@@ -1,0 +1,261 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5425 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-August/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5425%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090820002137.EAC5021F499%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000483.html">
+   <LINK REL="Next"  HREF="000485.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5425 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5425%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090820002137.EAC5021F499%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5425 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Thu Aug 20 02:21:37 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000483.html">[fetchmail-svn] r5424 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000485.html">[fetchmail-svn] r5426 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#484">[ date ]</a>
+              <a href="thread.html#484">[ thread ]</a>
+              <a href="subject.html#484">[ subject ]</a>
+              <a href="author.html#484">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-08-19 19:21:37 -0500 (Wed, 19 Aug 2009)
+New Revision: 5425
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/TODO.txt
+   branches/BRANCH_6-3/smtp.c
+Log:
+Fix SMTP_ok to cache multiline reponses...
+
+but there are more functions that need fixing (look for smtp_response).
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-08-20 00:21:28 UTC (rev 5424)
++++ branches/BRANCH_6-3/NEWS	2009-08-20 00:21:37 UTC (rev 5425)
+@@ -65,6 +65,9 @@
+ * Look for MD5_Init in libcrypto rather than libssl, fixes Gentoo Kerberos
+   builds; fixes upstream parts of Gentoo Bugs #231400 and #185652, and fixes
+   BerliOS Bug #16134.
++* Report multiline SMTP errors properly, reported by Earl Chew; fixes Debian Bug
++  #569899, reported by Akihiro Terasaki.
++* Replace control characters in SMTP replies by '?'.
+ 
+ # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
+ * [ca]    Catalan (Ernest Adrogu&#233; Calveras)
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2009-08-20 00:21:28 UTC (rev 5424)
++++ branches/BRANCH_6-3/TODO.txt	2009-08-20 00:21:37 UTC (rev 5425)
+@@ -5,6 +5,9 @@
+ - put bare IP addresses in brackets for SMTP (check if there are RFC
+   1123/5321/5322 differences)
+ - Debian Bug #531589: fetchmail ignores SIGUSR1 in idle mode.
++- Fix further occurrences of SMTP reply code handling:
++   - for proper smtp_reponse caching of multiline codes (there are some)
++   - for stomping over control characters.
+ 
+ soon - SHOULD:
+ - replace &quot; \n&quot; by &quot;\n&quot; (and similar) - but make sure translators have
+@@ -28,10 +31,6 @@
+ - find a solution for the &quot;invalid header&quot; discards message problem
+   (escape headers and stuff reminder into body)
+ - add Message-ID: header and other SHOULD headers to warning mails?
+-- report multiline SMTP errors properly (sample in private mail from 
+-  Earl Chew, 2007-07-30T02:28), Debian Bug #529899
+-  =&gt; requires reworking SMTP_ok to actually not only read the last line 
+-     of multiline replies, but buffer.
+ 
+ soon - MAY:
+ - <A HREF="http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=471176">http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=471176</A>
+@@ -44,7 +43,6 @@
+ - revise ticker, and add something like .........20%.... ... 100%
+   (suggested by Yue Wu)
+ 
+-
+ questionable:
+ - Convert POP3 UIDs to X-UIDL?
+ - fetch IMAP message in one go (fetchmail-devel by Adam Simpkins
+
+Modified: branches/BRANCH_6-3/smtp.c
+===================================================================
+--- branches/BRANCH_6-3/smtp.c	2009-08-20 00:21:28 UTC (rev 5424)
++++ branches/BRANCH_6-3/smtp.c	2009-08-20 00:21:37 UTC (rev 5425)
+@@ -4,13 +4,14 @@
+  * Concept due to Harry Hochheiser.  Implementation by ESR.  Cleanup and
+  * strict RFC821 compliance by Cameron MacPherson.
+  *
+- * Copyright 1997 Eric S. Raymond
++ * Copyright 1997 Eric S. Raymond, 2009 Matthias Andree
+  * For license terms, see the file COPYING in this directory.
+  */
+ 
+ #include &quot;config.h&quot;
+ #include &quot;fetchmail.h&quot;
+ 
++#include &lt;ctype.h&gt;
+ #include &lt;stdio.h&gt;
+ #include &lt;unistd.h&gt;
+ #include &lt;string.h&gt;
+@@ -80,10 +81,9 @@
+ 			report(stdout, GT_(&quot;ESMTP CRAM-MD5 Authentication...\n&quot;));
+ 		SockPrintf(sock, &quot;AUTH CRAM-MD5\r\n&quot;);
+ 		SockRead(sock, smtp_response, sizeof(smtp_response) - 1);
+-		strncpy(tmp, smtp_response, sizeof(tmp));
+-		tmp[sizeof(tmp)-1] = '\0';
++		strlcpy(tmp, smtp_response, sizeof(tmp));
+ 
+-		if (strncmp(tmp, &quot;334 &quot;, 4)) { /* Server rejects AUTH */
++		if (strncmp(tmp, &quot;334&quot;, 3)) { /* Server rejects AUTH */
+ 			SMTP_auth_error(sock, GT_(&quot;Server rejected the AUTH command.\n&quot;));
+ 			return;
+ 		}
+@@ -131,10 +131,9 @@
+ 			report(stdout, GT_(&quot;ESMTP LOGIN Authentication...\n&quot;));
+ 		SockPrintf(sock, &quot;AUTH LOGIN\r\n&quot;);
+ 		SockRead(sock, smtp_response, sizeof(smtp_response) - 1);
+-		strncpy(tmp, smtp_response, sizeof(tmp));
+-		tmp[sizeof(tmp)-1] = '\0';
++		strlcpy(tmp, smtp_response, sizeof(tmp));
+ 
+-		if (strncmp(tmp, &quot;334 &quot;, 4)) { /* Server rejects AUTH */
++		if (strncmp(tmp, &quot;334&quot;, 3)) { /* Server rejects AUTH */
+ 			SMTP_auth_error(sock, GT_(&quot;Server rejected the AUTH command.\n&quot;));
+ 			return;
+ 		}
+@@ -148,8 +147,7 @@
+ 		to64frombits(b64buf, username, strlen(username));
+ 		SockPrintf(sock, &quot;%s\r\n&quot;, b64buf);
+ 		SockRead(sock, smtp_response, sizeof(smtp_response) - 1);
+-		strncpy(tmp, smtp_response, sizeof(tmp));
+-		tmp[sizeof(tmp)-1] = '\0';
++		strlcpy(tmp, smtp_response, sizeof(tmp));
+ 		p = strchr(tmp, ' ');
+ 		if (!p) {
+ 			SMTP_auth_error(sock, GT_(&quot;Bad base64 reply from server.\n&quot;));
+@@ -308,32 +306,44 @@
+ time_t last_smtp_ok = 0;
+ 
+ int SMTP_ok(int sock, char smtp_mode, int mintimeout)
+-/* returns status of SMTP connection */
++/**&lt; returns status of SMTP connection and saves the message in
++ * smtp_response, without trailing [CR]LF, but with normalized CRLF
++ * between multiple lines of multi-line replies */
+ {
+     SIGHANDLERTYPE alrmsave;
++    char reply[MSGBUFSIZE], *i;
+ 
+     /* set an alarm for smtp ok */
+     alrmsave = set_signal_handler(SIGALRM, null_signal_handler);
+     set_timeout(mytimeout &gt;= mintimeout ? mytimeout : mintimeout);
+ 
+-    while ((SockRead(sock, smtp_response, sizeof(smtp_response)-1)) != -1)
++    smtp_response[0] = '\0';
++
++    while ((SockRead(sock, reply, sizeof(reply)-1)) != -1)
+     {
+-	int n;
++	size_t n;
+ 
+ 	/* restore alarm */
+ 	set_timeout(0);
+ 	set_signal_handler(SIGALRM, alrmsave);
+ 
+-	n = strlen(smtp_response);
+-	if (n &gt; 0 &amp;&amp; smtp_response[n-1] == '\n')
++	n = strlen(reply);
++	if (n &gt; 0 &amp;&amp; reply[n-1] == '\n')
+ 	    n--;
+-	if (n &gt; 0 &amp;&amp; smtp_response[n-1] == '\r')
++	if (n &gt; 0 &amp;&amp; reply[n-1] == '\r')
+ 	    n--;
+-	smtp_response[n] = '\0';
++	reply[n] = '\0';
++
++	/* stomp over control characters */
++	for (i = reply; *i; i++)
++	    if (iscntrl((unsigned char)*i))
++		*i = '?';
++
+ 	if (outlevel &gt;= O_MONITOR)
+-	    report(stdout, &quot;%cMTP&lt; %s\n&quot;, smtp_mode, smtp_response);
+-	if (n &lt; 4 ||
+-	    (smtp_response[3] != ' ' &amp;&amp; smtp_response[3] != '-'))
++	    report(stdout, &quot;%cMTP&lt; %s\n&quot;, smtp_mode, reply);
++	/* note that \0 is part of the strchr search string and the
++	 * blank after the reply code is optional (RFC 5321 4.2.1) */
++	if (n &lt; 3 || !strchr(&quot; -&quot;, reply[3]))
+ 	{
+ 	    if (outlevel &gt;= O_MONITOR)
+ 		report(stderr, GT_(&quot;smtp listener protocol error\n&quot;));
+@@ -342,16 +352,21 @@
+ 
+ 	last_smtp_ok = time((time_t *) NULL);
+ 
+-	if ((smtp_response[0] == '1' || smtp_response[0] == '2' || smtp_response[0] == '3') &amp;&amp;
+-	    smtp_response[3] == ' ')
++	if (strchr(&quot;123&quot;, reply[0])
++		&amp;&amp; isdigit((unsigned char)reply[1])
++		&amp;&amp; isdigit((unsigned char)reply[2])
++		&amp;&amp; strchr(&quot; &quot;, reply[3])) /* matches space and \0 */ {
++	    strlcat(smtp_response, reply, sizeof(smtp_response));
+ 	    return SM_OK;
+-	else if (smtp_response[3] != '-')
++	} else if (reply[3] != '-')
+ 	    return SM_ERROR;
+ 
++	strlcat(smtp_response, reply,  sizeof(smtp_response));
++	strlcat(smtp_response, &quot;\r\n&quot;, sizeof(smtp_response));
++
+ 	/* set an alarm for smtp ok */
+ 	set_signal_handler(SIGALRM, null_signal_handler);
+ 	set_timeout(mytimeout);
+-
+     }
+ 
+     /* restore alarm */
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000483.html">[fetchmail-svn] r5424 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000485.html">[fetchmail-svn] r5426 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#484">[ date ]</a>
+              <a href="thread.html#484">[ thread ]</a>
+              <a href="subject.html#484">[ subject ]</a>
+              <a href="author.html#484">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

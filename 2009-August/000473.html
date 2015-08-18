@@ -1,0 +1,282 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5414 - branches/BRANCH_MAPI
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-August/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5414%20-%20branches/BRANCH_MAPI&In-Reply-To=%3C20090813075032.898FD21F3F7%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000472.html">
+   <LINK REL="Next"  HREF="000474.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5414 - branches/BRANCH_MAPI</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5414%20-%20branches/BRANCH_MAPI&In-Reply-To=%3C20090813075032.898FD21F3F7%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5414 - branches/BRANCH_MAPI">svn at mknod.org
+       </A><BR>
+    <I>Thu Aug 13 09:50:32 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000472.html">[fetchmail-svn] r5413 - branches/BRANCH_MAPI
+</A></li>
+        <LI>Next message: <A HREF="000474.html">[fetchmail-svn] r5415 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#473">[ date ]</a>
+              <a href="thread.html#473">[ thread ]</a>
+              <a href="subject.html#473">[ subject ]</a>
+              <a href="author.html#473">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: mojmir
+Date: 2009-08-13 02:50:32 -0500 (Thu, 13 Aug 2009)
+New Revision: 5414
+
+Modified:
+   branches/BRANCH_MAPI/openchange-tools.c
+   branches/BRANCH_MAPI/openchange-tools.h
+Log:
+* upgrade openchange tools from libmapi-0.8 to libmapi-0.8.2
+
+note: seems that these two files do not form any library within
+libmapi.
+
+
+
+Modified: branches/BRANCH_MAPI/openchange-tools.c
+===================================================================
+--- branches/BRANCH_MAPI/openchange-tools.c	2009-08-13 07:05:57 UTC (rev 5413)
++++ branches/BRANCH_MAPI/openchange-tools.c	2009-08-13 07:50:32 UTC (rev 5414)
+@@ -22,7 +22,27 @@
+ #include &lt;libmapi/libmapi.h&gt;
+ #include &quot;openchange-tools.h&quot;
+ 
++/*
++static void popt_openchange_version_callback(poptContext con,
++					     enum poptCallbackReason reason,
++					     const struct poptOption *opt,
++					     const char *arg,
++					     const void *data)
++{
++	switch (opt-&gt;val) {
++	case 'V':
++		printf(&quot;Version %s\n&quot;, OPENCHANGE_VERSION_STRING);
++		exit (0);
++	}
++}
+ 
++struct poptOption popt_openchange_version[] = {
++	{ NULL, 0, POPT_ARG_CALLBACK, (void *)popt_openchange_version_callback	},
++	{ &quot;version&quot;, 'V', POPT_ARG_NONE, NULL, 'V', &quot;Print version &quot;		},
++	{ NULL }
++};
++*/
++
+ /*
+  * Retrieve the property value for a given SRow and property tag.  
+  *
+@@ -31,22 +51,22 @@
+  *
+  * Fetch property normally for any others properties
+  */
+-_PUBLIC_ void *octool_get_propval(struct SRow *aRow, uint32_t proptag)
++_PUBLIC_ const void * octool_get_propval(struct SRow *aRow, uint32_t proptag)
+ {
+ 	const char	*str;
+ 
+ 	if (((proptag &amp; 0xFFFF) == PT_STRING8) ||
+ 	    ((proptag &amp; 0xFFFF) == PT_UNICODE)) {
+ 		proptag = (proptag &amp; 0xFFFF0000) | PT_STRING8;
+-		str = (const char *) find_SPropValue_data(aRow, proptag);
+-		if (str) return (void *)str;
++		str = find_SPropValue_data(aRow, proptag);
++		if (str) return str;
+ 
+ 		proptag = (proptag &amp; 0xFFFF0000) | PT_UNICODE;
+-		str = (const char *) find_SPropValue_data(aRow, proptag);
+-		return (void *)str;
++		str = find_SPropValue_data(aRow, proptag);
++		return str;
+ 	} 
+ 
+-	return (void *)find_SPropValue_data(aRow, proptag);
++	return find_SPropValue_data(aRow, proptag);
+ }
+ 
+ 
+@@ -59,16 +79,17 @@
+ {
+ 	enum MAPISTATUS	retval;
+ 	uint16_t	read_size;
+-	unsigned char	buf[0x1000];
++	uint8_t		buf[0x1000];
+ 
+ 	body-&gt;length = 0;
+-	body-&gt;data = talloc_zero(mem_ctx, unsigned char);
++	body-&gt;data = talloc_zero(mem_ctx, uint8_t);
+ 
+ 	do {
+ 		retval = ReadStream(obj_stream, buf, 0x1000, &amp;read_size);
+ 		MAPI_RETVAL_IF(retval, GetLastError(), body-&gt;data);
+ 		if (read_size) {
+-			body-&gt;data = talloc_realloc(mem_ctx, body-&gt;data, unsigned char, body-&gt;length + read_size);
++			body-&gt;data = talloc_realloc(mem_ctx, body-&gt;data, uint8_t,
++						    body-&gt;length + read_size);
+ 			memcpy(&amp;(body-&gt;data[body-&gt;length]), buf, read_size);
+ 			body-&gt;length += read_size;
+ 		}
+@@ -90,8 +111,8 @@
+ 	enum MAPISTATUS			retval;
+ 	const struct SBinary_short	*bin;
+ 	mapi_object_t			obj_stream;
+-	char				*data;
+-	uint8_t				format;
++	char const * data;
++	uint8_t	format = 0;
+ 
+ 	/* Sanity checks */
+ 	MAPI_RETVAL_IF(!obj_message, MAPI_E_INVALID_PARAMETER, NULL);
+@@ -167,6 +188,7 @@
+ 	struct SPropValue		*lpProps;
+ 	struct SRow			aRow;
+ 	uint32_t			count;
++	ssize_t				len;
+ 	/* common email fields */
+ 	const char			*msgid;
+ 	const char			*from, *to, *cc, *bcc;
+@@ -262,8 +284,8 @@
+ 	printf(&quot;Body:\n&quot;);
+ 	fflush(0);
+ 	if (body.length) {
+-		write(1, body.data, body.length);
+-		write(1, &quot;\n&quot;, 1);
++		len = write(1, body.data, body.length);
++		len = write(1, &quot;\n&quot;, 1);
+ 		fflush(0);
+ 		talloc_free(body.data);
+ 	} 
+@@ -274,32 +296,40 @@
+ /*
+  * OpenChange MAPI programs initialization routine
+  */
+-_PUBLIC_ enum MAPISTATUS octool_init_mapi(TALLOC_CTX *mem_ctx,
+-					  const char *opt_profname,
+-					  const char *opt_password,
+-					  uint32_t provider)
++/*_PUBLIC_ struct mapi_session *octool_init_mapi(const char *opt_profname,
++					       const char *opt_password,
++					       uint32_t provider)
+ {
+ 	enum MAPISTATUS		retval;
++	char * profname = NULL;
+ 	struct mapi_session	*session = NULL;
++	TALLOC_CTX		*mem_ctx = NULL;
+ 
+-	if (!opt_profname) {
+-		retval = GetDefaultProfile(&amp;opt_profname);
++	mem_ctx = talloc_named(NULL, 0, &quot;octool_init_mapi&quot;);
++	if (opt_profname) {
++		profname = talloc_strdup(mem_ctx, opt_profname);
++	} else {
++		retval = GetDefaultProfile(&amp;profname);
+ 		if (retval != MAPI_E_SUCCESS) {
+ 			mapi_errstr(&quot;GetDefaultProfile&quot;, GetLastError());
+-			return retval;
++			talloc_free(mem_ctx);
++			return NULL;
+ 		}
+ 	}
+ 
+ 	if (!provider) {
+-		retval = MapiLogonEx(&amp;session, opt_profname, opt_password);
++		retval = MapiLogonEx(&amp;session, profname, opt_password);
+ 	} else {
+-		retval = MapiLogonProvider(&amp;session, opt_profname, opt_password, provider);
++		retval = MapiLogonProvider(&amp;session, profname, opt_password, provider);
+ 	}
++	MAPIFreeBuffer(profname);
+ 
+ 	if (retval != MAPI_E_SUCCESS) {
+ 		mapi_errstr(&quot;MapiLogonEx&quot;, GetLastError());
+-		return retval;
++		talloc_free(mem_ctx);
++		return NULL;
+ 	}
+ 
+-	return MAPI_E_SUCCESS;
+-}
++	talloc_free(mem_ctx);
++	return session;
++}*/
+
+Modified: branches/BRANCH_MAPI/openchange-tools.h
+===================================================================
+--- branches/BRANCH_MAPI/openchange-tools.h	2009-08-13 07:05:57 UTC (rev 5413)
++++ branches/BRANCH_MAPI/openchange-tools.h	2009-08-13 07:50:32 UTC (rev 5414)
+@@ -22,6 +22,8 @@
+ #ifndef	__OPENCHANGETOOLS_H__
+ #define	__OPENCHANGETOOLS_H__
+ 
++#include &lt;popt.h&gt;
++
+ #define	DEFAULT_PROFDB	&quot;%s/.openchange/profiles.ldb&quot;
+ #define	DEFAULT_TDB	&quot;%s/.openchange/index.tdb&quot;
+ #define	DEFAULT_MBOX	&quot;%s/.openchange/mbox&quot;
+@@ -39,17 +41,20 @@
+ #endif
+ #endif
+ 
++/* Common popt structures for tool */
++extern struct poptOption popt_openchange_version[];
++
++#define	POPT_OPENCHANGE_VERSION { NULL, 0, POPT_ARG_INCLUDE_TABLE, popt_openchange_version, 0, &quot;Common openchange options:&quot;, NULL },
++
+ #ifndef _PUBLIC_
+ #define _PUBLIC_
+ #endif
+ 
+ __BEGIN_DECLS
+ _PUBLIC_ enum MAPISTATUS octool_message(TALLOC_CTX *, mapi_object_t *);
+-_PUBLIC_ void *octool_get_propval(struct SRow *, uint32_t);
+-_PUBLIC_ enum MAPISTATUS octool_get_body(TALLOC_CTX *, mapi_object_t *,
+-					 struct SRow *, DATA_BLOB *);
+-_PUBLIC_ enum MAPISTATUS octool_init_mapi(TALLOC_CTX *, const char *, const char *,
+-					  uint32_t);
++_PUBLIC_ const void * octool_get_propval(struct SRow *, uint32_t);
++_PUBLIC_ enum MAPISTATUS octool_get_body(TALLOC_CTX *, mapi_object_t *, struct SRow *, DATA_BLOB *);
++/*_PUBLIC_ struct mapi_session * octool_init_mapi(const char *, const char *, uint32_t);*/
+ __END_DECLS
+ 
+ #endif /*!__OPENCHANGETOOLS_H__ */
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000472.html">[fetchmail-svn] r5413 - branches/BRANCH_MAPI
+</A></li>
+	<LI>Next message: <A HREF="000474.html">[fetchmail-svn] r5415 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#473">[ date ]</a>
+              <a href="thread.html#473">[ thread ]</a>
+              <a href="subject.html#473">[ subject ]</a>
+              <a href="author.html#473">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,177 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5270 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-April/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5270%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090427112358.7FCDB21F02D%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000252.html">
+   <LINK REL="Next"  HREF="000254.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5270 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5270%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090427112358.7FCDB21F02D%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5270 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Mon Apr 27 13:23:58 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000252.html">[fetchmail-svn] r5269 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000254.html">[fetchmail-svn] r5270 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#253">[ date ]</a>
+              <a href="thread.html#253">[ thread ]</a>
+              <a href="subject.html#253">[ subject ]</a>
+              <a href="author.html#253">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-04-27 06:23:58 -0500 (Mon, 27 Apr 2009)
+New Revision: 5270
+
+Modified:
+   branches/BRANCH_6-3/fetchmail-FAQ.html
+Log:
+Revise FAQ G3 (support). Make intro more catchy.
+
+Make the introduction a bit more catchy so as to guide people to G3
+right away.
+
+In G3:
+- some information was given twice. Remove the duplication.
+- Add env LC_ALL=C so that people send in information in English and
+  POSIX locale, we cannot handle i18n-ed reports.
+- Remove IMAP advocacy. Doesn't belong here, and ESR's IMAP-over-POP3
+  advocacy is neither technically substantiated nor warranted today.
+
+Modified: branches/BRANCH_6-3/fetchmail-FAQ.html
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-FAQ.html	2009-04-23 14:39:48 UTC (rev 5269)
++++ branches/BRANCH_6-3/fetchmail-FAQ.html	2009-04-27 11:23:58 UTC (rev 5270)
+@@ -31,9 +31,9 @@
+ &lt;hr/&gt;
+ &lt;h1 id=&quot;FAQ&quot;&gt;Frequently Asked Questions About Fetchmail&lt;/h1&gt;
+ 
+-&lt;p&gt;Before reporting any bug, please read &lt;a href=&quot;#G3&quot;&gt;G3&lt;/a&gt; for
+-advice on how to include diagnostic information that will get your
+-bug fixed as quickly as possible.&lt;/p&gt;
++&lt;p&gt;&lt;strong&gt;Support? Bug reports?&lt;/strong&gt; Please read &lt;a 
++href=&quot;#G3&quot;&gt;G3&lt;/a&gt; for what information is required to get your problem 
++solved as quickly as possible.&lt;/p&gt;
+ 
+ &lt;p&gt;Note that this FAQ is occasionally updated from the SVN repository
+ and speaks in the past tense (&quot;since&quot;) about a fetchmail release that is
+@@ -354,17 +354,22 @@
+ name and origin of the RPM or other binary package you
+ installed.&lt;/li&gt;
+ 
+-&lt;li&gt;A copy of your POP or IMAP server's greeting line.&lt;/li&gt;
+-
+ &lt;li&gt;The name and version of the SMTP listener or MDA you are
+ forwarding to.&lt;/li&gt;
+ 
+ &lt;li&gt;Any command-line options you used.&lt;/li&gt;
+ 
+-&lt;li&gt;The output of fetchmail -V called with whatever other
+-command-line options you used.&lt;/li&gt;
++&lt;li&gt;The output of &lt;kbd&gt;env LC_ALL=C fetchmail -V&lt;/kbd&gt; called with 
++whatever other command-line options you used.&lt;/li&gt;
+ 
+-&lt;li&gt;&lt;strong&gt;The output of &lt;kbd&gt;fetchmail --nodetach -vvv --nosyslog&lt;/kbd&gt; with whatever other command-line options you use routinely.&lt;/strong&gt;&lt;/li&gt;
++&lt;li&gt;&lt;strong&gt;The output of &lt;kbd&gt;env LC_ALL=C fetchmail --nodetach -vvv 
++--nosyslog&lt;/kbd&gt; with whatever other command-line options you use 
++routinely.&lt;/strong&gt;
++ &lt;p&gt;It is very important that the transcript include your
++POP/IMAP server's greeting line, so I can identify it in case of server
++problems. This transcript will not reveal your passwords, which are
++specially masked out precisely so transcripts can be passed around.&lt;/p&gt;
++&lt;/li&gt;
+ &lt;/ol&gt;
+ 
+ &lt;p&gt;If you have FTP access to your remote mail account, and you have
+@@ -382,22 +387,17 @@
+ failure was introduced in the lower half. Now bisect that half in
+ the same way. In a very few tries, you should be able to identify
+ the exact adjacent pair of versions between which your bug was
+-introduced &ndash; and with information like that, I can usually come up
+-with a fix very quickly.&lt;/p&gt;
++introduced. &lt;STRONG&gt;Please&lt;/STRONG&gt; include session transcripts (as 
++described in the last bullet point above) of &lt;strong&gt;both
++the working and failing versions.&lt;/strong&gt; Often, the source of the problem
++can instantly identified by looking at the differences in protocol
++transactions.&lt;/p&gt;
+ 
+-&lt;p&gt;Another useful thing you can do, if you're using POP3, is to
+-test for IMAP4 support on your mailserver using the autoprobe
+-function of fetchmailconf. If you have IMAP4, and fetchmailconf
+-doesn't tell you it's broken, switch immediately. POP3 is a weak,
+-poorly-designed protocol with chronic problems, and the later
+-versions after RFC1725 actually get worse rather than better.
+-Changing over to IMAP4 may well make your problem go away &ndash; and if
+-your ISP doesn't have IMAP4 support, bug them to supply it.&lt;/p&gt;
+-
+-&lt;p&gt;It is helpful if you include your .fetchmailrc file, but not
++&lt;p&gt;It may helpful if you include your .fetchmailrc file, but not
+ necessary unless your symptom seems to involve an error in
+ configuration parsing. If you do send in your .fetchmailrc, mask
+-the passwords first!&lt;/p&gt;
++the passwords first! Otherwise, fetchmail -V &ndash; as directed above 
++&ndash; will usually suffice.&lt;/p&gt;
+ 
+ &lt;p&gt;If fetchmail seems to run and fetch mail, but the headers look
+ mangled (that is, headers are missing or blank lines are inserted
+@@ -408,19 +408,6 @@
+ mail chain to screw up that look like fetchmail's fault, but you
+ may be able to fix these by tweaking your configuration.&lt;/p&gt;
+ 
+-&lt;p&gt;A transcript of the failed session with &quot;--nosyslog --nodetach -vvv&quot;
+-(yes, that's &lt;em&gt;three&lt;/em&gt; -v options, enabling debug mode) will almost
+-always be useful. It is very important that the transcript include your
+-POP/IMAP server's greeting line, so I can identify it in case of server
+-problems. This transcript will not reveal your passwords, which are
+-specially masked out precisely so transcripts can be passed around.&lt;/p&gt;
+-
+-&lt;p&gt;If you upgraded your fetchmail and something broke, you should
+-include session transcripts with &quot;--nosyslog --nodetach -vvv&quot; of both
+-the working and failing versions. Very often, the source of the problem
+-can instantly identified by looking at the differences in protocol
+-transactions.&lt;/p&gt;
+-
+ &lt;p&gt;If the bug involves a core dump or hang, a gdb stack trace is
+ good to have. (Bear in mind that you can attach gdb to a running
+ but hung process by giving the process ID as a second argument.)
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000252.html">[fetchmail-svn] r5269 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000254.html">[fetchmail-svn] r5270 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#253">[ date ]</a>
+              <a href="thread.html#253">[ thread ]</a>
+              <a href="subject.html#253">[ subject ]</a>
+              <a href="author.html#253">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

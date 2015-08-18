@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5022 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2007-February/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5022%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20070203001312.AD3C7218001%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000015.html">
+   <LINK REL="Next"  HREF="000017.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5022 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5022%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20070203001312.AD3C7218001%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5022 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Sat Feb  3 01:13:12 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000015.html">[fetchmail-svn] r5021 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000017.html">[fetchmail-svn] r5023 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#16">[ date ]</a>
+              <a href="thread.html#16">[ thread ]</a>
+              <a href="subject.html#16">[ subject ]</a>
+              <a href="author.html#16">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2007-02-02 18:13:12 -0600 (Fri, 02 Feb 2007)
+New Revision: 5022
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/pop3.c
+Log:
+Fix 6.3.6 regression: repoll upon socket error after STLS failure.
+Berlios Bug #10133, reported by Andrej Kacian.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2007-02-02 23:47:15 UTC (rev 5021)
++++ branches/BRANCH_6-3/NEWS	2007-02-03 00:13:12 UTC (rev 5022)
+@@ -44,8 +44,10 @@
+ 
+ fetchmail 6.3.7 (not yet released):
+ 
+-# REGRESSION FIX
+-* Fix KPOP, broken with the 6.3.6 security fix. Patch by Miroslav Trmac.
++# FIXES FOR REGRESSIONS IN 6.3.6
++* Fix KPOP. Patch by Miloslav Trmac.
++* Fix repoll when server disconnects after opportunistic TLS failed for POP3.
++  Berlios Bug #10133, reported by Andrej Kacian.
+ 
+ # TRANSLATION UPDATES
+ * Japanese (Takeshi Hamasaki), Polish (Jakub Bogusz)
+
+Modified: branches/BRANCH_6-3/pop3.c
+===================================================================
+--- branches/BRANCH_6-3/pop3.c	2007-02-02 23:47:15 UTC (rev 5021)
++++ branches/BRANCH_6-3/pop3.c	2007-02-03 00:13:12 UTC (rev 5022)
+@@ -635,17 +635,6 @@
+ 	}
+ 	memset(shroud, 0x55, sizeof(shroud));
+ 	shroud[0] = '\0';
+-#ifdef SSL_ENABLE
+-	/* this is for servers which claim to support TLS, but actually
+-	 * don't! */
+-	if (connection_may_have_tls_errors &amp;&amp; ok == PS_SOCKET)
+-	{
+-	    xfree(ctl-&gt;sslproto);
+-	    ctl-&gt;sslproto = xstrdup(&quot;&quot;);
+-	    /* repoll immediately without TLS */
+-	    ok = PS_REPOLL;
+-	}
+-#endif
+ 	break;
+ 
+     case P_APOP:
+@@ -694,6 +683,18 @@
+ 	ok = PS_ERROR;
+     }
+ 
++#ifdef SSL_ENABLE
++    /* this is for servers which claim to support TLS, but actually
++     * don't! */
++    if (connection_may_have_tls_errors &amp;&amp; ok == PS_SOCKET)
++    {
++	xfree(ctl-&gt;sslproto);
++	ctl-&gt;sslproto = xstrdup(&quot;&quot;);
++	/* repoll immediately without TLS */
++	ok = PS_REPOLL;
++    }
++#endif
++
+     if (ok != 0)
+     {
+ 	/* maybe we detected a lock-busy condition? */
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000015.html">[fetchmail-svn] r5021 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000017.html">[fetchmail-svn] r5023 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#16">[ date ]</a>
+              <a href="thread.html#16">[ thread ]</a>
+              <a href="subject.html#16">[ subject ]</a>
+              <a href="author.html#16">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

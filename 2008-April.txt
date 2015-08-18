@@ -1,0 +1,346 @@
+From svn at mknod.org  Thu Apr 17 14:16:35 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 17 Apr 2008 07:16:35 -0500 (CDT)
+Subject: [fetchmail-svn] r5172 - branches/BRANCH_6-3
+Message-ID: <20080417121635.7E3FC6B009C@mknod.org>
+
+Author: m-a
+Date: 2008-04-17 07:16:35 -0500 (Thu, 17 Apr 2008)
+New Revision: 5172
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Postpone fixing SMTP multiline reporting to after 6.3.9.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2008-03-31 15:00:34 UTC (rev 5171)
++++ branches/BRANCH_6-3/TODO.txt	2008-04-17 12:16:35 UTC (rev 5172)
+@@ -1,8 +1,6 @@
+ soon - MUST:
+ - BerliOS Bug #10972, Fetchmail refetches big messages repeatedly (SMTP listener
+   issue)
+-- report multiline SMTP errors properly (sample in private mail from 
+-  Earl Chew, 2007-07-30T02:28)
+ - publish SA-2007-02 after release
+ 
+ soon - SHOULD:
+@@ -36,6 +34,10 @@
+ - find a solution for the "invalid header" discards message problem
+   (escape headers and stuff reminder into body)
+ - add Message-ID: header and other SHOULD headers to warning mails?
++- report multiline SMTP errors properly (sample in private mail from 
++  Earl Chew, 2007-07-30T02:28)
++  => requires reworking SMTP_ok to actually not only read the last line 
++     of multiline replies, but buffer.
+ 
+ questionable:
+ - Convert POP3 UIDs to X-UIDL?
+
+
+
+From svn at mknod.org  Wed Apr 23 09:44:03 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Wed, 23 Apr 2008 02:44:03 -0500 (CDT)
+Subject: [fetchmail-svn] r5173 - branches/BRANCH_6-3
+Message-ID: <20080423074403.2188E6B0131@mknod.org>
+
+Author: m-a
+Date: 2008-04-23 02:44:02 -0500 (Wed, 23 Apr 2008)
+New Revision: 5173
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Add Debian Bug #475239.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2008-04-17 12:16:35 UTC (rev 5172)
++++ branches/BRANCH_6-3/TODO.txt	2008-04-23 07:44:02 UTC (rev 5173)
+@@ -2,6 +2,8 @@
+ - BerliOS Bug #10972, Fetchmail refetches big messages repeatedly (SMTP listener
+   issue)
+ - publish SA-2007-02 after release
++- Debian Bug #475239, MIME decoder may break up words (need to quote
++  results)
+ 
+ soon - SHOULD:
+ - https://bugzilla.novell.com/show_bug.cgi?id=246829 - fetchmail lost some mail
+
+
+
+From svn at mknod.org  Thu Apr 24 10:19:36 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 24 Apr 2008 03:19:36 -0500 (CDT)
+Subject: [fetchmail-svn] r5174 - branches/BRANCH_6-3
+Message-ID: <20080424081936.22F776B01B2@mknod.org>
+
+Author: m-a
+Date: 2008-04-24 03:19:35 -0500 (Thu, 24 Apr 2008)
+New Revision: 5174
+
+Modified:
+   branches/BRANCH_6-3/fetchmail-FAQ.html
+Log:
+Add notes about Google mail.
+
+Modified: branches/BRANCH_6-3/fetchmail-FAQ.html
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-FAQ.html	2008-04-23 07:44:02 UTC (rev 5173)
++++ branches/BRANCH_6-3/fetchmail-FAQ.html	2008-04-24 08:19:35 UTC (rev 5174)
+@@ -150,6 +150,7 @@
+ <a href="#I7">I7. How can I use fetchmail with SpryNet?</a><br/>
+ <a href="#I8">I8. How can I use fetchmail with comcast.net or other
+     Maillennium servers?</a><br/>
++<a href="#I9">I9. How can I use fetchmail with GMail/Google Mail?</a><br/>
+ 
+ <h2 id="C_K">How to set up well-known security and authentication
+ methods</h2>
+@@ -1969,6 +1970,16 @@
+ 
+ <p>Workaround for older versions: use the <tt>fetchall</tt> option.</p>
+ 
++<h2><a id="I9" name="I9">I9. How can I use fetchmail with GMail/Google Mail?</a></h2>
++
++<p>Google's IMAP servers, as of April 2008, are broken and re-encode
++MIME-encoded headers improperly and are not feature-complete yet. The
++model how their servers organize mail also deviates in significant ways
++from what the POP3 or IMAP protocol 'fathers' conceived. This means all
++sorts of strange effects, for instance, your sent mail may show up in
++the mail that fetchmail fetches. It's best to avoid fetching mail from
++Google until they are using standards-compliant software.</p>
++
+ <hr/>
+ <h1>How to set up well-known security and authentication
+ methods</h1>
+
+
+
+From svn at mknod.org  Thu Apr 24 10:21:45 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 24 Apr 2008 03:21:45 -0500 (CDT)
+Subject: [fetchmail-svn] r5175 - branches/BRANCH_6-3
+Message-ID: <20080424082145.BCF706B01B2@mknod.org>
+
+Author: m-a
+Date: 2008-04-24 03:21:45 -0500 (Thu, 24 Apr 2008)
+New Revision: 5175
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+Log:
+Add notes about Google mail.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2008-04-24 08:19:35 UTC (rev 5174)
++++ branches/BRANCH_6-3/NEWS	2008-04-24 08:21:45 UTC (rev 5175)
+@@ -115,7 +115,7 @@
+   since it is planned to use the file with IMAP4 later.
+ * Add grammar fixes from Dan Jacobson to fetchmail.man. Debian Bug #461642.
+ * The manual page now mentions that user descriptions need to come before user
+-  options. Reported by Francensco Pontort?, to fix Debian Bug#467010.
++  options. Reported by Francensco Pontort?, to fix Debian Bug #467010.
+ * The manual page no longer hints that multi-user declarations per server were
+   only useful in daemon mode running as root, to avoid hinting people to doing
+   that.
+@@ -124,6 +124,8 @@
+   enclosed in quotes.
+ * The manual page now mentions that the --logfile must already exist before
+   fetchmail is run.
++* The FAQ now recommends (#I9) not to use Google Mail for their disregard to the
++  protocols they claim to support.
+ 
+ # TRANSLATION UPDATES:
+ * Polish (Jakub Bogusz)
+
+
+
+From svn at mknod.org  Thu Apr 24 10:26:00 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 24 Apr 2008 03:26:00 -0500 (CDT)
+Subject: [fetchmail-svn] r5176 - branches/BRANCH_6-3
+Message-ID: <20080424082600.310466B01B2@mknod.org>
+
+Author: m-a
+Date: 2008-04-24 03:25:59 -0500 (Thu, 24 Apr 2008)
+New Revision: 5176
+
+Modified:
+   branches/BRANCH_6-3/fetchmail-FAQ.html
+Log:
+Minor corrections, use <em> for strikethrough text sections.
+
+Modified: branches/BRANCH_6-3/fetchmail-FAQ.html
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-FAQ.html	2008-04-24 08:21:45 UTC (rev 5175)
++++ branches/BRANCH_6-3/fetchmail-FAQ.html	2008-04-24 08:25:59 UTC (rev 5176)
+@@ -2687,7 +2687,8 @@
+ <h2><a id="M4" name="M4"><strike>M4. My multidrop fetchmail seems to be
+ having DNS problems.</strike></a></h2>
+ 
+-<p>The answer that used to be here no longer applies to fetchmail.</p>
++<p><em>The answer that used to be here no longer applies to
++    fetchmail.</em></p>
+ 
+ <h2><a id="M5" name="M5">M5. I'm seeing long DNS delays before each
+ message is processed.</a></h2>
+@@ -2981,12 +2982,9 @@
+ <h2><a id="X5" name="X5"><strike>X5. Using POP3, retrievals seems to be
+ 	fetching too much!</strike></a></h2>
+ 
+-<p>The information that used to be here pertained to fetchmail 4.4.7 or
+-older, which should not be used. Use a recent fetchmail version.</p>
++<p><em>The information that used to be here pertained to fetchmail 4.4.7 or
++    older, which should not be used. Use a recent fetchmail version.</em></p>
+ 
+-<p>Workaround: set the <code>fetchall</code> option. Under POP3
+-this has the side effect of forcing RETR use.</p>
+-
+ <h2><a id="X6" name="X6">X6. My mail attachments are being dropped
+ or mangled.</a></h2>
+ 
+@@ -3374,9 +3372,9 @@
+ for the other client to finish, or (b) terminate it.</p>
+ 
+ <h2><a id="O10" name="O10"><strike>O10. Why is the received date on all my
+-	messages the same?i</strike></a></h2>
++	messages the same?</strike></a></h2>
+ 
+-<p>The answer that used to be here made no sense.</p>
++<p><em>The answer that used to be here made no sense and was dropped.</em></p>
+ 
+ <h2><a name="O11">O11. I keep getting messages that say "Repoll
+ immediately" in my logs.</a></h2>
+
+
+
+From svn at mknod.org  Thu Apr 24 10:34:49 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 24 Apr 2008 03:34:49 -0500 (CDT)
+Subject: [fetchmail-svn] r5177 - branches/BRANCH_6-3
+Message-ID: <20080424083449.07FEE6B01B2@mknod.org>
+
+Author: m-a
+Date: 2008-04-24 03:34:48 -0500 (Thu, 24 Apr 2008)
+New Revision: 5177
+
+Modified:
+   branches/BRANCH_6-3/fetchmail-FAQ.html
+Log:
+Minor corrections in K5 (OpenSSL).
+
+Modified: branches/BRANCH_6-3/fetchmail-FAQ.html
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-FAQ.html	2008-04-24 08:25:59 UTC (rev 5176)
++++ branches/BRANCH_6-3/fetchmail-FAQ.html	2008-04-24 08:34:48 UTC (rev 5177)
+@@ -2088,10 +2088,10 @@
+ href="http://www.openssl.org/">OpenSSL</a> libraries installed, and they
+ should at least be version 0.9.6.
+ Configure with --with-ssl. If you have the OpenSSL libraries
+-installed in the default location (/usr/local/ssl) ths will
++installed in commonly-used default locations, this will
+ suffice. If you have them installed in a non-default location,
+-you'll need to specify it as an argument to --with-ssl after an
+-equal sign.</p>
++you'll need to specify the OpenSSL installation directory as an argument
++to --with-ssl after an equal sign.</p>
+ 
+ <p>Fetchmail binaries built this way support <code>ssl</code>,
+ <code>sslkey</code>, and <code>sslcert</code> options that control
+
+
+
+From svn at mknod.org  Thu Apr 24 10:45:14 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 24 Apr 2008 03:45:14 -0500 (CDT)
+Subject: [fetchmail-svn] r5178 - branches/BRANCH_6-3
+Message-ID: <20080424084514.7E9FA6B01B2@mknod.org>
+
+Author: m-a
+Date: 2008-04-24 03:45:14 -0500 (Thu, 24 Apr 2008)
+New Revision: 5178
+
+Modified:
+   branches/BRANCH_6-3/fetchmail-SA-2007-01.txt
+Log:
+Add missing --ssl to 3 A.
+
+Modified: branches/BRANCH_6-3/fetchmail-SA-2007-01.txt
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-SA-2007-01.txt	2008-04-24 08:34:48 UTC (rev 5177)
++++ branches/BRANCH_6-3/fetchmail-SA-2007-01.txt	2008-04-24 08:45:14 UTC (rev 5178)
+@@ -3,7 +3,7 @@
+ Topics:		APOP authentication insecure, fetchmail implementation lax
+ 
+ Author:		Matthias Andree
+-Version:	1.0
++Version:	1.1
+ Announced:	2007-04-06
+ Type:		password theft when under MITM attack
+ Impact:		password disclosure possible
+@@ -24,6 +24,7 @@
+ ==================
+ 
+ 2007-04-06 1.0	first release
++2008-04-24 1.1	add --ssl to section 3. suggestion A below
+ 
+ 
+ 1. Background
+@@ -64,7 +65,7 @@
+ 
+ A. Only use APOP on SSL or TLS secured connections with mandatory and thorough
+    certificate validation, such as fetchmail --sslproto tls1 --sslcertck
+-   or --sslproto ssl3 --sslcertck), or equivalent in the run control file.
++   or --ssl --sslproto ssl3 --sslcertck), or equivalent in the run control file.
+ 
+ B. Avoid APOP and use stronger authenticators.
+ 
+@@ -78,7 +79,7 @@
+ A. Copyright, License and Warranty
+ ==================================
+ 
+-(C) Copyright 2007 by Matthias Andree, <matthias.andree at gmx.de>.
++(C) Copyright 2007, 2008 by Matthias Andree, <matthias.andree at gmx.de>.
+ Some rights reserved.
+ 
+ This work is licensed under the Creative Commons
+
+
+
+From svn at mknod.org  Thu Apr 24 16:48:55 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 24 Apr 2008 09:48:55 -0500 (CDT)
+Subject: [fetchmail-svn] r5179 - branches/BRANCH_6-3
+Message-ID: <20080424144855.A06606B0125@mknod.org>
+
+Author: m-a
+Date: 2008-04-24 09:48:55 -0500 (Thu, 24 Apr 2008)
+New Revision: 5179
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Require security audit for *scanf(). :-/
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2008-04-24 08:45:14 UTC (rev 5178)
++++ branches/BRANCH_6-3/TODO.txt	2008-04-24 14:48:55 UTC (rev 5179)
+@@ -2,8 +2,9 @@
+ - BerliOS Bug #10972, Fetchmail refetches big messages repeatedly (SMTP listener
+   issue)
+ - publish SA-2007-02 after release
+-- Debian Bug #475239, MIME decoder may break up words (need to quote
+-  results)
++- Debian Bug #475239, MIME decoder may break up words (need to quote results)
++- Replace sscanf/fscanf by functions that do range checking (strtol/strtoul) :-/
++  See http://sourceware.org/bugzilla/show_bug.cgi?id=6453
+ 
+ soon - SHOULD:
+ - https://bugzilla.novell.com/show_bug.cgi?id=246829 - fetchmail lost some mail
+
+
+

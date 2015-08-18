@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5198 - branches/BRANCH_6-3/dist-tools
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2008-June/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5198%20-%20branches/BRANCH_6-3/dist-tools&In-Reply-To=%3C20080617125926.403B96B010F%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000187.html">
+   <LINK REL="Next"  HREF="000189.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5198 - branches/BRANCH_6-3/dist-tools</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5198%20-%20branches/BRANCH_6-3/dist-tools&In-Reply-To=%3C20080617125926.403B96B010F%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5198 - branches/BRANCH_6-3/dist-tools">svn at mknod.org
+       </A><BR>
+    <I>Tue Jun 17 14:59:26 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000187.html">[fetchmail-svn] r5197 - in branches/BRANCH_6-3: . website	website/host-scripts
+</A></li>
+        <LI>Next message: <A HREF="000189.html">[fetchmail-svn] r5199 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#188">[ date ]</a>
+              <a href="thread.html#188">[ thread ]</a>
+              <a href="subject.html#188">[ subject ]</a>
+              <a href="author.html#188">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2008-06-17 07:59:26 -0500 (Tue, 17 Jun 2008)
+New Revision: 5198
+
+Added:
+   branches/BRANCH_6-3/dist-tools/send-security-announce.sh
+Log:
+Add security announcer script.
+
+Added: branches/BRANCH_6-3/dist-tools/send-security-announce.sh
+===================================================================
+--- branches/BRANCH_6-3/dist-tools/send-security-announce.sh	2008-06-17 12:43:54 UTC (rev 5197)
++++ branches/BRANCH_6-3/dist-tools/send-security-announce.sh	2008-06-17 12:59:26 UTC (rev 5198)
+@@ -0,0 +1,16 @@
++test &quot;$SEND_ANNOUNCEMENTS&quot; = doit || { echo &quot;read the source, luke! -&gt; $0&quot; ; cat &quot;$0&quot; ; exit 1 ; }
++
++ANN=fetchmail-SA-2008-02
++FILE=$HOME/mywork/fetchmail/BRANCH_6-3/$ANN.txt
++test -r $FILE || { echo &quot;Cannot find $FILE.&quot; ; exit 1 ; }
++CVE=$(sed -n '/^CVE Name:/ { s/^.*:[ 	]*//p;q; }' $FILE)
++SUBJECT=&quot;fetchmail security announcement $ANN ($CVE)&quot;
++
++nail -r <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">ma+nomail at dt.e-technik.uni-dortmund.de</A> -s &quot;$SUBJECT&quot; &lt;$FILE \
++    <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">vulnwatch at vulnwatch.org</A>
++
++nail -r <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">ma+bt at dt.e-technik.uni-dortmund.de</A> -s &quot;$SUBJECT&quot; &lt;$FILE \
++    <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">bugtraq at securityfocus.com</A>
++
++nail -r <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">matthias.andree at gmx.de</A> -s &quot;$SUBJECT&quot; &lt;$FILE \
++    <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">vendor-sec at lst.de</A> <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-announce at lists.berlios.de</A>
+
+
+Property changes on: branches/BRANCH_6-3/dist-tools/send-security-announce.sh
+___________________________________________________________________
+Name: svn:executable
+   + *
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000187.html">[fetchmail-svn] r5197 - in branches/BRANCH_6-3: . website	website/host-scripts
+</A></li>
+	<LI>Next message: <A HREF="000189.html">[fetchmail-svn] r5199 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#188">[ date ]</a>
+              <a href="thread.html#188">[ thread ]</a>
+              <a href="subject.html#188">[ subject ]</a>
+              <a href="author.html#188">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

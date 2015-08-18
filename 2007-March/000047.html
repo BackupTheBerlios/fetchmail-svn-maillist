@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5054 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2007-March/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5054%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20070317200041.4941C218057%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000046.html">
+   <LINK REL="Next"  HREF="000048.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5054 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5054%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20070317200041.4941C218057%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5054 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Sat Mar 17 21:00:41 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000046.html">[fetchmail-svn] r5053 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000048.html">[fetchmail-svn] r5055 - in branches/BRANCH_6-3: . po
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#47">[ date ]</a>
+              <a href="thread.html#47">[ thread ]</a>
+              <a href="subject.html#47">[ subject ]</a>
+              <a href="author.html#47">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2007-03-17 15:00:39 -0500 (Sat, 17 Mar 2007)
+New Revision: 5054
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/fetchmail-FAQ.html
+   branches/BRANCH_6-3/fetchmail.man
+Log:
+Document SOCKS_CONF environment variable.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2007-03-17 11:40:53 UTC (rev 5053)
++++ branches/BRANCH_6-3/NEWS	2007-03-17 20:00:39 UTC (rev 5054)
+@@ -57,7 +57,8 @@
+ # DOCUMENTATION:
+ * Extend --mda documentation, discourage use of qmail-inject.
+   Based on a patch by Rob MacGregor.
+-* Document SOCKS is not run-time configurable. Patch by Rob MacGregor.
++* Document SOCKS configuration facility (SOCKS_CONF environment variable).
++  Thanks to Jochen Hayek, Michael Shuldman and Rob MacGregor.
+ * Use envelope option in multidrop example. Patch by Rob MacGregor.
+ * Document expected Received: line format when parsing for envelope addressees.
+ * Stripped option documentation from sample.rcfile, since this is bound to go
+
+Modified: branches/BRANCH_6-3/fetchmail-FAQ.html
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-FAQ.html	2007-03-17 11:40:53 UTC (rev 5053)
++++ branches/BRANCH_6-3/fetchmail-FAQ.html	2007-03-17 20:00:39 UTC (rev 5054)
+@@ -1971,15 +1971,23 @@
+ methods&lt;/h1&gt;
+ &lt;h2&gt;&lt;a id=&quot;K1&quot; name=&quot;K1&quot;&gt;K1. How can I use fetchmail with SOCKS?&lt;/a&gt;&lt;/h2&gt;
+ 
+-&lt;p&gt;Giuseppe Guerini added a --with-socks option that supports
+-linking with socks library. If you specify the value of this option
+-as &quot;yes&quot;, the configure script will try to find the Rconnect
++&lt;p&gt;Giuseppe Guerini added a &lt;kbd&gt;--with-socks&lt;/kbd&gt; compile-time option
++that supports linking with socks library. If you specify the value of
++this option as &quot;yes&quot;, the configure script will try to find the Rconnect
+ library and set the makefile up to link it. You can also specify a
+ directory containing the Rconnect library.&lt;/p&gt;
+ 
+-&lt;p&gt;Alan Schmitt has added a similar --with-socks5 option that may
++&lt;p&gt;Alan Schmitt has added a similar &lt;kbd&gt;--with-socks5&lt;/kbd&gt; option that may
+ work better if you have a recent version of the SOCKS library.&lt;/p&gt;
+ 
++&lt;p&gt;In either case, fetchmail has no direct configuration hooks, but you
++can specify which socks configuration file the library should read by
++means of the &lt;tt&gt;SOCKS_CONF&lt;/tt&gt; environment variable. In order to
++bypass the SOCKS proxy altogether, you could run (adding your usual
++options to the end of this line):&lt;/p&gt;
++
++&lt;pre&gt;env SOCKS_CONF=/dev/null fetchmail&lt;/pre&gt;
++
+ &lt;h2&gt;&lt;a id=&quot;K2&quot; name=&quot;K2&quot;&gt;K2. How can I use fetchmail with IPv6 and
+ IPsec?&lt;/a&gt;&lt;/h2&gt;
+ 
+
+Modified: branches/BRANCH_6-3/fetchmail.man
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.man	2007-03-17 11:40:53 UTC (rev 5053)
++++ branches/BRANCH_6-3/fetchmail.man	2007-03-17 20:00:39 UTC (rev 5054)
+@@ -2461,15 +2461,22 @@
+ \fIonly\fR match against the aka list.
+ 
+ .SH SOCKS
+-Support for socks4/5 is a 
+-.B compile time 
+-configuration option.  Once
+-compiled in fetchmail will always use the socks libraries and
+-configuration on your system.  There are no configuration
+-options internal to fetchmail to control this behaviour, and the socks 
+-and socks5 libraries provide no documented interfaces that fetchmail 
+-could use to achieve run-time configurability.
++Support for socks4/5 is a \fBcompile time\fP configuration option. Once
++compiled in, fetchmail will always use the socks libraries and
++configuration on your system, there are no run-time switches in
++fetchmail - but you can still configure SOCKS: you can specify which
++SOCKS configuration file is used in the \fBSOCKS_CONF\fP environment
++variable.
+ 
++For instance, if you wanted to bypass the SOCKS proxy altogether and
++have fetchmail connect directly, you could just pass
++SOCKS_CONF=/dev/null in the environment, for example (add your usual
++command line options - if any - to the end of this line):
++
++.nf
++env SOCKS_CONF=/dev/null fetchmail
++.fi
++
+ .SH EXIT CODES
+ To facilitate the use of
+ .I fetchmail
+@@ -2569,6 +2576,7 @@
+ lock file to help prevent concurrent runs (root mode, systems without /var/run).
+ 
+ .SH ENVIRONMENT
++.B FETCHMAILUSER:
+ If the FETCHMAILUSER variable is set, it is used as the name of the
+ calling user (default local name) for purposes such as mailing error
+ notifications.  Otherwise, if either the LOGNAME or USER variable is
+@@ -2578,6 +2586,7 @@
+ session ID (this elaborate logic is designed to handle the case of
+ multiple names per userid gracefully).
+ 
++.B FETCHMAILHOME:
+ If the environment variable FETCHMAILHOME is set to a valid and
+ existing directory name, fetchmail will read $FETCHMAILHOME/fetchmailrc
+ (the dot is missing in this case), $FETCHMAILHOME/.fetchids and
+@@ -2585,11 +2594,17 @@
+ directory.  The .netrc file is always looked for in the the invoking
+ user's home directory regardless of FETCHMAILHOME's setting.
+ 
++.B HOME_ETC:
+ If the HOME_ETC variable is set, fetchmail will read
+ $HOME_ETC/.fetchmailrc instead of ~/.fetchmailrc.
+ 
+-If HOME_ETC and FETCHMAILHOME are set, HOME_ETC will be ignored.
++If HOME_ETC and FETCHMAILHOME are both set, HOME_ETC will be ignored.
+ 
++.B SOCKS_CONF:
++(only if SOCKS support is compiled in) this variable is used by the
++socks library to find out which configuration file it should read. Set
++this to /dev/null to bypass the SOCKS proxy.
++
+ .SH SIGNALS
+ If a
+ .I fetchmail
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000046.html">[fetchmail-svn] r5053 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000048.html">[fetchmail-svn] r5055 - in branches/BRANCH_6-3: . po
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#47">[ date ]</a>
+              <a href="thread.html#47">[ thread ]</a>
+              <a href="subject.html#47">[ subject ]</a>
+              <a href="author.html#47">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

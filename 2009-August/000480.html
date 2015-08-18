@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5421 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-August/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5421%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090818122544.DDF6D21F46E%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000479.html">
+   <LINK REL="Next"  HREF="000481.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5421 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5421%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090818122544.DDF6D21F46E%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5421 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Tue Aug 18 14:25:44 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000479.html">[fetchmail-svn] r5420 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000481.html">[fetchmail-svn] r5422 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#480">[ date ]</a>
+              <a href="thread.html#480">[ thread ]</a>
+              <a href="subject.html#480">[ subject ]</a>
+              <a href="author.html#480">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-08-18 07:25:44 -0500 (Tue, 18 Aug 2009)
+New Revision: 5421
+
+Modified:
+   branches/BRANCH_6-3/t.validate-xhtml
+Log:
+Ignore fetchmail-man.html; it's not XHTML.
+
+Modified: branches/BRANCH_6-3/t.validate-xhtml
+===================================================================
+--- branches/BRANCH_6-3/t.validate-xhtml	2009-08-18 12:14:37 UTC (rev 5420)
++++ branches/BRANCH_6-3/t.validate-xhtml	2009-08-18 12:25:44 UTC (rev 5421)
+@@ -2,11 +2,12 @@
+ 
+ # This test script validates all *.html files as XHTML.
+ 
+-set -e
++set -eu
+ e=0
+ fail=
+ IFS=$(printf '\n\t')
+ for i in &quot;${srcdir}&quot;/*.html ; do
++    case &quot;$i&quot; in */fetchmail-man.html) continue ;; esac
+     xmllint --postvalid --noout &quot;$i&quot; || { e=1 ; fail=&quot;$i${fail:+&quot; &quot;}$fail&quot; ; }
+ done
+ if [ $e != 0 ] ; then
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000479.html">[fetchmail-svn] r5420 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000481.html">[fetchmail-svn] r5422 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#480">[ date ]</a>
+              <a href="thread.html#480">[ thread ]</a>
+              <a href="subject.html#480">[ subject ]</a>
+              <a href="author.html#480">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

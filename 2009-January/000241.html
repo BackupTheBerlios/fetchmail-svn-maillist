@@ -1,0 +1,390 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5261 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-January/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5261%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090114015615.BF16721EFF9%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000240.html">
+   <LINK REL="Next"  HREF="000242.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5261 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5261%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090114015615.BF16721EFF9%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5261 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Wed Jan 14 02:56:15 CET 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000240.html">[fetchmail-svn] r5260 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000242.html">[fetchmail-svn] r5262 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#241">[ date ]</a>
+              <a href="thread.html#241">[ thread ]</a>
+              <a href="subject.html#241">[ subject ]</a>
+              <a href="author.html#241">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-01-13 19:56:15 -0600 (Tue, 13 Jan 2009)
+New Revision: 5261
+
+Modified:
+   branches/BRANCH_6-3/env.c
+   branches/BRANCH_6-3/fetchmail.c
+   branches/BRANCH_6-3/imap.c
+   branches/BRANCH_6-3/interface.c
+   branches/BRANCH_6-3/pop3.c
+   branches/BRANCH_6-3/rcfile_l.l
+   branches/BRANCH_6-3/rcfile_y.y
+   branches/BRANCH_6-3/report.c
+   branches/BRANCH_6-3/rfc2047e.c
+   branches/BRANCH_6-3/rfc822.c
+   branches/BRANCH_6-3/sink.c
+   branches/BRANCH_6-3/socket.c
+   branches/BRANCH_6-3/transact.c
+   branches/BRANCH_6-3/uid.c
+   branches/BRANCH_6-3/unmime.c
+Log:
+Fix a few compiler warnings around implicit conversion or extra &quot;;&quot;.
+
+Modified: branches/BRANCH_6-3/env.c
+===================================================================
+--- branches/BRANCH_6-3/env.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/env.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -292,7 +292,7 @@
+ 
+     if (needed &gt; vbufs) {
+ 	vbufs = needed;
+-	vbuf = xrealloc(vbuf, vbufs);
++	vbuf = (char *)xrealloc(vbuf, vbufs);
+     }
+ 
+     tp = vbuf;
+
+Modified: branches/BRANCH_6-3/fetchmail.c
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/fetchmail.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -532,7 +532,7 @@
+ 		const char* password_prompt = GT_(&quot;Enter password for %s@%s: &quot;);
+ 		size_t pplen = strlen(password_prompt) + strlen(ctl-&gt;remotename) + strlen(ctl-&gt;server.pollname) + 1;
+ 
+-		tmpbuf = xmalloc(pplen);
++		tmpbuf = (char *)xmalloc(pplen);
+ 		snprintf(tmpbuf, pplen, password_prompt,
+ 			ctl-&gt;remotename, ctl-&gt;server.pollname);
+ 		ctl-&gt;password = xstrdup((char *)fm_getpassword(tmpbuf));
+
+Modified: branches/BRANCH_6-3/imap.c
+===================================================================
+--- branches/BRANCH_6-3/imap.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/imap.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -617,8 +617,8 @@
+ 	size_t rnl, pwl;
+ 	rnl = 2 * strlen(ctl-&gt;remotename) + 1;
+ 	pwl = 2 * strlen(ctl-&gt;password) + 1;
+-	remotename = xmalloc(rnl);
+-	password = xmalloc(pwl);
++	remotename = (char *)xmalloc(rnl);
++	password = (char *)xmalloc(pwl);
+ 
+ 	imap_canonicalize(remotename, ctl-&gt;remotename, rnl);
+ 	imap_canonicalize(password, ctl-&gt;password, pwl);
+
+Modified: branches/BRANCH_6-3/interface.c
+===================================================================
+--- branches/BRANCH_6-3/interface.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/interface.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -418,7 +418,7 @@
+ 	    GT_(&quot;get_ifinfo: sysctl (iflist estimate) failed&quot;));
+ 	exit(1);
+     }
+-    if ((buf = malloc(needed)) == NULL)
++    if ((buf = (char *)malloc(needed)) == NULL)
+     {
+  	report(stderr, 
+ 	    GT_(&quot;get_ifinfo: malloc failed&quot;));
+@@ -736,5 +736,5 @@
+ #endif /* CAN_MONITOR */
+ 
+ #ifndef have_interface_init
+-void interface_init(void) {};
++void interface_init(void) {}
+ #endif
+
+Modified: branches/BRANCH_6-3/pop3.c
+===================================================================
+--- branches/BRANCH_6-3/pop3.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/pop3.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -687,7 +687,7 @@
+ 	}
+ 
+ 	/* copy timestamp and password into digestion buffer */
+-	msg = xmalloc((end-start+1) + strlen(ctl-&gt;password) + 1);
++	msg = (char *)xmalloc((end-start+1) + strlen(ctl-&gt;password) + 1);
+ 	strcpy(msg,start);
+ 	strcat(msg,ctl-&gt;password);
+ 	strcpy(ctl-&gt;digest, MD5Digest((unsigned char *)msg));
+
+Modified: branches/BRANCH_6-3/rcfile_l.l
+===================================================================
+--- branches/BRANCH_6-3/rcfile_l.l	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/rcfile_l.l	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -55,7 +55,7 @@
+ 
+ 			if ((size_t)yyleng + 1 &gt; ins) {
+ 			    ins = yyleng + 1;
+-			    in = xrealloc(in, ins);
++			    in = (char *)xrealloc(in, ins);
+ 			}
+ 			memcpy(in, yytext, yyleng);
+ 			in[yyleng] = '\0';
+
+Modified: branches/BRANCH_6-3/rcfile_y.y
+===================================================================
+--- branches/BRANCH_6-3/rcfile_y.y	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/rcfile_y.y	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -573,7 +573,7 @@
+ 	strcmp(file, &quot;-&quot;) == 0 ||	/* stdin/stdout */
+ 	!dir[0])			/* we don't HAVE_GETCWD */
+ 	return xstrdup (file);
+-    newfile = xmalloc (strlen (dir) + 1 + strlen (file) + 1);
++    newfile = (char *)xmalloc (strlen (dir) + 1 + strlen (file) + 1);
+     if (dir[strlen(dir) - 1] != '/')
+ 	sprintf (newfile, &quot;%s/%s&quot;, dir, file);
+     else
+
+Modified: branches/BRANCH_6-3/report.c
+===================================================================
+--- branches/BRANCH_6-3/report.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/report.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -211,13 +211,13 @@
+     {
+ 	partial_message_size_used = 0;
+ 	partial_message_size = 2048;
+-	partial_message = MALLOC (partial_message_size);
++	partial_message = (char *)MALLOC (partial_message_size);
+     }
+     else
+ 	if (partial_message_size - partial_message_size_used &lt; 1024)
+ 	{
+ 	    partial_message_size += 2048;
+-	    partial_message = REALLOC (partial_message, partial_message_size);
++	    partial_message = (char *)REALLOC (partial_message, partial_message_size);
+ 	}
+ }
+ 
+@@ -258,7 +258,7 @@
+ 	}
+ 
+ 	partial_message_size += 2048;
+-	partial_message = REALLOC (partial_message, partial_message_size);
++	partial_message = (char *)REALLOC (partial_message, partial_message_size);
+     }
+ #else
+     for ( ; ; )
+@@ -326,7 +326,7 @@
+ 	}
+ 
+ 	partial_message_size += 2048;
+-	partial_message = REALLOC (partial_message, partial_message_size);
++	partial_message = (char *)REALLOC (partial_message, partial_message_size);
+     }
+ #else
+     for ( ; ; )
+
+Modified: branches/BRANCH_6-3/rfc2047e.c
+===================================================================
+--- branches/BRANCH_6-3/rfc2047e.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/rfc2047e.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -52,7 +52,7 @@
+ 	l += strlen(words[i]) * 3; /* worst case, encode everything */
+     l += (strlen(charset) + 8) * (l/60 + 1);
+ 
+-    out = v = xmalloc(l);
++    out = v = (char *)xmalloc(l);
+     t = stpcpy(out, &quot;=?&quot;);
+     t = stpcpy(t, charset);
+     t = stpcpy(t, &quot;?Q?&quot;);
+@@ -110,14 +110,14 @@
+     r = string;
+     while (*r) {
+ 	l = strcspn(r, ws);
+-	words[idx] = xmalloc(l+1);
++	words[idx] = (char *)xmalloc(l+1);
+ 	memcpy(words[idx], r, l);
+ 	words[idx][l] = '\0';
+ 	idx++;
+ 	r += l;
+ 	if (!*r) break;
+ 	l = strspn(r, ws);
+-	words[idx] = xmalloc(l+1);
++	words[idx] = (char *)xmalloc(l+1);
+ 	memcpy(words[idx], r, l);
+ 	words[idx][l] = '\0';
+ 	idx++;
+@@ -157,7 +157,7 @@
+     /* phase 3: limit lengths */
+     minlen = strlen(charset) + 7;
+     /* allocate ample memory */
+-    out = xmalloc(l + (l / (72 - minlen) + 1) * (minlen + 2) + 1);
++    out = (char *)xmalloc(l + (l / (72 - minlen) + 1) * (minlen + 2) + 1);
+ 
+     if (count)
+ 	t = stpcpy(out, words[0]);
+
+Modified: branches/BRANCH_6-3/rfc822.c
+===================================================================
+--- branches/BRANCH_6-3/rfc822.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/rfc822.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -79,7 +79,7 @@
+     for (cp = buf; *cp; cp++)
+ 	if (*cp == ',' || isspace((unsigned char)*cp))
+ 	    addresscount++;
+-    buf = xrealloc(buf, strlen(buf) + addresscount * (strlen(host) + 1) + 1);
++    buf = (char *)xrealloc(buf, strlen(buf) + addresscount * (strlen(host) + 1) + 1);
+ #endif /* MAIN */
+ 
+     /*
+
+Modified: branches/BRANCH_6-3/sink.c
+===================================================================
+--- branches/BRANCH_6-3/sink.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/sink.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -1155,7 +1155,7 @@
+ 	    sp += 2;
+ 	}
+ 
+-	after = xmalloc(length + 1);
++	after = (char *)xmalloc(length + 1);
+ 
+ 	/* copy mda source string to after, while expanding %[sTF] */
+ 	for (dp = after, sp = before; (*dp = *sp); dp++, sp++) {
+
+Modified: branches/BRANCH_6-3/socket.c
+===================================================================
+--- branches/BRANCH_6-3/socket.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/socket.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -468,7 +468,7 @@
+ 			 * We don't have a string to pass through
+ 			 * the strchr at this point yet */
+ 			newline = NULL;
+-		} else if ((newline = memchr(bp, '\n', n)) != NULL)
++		} else if ((newline = (char *)memchr(bp, '\n', n)) != NULL)
+ 			n = newline - bp + 1;
+ 		/* Matthias Andree: SSL_read can return 0, in that case
+ 		 * we must call SSL_get_error to figure if there was
+@@ -638,7 +638,7 @@
+ 				
+ 				/* RFC 2595 section 2.4: find a matching name
+ 				 * first find a match among alternative names */
+-				gens = X509_get_ext_d2i(x509_cert, NID_subject_alt_name, NULL, NULL);
++				gens = (STACK_OF(GENERAL_NAME) *)X509_get_ext_d2i(x509_cert, NID_subject_alt_name, NULL, NULL);
+ 				if (gens) {
+ 					int i, r;
+ 					for (i = 0, r = sk_GENERAL_NAME_num(gens); i &lt; r; ++i) {
+
+Modified: branches/BRANCH_6-3/transact.c
+===================================================================
+--- branches/BRANCH_6-3/transact.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/transact.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -446,7 +446,7 @@
+     {
+ 	char *line, *rline;
+ 
+-	line = xmalloc(sizeof(buf));
++	line = (char *)xmalloc(sizeof(buf));
+ 	linelen = 0;
+ 	line[0] = '\0';
+ 	do {
+@@ -807,7 +807,7 @@
+ 	if (!msgblk.headers)
+ 	{
+ 	    oldlen = linelen;
+-	    msgblk.headers = xmalloc(oldlen + 1);
++	    msgblk.headers = (char *)xmalloc(oldlen + 1);
+ 	    (void) memcpy(msgblk.headers, line, linelen);
+ 	    msgblk.headers[oldlen] = '\0';
+ 	    free(line);
+@@ -1300,7 +1300,7 @@
+ 		if (idp-&gt;val.status.mark == XMIT_RCPTBAD)
+ 		    errlen += strlen(idp-&gt;id) + 2;
+ 
+-	    errmsg = xmalloc(errlen + 3);
++	    errmsg = (char *)xmalloc(errlen + 3);
+ 	    strcpy(errmsg, errhd);
+ 	    for (idp = msgblk.recipients; idp; idp = idp-&gt;next)
+ 		if (idp-&gt;val.status.mark == XMIT_RCPTBAD)
+
+Modified: branches/BRANCH_6-3/uid.c
+===================================================================
+--- branches/BRANCH_6-3/uid.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/uid.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -619,7 +619,7 @@
+ 	if (unlink(idfile) &amp;&amp; errno != ENOENT)
+ 	    report(stderr, GT_(&quot;Error deleting %s: %s\n&quot;), idfile, strerror(errno));
+     } else {
+-	char *newnam = xmalloc(strlen(idfile) + 2);
++	char *newnam = (char *)xmalloc(strlen(idfile) + 2);
+ 	strcpy(newnam, idfile);
+ 	strcat(newnam, &quot;_&quot;);
+ 	if (outlevel &gt;= O_DEBUG)
+
+Modified: branches/BRANCH_6-3/unmime.c
+===================================================================
+--- branches/BRANCH_6-3/unmime.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/unmime.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -434,7 +434,7 @@
+ 	    if (p == NULL) p = NxtHdr + strlen(NxtHdr);
+ 
+ 	    xfree(CntType);
+-	    CntType = xmalloc(p-NxtHdr+1);
++	    CntType = (char *)xmalloc(p-NxtHdr+1);
+ 	    strlcpy(CntType, NxtHdr, p-NxtHdr+1);
+ 	    HdrsFound++;
+ 	}
+@@ -707,7 +707,7 @@
+     buf_p++;
+     if ((unsigned)(buf_p - buffer) == BufSize) {
+        /* Buffer is full! Get more room. */
+-       buffer = xrealloc(buffer, BufSize+BUFSIZE_INCREMENT);
++       buffer = (char *)xrealloc(buffer, BufSize+BUFSIZE_INCREMENT);
+        buf_p = buffer + BufSize;
+        BufSize += BUFSIZE_INCREMENT;
+     }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000240.html">[fetchmail-svn] r5260 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000242.html">[fetchmail-svn] r5262 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#241">[ date ]</a>
+              <a href="thread.html#241">[ thread ]</a>
+              <a href="subject.html#241">[ subject ]</a>
+              <a href="author.html#241">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

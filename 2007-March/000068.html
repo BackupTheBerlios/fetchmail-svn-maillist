@@ -1,0 +1,205 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5075 - branches/BRANCH_6-3/po
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2007-March/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5075%20-%20branches/BRANCH_6-3/po&In-Reply-To=%3C20070329233336.A3F03218096%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000067.html">
+   <LINK REL="Next"  HREF="000069.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5075 - branches/BRANCH_6-3/po</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5075%20-%20branches/BRANCH_6-3/po&In-Reply-To=%3C20070329233336.A3F03218096%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5075 - branches/BRANCH_6-3/po">svn at mknod.org
+       </A><BR>
+    <I>Fri Mar 30 01:33:36 CEST 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000067.html">[fetchmail-svn] r5074 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000069.html">[fetchmail-svn] r5077 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#68">[ date ]</a>
+              <a href="thread.html#68">[ thread ]</a>
+              <a href="subject.html#68">[ subject ]</a>
+              <a href="author.html#68">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2007-03-29 18:33:36 -0500 (Thu, 29 Mar 2007)
+New Revision: 5075
+
+Modified:
+   branches/BRANCH_6-3/po/de.po
+Log:
+Update.
+
+Modified: branches/BRANCH_6-3/po/de.po
+===================================================================
+--- branches/BRANCH_6-3/po/de.po	2007-03-29 23:30:20 UTC (rev 5074)
++++ branches/BRANCH_6-3/po/de.po	2007-03-29 23:33:36 UTC (rev 5075)
+@@ -8,7 +8,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: de\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-03-18 02:13+0100\n&quot;
++&quot;POT-Creation-Date: 2007-03-30 01:31+0200\n&quot;
+ &quot;PO-Revision-Date: 2006-11-27 04:32+0100\n&quot;
+ &quot;Last-Translator: Matthias Andree &lt;matthias.andree&gt;\n&quot;
+ &quot;Language-Team: Deutsch &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">de at li.org</A>&gt;\n&quot;
+@@ -2652,69 +2652,74 @@
+ msgid &quot;%cMTP error: %s\n&quot;
+ msgstr &quot;%cMTP-Fehler: %s\n&quot;
+ 
+-#: sink.c:752
+-msgid &quot;BSMTP file open or preamble write failed\n&quot;
+-msgstr &quot;BSMTP Datei &#246;ffnen oder Pr&#228;ambel schreiben fehlgeschlagen\n&quot;
++#: sink.c:712
++#, c-format
++msgid &quot;BSMTP file open failed: %s\n&quot;
++msgstr &quot;&#214;ffnen der BSMTP-Datei fehlgeschlagen: %s\n&quot;
+ 
+-#: sink.c:966
++#: sink.c:758
++msgid &quot;BSMTP preamble write failed.\n&quot;
++msgstr &quot;Schreiben der BSMTP-Pr&#228;ambel fehlgeschlagen.\n&quot;
++
++#: sink.c:972
+ #, c-format
+ msgid &quot;%cMTP listener doesn't like recipient address `%s'\n&quot;
+ msgstr &quot;%cMTP-Server mag Empf&#228;ngeradresse &#8222;%s&#8220; nicht\n&quot;
+ 
+-#: sink.c:973
++#: sink.c:979
+ #, c-format
+ msgid &quot;%cMTP listener doesn't really like recipient address `%s'\n&quot;
+ msgstr &quot;%cMTP-Server mag Empf&#228;nger-Adresse &#8222;%s&#8220; irgendwie nicht\n&quot;
+ 
+-#: sink.c:1019
++#: sink.c:1025
+ msgid &quot;no address matches; no postmaster set.\n&quot;
+ msgstr &quot;keine Adressen stimmten &#252;berein; kein Postmaster gesetzt.\n&quot;
+ 
+-#: sink.c:1031
++#: sink.c:1037
+ #, c-format
+ msgid &quot;can't even send to %s!\n&quot;
+ msgstr &quot;kann noch nicht einmal an %s senden!\n&quot;
+ 
+-#: sink.c:1037
++#: sink.c:1043
+ #, c-format
+ msgid &quot;no address matches; forwarding to %s.\n&quot;
+ msgstr &quot;keine Adressen stimmten &#252;berein; leite an %s weiter.\n&quot;
+ 
+-#: sink.c:1193
++#: sink.c:1199
+ #, c-format
+ msgid &quot;about to deliver with: %s\n&quot;
+ msgstr &quot;dabei, auszuliefern mit: %s\n&quot;
+ 
+-#: sink.c:1217
++#: sink.c:1223
+ msgid &quot;MDA open failed\n&quot;
+ msgstr &quot;MDA &#214;ffnen fehlgeschlagen\n&quot;
+ 
+-#: sink.c:1254
++#: sink.c:1260
+ #, c-format
+ msgid &quot;%cMTP connect to %s failed\n&quot;
+ msgstr &quot;%cMTP-Verbindung zu %s fehlgeschlagen\n&quot;
+ 
+-#: sink.c:1278
++#: sink.c:1284
+ #, c-format
+ msgid &quot;can't raise the listener; falling back to %s&quot;
+ msgstr &quot;kann SMTP/LMTP-Server nicht erreichen; falle zur&#252;ck auf %s&quot;
+ 
+-#: sink.c:1340
++#: sink.c:1346
+ #, c-format
+ msgid &quot;Error writing to MDA: %s\n&quot;
+ msgstr &quot;Fehler beim Transport an den MDA: %s\n&quot;
+ 
+-#: sink.c:1343
++#: sink.c:1349
+ #, c-format
+ msgid &quot;MDA died of signal %d\n&quot;
+ msgstr &quot;MDA starb durch Signal %d\n&quot;
+ 
+-#: sink.c:1346
++#: sink.c:1352
+ #, c-format
+ msgid &quot;MDA returned nonzero status %d\n&quot;
+ msgstr &quot;MDA gab Status %d ungleich Null zur&#252;ck\n&quot;
+ 
+-#: sink.c:1349
++#: sink.c:1355
+ #, c-format
+ msgid &quot;&quot;
+ &quot;Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n&quot;
+@@ -2722,24 +2727,24 @@
+ &quot;Merkw&#252;rdig: MDA pclose gab %d und errno %d/%s zur&#252;ck, kann das nicht &quot;
+ &quot;behandeln bei %s:%d\n&quot;
+ 
+-#: sink.c:1371
++#: sink.c:1377
+ msgid &quot;Message termination or close of BSMTP file failed\n&quot;
+ msgstr &quot;Nachrichtenbeendigung oder Schlie&#223;en der BSMTP-Datei fehlgeschlagen\n&quot;
+ 
+-#: sink.c:1393
++#: sink.c:1399
+ msgid &quot;SMTP listener refused delivery\n&quot;
+ msgstr &quot;SMTP-Server verweigerte Auslieferung\n&quot;
+ 
+-#: sink.c:1423
++#: sink.c:1429
+ msgid &quot;LMTP delivery error on EOM\n&quot;
+ msgstr &quot;LMTP-Auslieferungsfehler bei EOM\n&quot;
+ 
+-#: sink.c:1426
++#: sink.c:1432
+ #, c-format
+ msgid &quot;Unexpected non-503 response to LMTP EOM: %s\n&quot;
+ msgstr &quot;Unerwartete Nicht-503-Erwiderung auf LMTP EOM: %s\n&quot;
+ 
+-#: sink.c:1581
++#: sink.c:1587
+ msgid &quot;&quot;
+ &quot;-- \n&quot;
+ &quot;The Fetchmail Daemon&quot;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000067.html">[fetchmail-svn] r5074 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000069.html">[fetchmail-svn] r5077 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#68">[ date ]</a>
+              <a href="thread.html#68">[ thread ]</a>
+              <a href="subject.html#68">[ subject ]</a>
+              <a href="author.html#68">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,209 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5381 - branches/BRANCH_MAPI
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-July/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5381%20-%20branches/BRANCH_MAPI&In-Reply-To=%3C20090706204045.86EDF21F32F%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000440.html">
+   <LINK REL="Next"  HREF="000442.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5381 - branches/BRANCH_MAPI</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5381%20-%20branches/BRANCH_MAPI&In-Reply-To=%3C20090706204045.86EDF21F32F%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5381 - branches/BRANCH_MAPI">svn at mknod.org
+       </A><BR>
+    <I>Mon Jul  6 22:40:45 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000440.html">[fetchmail-svn] r5379 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000442.html">[fetchmail-svn] r5382 - branches/BRANCH_MAPI
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#441">[ date ]</a>
+              <a href="thread.html#441">[ thread ]</a>
+              <a href="subject.html#441">[ subject ]</a>
+              <a href="author.html#441">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-07-06 15:40:43 -0500 (Mon, 06 Jul 2009)
+New Revision: 5381
+
+Modified:
+   branches/BRANCH_MAPI/mapi.c
+Log:
+Add Mojmir Svoboda's patch to make mapi.c compile.
+
+Modified: branches/BRANCH_MAPI/mapi.c
+===================================================================
+--- branches/BRANCH_MAPI/mapi.c	2009-07-06 19:10:13 UTC (rev 5380)
++++ branches/BRANCH_MAPI/mapi.c	2009-07-06 20:40:43 UTC (rev 5381)
+@@ -58,6 +58,7 @@
+ static int      mapi_initialized = FALSE;
+ static char     mapi_profdb[PATH_MAX];	/* mapi profiles databse */
+ static char     password[128];
++static struct mapi_session * s_mapi_session = NULL;
+ 
+ 
+ static DATA_BLOB mapi_buffer;
+@@ -199,52 +200,47 @@
+ }
+ 
+ 
+-static char *get_base64_attachment(TALLOC_CTX * mem_ctx, mapi_object_t obj_attach, const uint32_t size, char **magic)
++static char * get_base64_attachment (TALLOC_CTX * mem_ctx, mapi_object_t obj_attach, const uint32_t size, char ** magic)
+ {
+     enum MAPISTATUS retval;
+-    const char     *tmp;
+     mapi_object_t   obj_stream;
+-    uint32_t        stream_size;
+-    uint32_t        read_size;
+-    unsigned char   buf[MSGBUFSIZE];
+-    uint32_t        max_read_size = MSGBUFSIZE;
+-    DATA_BLOB       data;
+-    magic_t         cookie = NULL;
++    DATA_BLOB	    data;
++    size_t	    data_pos = 0;
++    uint16_t	    read_bytes = 0;
++    magic_t	    cookie = NULL;
+ 
+-    retval = OpenStream(&amp;obj_attach, PR_ATTACH_DATA_BIN, 0, &amp;obj_stream);
+-    if (retval != MAPI_E_SUCCESS)
+-	return false;
++    if (outlevel &gt;= O_MONITOR) report(stdout, GT_(&quot;MAPI&gt; mapi_get_base64_attachment(): size=%u\n&quot;), size);
+ 
+-    retval = GetStreamSize(&amp;obj_stream, &amp;data.length);
+-    if (retval != MAPI_E_SUCCESS)
+-	return false;
++    if (OpenStream(&amp;obj_attach, PR_ATTACH_DATA_BIN, 0, &amp;obj_stream) != MAPI_E_SUCCESS)
++	return NULL;
++    if (GetStreamSize(&amp;obj_stream, &amp;data.length) != MAPI_E_SUCCESS)
++	return NULL;
++
+     data.data = talloc_size(mem_ctx, data.length);
++    if (outlevel &gt;= O_MONITOR) report(stdout, GT_(&quot;MAPI&gt; allocated size=%u\n&quot;), data.length);
+ 
+-    read_size = size;
+-    for (stream_size = 0; stream_size &lt; data.length &amp;&amp; read_size != 0; stream_size += MSGBUFSIZE) {
+-	retval = ReadStream(&amp;obj_stream, buf, max_read_size, &amp;read_size);
+-	if (retval != MAPI_E_SUCCESS)
++    do {
++	if (ReadStream(&amp;obj_stream, data.data + data_pos, MSGBUFSIZE, &amp;read_bytes) != MAPI_E_SUCCESS)
+ 	    return NULL;
+-	memcpy(data.data, buf, read_size);
+-    }
++	data_pos += read_bytes;
++    } while (data_pos &lt; data.length);
+ 
++    if (outlevel &gt;= O_MONITOR) report(stdout, GT_(&quot;MAPI&gt; All data received: data_pos=%u\n&quot;), data_pos);
++
+     cookie = magic_open(MAGIC_MIME);
+     if (cookie == NULL) {
+-	printf(&quot;%s\n&quot;, magic_error(cookie));
++	report(stderr, GT_(&quot;MAPI&gt; mime error: %s\n&quot;), magic_error(cookie));
+ 	return NULL;
+     }
+     if (magic_load(cookie, NULL) == -1) {
+-	printf(&quot;%s\n&quot;, magic_error(cookie));
++	report(stderr, GT_(&quot;MAPI&gt; mime error: %s\n&quot;), magic_error(cookie));
++	magic_close(cookie);
+ 	return NULL;
+     }
+-    tmp = magic_buffer(cookie, (void *) data.data, data.length);
+-    *magic = talloc_strdup(mem_ctx, tmp);
++    *magic = talloc_strdup(mem_ctx, magic_buffer(cookie, data.data, data.length));
+     magic_close(cookie);
+ 
+-    /*
+-     * convert attachment to base64 
+-     */
+-    return (ldb_base64_encode(mem_ctx, (const char *) data.data, data.length));
++    return ldb_base64_encode(mem_ctx, data.data, data.length);
+ }
+ 
+ 
+@@ -394,7 +390,6 @@
+ static int mapi_init(const char *folder)
+ {
+     enum MAPISTATUS retval;
+-    struct mapi_session *session = NULL;
+     mapi_object_t   obj_tis;
+     mapi_id_t       id_folder;
+     struct SPropTagArray *SPropTagArray = NULL;
+@@ -426,20 +421,19 @@
+ 	return GetLastError();
+     }
+ 
+-    retval = MapiLogonEx(&amp;session, profname, password);
++    retval = MapiLogonEx(&amp;s_mapi_session, profname, password);
+     if (retval != MAPI_E_SUCCESS) {
+ 	report(stderr, GT_(&quot;MAPI: MapiLogonEx failed\n&quot;));
+ 	mapi_clean();
+ 	return GetLastError();
+     }
+-    mapi_profile = session-&gt;profile;
++    mapi_profile = s_mapi_session-&gt;profile;
+ 
+-
+     /*-----------------------------------------------------------------------------
+      *  Open the default message store
+      *-----------------------------------------------------------------------------*/
+     mapi_object_init(&amp;mapi_obj_store);
+-    retval = OpenMsgStore(&amp;mapi_obj_store);
++    retval = OpenMsgStore(s_mapi_session, &amp;mapi_obj_store);
+     if (retval != MAPI_E_SUCCESS) {
+ 	report(stderr, GT_(&quot;MAPI: OpenMsgStore failed\n&quot;));
+ 	mapi_clean();
+@@ -664,7 +658,7 @@
+  */
+ static uint32_t callback(struct SRowSet *rowset, void *private)
+ {
+-    // TODO: check if running in daemon mode
++    /* TODO: check if running in daemon mode*/
+     int             daemon_mode = FALSE;
+ 
+     if (!daemon_mode) {
+@@ -1109,7 +1103,7 @@
+     ulFlags = TABLE_START;
+     do {
+ 	count += 0x2;
+-	retval = GetGALTable(SPropTagArray, &amp;SRowSet, count, ulFlags);
++	retval = GetGALTable(s_mapi_session, SPropTagArray, &amp;SRowSet, count, ulFlags);
+ 	if (retval != MAPI_E_SUCCESS) {
+ 	    MapiWrite(lenp, &quot;\n&quot;);
+ 	    report(stderr, &quot;MAPI: Error when translate display name into smtp address\n&quot;);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000440.html">[fetchmail-svn] r5379 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000442.html">[fetchmail-svn] r5382 - branches/BRANCH_MAPI
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#441">[ date ]</a>
+              <a href="thread.html#441">[ thread ]</a>
+              <a href="subject.html#441">[ subject ]</a>
+              <a href="author.html#441">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

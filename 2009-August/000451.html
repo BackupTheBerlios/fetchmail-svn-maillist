@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5391 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-August/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5391%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090805165049.E2C1D21F140%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000450.html">
+   <LINK REL="Next"  HREF="000452.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5391 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5391%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090805165049.E2C1D21F140%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5391 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Wed Aug  5 18:50:49 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000450.html">[fetchmail-svn] r5390 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000452.html">[fetchmail-svn] r5392 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#451">[ date ]</a>
+              <a href="thread.html#451">[ thread ]</a>
+              <a href="subject.html#451">[ subject ]</a>
+              <a href="author.html#451">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-08-05 11:50:48 -0500 (Wed, 05 Aug 2009)
+New Revision: 5391
+
+Modified:
+   branches/BRANCH_6-3/sdump.c
+Log:
+Extend documentation, add license.
+
+Modified: branches/BRANCH_6-3/sdump.c
+===================================================================
+--- branches/BRANCH_6-3/sdump.c	2009-08-05 16:27:47 UTC (rev 5390)
++++ branches/BRANCH_6-3/sdump.c	2009-08-05 16:50:48 UTC (rev 5391)
+@@ -1,7 +1,12 @@
+-/* sdump.c -- library to allocate a printable version of a string */
++/* sdump.c -- library to allocate and format a printable version of a
++ * string with embedded NUL */
++
+ /** \file sdump.c
+  * \author Matthias Andree
+  * \date 2009
++ *
++ * This file is available under the GNU Lesser General Public License
++ * v2.1 or any later version of the GNU LGPL.
+  */
+ 
+ #include &lt;ctype.h&gt;  /* for isprint() */
+@@ -14,7 +19,9 @@
+ /** sdump converts a byte string \a in of size \a len into a printable
+  * string and returns a pointer to the memory region.
+  * \returns a pointer to a xmalloc()ed string that the caller must
+- * free() after use. This function causes program abort on failure. */
++ * free() after use. This function causes program abort on failure
++ * through xmalloc. xmalloc is a function that calls malloc() and aborts
++ * the program if malloc() returned NULL i. e. failure. */
+ char *sdump(const char *in, size_t len)
+ {
+     size_t outlen = 0, i;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000450.html">[fetchmail-svn] r5390 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000452.html">[fetchmail-svn] r5392 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#451">[ date ]</a>
+              <a href="thread.html#451">[ thread ]</a>
+              <a href="subject.html#451">[ subject ]</a>
+              <a href="author.html#451">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

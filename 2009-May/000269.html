@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5281 - in branches/BRANCH_6-3: . m4
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-May/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5281%20-%20in%20branches/BRANCH_6-3%3A%20.%20m4&In-Reply-To=%3C20090504190139.3466C21F058%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000268.html">
+   <LINK REL="Next"  HREF="000270.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5281 - in branches/BRANCH_6-3: . m4</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5281%20-%20in%20branches/BRANCH_6-3%3A%20.%20m4&In-Reply-To=%3C20090504190139.3466C21F058%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5281 - in branches/BRANCH_6-3: . m4">svn at mknod.org
+       </A><BR>
+    <I>Mon May  4 21:01:39 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000268.html">[fetchmail-svn] r5280 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000270.html">[fetchmail-svn] r5282 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#269">[ date ]</a>
+              <a href="thread.html#269">[ thread ]</a>
+              <a href="subject.html#269">[ subject ]</a>
+              <a href="author.html#269">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-05-04 14:01:39 -0500 (Mon, 04 May 2009)
+New Revision: 5281
+
+Removed:
+   branches/BRANCH_6-3/m4/Makefile.am
+Modified:
+   branches/BRANCH_6-3/Makefile.am
+Log:
+Inline m4/ EXTRA_DIST (was SUBDIRS=m4...)
+
+Recursive Makefiles are expensive and inconcise, so move the
+m4/Makefile.am contents here and remove m4 from SUBDIRS.
+
+Modified: branches/BRANCH_6-3/Makefile.am
+===================================================================
+--- branches/BRANCH_6-3/Makefile.am	2009-05-04 19:01:27 UTC (rev 5280)
++++ branches/BRANCH_6-3/Makefile.am	2009-05-04 19:01:39 UTC (rev 5281)
+@@ -1,6 +1,6 @@
+ # Makefile for fetchmail
+ 
+-SUBDIRS=		m4 po
++SUBDIRS=		po
+ AUTOMAKE_OPTIONS=	1.8 foreign no-dist-gzip dist-bzip2
+ 
+ AM_CPPFLAGS=		-I$(srcdir)/libesmtp
+@@ -143,6 +143,34 @@
+ EXTRA_DIST+=	$(DISTDOCS) fetchmail.spec $(distdirs) ucs/README.svn \
+ 		trio/CHANGES trio/README \
+ 		strlcpy.3 bighand.png \
++		m4/codeset.m4 \
++		m4/gettext.m4 \
++		m4/glibc21.m4 \
++		m4/iconv.m4 \
++		m4/intdiv0.m4 \
++		m4/intmax.m4 \
++		m4/inttypes-pri.m4 \
++		m4/inttypes.m4 \
++		m4/inttypes_h.m4 \
++		m4/isc-posix.m4 \
++		m4/lcmessage.m4 \
++		m4/lib-ld.m4 \
++		m4/lib-link.m4 \
++		m4/lib-prefix.m4 \
++		m4/longdouble.m4 \
++		m4/longlong.m4 \
++		m4/nls.m4 \
++		m4/po.m4 \
++		m4/printf-posix.m4 \
++		m4/progtest.m4 \
++		m4/signed.m4 \
++		m4/size_max.m4 \
++		m4/stdint_h.m4 \
++		m4/uintmax_t.m4 \
++		m4/ulonglong.m4 \
++		m4/wchar_t.m4 \
++		m4/wint_t.m4 \
++		m4/xsize.m4 \
+ 		m4-local/ac-archive-license.txt \
+ 		m4-local/ac_ma_search_package.m4 \
+ 		m4-local/autobuild.m4 \
+
+Deleted: branches/BRANCH_6-3/m4/Makefile.am
+===================================================================
+--- branches/BRANCH_6-3/m4/Makefile.am	2009-05-04 19:01:27 UTC (rev 5280)
++++ branches/BRANCH_6-3/m4/Makefile.am	2009-05-04 19:01:39 UTC (rev 5281)
+@@ -1,29 +0,0 @@
+-EXTRA_DIST= \
+-codeset.m4 \
+-gettext.m4 \
+-glibc21.m4 \
+-iconv.m4 \
+-intdiv0.m4 \
+-intmax.m4 \
+-inttypes-pri.m4 \
+-inttypes.m4 \
+-inttypes_h.m4 \
+-isc-posix.m4 \
+-lcmessage.m4 \
+-lib-ld.m4 \
+-lib-link.m4 \
+-lib-prefix.m4 \
+-longdouble.m4 \
+-longlong.m4 \
+-nls.m4 \
+-po.m4 \
+-printf-posix.m4 \
+-progtest.m4 \
+-signed.m4 \
+-size_max.m4 \
+-stdint_h.m4 \
+-uintmax_t.m4 \
+-ulonglong.m4 \
+-wchar_t.m4 \
+-wint_t.m4 \
+-xsize.m4
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000268.html">[fetchmail-svn] r5280 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000270.html">[fetchmail-svn] r5282 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#269">[ date ]</a>
+              <a href="thread.html#269">[ thread ]</a>
+              <a href="subject.html#269">[ subject ]</a>
+              <a href="author.html#269">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

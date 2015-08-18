@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5306 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-May/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5306%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090524111036.02C8721EF4D%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000319.html">
+   <LINK REL="Next"  HREF="000321.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5306 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5306%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090524111036.02C8721EF4D%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5306 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Sun May 24 13:10:35 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000319.html">[fetchmail-svn] r5305 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000321.html">[fetchmail-svn] r5307 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#320">[ date ]</a>
+              <a href="thread.html#320">[ thread ]</a>
+              <a href="subject.html#320">[ subject ]</a>
+              <a href="author.html#320">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-05-24 06:10:35 -0500 (Sun, 24 May 2009)
+New Revision: 5306
+
+Modified:
+   branches/BRANCH_6-3/README.packaging
+Log:
+Reformat.
+
+Modified: branches/BRANCH_6-3/README.packaging
+===================================================================
+--- branches/BRANCH_6-3/README.packaging	2009-05-24 11:07:44 UTC (rev 5305)
++++ branches/BRANCH_6-3/README.packaging	2009-05-24 11:10:35 UTC (rev 5306)
+@@ -8,40 +8,39 @@
+ 
+ The bullet points below mention a few useful hints for package(r)s:
+ 
+-- Please use OpenSSL and add --with-ssl to the ./configure command line.
+-  SSL/TLS support hasn't been enabled in the default build in order to
+-  maintain fetchmail 6.2 compatibility as far as possible.
+-  SSL/TLS however is a highly recommended compilation option.
++- Please use OpenSSL and add --with-ssl to the ./configure command line.  
++  SSL/TLS support hasn't been enabled in the default build in order to maintain 
++  fetchmail 6.2 compatibility as far as possible.  SSL/TLS however is a highly 
++  recommended compilation option.
+ 
+-- Fetchmail now uses automake and supports all common automake targets
+-  and overrides such as &quot;make install-strip&quot; or &quot;DESTDIR=...&quot; for staging
+-  areas.
++- Fetchmail now uses automake and supports all common automake targets and 
++  overrides such as &quot;make install-strip&quot; or &quot;DESTDIR=...&quot; for staging areas.
+ 
+-- The fetchmailconf script has been renamed to fetchmailconf.py,
+-  automake will install it into Python's top-level site-packages directory
+-  and byte-compile it (so you need to package or remove
+-  fetchmailconf.pyc and fetchmailconf.pyo as well).
++- The fetchmailconf script has been renamed to fetchmailconf.py, automake will 
++  install it into Python's top-level site-packages directory and byte-compile 
++  it (so you need to package or remove fetchmailconf.pyc and fetchmailconf.pyo 
++  as well).
+ 
+-- If you want to defeat Python byte-code compilation and would rather
+-  like to install fetchmailconf.py yourself, you can add
++- If you want to defeat Python byte-code compilation and would rather like to 
++  install fetchmailconf.py yourself, you can add
+ 
+       PYTHON=:
+ 
+-  to the ./configure command or pass this in the environment.
+-  This pretends that no Python interpreter were installed.
++  to the ./configure command or pass this in the environment.  This pretends 
++  that no Python interpreter were installed.
+ 
+-- The Makefile generates a two-line &quot;fetchmailconf&quot; /bin/sh wrapper
+-  script that executes the actual fetchmailconf.py with the python
+-  installation found at configuration time, so that users can still type
+-  &quot;fetchmailconf&quot; rather than &quot;python fetchmailconf&quot;.
++- The Makefile generates a two-line &quot;fetchmailconf&quot; /bin/sh wrapper script that 
++  executes the actual fetchmailconf.py with the python installation found at 
++  configuration time, so that users can still type &quot;fetchmailconf&quot; rather than 
++  &quot;python fetchmailconf&quot;.
+ 
+-- Note that fetchmailconf.py supports a few command line arguments, so
+-  if you use local wrapper scripts, be sure they pass on their own
+-  arguments properly. Remember to use &quot;$@&quot; (with quotes) in shells, not $*.
++- Note that fetchmailconf.py supports a few command line arguments, so if you 
++  use local wrapper scripts, be sure they pass on their own arguments properly. 
++  Remember to use &quot;$@&quot; (with quotes) in shells, not $*.
+ 
+-- There is now a dummy fetchmailconf manual page which will just source
+-  (roff's &quot;.so&quot; command) the fetchmail manual page for now. You can of
+-  course keep your symlinks in place and ignore this dummy. IF you
+-  install the dummy and compress your man pages, be sure to test &quot;man
+-  fetchmailconf&quot;, on some systems, you'll need to adjust the &quot;.so&quot;
+-  command to point to the compressed version.
++- There is now a dummy fetchmailconf manual page which will just source (roff's 
++  &quot;.so&quot; command) the fetchmail manual page for now. You can of course keep your 
++  symlinks in place and ignore this dummy. IF you install the dummy and 
++  compress your man pages, be sure to test &quot;man fetchmailconf&quot;, on some 
++  systems, you'll need to adjust the &quot;.so&quot; command to point to the compressed 
++  version.
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000319.html">[fetchmail-svn] r5305 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000321.html">[fetchmail-svn] r5307 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#320">[ date ]</a>
+              <a href="thread.html#320">[ thread ]</a>
+              <a href="subject.html#320">[ subject ]</a>
+              <a href="author.html#320">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

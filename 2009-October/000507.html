@@ -1,0 +1,200 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5449 - in branches/BRANCH_6-3: . website
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-October/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5449%20-%20in%20branches/BRANCH_6-3%3A%20.%20website&In-Reply-To=%3C20091030022518.B899021F096%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000506.html">
+   <LINK REL="Next"  HREF="000508.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5449 - in branches/BRANCH_6-3: . website</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5449%20-%20in%20branches/BRANCH_6-3%3A%20.%20website&In-Reply-To=%3C20091030022518.B899021F096%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5449 - in branches/BRANCH_6-3: . website">svn at mknod.org
+       </A><BR>
+    <I>Fri Oct 30 03:25:18 CET 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000506.html">[fetchmail-svn] r5448 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000508.html">[fetchmail-svn] r5450 - tags
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#507">[ date ]</a>
+              <a href="thread.html#507">[ thread ]</a>
+              <a href="subject.html#507">[ subject ]</a>
+              <a href="author.html#507">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-10-29 21:25:18 -0500 (Thu, 29 Oct 2009)
+New Revision: 5449
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/RELEASE-INSTRUCTIONS
+   branches/BRANCH_6-3/RELEASEVERSIONS
+   branches/BRANCH_6-3/configure.ac
+   branches/BRANCH_6-3/fetchmail.man
+   branches/BRANCH_6-3/website/index.html
+Log:
+Release 6.3.13.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-10-30 02:24:27 UTC (rev 5448)
++++ branches/BRANCH_6-3/NEWS	2009-10-30 02:25:18 UTC (rev 5449)
+@@ -47,7 +47,7 @@
+ 
+ --------------------------------------------------------------------------------
+ 
+-fetchmail 6.3.13 (not yet released):
++fetchmail 6.3.13 (released 2009-10-30, 25333 LoC):
+ 
+ # REGRESSION FIXES
+ * The multiline SMTP error fix in release 6.3.12 caused fetchmail to lose
+@@ -85,6 +85,7 @@
+   BerliOS Bug #16134.
+ * Report multiline SMTP errors properly, reported by Earl Chew; fixes Debian Bug
+   #569899, reported by Akihiro Terasaki.
++  Note: This fix introduced a regression, fixed in 6.3.13.
+ * Replace control characters in SMTP replies by '?'.
+ * Fetchmailconf: Fix descriptions for smtpaddress and smtpname options;
+   smtpaddress is for RCPT TO, not MAIL FROM. Found by Gerard Seibert.
+
+Modified: branches/BRANCH_6-3/RELEASE-INSTRUCTIONS
+===================================================================
+--- branches/BRANCH_6-3/RELEASE-INSTRUCTIONS	2009-10-30 02:24:27 UTC (rev 5448)
++++ branches/BRANCH_6-3/RELEASE-INSTRUCTIONS	2009-10-30 02:25:18 UTC (rev 5449)
+@@ -1,10 +1,21 @@
+ To do a release:
+ 
+-1. Torture-test the code against the list of test sites usuing the
+-   torturetest script.
++- Update NEWS, configure.ac, and fetchmail.man, with release number &amp; date.
+ 
+-2. Check in all files to RCS with an appropriate release label.
++- Run &quot;perl dist-tools/makerelease&quot; - this entails &quot;make distcheck&quot; and
++  RPM building.
+ 
+-3. Run &quot;makerelease&quot; is root.  Read the script to see what it generates.
++- Commit all files to the VCS.
+ 
+-4. Run &quot;upload&quot; as yourself.
++- Tag the new release and record the revision in RELEASE-VERSIONS
++
++- Upload sig and tarball to ~/public_html/fetchmail/ and edit index.html
++  for the new files, NEWS, and the new release and last update.
++
++- Upload sig and tarball to ftp.berlios.de:/incoming/ and release
++
++- Upload lsm and tarball to Ibiblio
++
++- Update the fetchmail website for version and last update, commit, and upload.
++
++- Announce on freshmeat.
+
+Modified: branches/BRANCH_6-3/RELEASEVERSIONS
+===================================================================
+--- branches/BRANCH_6-3/RELEASEVERSIONS	2009-10-30 02:24:27 UTC (rev 5448)
++++ branches/BRANCH_6-3/RELEASEVERSIONS	2009-10-30 02:25:18 UTC (rev 5449)
+@@ -1,6 +1,7 @@
+ SVN release - fetchmail release    - release manager
+ ====================================================
+               SORT_BY (release)
++r5450       - 6.3.13   (2009-10-30) - MA
+ r5439       - 6.3.12   (2009-10-05) - MA
+ r5398       - 6.3.11   (2009-08-06) - MA
+ r5373       - 6.3.10   (2009-07-02) - MA
+
+Modified: branches/BRANCH_6-3/configure.ac
+===================================================================
+--- branches/BRANCH_6-3/configure.ac	2009-10-30 02:24:27 UTC (rev 5448)
++++ branches/BRANCH_6-3/configure.ac	2009-10-30 02:25:18 UTC (rev 5449)
+@@ -9,7 +9,7 @@
+ dnl
+ 
+ dnl XXX - if bumping version here, check fetchmail.man, too!
+-AC_INIT([fetchmail],[6.3.12],[<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-users at lists.berlios.de</A>])
++AC_INIT([fetchmail],[6.3.13],[<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-users at lists.berlios.de</A>])
+ AC_CONFIG_SRCDIR([fetchmail.h])
+ AC_CONFIG_HEADERS([config.h])
+ AC_CONFIG_LIBOBJ_DIR([.])
+
+Modified: branches/BRANCH_6-3/fetchmail.man
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.man	2009-10-30 02:24:27 UTC (rev 5448)
++++ branches/BRANCH_6-3/fetchmail.man	2009-10-30 02:25:18 UTC (rev 5449)
+@@ -10,7 +10,7 @@
+ .\&quot; Load www macros to process .URL requests, this requires groff:
+ .mso www.tmac
+ .\&quot;
+-.TH fetchmail 1 &quot;fetchmail 6.3.12&quot; &quot;fetchmail&quot; &quot;fetchmail reference manual&quot;
++.TH fetchmail 1 &quot;fetchmail 6.3.13&quot; &quot;fetchmail&quot; &quot;fetchmail reference manual&quot;
+ 
+ .SH NAME
+ fetchmail \- fetch mail from a POP, IMAP, ETRN, or ODMR-capable server
+
+Modified: branches/BRANCH_6-3/website/index.html
+===================================================================
+--- branches/BRANCH_6-3/website/index.html	2009-10-30 02:24:27 UTC (rev 5448)
++++ branches/BRANCH_6-3/website/index.html	2009-10-30 02:25:18 UTC (rev 5449)
+@@ -15,7 +15,7 @@
+ &lt;table width=&quot;100%&quot; cellpadding=&quot;0&quot; summary=&quot;Canned page header&quot;&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Fetchmail&lt;/td&gt;
+-&lt;td align=&quot;right&quot;&gt;&lt;!-- update date --&gt;2009-10-05&lt;/td&gt;
++&lt;td align=&quot;right&quot;&gt;&lt;!-- update date --&gt;2009-10-30&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/table&gt;
+ &lt;/div&gt;
+@@ -41,11 +41,11 @@
+ &lt;h1&gt;Fetchmail&lt;/h1&gt;
+ 
+ &lt;div style=&quot;background-color:#c0ffc0;color:#000000;&quot;&gt;
+-    &lt;h1&gt;NEWS: FETCHMAIL 6.3.12 RELEASE&lt;/h1&gt;
+-    &lt;p&gt;On 2009-10-05, &lt;a
+-	href=&quot;<A HREF="http://developer.berlios.de/project/showfiles.php?group_id=1824">http://developer.berlios.de/project/showfiles.php?group_id=1824</A>&quot;&gt;fetchmail-6.3.12
++    &lt;h1&gt;NEWS: FETCHMAIL 6.3.13 RELEASE&lt;/h1&gt;
++    &lt;p&gt;On 2009-10-30, &lt;a
++	href=&quot;<A HREF="http://developer.berlios.de/project/showfiles.php?group_id=1824">http://developer.berlios.de/project/showfiles.php?group_id=1824</A>&quot;&gt;fetchmail-6.3.13
+ 	has been released (this is the download link),&lt;/a&gt; fixing a
+-    regression in the 6.3.11 security fix and updating translations.
++    regression in the 6.3.12 SMTP multiline fix and updating translations.
+     It is a recommended update for all users. &lt;a
+ 	href=&quot;<A HREF="http://developer.berlios.de/project/shownotes.php?group_id=1824&amp;amp;release_id=16791">http://developer.berlios.de/project/shownotes.php?group_id=1824&amp;release_id=16791</A>&quot;&gt;Click
+ 	here to see the change details.&lt;/a&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000506.html">[fetchmail-svn] r5448 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000508.html">[fetchmail-svn] r5450 - tags
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#507">[ date ]</a>
+              <a href="thread.html#507">[ thread ]</a>
+              <a href="subject.html#507">[ subject ]</a>
+              <a href="author.html#507">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

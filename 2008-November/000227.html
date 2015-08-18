@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5247 - in branches/BRANCH_6-3: . website
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2008-November/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5247%20-%20in%20branches/BRANCH_6-3%3A%20.%20website&In-Reply-To=%3C20081116153345.714C721F0B4%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000226.html">
+   <LINK REL="Next"  HREF="000228.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5247 - in branches/BRANCH_6-3: . website</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5247%20-%20in%20branches/BRANCH_6-3%3A%20.%20website&In-Reply-To=%3C20081116153345.714C721F0B4%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5247 - in branches/BRANCH_6-3: . website">svn at mknod.org
+       </A><BR>
+    <I>Sun Nov 16 16:33:45 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000226.html">[fetchmail-svn] r5246 - tags
+</A></li>
+        <LI>Next message: <A HREF="000228.html">[fetchmail-svn] r5248 - tags
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#227">[ date ]</a>
+              <a href="thread.html#227">[ thread ]</a>
+              <a href="subject.html#227">[ subject ]</a>
+              <a href="author.html#227">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2008-11-16 09:33:45 -0600 (Sun, 16 Nov 2008)
+New Revision: 5247
+
+Modified:
+   branches/BRANCH_6-3/RELEASEVERSIONS
+   branches/BRANCH_6-3/website/index.html
+Log:
+Move 6.3.9 tag.
+
+Modified: branches/BRANCH_6-3/RELEASEVERSIONS
+===================================================================
+--- branches/BRANCH_6-3/RELEASEVERSIONS	2008-11-16 15:33:13 UTC (rev 5246)
++++ branches/BRANCH_6-3/RELEASEVERSIONS	2008-11-16 15:33:45 UTC (rev 5247)
+@@ -1,6 +1,6 @@
+ SVN release - fetchmail release
+ ================================
+-r5244       - 6.3.9 (2008-11-16)
++r5248       - 6.3.9 (2008-11-16)
+ r5093       - 6.3.8 (2007-04-06)
+ r5037       - 6.3.7 (2007-02-18)
+ r5010       - 6.3.6 (2007-01-05)
+
+Modified: branches/BRANCH_6-3/website/index.html
+===================================================================
+--- branches/BRANCH_6-3/website/index.html	2008-11-16 15:33:13 UTC (rev 5246)
++++ branches/BRANCH_6-3/website/index.html	2008-11-16 15:33:45 UTC (rev 5247)
+@@ -14,7 +14,7 @@
+ &lt;table width=&quot;100%&quot; cellpadding=&quot;0&quot; summary=&quot;Canned page header&quot;&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Fetchmail&lt;/td&gt;
+-&lt;td align=&quot;right&quot;&gt;&lt;!-- update date --&gt;2008-06-24&lt;/td&gt;
++&lt;td align=&quot;right&quot;&gt;&lt;!-- update date --&gt;2008-11-16&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/table&gt;
+ &lt;/div&gt;
+@@ -44,43 +44,27 @@
+ href=&quot;<A HREF="http://mandree.home.pages.de/fetchmail/">http://mandree.home.pages.de/fetchmail/</A>&quot;&gt;fetchmail-6.3.6-rc5 was released&lt;/a&gt;, fixing several annoying bugs. &lt;a href=&quot;<A HREF="http://mandree.home.pages.de/fetchmail/NEWS-6.3.6-rc5.txt">http://mandree.home.pages.de/fetchmail/NEWS-6.3.6-rc5.txt</A>&quot;&gt;Click here for details.&lt;/a&gt;&lt;/p&gt; &lt;/div&gt;
+ --&gt;
+ 
+-&lt;div style=&quot;background-color:#80ff80;color:#000000;&quot;&gt;
+-&lt;h1&gt;ADDITIONAL FIXES FOR FETCHMAIL 6.3.8 RELEASE&lt;/h1&gt;
+-&lt;p&gt;New 2008-06-24 After the fetchmail-6.3.8 release described below,
+-two denial-of-service vulnerabilities were discovered, but a new release
+-is not yet available. Release candidates may be found at &lt;a
+-    href=&quot;<A HREF="http://home.pages.de/~mandree/fetchmail/">http://home.pages.de/~mandree/fetchmail/</A>&quot;&gt;<A HREF="http://home.pages.de/~mandree/fetchmail/&lt;/a">http://home.pages.de/~mandree/fetchmail/&lt;/a</A>&gt;.
+-Official patches for 6.3.8 are parts of the security
+-announcements (you may need to use patch -l to apply them, this should
+-tell patch to ignore whitespace differences):&lt;/p&gt;
+-&lt;ul&gt;
+-    &lt;li&gt;&lt;strong&gt;(REVISED)&lt;/strong&gt; &lt;a href=&quot;#cve-2008-2711&quot;&gt;CVE-2008-2711:&lt;/a&gt; &lt;a
+-	href=&quot;fetchmail-SA-2008-01.txt&quot;&gt;fetchmail-SA-2008-01.txt&lt;/a&gt;&lt;/li&gt;
+-    &lt;li&gt;&lt;a href=&quot;#cve-2007-4565&quot;&gt;CVE-2007-4565:&lt;/a&gt; &lt;a
+-	href=&quot;fetchmail-SA-2007-02.txt&quot;&gt;fetchmail-SA-2007-02.txt&lt;/a&gt;&lt;/li&gt;
+-&lt;/ul&gt;
+-&lt;p&gt;On 2008-04-24, the &lt;a href=&quot;fetchmail-FAQ.html&quot;&gt;FAQ&lt;/a&gt; &lt;a
+-    href=&quot;fetchmail-FAQ.pdf&quot;&gt;(also available as PDF)&lt;/a&gt;, &lt;a
+-    href=&quot;fetchmail-man.html&quot;&gt;manual page&lt;/a&gt; and &lt;a href=&quot;fetchmail-SA-2007-01.txt&quot;&gt;fetchmail-SA-2007-01.txt (CVE-2007-1558)&lt;/a&gt; have been revised.&lt;/p&gt;
+-&lt;p&gt;On 2007-04-06, &lt;a href=&quot;<A HREF="http://developer.berlios.de/project/showfiles.php?group_id=1824">http://developer.berlios.de/project/showfiles.php?group_id=1824</A>&quot;&gt;fetchmail-6.3.8
+-was released (this is the download link),&lt;/a&gt; fixing up further fallout from the CVE-2006-5867 fix, fixing long-standing bugs, and strengthening the APOP client in response to CVE-2007-1558. &lt;a href=&quot;<A HREF="https://developer.berlios.de/project/shownotes.php?group_id=1824&amp;amp;release_id=12610">https://developer.berlios.de/project/shownotes.php?group_id=1824&amp;release_id=12610</A>&quot;&gt;Click here to see the change details.&lt;/a&gt;&lt;/p&gt; &lt;/div&gt;
++&lt;div style=&quot;background-color:#c0ffc0;color:#000000;&quot;&gt;
++    &lt;h1&gt;NEWS: FETCHMAIL 6.3.9 RELEASE&lt;/h1&gt;
++    &lt;p&gt;On 2008-11-16, &lt;a href=&quot;<A HREF="http://developer.berlios.de/project/showfiles.php?group_id=1824">http://developer.berlios.de/project/showfiles.php?group_id=1824</A>&quot;&gt;fetchmail-6.3.9
++	has been released (this is the download link),&lt;/a&gt; fixing
++    various bugs, among them the security issues CVE-2008-2711 and
++    CVE-2007-4565, and two critical bugs. &lt;a
++	href=&quot;<A HREF="https://developer.berlios.de/project/shownotes.php?group_id=1824&amp;amp;release_id=12610">https://developer.berlios.de/project/shownotes.php?group_id=1824&amp;release_id=12610</A>&quot;&gt;Click
++	here to see the change details.&lt;/a&gt;
++    &lt;/p&gt;
++&lt;/div&gt;
+ 
+-&lt;div style=&quot;background-color:#ffff80;color:#000000;font-size:80%;&quot;&gt; &lt;h1&gt;FETCHMAIL 6.2.X UNSUPPORTED AND VULNERABLE - USE 6.3.X INSTEAD&lt;/h1&gt;
+-&lt;p&gt;fetchmail 6.2.X versions are susceptible to CVE-2006-5867 and CVE-2007-1558 and should be replaced by the most current 6.3.X version. Support has been discontinued as of 2006-01-22.&lt;/p&gt;
+-
+ &lt;!--
+-&lt;p&gt;On 2006-01-22, fetchmail 6.2.X has reached end of its support life. No
+-further releases of 6.2.X versions will be made and no bug reports for 6.2.X
+-will be accepted unless the bug persists in the 6.3.X releases. Users are asked
+-to upgrade to the most current 6.3.X release; care was taken to keep 6.3.X as
+-compatible as possible with 6.2.X to ensure a smooth upgrade experience. See
+-above for 6.3.X release news.&lt;/p&gt;
++&lt;div style=&quot;background-color:#ffff80;color:#000000;font-size:80%;&quot;&gt;
++    &lt;h1&gt;FETCHMAIL 6.2.X UNSUPPORTED AND VULNERABLE - USE 6.3.X INSTEAD&lt;/h1&gt;
++    &lt;p&gt;fetchmail 6.2.X versions are susceptible to CVE-2006-5867 and CVE-2007-1558 and should be replaced by the most current 6.3.X version. Support has been discontinued as of 2006-01-22.&lt;/p&gt;
++&lt;/div&gt;
+ --&gt;
+ 
+-&lt;/div&gt;
+ 
+-&lt;div style=&quot;background-color:#ff8080;color:#000000;font-size:85%&quot;&gt; &lt;h1&gt;SECURITY ALERTS&lt;/h1&gt;
+-&lt;p&gt;&lt;strong&gt;NEW&lt;/strong&gt; &lt;a name=&quot;cve-2008-2711&quot; href=&quot;<A HREF="http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2008-2711">http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2008-2711</A>&quot;&gt;CVE-2008-2711:&lt;/a&gt; Fetchmail can &lt;a href=&quot;fetchmail-SA-2008-01.txt&quot;&gt;crash in verbose mode when logging long message headers.&lt;/a&gt; This bug will be fixed in release 6.3.9. For the nonce, use the &lt;a href=&quot;fetchmail-SA-2008-01.txt&quot;&gt;patch contained in the security announcement.&lt;/a&gt;&lt;/p&gt;
++&lt;div style=&quot;background-color:#ffe0c0;color:#000000;font-size:85%&quot;&gt; &lt;h1&gt;SECURITY ALERTS&lt;/h1&gt;
++&lt;p&gt;&lt;a name=&quot;cve-2008-2711&quot; href=&quot;<A HREF="http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2008-2711">http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2008-2711</A>&quot;&gt;CVE-2008-2711:&lt;/a&gt; Fetchmail can &lt;a href=&quot;fetchmail-SA-2008-01.txt&quot;&gt;crash in verbose mode when logging long message headers.&lt;/a&gt; This bug will be fixed in release 6.3.9. For the nonce, use the &lt;a href=&quot;fetchmail-SA-2008-01.txt&quot;&gt;patch contained in the security announcement.&lt;/a&gt;&lt;/p&gt;
+ &lt;p&gt;&lt;a name=&quot;cve-2007-4565&quot; href=&quot;<A HREF="http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2007-4565">http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2007-4565</A>&quot;&gt;CVE-2007-4565:&lt;/a&gt; Fetchmail can &lt;a href=&quot;fetchmail-SA-2007-02.txt&quot;&gt;crash when the SMTP server refuses a warning message generated by fetchmail.&lt;/a&gt; This bug was introduced in fetchmail 4.6.8 and will be fixed in release 6.3.9. For the nonce, use the &lt;a href=&quot;fetchmail-SA-2007-02.txt&quot;&gt;patch contained in this security announcement.&lt;/a&gt;&lt;/p&gt;
+ &lt;p&gt;&lt;a href=&quot;<A HREF="http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2007-1558">http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2007-1558</A>&quot;&gt;CVE-2007-1558:&lt;/a&gt; Fetchmail's APOP client was found to &lt;a href=&quot;fetchmail-SA-2007-01.txt&quot;&gt;validate APOP challenges insufficiently, making man-in-the-middle attacks on APOP secrets unnecessarily easier than need be.&lt;/a&gt; This bug was long-standing, fetchmail 6.3.8 validates the APOP challenge stricter.&lt;/p&gt;
+ &lt;p&gt;&lt;a href=&quot;<A HREF="http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2006-5974">http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2006-5974</A>&quot;&gt;CVE-2006-5974:&lt;/a&gt; Fetchmail was found to &lt;a href=&quot;fetchmail-SA-2006-03.txt&quot;&gt;crash when refusing a message that was bound to be delivered by an MDA.&lt;/a&gt; This bug was introduced into fetchmail 6.3.5 and fixed in 6.3.6.&lt;/p&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000226.html">[fetchmail-svn] r5246 - tags
+</A></li>
+	<LI>Next message: <A HREF="000228.html">[fetchmail-svn] r5248 - tags
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#227">[ date ]</a>
+              <a href="thread.html#227">[ thread ]</a>
+              <a href="subject.html#227">[ subject ]</a>
+              <a href="author.html#227">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

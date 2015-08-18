@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5433 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-September/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5433%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090923231114.16A5821F086%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000490.html">
+   <LINK REL="Next"  HREF="000492.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5433 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5433%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090923231114.16A5821F086%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5433 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Thu Sep 24 01:11:13 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000490.html">[fetchmail-svn] r5432 - in branches/BRANCH_6-3: . po
+</A></li>
+        <LI>Next message: <A HREF="000492.html">[fetchmail-svn] r5434 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#491">[ date ]</a>
+              <a href="thread.html#491">[ thread ]</a>
+              <a href="subject.html#491">[ subject ]</a>
+              <a href="author.html#491">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-09-23 18:11:12 -0500 (Wed, 23 Sep 2009)
+New Revision: 5433
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/fetchmailconf.py
+Log:
+Fetchmailconf: Fix descriptions for smtpaddress and smtpname options
+
+Smtpaddress is for RCPT TO, not MAIL FROM.  Found by Gerard Seibert.
+'Append to MAIL FROM line:' =&gt; 'Use domain on RCPT TO line:'
+'Set RCPT To address:' =&gt; 'Set fixed RCPT TO address:'
+
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-09-23 10:21:51 UTC (rev 5432)
++++ branches/BRANCH_6-3/NEWS	2009-09-23 23:11:12 UTC (rev 5433)
+@@ -69,6 +69,8 @@
+ * Report multiline SMTP errors properly, reported by Earl Chew; fixes Debian Bug
+   #569899, reported by Akihiro Terasaki.
+ * Replace control characters in SMTP replies by '?'.
++* Fetchmailconf: Fix descriptions for smtpaddress and smtpname options;
++  smtpaddress is for RCPT TO, not MAIL FROM. Found by Gerard Seibert.
+ 
+ # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
+ * [ca]    Catalan (Ernest Adrogu&#233; Calveras)
+
+Modified: branches/BRANCH_6-3/fetchmailconf.py
+===================================================================
+--- branches/BRANCH_6-3/fetchmailconf.py	2009-09-23 10:21:51 UTC (rev 5432)
++++ branches/BRANCH_6-3/fetchmailconf.py	2009-09-23 23:11:12 UTC (rev 5433)
+@@ -5,7 +5,7 @@
+ # Matthias Andree &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">matthias.andree at gmx.de</A>&gt;
+ # Requires Python with Tkinter, and the following OS-dependent services:
+ #	posix, posixpath, socket
+-version = &quot;1.55 $Revision$&quot;
++version = &quot;1.56 $Revision$&quot;
+ 
+ from Tkinter import *
+ from Dialog import *
+@@ -1689,9 +1689,9 @@
+ 	    Label(targwin, text=&quot;Domains to fetch from (ODMR/ETRN only)&quot;).pack(side=TOP)
+ 	    ListEdit(&quot;Domains:&quot;,
+ 		     self.user.fetchdomains, None, None, targwin, None)
+-	    LabeledEntry(targwin, 'Append to MAIL FROM line:',
++	    LabeledEntry(targwin, 'Use domain on RCPT TO line:',
+ 		     self.smtpaddress, '26').pack(side=TOP, fill=X)
+-	    LabeledEntry(targwin, 'Set RCPT To address:',
++	    LabeledEntry(targwin, 'Set fixed RCPT TO address:',
+ 		     self.smtpname, '26').pack(side=TOP, fill=X)
+ 	    LabeledEntry(targwin, 'Connection setup command:',
+ 		     self.preconnect, '26').pack(side=TOP, fill=X)
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000490.html">[fetchmail-svn] r5432 - in branches/BRANCH_6-3: . po
+</A></li>
+	<LI>Next message: <A HREF="000492.html">[fetchmail-svn] r5434 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#491">[ date ]</a>
+              <a href="thread.html#491">[ thread ]</a>
+              <a href="subject.html#491">[ subject ]</a>
+              <a href="author.html#491">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

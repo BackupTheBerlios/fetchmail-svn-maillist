@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5106 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2007-June/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5106%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20070610085136.A917221801C%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000096.html">
+   <LINK REL="Next"  HREF="000098.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5106 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5106%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20070610085136.A917221801C%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5106 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Sun Jun 10 10:51:36 CEST 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000096.html">[fetchmail-svn] r5105 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000098.html">[fetchmail-svn] r5107 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#97">[ date ]</a>
+              <a href="thread.html#97">[ thread ]</a>
+              <a href="subject.html#97">[ subject ]</a>
+              <a href="author.html#97">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2007-06-10 03:51:36 -0500 (Sun, 10 Jun 2007)
+New Revision: 5106
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/TODO.txt
+   branches/BRANCH_6-3/configure.ac
+Log:
+Check for dn_skipname() when checking res_search() to resolve ?\194?\181Clibc compile failures.
+This works by disabling the DNS alias detection feature,
+which is however deprecated anyways.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2007-06-10 08:22:29 UTC (rev 5105)
++++ branches/BRANCH_6-3/NEWS	2007-06-10 08:51:36 UTC (rev 5106)
+@@ -44,6 +44,15 @@
+ 
+ fetchmail 6.3.X (not yet released, may become .8.1 or .9):
+ 
++# FIXES:
++* The configure script will additionally check for 'dn_skipname', to fix build
++  failures with &#181;Clibc. The new check still recognizes the resolver libraries on
++  Ubuntu 7.04, openSUSE 10.2, Solaris 8, NetBSD 3.0 and FreeBSD 6.2.
++  Fixes Gentoo bug #134187.
++  NOTE: this is a bit of a hack, since we twist the HAVE_RES_SEARCH result, but
++  res_search() and dn_skipname() are only used together and scheduled for
++  removal in future versions, so this is probably fine.
++
+ # TRANSLATION UPDATES:
+ * Polish (Jakub Bogusz)
+ * Japanese (Takeshi Hamasaki)
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2007-06-10 08:22:29 UTC (rev 5105)
++++ branches/BRANCH_6-3/TODO.txt	2007-06-10 08:51:36 UTC (rev 5106)
+@@ -2,8 +2,6 @@
+ - mark fetchmail -vvv in the FAQ
+ - find a solution for the &quot;invalid header&quot; discards message problem
+   (escape headers and stuff reminder into body)
+-- use workaround for &#181;Clibc issue (extend configure.ac check)
+-  <A HREF="https://bugs.gentoo.org/show_bug.cgi?id=134187">https://bugs.gentoo.org/show_bug.cgi?id=134187</A>
+ - <A HREF="https://bugzilla.novell.com/show_bug.cgi?id=247233">https://bugzilla.novell.com/show_bug.cgi?id=247233</A>
+   (same as <A HREF="http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=421446">http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=421446</A>)
+   might be our fallback of setting sslproto to &quot;&quot;? But what triggers it?
+
+Modified: branches/BRANCH_6-3/configure.ac
+===================================================================
+--- branches/BRANCH_6-3/configure.ac	2007-06-10 08:22:29 UTC (rev 5105)
++++ branches/BRANCH_6-3/configure.ac	2007-06-10 08:51:36 UTC (rev 5106)
+@@ -195,10 +195,10 @@
+ #include &lt;resolv.h&gt;
+ #endif
+ extern int res_search();
+-]], [[res_search(0, 0, 0, 0, 0);]])],
++]], [[res_search(0, 0, 0, 0, 0); dn_skipname(0,0);]])],
+     [AC_MSG_RESULT([found])
+      AC_DEFINE(HAVE_RES_SEARCH, [1],
+-	       [Define to 1 if you have the 'res_search' function.])
++	       [Define to 1 if you have the 'res_search' and 'dn_skipname' functions.])
+      break], [AC_MSG_RESULT([not found])])
+      LIBS=$old_LIBS
+ done
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000096.html">[fetchmail-svn] r5105 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000098.html">[fetchmail-svn] r5107 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#97">[ date ]</a>
+              <a href="thread.html#97">[ thread ]</a>
+              <a href="subject.html#97">[ subject ]</a>
+              <a href="author.html#97">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5445 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-October/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5445%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20091028162423.A6AF321F095%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000502.html">
+   <LINK REL="Next"  HREF="000504.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5445 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5445%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20091028162423.A6AF321F095%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5445 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Wed Oct 28 17:24:23 CET 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000502.html">[fetchmail-svn] r5444 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000504.html">[fetchmail-svn] r5446 - in branches/BRANCH_6-3/dist-tools: . shipper
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#503">[ date ]</a>
+              <a href="thread.html#503">[ thread ]</a>
+              <a href="subject.html#503">[ subject ]</a>
+              <a href="author.html#503">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-10-28 11:24:23 -0500 (Wed, 28 Oct 2009)
+New Revision: 5445
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/smtp.c
+Log:
+Regression fix for multiline SMTP bugfix. Reported by Thomas Jarosch.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-10-21 07:21:08 UTC (rev 5444)
++++ branches/BRANCH_6-3/NEWS	2009-10-28 16:24:23 UTC (rev 5445)
+@@ -49,6 +49,12 @@
+ 
+ fetchmail 6.3.13 (not yet released):
+ 
++# REGRESSION FIXES
++* The multiline SMTP error fix in release 6.3.12 caused fetchmail to lose
++  message codes 400..599 and treat all of these as temporary error. This would
++  cause messages to be left on the server even if softbounce was turned off.
++  Reported by Thomas Jarosch.
++
+ # TRANSLATION UPDATES
+ * [cs]    Czech, by Petr Pisar
+ * [zh_CN] Chinese (simplified), by Ji ZhengYu
+
+Modified: branches/BRANCH_6-3/smtp.c
+===================================================================
+--- branches/BRANCH_6-3/smtp.c	2009-10-21 07:21:08 UTC (rev 5444)
++++ branches/BRANCH_6-3/smtp.c	2009-10-28 16:24:23 UTC (rev 5445)
+@@ -352,16 +352,16 @@
+ 
+ 	last_smtp_ok = time((time_t *) NULL);
+ 
++	strlcat(smtp_response, reply,  sizeof(smtp_response));
++
+ 	if (strchr(&quot;123&quot;, reply[0])
+ 		&amp;&amp; isdigit((unsigned char)reply[1])
+ 		&amp;&amp; isdigit((unsigned char)reply[2])
+ 		&amp;&amp; strchr(&quot; &quot;, reply[3])) /* matches space and \0 */ {
+-	    strlcat(smtp_response, reply, sizeof(smtp_response));
+ 	    return SM_OK;
+ 	} else if (reply[3] != '-')
+ 	    return SM_ERROR;
+ 
+-	strlcat(smtp_response, reply,  sizeof(smtp_response));
+ 	strlcat(smtp_response, &quot;\r\n&quot;, sizeof(smtp_response));
+ 
+ 	/* set an alarm for smtp ok */
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000502.html">[fetchmail-svn] r5444 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000504.html">[fetchmail-svn] r5446 - in branches/BRANCH_6-3/dist-tools: . shipper
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#503">[ date ]</a>
+              <a href="thread.html#503">[ thread ]</a>
+              <a href="subject.html#503">[ subject ]</a>
+              <a href="author.html#503">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,405 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5338 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-May/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5338%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090525123554.2D07621EF62%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000371.html">
+   <LINK REL="Next"  HREF="000373.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5338 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5338%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090525123554.2D07621EF62%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5338 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Mon May 25 14:35:54 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000371.html">[fetchmail-svn] r5337 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000373.html">[fetchmail-svn] r5339 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#372">[ date ]</a>
+              <a href="thread.html#372">[ thread ]</a>
+              <a href="subject.html#372">[ subject ]</a>
+              <a href="author.html#372">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-05-25 07:35:54 -0500 (Mon, 25 May 2009)
+New Revision: 5338
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/TODO.txt
+   branches/BRANCH_6-3/etrn.c
+   branches/BRANCH_6-3/odmr.c
+   branches/BRANCH_6-3/sink.c
+   branches/BRANCH_6-3/smtp.c
+   branches/BRANCH_6-3/smtp.h
+Log:
+Enforce minimum recommended SMTP timeouts, apply to EHLO/LHLO as well.
+
+Short timeouts could cause fetchmail to not wait long enough for the
+&quot;250 Ok&quot; after shipping a long message, particularly with synchronous
+mailers and extensive spam filtering. This caused fetchmail to re-fetch
+long messages.
+
+While the actual fix is making sure that the timeout is no shorter than
+the time the SMTP server takes to process the message, we now enforce
+the minimum RFC-5321 recommended timeouts even if the user configures a
+lower timeout.
+
+This is to fix Berlios Bug #10972, reported by Viktor Binzberger.
+
+NOTE: it is untested whether we will properly delete the message from
+the POP3/IMAP server or mark it as seen, as the upstream server may
+close the connection sooner.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-05-25 10:45:05 UTC (rev 5337)
++++ branches/BRANCH_6-3/NEWS	2009-05-25 12:35:54 UTC (rev 5338)
+@@ -81,6 +81,18 @@
+ * Non-delivery notice (&quot;bounce mail&quot;) now mentions the original reason again,
+   before the address list. This fixes a regression introduced in 6.3.0.
+ * Several compiler warnings were fixed.
++* The minimum recommended SMTP (RFC-5321) timeouts are enforced to leave
++  sufficient time for the listener to respond. Some synchronous listeners,
++  particularly when used with spam filtering and other policy enforcement
++  services, take extended amounts of time to process messages after the sender,
++  recipient, or data block and EOM line. This can cause fetchmail to not wait
++  long enough for the &quot;250 Ok&quot; and make fetchmail believe the message wasn't
++  properly delivered when in fact it was; fetchmail would then retry the
++  download next time and never make progress.
++  Fixes Berlios Bug #10972, reported by Viktor Binzberger.
++* The ESMTP/LMTP client will now apply an application-specific timeout while
++  waiting for the EHLO/LHLO response, rather than wait for the server or TCP
++  connection timeout.
+ 
+ # CHANGES
+ * Make the comparison of the SSL fingerprints case insensitive, to
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2009-05-25 10:45:05 UTC (rev 5337)
++++ branches/BRANCH_6-3/TODO.txt	2009-05-25 12:35:54 UTC (rev 5338)
+@@ -1,8 +1,6 @@
+ Note that there is a separate todo.html with different content than this.
+ 
+ soon - MUST:
+-- BerliOS Bug #10972, Fetchmail refetches big messages repeatedly (SMTP listener
+-  issue)
+ - Debian Bug #475239, MIME decoder may break up words (need to quote results)
+ - Replace sscanf/fscanf by functions that do range checking (strtol/strtoul) :-/
+   See <A HREF="http://sourceware.org/bugzilla/show_bug.cgi?id=6453">http://sourceware.org/bugzilla/show_bug.cgi?id=6453</A>
+
+Modified: branches/BRANCH_6-3/etrn.c
+===================================================================
+--- branches/BRANCH_6-3/etrn.c	2009-05-25 10:45:05 UTC (rev 5337)
++++ branches/BRANCH_6-3/etrn.c	2009-05-25 12:35:54 UTC (rev 5338)
+@@ -26,7 +26,7 @@
+     int ok;
+ 
+     (void)argbuf;
+-    ok = SMTP_ok(sock, SMTP_MODE);
++    ok = SMTP_ok(sock, SMTP_MODE, TIMEOUT_DEFAULT);
+     if (ok == SM_UNRECOVERABLE)
+ 	return(PS_PROTOCOL);
+     else
+
+Modified: branches/BRANCH_6-3/odmr.c
+===================================================================
+--- branches/BRANCH_6-3/odmr.c	2009-05-25 10:45:05 UTC (rev 5337)
++++ branches/BRANCH_6-3/odmr.c	2009-05-25 12:35:54 UTC (rev 5338)
+@@ -36,7 +36,7 @@
+     int ok;
+ 
+     (void)argbuf;
+-    ok = SMTP_ok(sock, SMTP_MODE);
++    ok = SMTP_ok(sock, SMTP_MODE, TIMEOUT_DEFAULT);
+     if (ok == SM_UNRECOVERABLE)
+ 	return(PS_PROTOCOL);
+     else
+
+Modified: branches/BRANCH_6-3/sink.c
+===================================================================
+--- branches/BRANCH_6-3/sink.c	2009-05-25 10:45:05 UTC (rev 5337)
++++ branches/BRANCH_6-3/sink.c	2009-05-25 12:35:54 UTC (rev 5338)
+@@ -158,7 +158,7 @@
+ 	    }
+ 
+ 	    /* first, probe for ESMTP */
+-	    if (SMTP_ok(ctl-&gt;smtp_socket, ctl-&gt;smtphostmode) == SM_OK &amp;&amp;
++	    if (SMTP_ok(ctl-&gt;smtp_socket, ctl-&gt;smtphostmode, TIMEOUT_STARTSMTP) == SM_OK &amp;&amp;
+ 		    SMTP_ehlo(ctl-&gt;smtp_socket, ctl-&gt;smtphostmode, id_me,
+ 			ctl-&gt;server.esmtp_name, ctl-&gt;server.esmtp_password,
+ 			&amp;ctl-&gt;server.esmtp_options) == SM_OK)
+@@ -186,7 +186,7 @@
+ 		}
+ 	    }
+ 
+-	    if (SMTP_ok(ctl-&gt;smtp_socket, ctl-&gt;smtphostmode) == SM_OK &amp;&amp;
++	    if (SMTP_ok(ctl-&gt;smtp_socket, ctl-&gt;smtphostmode, TIMEOUT_STARTSMTP) == SM_OK &amp;&amp;
+ 		    SMTP_helo(ctl-&gt;smtp_socket, ctl-&gt;smtphostmode, id_me) == SM_OK)
+ 		break;  /* success */
+ 
+@@ -282,7 +282,7 @@
+     if ((sock = SockOpen(&quot;localhost&quot;, SMTP_PORT, NULL, &amp;ai1)) == -1)
+ 	return(FALSE);
+ 
+-    if (SMTP_ok(sock, SMTP_MODE) != SM_OK)
++    if (SMTP_ok(sock, SMTP_MODE, TIMEOUT_STARTSMTP) != SM_OK)
+     {
+ 	SockClose(sock);
+ 	return FALSE;
+@@ -1422,7 +1422,7 @@
+ 	{
+ 	    if (lmtp_responses == 0)
+ 	    {
+-		SMTP_ok(ctl-&gt;smtp_socket, ctl-&gt;smtphostmode);
++		SMTP_ok(ctl-&gt;smtp_socket, ctl-&gt;smtphostmode, TIMEOUT_EOM);
+ 
+ 		/*
+ 		 * According to RFC2033, 503 is the only legal response
+@@ -1455,7 +1455,7 @@
+ 		responses = (char **)xmalloc(sizeof(char *) * lmtp_responses);
+ 		for (errors = i = 0; i &lt; lmtp_responses; i++)
+ 		{
+-		    if ((smtp_err = SMTP_ok(ctl-&gt;smtp_socket, ctl-&gt;smtphostmode))
++		    if ((smtp_err = SMTP_ok(ctl-&gt;smtp_socket, ctl-&gt;smtphostmode, TIMEOUT_EOM))
+ 			    == SM_UNRECOVERABLE)
+ 		    {
+ 			smtp_close(ctl, 0);
+
+Modified: branches/BRANCH_6-3/smtp.c
+===================================================================
+--- branches/BRANCH_6-3/smtp.c	2009-05-25 10:45:05 UTC (rev 5337)
++++ branches/BRANCH_6-3/smtp.c	2009-05-25 12:35:54 UTC (rev 5338)
+@@ -39,6 +39,7 @@
+ 
+ char smtp_response[MSGBUFSIZE];
+ 
++/* XXX: this must not be used for LMTP! */
+ int SMTP_helo(int sock, char smtp_mode, const char *host)
+ /* send a &quot;HELO&quot; message to the SMTP listener */
+ {
+@@ -47,7 +48,7 @@
+   SockPrintf(sock,&quot;HELO %s\r\n&quot;, host);
+   if (outlevel &gt;= O_MONITOR)
+       report(stdout, &quot;%cMTP&gt; HELO %s\n&quot;, smtp_mode, host);
+-  ok = SMTP_ok(sock, smtp_mode);
++  ok = SMTP_ok(sock, smtp_mode, TIMEOUT_HELO);
+   return ok;
+ }
+ 
+@@ -107,7 +108,7 @@
+ 
+ 		to64frombits(b64buf, tmp, strlen(tmp));
+ 		SockPrintf(sock, &quot;%s\r\n&quot;, b64buf);
+-		SMTP_ok(sock, smtp_mode);
++		SMTP_ok(sock, smtp_mode, TIMEOUT_DEFAULT);
+ 	}
+ 	else if (strstr(buf, &quot;PLAIN&quot;)) {
+ 		int len;
+@@ -123,7 +124,7 @@
+ 		}
+ 		to64frombits(b64buf, tmp, len);
+ 		SockPrintf(sock, &quot;AUTH PLAIN %s\r\n&quot;, b64buf);
+-		SMTP_ok(sock, smtp_mode);
++		SMTP_ok(sock, smtp_mode, TIMEOUT_DEFAULT);
+ 	}
+ 	else if (strstr(buf, &quot;LOGIN&quot;)) {
+ 		if (outlevel &gt;= O_MONITOR)
+@@ -162,7 +163,7 @@
+ 		}
+ 		to64frombits(b64buf, password, strlen(password));
+ 		SockPrintf(sock, &quot;%s\r\n&quot;, b64buf);
+-		SMTP_ok(sock, smtp_mode);
++		SMTP_ok(sock, smtp_mode, TIMEOUT_DEFAULT);
+ 	}
+ 	return;
+ }
+@@ -172,17 +173,25 @@
+ {
+   struct opt *hp;
+   char auth_response[511];
++  SIGHANDLERTYPE alrmsave;
++  const int tmout = (mytimeout &gt;= TIMEOUT_HELO ? mytimeout : TIMEOUT_HELO);
+ 
+   SockPrintf(sock,&quot;%cHLO %s\r\n&quot;, (smtp_mode == 'S') ? 'E' : smtp_mode, host);
+   if (outlevel &gt;= O_MONITOR)
+       report(stdout, &quot;%cMTP&gt; %cHLO %s\n&quot;, 
+ 	    smtp_mode, (smtp_mode == 'S') ? 'E' : smtp_mode, host);
+ 
++  alrmsave = set_signal_handler(SIGALRM, null_signal_handler);
++  set_timeout(tmout);
++
+   *opt = 0;
+   while ((SockRead(sock, smtp_response, sizeof(smtp_response)-1)) != -1)
+   {
+       int  n = strlen(smtp_response);
+ 
++      set_timeout(0);
++      (void)set_signal_handler(SIGALRM, alrmsave);
++
+       if (smtp_response[strlen(smtp_response)-1] == '\n')
+ 	  smtp_response[strlen(smtp_response)-1] = '\0';
+       if (smtp_response[strlen(smtp_response)-1] == '\r')
+@@ -206,6 +215,9 @@
+       }
+       else if (smtp_response[3] != '-')
+ 	  return SM_ERROR;
++
++      alrmsave = set_signal_handler(SIGALRM, null_signal_handler);
++      set_timeout(tmout);
+   }
+   return SM_UNRECOVERABLE;
+ }
+@@ -225,7 +237,7 @@
+     SockPrintf(sock,&quot;%s\r\n&quot;, buf);
+     if (outlevel &gt;= O_MONITOR)
+ 	report(stdout, &quot;%cMTP&gt; %s\n&quot;, smtp_mode, buf);
+-    ok = SMTP_ok(sock, smtp_mode);
++    ok = SMTP_ok(sock, smtp_mode, TIMEOUT_MAIL);
+     return ok;
+ }
+ 
+@@ -237,7 +249,7 @@
+   SockPrintf(sock,&quot;RCPT TO:&lt;%s&gt;\r\n&quot;, to);
+   if (outlevel &gt;= O_MONITOR)
+       report(stdout, &quot;%cMTP&gt; RCPT TO:&lt;%s&gt;\n&quot;, smtp_mode, to);
+-  ok = SMTP_ok(sock, smtp_mode);
++  ok = SMTP_ok(sock, smtp_mode, TIMEOUT_RCPT);
+   return ok;
+ }
+ 
+@@ -249,7 +261,7 @@
+   SockPrintf(sock,&quot;DATA\r\n&quot;);
+   if (outlevel &gt;= O_MONITOR)
+       report(stdout, &quot;%cMTP&gt; DATA\n&quot;, smtp_mode);
+-  ok = SMTP_ok(sock, smtp_mode);
++  ok = SMTP_ok(sock, smtp_mode, TIMEOUT_DATA);
+   return ok;
+ }
+ 
+@@ -261,7 +273,7 @@
+   SockPrintf(sock,&quot;RSET\r\n&quot;);
+   if (outlevel &gt;= O_MONITOR)
+       report(stdout, &quot;%cMTP&gt; RSET\n&quot;, smtp_mode);
+-  ok = SMTP_ok(sock, smtp_mode);
++  ok = SMTP_ok(sock, smtp_mode, TIMEOUT_DEFAULT);
+   return ok;
+ }
+ 
+@@ -273,15 +285,13 @@
+   SockPrintf(sock,&quot;QUIT\r\n&quot;);
+   if (outlevel &gt;= O_MONITOR)
+       report(stdout, &quot;%cMTP&gt; QUIT\n&quot;, smtp_mode);
+-  ok = SMTP_ok(sock, smtp_mode);
++  ok = SMTP_ok(sock, smtp_mode, TIMEOUT_DEFAULT);
+   return ok;
+ }
+ 
+ int SMTP_eom(int sock, char smtp_mode)
+ /* send a message data terminator to the SMTP listener */
+ {
+-  int ok;
+-
+   SockPrintf(sock,&quot;.\r\n&quot;);
+   if (outlevel &gt;= O_MONITOR)
+       report(stdout, &quot;%cMTP&gt;. (EOM)\n&quot;, smtp_mode);
+@@ -290,23 +300,21 @@
+    * When doing LMTP, must process many of these at the outer level. 
+    */
+   if (smtp_mode == 'S')
+-      ok = SMTP_ok(sock, smtp_mode);
++      return SMTP_ok(sock, smtp_mode, TIMEOUT_EOM);
+   else
+-      ok = SM_OK;
+-
+-  return ok;
++      return SM_OK;
+ }
+ 
+ time_t last_smtp_ok = 0;
+ 
+-int SMTP_ok(int sock, char smtp_mode)
++int SMTP_ok(int sock, char smtp_mode, int mintimeout)
+ /* returns status of SMTP connection */
+ {
+     SIGHANDLERTYPE alrmsave;
+ 
+     /* set an alarm for smtp ok */
+     alrmsave = set_signal_handler(SIGALRM, null_signal_handler);
+-    set_timeout(mytimeout);
++    set_timeout(mytimeout &gt;= mintimeout ? mytimeout : mintimeout);
+ 
+     while ((SockRead(sock, smtp_response, sizeof(smtp_response)-1)) != -1)
+     {
+
+Modified: branches/BRANCH_6-3/smtp.h
+===================================================================
+--- branches/BRANCH_6-3/smtp.h	2009-05-25 10:45:05 UTC (rev 5337)
++++ branches/BRANCH_6-3/smtp.h	2009-05-25 12:35:54 UTC (rev 5338)
+@@ -23,6 +23,16 @@
+ #define ESMTP_ATRN	0x08		/* used with ODMR, RFC 2645 */
+ #define ESMTP_AUTH	0x10
+ 
++/* SMTP timeouts (seconds) - SHOULD clauses from RFC-5321 sec. 4.5.3.2. */
++#define TIMEOUT_STARTSMTP	300
++#define TIMEOUT_HELO		300 /* not in RFC-5321, also for EHLO/LHLO */
++#define TIMEOUT_MAIL		300
++#define TIMEOUT_RCPT		300
++#define TIMEOUT_DATA		120
++#define TIMEOUT_DATALINE	180
++#define TIMEOUT_EOM		600
++#define TIMEOUT_DEFAULT		300 /* not in RFC-5321, all other client timeouts */
++
+ extern time_t last_smtp_ok;
+ 
+ int SMTP_helo(int socket, char smtp_mode, const char *host);
+@@ -33,7 +43,7 @@
+ int SMTP_eom(int socket, char smtp_mode);
+ int SMTP_rset(int socket, char smtp_mode);
+ int SMTP_quit(int socket, char smtp_mode);
+-int SMTP_ok(int socket, char smtp_mode);
++int SMTP_ok(int socket, char smtp_mode, int mintimeout);
+ 
+ extern char smtp_response[MSGBUFSIZE];
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000371.html">[fetchmail-svn] r5337 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000373.html">[fetchmail-svn] r5339 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#372">[ date ]</a>
+              <a href="thread.html#372">[ thread ]</a>
+              <a href="subject.html#372">[ subject ]</a>
+              <a href="author.html#372">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

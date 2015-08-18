@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5237 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2008-November/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5237%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20081113115150.04DDA21EF49%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000216.html">
+   <LINK REL="Next"  HREF="000218.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5237 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5237%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20081113115150.04DDA21EF49%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5237 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Thu Nov 13 12:51:49 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000216.html">[fetchmail-svn] r5236 - branches/BRANCH_6-3/po
+</A></li>
+        <LI>Next message: <A HREF="000218.html">[fetchmail-svn] r5238 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#217">[ date ]</a>
+              <a href="thread.html#217">[ thread ]</a>
+              <a href="subject.html#217">[ subject ]</a>
+              <a href="author.html#217">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2008-11-13 05:51:49 -0600 (Thu, 13 Nov 2008)
+New Revision: 5237
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/socket.c
+Log:
+SSL_free(context) when SSL_connect fails, plugging memleak. By Seiichi Ikarashi.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2008-11-12 00:22:16 UTC (rev 5236)
++++ branches/BRANCH_6-3/NEWS	2008-11-13 11:51:49 UTC (rev 5237)
+@@ -88,6 +88,10 @@
+ * Only print &quot;Deleting fetchids file&quot; if there actually is one.
+   Fixes Debian Bug#374514, reported by Dan Jacobson.
+ * SSL fix: check and report if SSL_set_fd fails.
++* SSL fix: close memory leak when SSL connection fails; fetchmail used to forget
++  calling SSL_free() on the SSL context, leaking in excess of 1/2 MB RAM on a
++  x86_64 system per failed SSL connection attempt.
++  Bug reported and patch provided by Seiichi Ikarashi, Fujitsu.
+ 
+ # CHANGES:
+ * autoconf 2.60 is now required to build fetchmail; it uses
+
+Modified: branches/BRANCH_6-3/socket.c
+===================================================================
+--- branches/BRANCH_6-3/socket.c	2008-11-12 00:22:16 UTC (rev 5236)
++++ branches/BRANCH_6-3/socket.c	2008-11-13 11:51:49 UTC (rev 5237)
+@@ -906,6 +906,8 @@
+ 	if (SSL_set_fd(_ssl_context[sock], sock) == 0 
+ 	    || SSL_connect(_ssl_context[sock]) &lt; 1) {
+ 		ERR_print_errors_fp(stderr);
++		SSL_free( _ssl_context[sock] );
++		_ssl_context[sock] = NULL;
+ 		SSL_CTX_free(_ctx[sock]);
+ 		_ctx[sock] = NULL;
+ 		return(-1);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000216.html">[fetchmail-svn] r5236 - branches/BRANCH_6-3/po
+</A></li>
+	<LI>Next message: <A HREF="000218.html">[fetchmail-svn] r5238 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#217">[ date ]</a>
+              <a href="thread.html#217">[ thread ]</a>
+              <a href="subject.html#217">[ subject ]</a>
+              <a href="author.html#217">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

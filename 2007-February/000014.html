@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5020 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2007-February/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5020%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20070202233411.9B062218001%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000015.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5020 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5020%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20070202233411.9B062218001%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5020 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Sat Feb  3 00:34:11 CET 2007</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000015.html">[fetchmail-svn] r5021 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#14">[ date ]</a>
+              <a href="thread.html#14">[ thread ]</a>
+              <a href="subject.html#14">[ subject ]</a>
+              <a href="author.html#14">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2007-02-02 17:34:11 -0600 (Fri, 02 Feb 2007)
+New Revision: 5020
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/pop3.c
+Log:
+Add Miloslav Trmac's patch to fix KPOP regression in 6.3.6.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2007-02-02 23:33:31 UTC (rev 5019)
++++ branches/BRANCH_6-3/NEWS	2007-02-02 23:34:11 UTC (rev 5020)
+@@ -42,6 +42,32 @@
+ 
+ --------------------------------------------------------------------------------
+ 
++fetchmail 6.3.7 (not yet released):
++
++# REGRESSION FIX
++* Fix KPOP, broken with the 6.3.6 security fix. Patch by Miroslav Trmac.
++
++# TRANSLATION UPDATES
++* Japanese (Takeshi Hamasaki), Polish (Jakub Bogusz)
++
++# KNOWN BUGS AND WORKAROUNDS:
++  (this section floats upwards through the NEWS file so it stays with the
++  current release information)
++* fetchmail does not handle messages without Message-ID header well
++  (See sourceforge.net bug #780933)
++* Sun Workshop 6 (SPARC) is known to miscompile the configuration file lexer in
++  64-bit mode.  Either compile 32-bit code or use GCC to compile 64-bit
++  fetchmail.  Note that fetchmail doesn't take advantage of 64-bit code,
++  so compiling 32-bit SPARC code should not cause any difficulties.
++* fetchmail expects Received: headers in a particular, but undocumented, format
++  when parsing envelopes.
++* fetchmail does not track pending deletes over crashes
++* the command line interface is a bit narrow-minded sometimes, for instance,
++  fetchmail -s doesn't work with a running daemon
++* some of the logging output is not very helpful
++* some of the documentation is still not up to date
++
++
+ fetchmail 6.3.6 (released 2007-01-04):
+ 
+ # SECURITY FIXES:
+@@ -129,23 +155,6 @@
+   Reported by Isaac Wilcox.
+ * Documented exit codes 24 - 29 as internal.
+ 
+-# KNOWN BUGS AND WORKAROUNDS:
+-  (this section floats upwards through the NEWS file so it stays with the
+-  current release information)
+-* fetchmail does not handle messages without Message-ID header well
+-  (See sourceforge.net bug #780933)
+-* Sun Workshop 6 (SPARC) is known to miscompile the configuration file lexer in
+-  64-bit mode.  Either compile 32-bit code or use GCC to compile 64-bit
+-  fetchmail.  Note that fetchmail doesn't take advantage of 64-bit code,
+-  so compiling 32-bit SPARC code should not cause any difficulties.
+-* fetchmail expects Received: headers in a particular, but undocumented, format
+-  when parsing envelopes.
+-* fetchmail does not track pending deletes over crashes
+-* the command line interface is a bit narrow-minded sometimes, for instance,
+-  fetchmail -s doesn't work with a running daemon
+-* some of the logging output is not very helpful
+-* some of the documentation is still not up to date
+-
+ fetchmail 6.3.5 (released 2006-10-09):
+ 
+ # BUG FIXES:
+
+Modified: branches/BRANCH_6-3/pop3.c
+===================================================================
+--- branches/BRANCH_6-3/pop3.c	2007-02-02 23:33:31 UTC (rev 5019)
++++ branches/BRANCH_6-3/pop3.c	2007-02-02 23:34:11 UTC (rev 5020)
+@@ -612,7 +612,11 @@
+ 
+ 	/* check if we are actually allowed to send the password */
+ 	if (ctl-&gt;server.authenticate == A_ANY
+-		|| ctl-&gt;server.authenticate == A_PASSWORD) {
++	    || ctl-&gt;server.authenticate == A_PASSWORD
++	    || ((ctl-&gt;server.authenticate == A_KERBEROS_V4
++		 || ctl-&gt;server.authenticate == A_KERBEROS_V5)
++		&amp;&amp; ctl-&gt;server.service
++		&amp;&amp; strcmp(ctl-&gt;server.service, KPOP_PORT) == 0)) {
+ 	    strlcpy(shroud, ctl-&gt;password, sizeof(shroud));
+ 	    ok = gen_transact(sock, &quot;PASS %s&quot;, ctl-&gt;password);
+ 	} else {
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000015.html">[fetchmail-svn] r5021 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#14">[ date ]</a>
+              <a href="thread.html#14">[ thread ]</a>
+              <a href="subject.html#14">[ subject ]</a>
+              <a href="author.html#14">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

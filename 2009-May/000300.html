@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5291 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-May/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5291%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090505051524.BD55021F073%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000299.html">
+   <LINK REL="Next"  HREF="000301.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5291 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5291%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090505051524.BD55021F073%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5291 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Tue May  5 07:15:24 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000299.html">[fetchmail-svn] r5290 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000301.html">[fetchmail-svn] r5294 - in branches/BRANCH_6-3: . m4-local
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#300">[ date ]</a>
+              <a href="thread.html#300">[ thread ]</a>
+              <a href="subject.html#300">[ subject ]</a>
+              <a href="author.html#300">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: root
+Date: 2009-05-05 00:15:24 -0500 (Tue, 05 May 2009)
+New Revision: 5291
+
+Modified:
+   branches/BRANCH_6-3/pop3.c
+   branches/BRANCH_6-3/report.c
+   branches/BRANCH_6-3/smtp.c
+Log:
+Fix format string bugs.
+
+Modified: branches/BRANCH_6-3/pop3.c
+===================================================================
+--- branches/BRANCH_6-3/pop3.c	2009-05-04 21:52:32 UTC (rev 5290)
++++ branches/BRANCH_6-3/pop3.c	2009-05-05 05:15:24 UTC (rev 5291)
+@@ -771,7 +771,7 @@
+     int got_it;
+     char buf [POPBUFSIZE+1];
+     snprintf(buf, sizeof(buf), &quot;TOP %d 1&quot;, num);
+-    if ((ok = gen_transact(sock, buf )) != 0)
++    if ((ok = gen_transact(sock, &quot;%s&quot;, buf)) != 0)
+        return ok;
+     got_it = 0;
+     while ((ok = gen_recv(sock, buf, sizeof(buf))) == 0) 
+
+Modified: branches/BRANCH_6-3/report.c
+===================================================================
+--- branches/BRANCH_6-3/report.c	2009-05-04 21:52:32 UTC (rev 5290)
++++ branches/BRANCH_6-3/report.c	2009-05-05 05:15:24 UTC (rev 5291)
+@@ -274,7 +274,7 @@
+     if (partial_message_size_used != 0)
+     {
+ 	partial_message_size_used = 0;
+-	report(errfp, partial_message);
++	report(errfp, &quot;%s&quot;, partial_message);
+ 	partial_suppress_tag = 1;
+     }
+ }
+
+Modified: branches/BRANCH_6-3/smtp.c
+===================================================================
+--- branches/BRANCH_6-3/smtp.c	2009-05-04 21:52:32 UTC (rev 5290)
++++ branches/BRANCH_6-3/smtp.c	2009-05-05 05:15:24 UTC (rev 5291)
+@@ -55,7 +55,7 @@
+ {
+     SockPrintf(sock, &quot;*\r\n&quot;);
+     SockRead(sock, smtp_response, sizeof(smtp_response) - 1);
+-    if (outlevel &gt;= O_MONITOR) report(stdout, msg);
++    if (outlevel &gt;= O_MONITOR) report(stdout, &quot;%s&quot;, msg);
+ }
+ 
+ static void SMTP_auth(int sock, char smtp_mode, char *username, char *password, char *buf)
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000299.html">[fetchmail-svn] r5290 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000301.html">[fetchmail-svn] r5294 - in branches/BRANCH_6-3: . m4-local
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#300">[ date ]</a>
+              <a href="thread.html#300">[ thread ]</a>
+              <a href="subject.html#300">[ subject ]</a>
+              <a href="author.html#300">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

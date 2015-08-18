@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5216 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2008-July/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5216%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20080708133355.AF5776B0122%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000203.html">
+   <LINK REL="Next"  HREF="000205.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5216 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5216%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20080708133355.AF5776B0122%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5216 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Tue Jul  8 15:33:55 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000203.html">[fetchmail-svn] r5214 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000205.html">[fetchmail-svn] r5217 - branches/BRANCH_MAPI
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#204">[ date ]</a>
+              <a href="thread.html#204">[ thread ]</a>
+              <a href="subject.html#204">[ subject ]</a>
+              <a href="author.html#204">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2008-07-08 08:33:55 -0500 (Tue, 08 Jul 2008)
+New Revision: 5216
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/TODO.txt
+   branches/BRANCH_6-3/fetchmail.man
+Log:
+Improve documentation: --logfile requires --daemon mode
+
+Make this clearer, and document that --daemon is the wait
+interval after completing a cycle before starting the next,
+so that poll time count towards the interval.
+
+Also take a note to make logfile more useful (used more often).
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2008-07-06 11:31:25 UTC (rev 5215)
++++ branches/BRANCH_6-3/NEWS	2008-07-08 13:33:55 UTC (rev 5216)
+@@ -146,6 +146,8 @@
+   silently accept additional g=x permissions for compatibility with previous
+   6.2.X and 6.3.X versions.
+   Inconsistency (program 0710, manpage 0600) reported by Petr Uzel.
++* The --logfile documentation is now clearer about requiring detached daemon 
++  mode.
+ 
+ # TRANSLATION UPDATES:
+ * Polish (Jakub Bogusz)
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2008-07-06 11:31:25 UTC (rev 5215)
++++ branches/BRANCH_6-3/TODO.txt	2008-07-08 13:33:55 UTC (rev 5216)
+@@ -114,6 +114,7 @@
+   but stuff it at the end
+ - allow forcing RETR (RETR vs. TOP, fetchmail-users, drbob 2008-01-11)
+ - use SASL?
++- make logfile more useful (redirect not only in daemon mode)
+ 
+ DOCUMENTATION:
+ - Add info whether Keywords are global, server or user keywords
+
+Modified: branches/BRANCH_6-3/fetchmail.man
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.man	2008-07-06 11:31:25 UTC (rev 5215)
++++ branches/BRANCH_6-3/fetchmail.man	2008-07-08 13:33:55 UTC (rev 5216)
+@@ -1154,7 +1154,9 @@
+ There are several ways to make fetchmail work in daemon mode. On the
+ command line, \fB\-\-daemon\ &lt;interval&gt;\fR or \fB\-d\ &lt;interval&gt;\fR
+ option runs \fIfetchmail\fR in daemon mode.  You must specify a numeric
+-argument which is a polling interval in seconds.
++argument which is a polling interval (time to wait after completing a 
++whole poll cycle with the last server and before starting the next poll 
++cycle with the first server) in seconds.
+ .PP
+ Example: simply invoking
+ .IP
+@@ -1162,8 +1164,9 @@
+ .PP
+ will, therefore, poll all the hosts described in your
+ .I ~/.fetchmailrc
+-file (except those explicitly excluded with the 'skip' verb) once
+-every 15 minutes.
++file (except those explicitly excluded with the 'skip' verb) a bit less 
++often than once every 15 minutes (exactly: 15 minutes + time that the 
++poll take)
+ .PP
+ It is also possible to set a polling interval
+ in your \fI~/.fetchmailrc\fR file by saying 'set\ daemon\ &lt;interval&gt;',
+@@ -1202,7 +1205,8 @@
+ or
+ .B \-\-logfile &lt;filename&gt;
+ option (keyword: set logfile) is only effective when fetchmail is
+-detached. Note that the logfile must exist BEFORE fetchmail is run, you
++detached and in daemon mode. Note that the logfile must exist BEFORE 
++fetchmail is run, you
+ can use the
+ .BR touch (1)
+ command with the filename as its sole argument to create it.
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000203.html">[fetchmail-svn] r5214 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000205.html">[fetchmail-svn] r5217 - branches/BRANCH_MAPI
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#204">[ date ]</a>
+              <a href="thread.html#204">[ thread ]</a>
+              <a href="subject.html#204">[ subject ]</a>
+              <a href="author.html#204">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

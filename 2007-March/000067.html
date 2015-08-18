@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5074 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2007-March/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5074%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20070329233020.ACE72218096%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000066.html">
+   <LINK REL="Next"  HREF="000068.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5074 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5074%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20070329233020.ACE72218096%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5074 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Fri Mar 30 01:30:20 CEST 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000066.html">[fetchmail-svn] r5073 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000068.html">[fetchmail-svn] r5075 - branches/BRANCH_6-3/po
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#67">[ date ]</a>
+              <a href="thread.html#67">[ thread ]</a>
+              <a href="subject.html#67">[ subject ]</a>
+              <a href="author.html#67">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2007-03-29 18:30:20 -0500 (Thu, 29 Mar 2007)
+New Revision: 5074
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/fetchmail.man
+Log:
+Document bad shape of BSMTP.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2007-03-29 23:08:21 UTC (rev 5073)
++++ branches/BRANCH_6-3/NEWS	2007-03-29 23:30:20 UTC (rev 5074)
+@@ -100,6 +100,7 @@
+   current release information)
+ * fetchmail does not handle messages without Message-ID header well
+   (See sourceforge.net bug #780933)
++* BSMTP is mostly untested and errors can cause corrupt output.
+ * Sun Workshop 6 (SPARC) is known to miscompile the configuration file lexer in
+   64-bit mode.  Either compile 32-bit code or use GCC to compile 64-bit
+   fetchmail.  Note that fetchmail doesn't take advantage of 64-bit code,
+
+Modified: branches/BRANCH_6-3/fetchmail.man
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.man	2007-03-29 23:08:21 UTC (rev 5073)
++++ branches/BRANCH_6-3/fetchmail.man	2007-03-29 23:30:20 UTC (rev 5074)
+@@ -2703,6 +2703,9 @@
+ A backslash as the last character of a configuration file will be
+ flagged as a syntax error rather than ignored.
+ .PP
++The BSMTP error handling is virtually nonexistent and may leave broken
++messages behind.
++.PP
+ Send comments, bug reports, gripes, and the like to the
+ fetchmail\-devel list &lt;fetchmail\<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">-devel at lists.berlios.de</A>&gt;.  An HTML FAQ is
+ available at the fetchmail home page; surf to
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000066.html">[fetchmail-svn] r5073 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000068.html">[fetchmail-svn] r5075 - branches/BRANCH_6-3/po
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#67">[ date ]</a>
+              <a href="thread.html#67">[ thread ]</a>
+              <a href="subject.html#67">[ subject ]</a>
+              <a href="author.html#67">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

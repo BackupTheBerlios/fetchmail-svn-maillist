@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5078 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2007-March/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5078%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20070331182826.D3CF52180A1%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000069.html">
+   <LINK REL="Next"  HREF="000071.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5078 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5078%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20070331182826.D3CF52180A1%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5078 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Sat Mar 31 20:28:26 CEST 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000069.html">[fetchmail-svn] r5077 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000071.html">[fetchmail-svn] r5079 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#70">[ date ]</a>
+              <a href="thread.html#70">[ thread ]</a>
+              <a href="subject.html#70">[ subject ]</a>
+              <a href="author.html#70">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2007-03-31 13:28:26 -0500 (Sat, 31 Mar 2007)
+New Revision: 5078
+
+Modified:
+   branches/BRANCH_6-3/README.packaging
+Log:
+Update packaging instructions a bit, recommend --with-ssl.
+
+Modified: branches/BRANCH_6-3/README.packaging
+===================================================================
+--- branches/BRANCH_6-3/README.packaging	2007-03-30 08:07:04 UTC (rev 5077)
++++ branches/BRANCH_6-3/README.packaging	2007-03-31 18:28:26 UTC (rev 5078)
+@@ -1,40 +1,45 @@
+ README.packaging
+ ================
+ 
+-fetchmail 6.3.0 changes relevant for packagers
+-----------------------------------------------
+-(These should apply to all 6.3.X versions)
++fetchmail 6.3 changes relevant for packagers
++--------------------------------------------
+ 
+ Greetings, dear packager!
+ 
+-There are now some changes to the fetchmail 6.3.0 installation layout,
+-which are given as headwords below.
++The bullet points below mention a few useful hints for package(r)s:
+ 
+-- fetchmail now uses automake and supports all common automake targets
++- Please use OpenSSL and add --with-ssl to the ./configure command line.
++  SSL/TLS support hasn't been enabled in the default build in order to
++  maintain fetchmail 6.2 compatibility as far as possible.
++  SSL/TLS however is a highly recommended compilation option.
++
++- Fetchmail now uses automake and supports all common automake targets
+   and overrides such as &quot;make install-strip&quot; or &quot;DESTDIR=...&quot; for staging
+-  areas
++  areas.
+ 
+-- the fetchmailconf script has been renamed to fetchmailconf.py,
++- The fetchmailconf script has been renamed to fetchmailconf.py,
+   automake will install it into Python's top-level site-packages directory
+   and byte-compile it (so you need to package or remove
+-  fetchmailconf.pyc and fetchmailconf.pyo as well)
++  fetchmailconf.pyc and fetchmailconf.pyo as well).
+ 
+-  If you want to defeat Python byte-code compilation and would rather
++- If you want to defeat Python byte-code compilation and would rather
+   like to install fetchmailconf.py yourself, you can add
++
+       PYTHON=:
++
+   to the ./configure command or pass this in the environment.
+   This pretends that no Python interpreter were installed.
+ 
+-- the Makefile generates a two-line &quot;fetchmailconf&quot; /bin/sh wrapper
++- The Makefile generates a two-line &quot;fetchmailconf&quot; /bin/sh wrapper
+   script that executes the actual fetchmailconf.py with the python
+   installation found at configuration time, so that users can still type
+-  &quot;fetchmailconf&quot; rather than &quot;python fetchmailconf&quot;
++  &quot;fetchmailconf&quot; rather than &quot;python fetchmailconf&quot;.
+ 
+-- note that fetchmailconf.py supports a few command line arguments, so
++- Note that fetchmailconf.py supports a few command line arguments, so
+   if you use local wrapper scripts, be sure they pass on their own
+   arguments properly. Remember to use &quot;$@&quot; (with quotes) in shells, not $*.
+ 
+-- there is now a dummy fetchmailconf manual page which will just source
++- There is now a dummy fetchmailconf manual page which will just source
+   (roff's &quot;.so&quot; command) the fetchmail manual page for now. You can of
+   course keep your symlinks in place and ignore this dummy. IF you
+   install the dummy and compress your man pages, be sure to test &quot;man
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000069.html">[fetchmail-svn] r5077 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000071.html">[fetchmail-svn] r5079 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#70">[ date ]</a>
+              <a href="thread.html#70">[ thread ]</a>
+              <a href="subject.html#70">[ subject ]</a>
+              <a href="author.html#70">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

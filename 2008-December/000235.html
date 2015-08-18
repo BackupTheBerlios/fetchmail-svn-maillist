@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5255 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2008-December/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5255%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20081215005815.61D8121F13B%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000236.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5255 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5255%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20081215005815.61D8121F13B%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5255 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Mon Dec 15 01:58:15 CET 2008</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000236.html">[fetchmail-svn] r5256 - branches/BRANCH_6-3/website
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#235">[ date ]</a>
+              <a href="thread.html#235">[ thread ]</a>
+              <a href="subject.html#235">[ subject ]</a>
+              <a href="author.html#235">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2008-12-14 18:58:15 -0600 (Sun, 14 Dec 2008)
+New Revision: 5255
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/driver.c
+Log:
+Fix Debian Bug#508667: do not lose PS_MAXFETCH (13) exit status.
+
+Reported by Michelle Konzack.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2008-11-27 12:49:33 UTC (rev 5254)
++++ branches/BRANCH_6-3/NEWS	2008-12-15 00:58:15 UTC (rev 5255)
+@@ -44,6 +44,10 @@
+ 
+ fetchmail 6.3.10 (not yet released):
+ 
++# BUGFIXES
++* Do not lose PS_MAXFETCH (13) exit status when hitting maxpoll. Reported by
++  Michelle Konzack, Debian Bug#508667.
++
+ # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
+ * [it] Italian (Vincenzo Campanella)
+ 
+
+Modified: branches/BRANCH_6-3/driver.c
+===================================================================
+--- branches/BRANCH_6-3/driver.c	2008-11-27 12:49:33 UTC (rev 5254)
++++ branches/BRANCH_6-3/driver.c	2008-12-15 00:58:15 UTC (rev 5255)
+@@ -1435,9 +1435,11 @@
+ 		/* end-of-mailbox processing before we repoll or switch to another one */
+ 		if (ctl-&gt;server.base_protocol-&gt;end_mailbox_poll)
+ 		{
+-		    err = (ctl-&gt;server.base_protocol-&gt;end_mailbox_poll)(mailserver_socket, ctl);
+-		    if (err)
++		    tmperr = (ctl-&gt;server.base_protocol-&gt;end_mailbox_poll)(mailserver_socket, ctl);
++		    if (tmperr) {
++			err = tmperr;
+ 			goto cleanUp;
++		    }
+ 		}
+ 		/* Return now if we have reached the fetchlimit */
+ 		if (maxfetch &amp;&amp; maxfetch &lt;= fetches)
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000236.html">[fetchmail-svn] r5256 - branches/BRANCH_6-3/website
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#235">[ date ]</a>
+              <a href="thread.html#235">[ thread ]</a>
+              <a href="subject.html#235">[ subject ]</a>
+              <a href="author.html#235">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,254 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5392 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-August/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5392%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090805173232.17F9E21F140%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000451.html">
+   <LINK REL="Next"  HREF="000453.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5392 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5392%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090805173232.17F9E21F140%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5392 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Wed Aug  5 19:32:32 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000451.html">[fetchmail-svn] r5391 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000453.html">[fetchmail-svn] r5393 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#452">[ date ]</a>
+              <a href="thread.html#452">[ thread ]</a>
+              <a href="subject.html#452">[ subject ]</a>
+              <a href="author.html#452">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-08-05 12:32:31 -0500 (Wed, 05 Aug 2009)
+New Revision: 5392
+
+Added:
+   branches/BRANCH_6-3/fetchmail-SA-2009-01.txt
+Modified:
+   branches/BRANCH_6-3/Makefile.am
+Log:
+Add fetchmail-SA-2009-01.txt and hook it to the tarball.
+
+Note that the subjectAltName part of the patch is untested.
+
+Modified: branches/BRANCH_6-3/Makefile.am
+===================================================================
+--- branches/BRANCH_6-3/Makefile.am	2009-08-05 16:50:48 UTC (rev 5391)
++++ branches/BRANCH_6-3/Makefile.am	2009-08-05 17:32:31 UTC (rev 5392)
+@@ -128,6 +128,7 @@
+ 		fetchmail-features.html README.SSL README.NTLM \
+ 		README.packaging README.SSL-SERVER \
+ 		fetchmail-FAQ.book fetchmail-FAQ.pdf fetchmail-FAQ.html \
++		fetchmail-SA-2009-01.txt \
+ 		fetchmail-SA-2008-01.txt \
+ 		fetchmail-SA-2007-02.txt \
+ 		fetchmail-SA-2007-01.txt \
+
+Added: branches/BRANCH_6-3/fetchmail-SA-2009-01.txt
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-SA-2009-01.txt	                        (rev 0)
++++ branches/BRANCH_6-3/fetchmail-SA-2009-01.txt	2009-08-05 17:32:31 UTC (rev 5392)
+@@ -0,0 +1,161 @@
++fetchmail-SA-2009-01: Improper SSL certificate subject verification
++
++Topics:		Improper SSL certificate subject verification
++
++Author:		Matthias Andree
++Version:	1.0
++Announced:	2009-08-XX
++Type:		Allows undetected Man-in-the-middle attacks against SSL/TLS.
++Impact:		Credential disclose to eavesdroppers.
++Danger:		low
++CVSS V2 vector: (AV:N/AC:M/Au:N/C:P/I:N/A:N/E:H/RL:OF/RC:C)
++
++Credits:	
++CVE Name:	CVE-2009-xxxx
++URL:		<A HREF="http://www.fetchmail.info/fetchmail-SA-2009-01.txt">http://www.fetchmail.info/fetchmail-SA-2009-01.txt</A>
++Project URL:	<A HREF="http://www.fetchmail.info/">http://www.fetchmail.info/</A>
++
++Affects:	fetchmail release before and excluding 6.3.11
++
++Not affected:	fetchmail release 6.3.11 and newer
++
++Corrected:	2009-08-04 fetchmail SVN (rev 5389)
++
++References:	&quot;Null Prefix Attacks Against SSL/TLS Certificates&quot;,
++		Moxie Marlinspike, 2009-07-29, Defcon 17, Blackhat 09.
++
++		CVE-2009-2408, Mozilla Firefox &lt;3.5 and NSS &lt;3.12.3
++		improper handling of '\0' characters in domain names in
++		the Subject CN field of X.509 certificates.
++
++
++0. Release history
++==================
++
++2009-08-05 0.1	first draft (visible in SVN)
++
++
++1. Background
++=============
++
++fetchmail is a software package to retrieve mail from remote POP2, POP3,
++IMAP, ETRN or ODMR servers and forward it to local SMTP, LMTP servers or
++message delivery agents. It supports SSL and TLS security layers through
++the OpenSSL library, if enabled at compile time and if also enabled at
++run time.
++
++
++2. Problem description and Impact
++=================================
++
++Moxie Marlinspike demonstrated in July 2009 that some CAs would sign
++certificates that contain embedded NUL characters in the Common Name or
++subjectAltName fields of ITU-T X.509 certificates. Applications what
++would treat such strings in X.509 as NUL-terminated C strings (rather
++than strings that contain an explicit length field) would only
++check the part up to and excluding the NUL character, so that
++certificate names such as www.good.example\0www.bad.example.com would be
++mistaken as a certificate name for www.good.example. The CA however
++would usually sign example.com and not care about the subdomain.
++
++
++3. Solution
++===========
++
++There are two alternatives, either of them by itself is sufficient:
++
++a. Apply the patch found in section B of this announcement to
++   fetchmail 6.3.10, recompile and reinstall it.
++
++b. Install fetchmail 6.3.11 or newer after it will have become available.
++   The fetchmail source code is always available from
++   &lt;<A HREF="http://developer.berlios.de/project/showfiles.php?group_id=1824">http://developer.berlios.de/project/showfiles.php?group_id=1824</A>&gt;.
++
++
++4. Workaround
++=============
++
++Obtain the server fingerprints through a separate secure channel and
++configure them with the sslfingerprint option, and enable the sslcertck
++option.
++
++
++A. Copyright, License and Warranty
++==================================
++
++(C) Copyright 2009 by Matthias Andree, &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">matthias.andree at gmx.de</A>&gt;.
++Some rights reserved.
++
++This work is licensed under the Creative Commons
++Attribution-Noncommercial-No Derivative Works 3.0 Germany License.
++To view a copy of this license, visit
++<A HREF="http://creativecommons.org/licenses/by-nc-nd/3.0/de/">http://creativecommons.org/licenses/by-nc-nd/3.0/de/</A> or send a letter to
++
++Creative Commons
++171 Second Street
++Suite 300
++SAN FRANCISCO, CALIFORNIA 94105
++USA
++
++
++THIS WORK IS PROVIDED FREE OF CHARGE AND WITHOUT ANY WARRANTIES.
++Use the information herein at your own risk.
++
++
++B. Patch to remedy the problem
++==============================
++
++Note that when taking this from a GnuPG clearsigned file, the lines 
++starting with a &quot;-&quot; character are prefixed by another &quot;- &quot; (dash + 
++blank) combination. Either feed this file through GnuPG to strip them, 
++or strip them manually.
++
++Whitespace differences can usually be ignored by invoking &quot;patch -l&quot;,
++so try this if the patch does not apply.
++
++
++Index: socket.c
++===================================================================
++--- ./socket.c~
+++++ ./socket.c
++@@ -632,6 +632,12 @@
++ 				report(stderr, GT_(&quot;Bad certificate: Subject CommonName too long!\n&quot;));
++ 				return (0);
++ 			}
+++			if ((size_t)i &gt; strlen(buf)) {
+++				/* Name contains embedded NUL characters, so we complain. This is likely
+++				 * a certificate spoofing attack. */
+++				report(stderr, GT_(&quot;Bad certificate: Subject CommonName contains NUL, aborting!\n&quot;));
+++				return 0;
+++			}
++ 			if (_ssl_server_cname != NULL) {
++ 				char *p1 = buf;
++ 				char *p2 = _ssl_server_cname;
++@@ -643,14 +649,21 @@
++ 				 * first find a match among alternative names */
++ 				gens = (STACK_OF(GENERAL_NAME) *)X509_get_ext_d2i(x509_cert, NID_subject_alt_name, NULL, NULL);
++ 				if (gens) {
++-					int i, r;
++-					for (i = 0, r = sk_GENERAL_NAME_num(gens); i &lt; r; ++i) {
++-						const GENERAL_NAME *gn = sk_GENERAL_NAME_value(gens, i);
+++					int j, r;
+++					for (j = 0, r = sk_GENERAL_NAME_num(gens); j &lt; r; ++j) {
+++						const GENERAL_NAME *gn = sk_GENERAL_NAME_value(gens, j);
++ 						if (gn-&gt;type == GEN_DNS) {
++ 							char *p1 = (char *)gn-&gt;d.ia5-&gt;data;
++ 							char *p2 = _ssl_server_cname;
+++							/* Name contains embedded NUL characters, so we complain. This
+++							 * is likely a certificate spoofing attack. */
+++							if ((size_t)gn-&gt;d.ia5-&gt;length != strlen(p1)) {
+++								report(stderr, GT_(&quot;Bad certificate: Subject Alternative Name contains NUL, aborting!\n&quot;));
+++								sk_GENERAL_NAME_free(gens);
+++								return 0;
+++							}
++ 							if (outlevel &gt;= O_VERBOSE)
++-								report(stderr, &quot;Subject Alternative Name: %s\n&quot;, p1);
+++								report(stdout, GT_(&quot;Subject Alternative Name: %s\n&quot;), p1);
++ 							if (*p1 == '*') {
++ 								++p1;
++ 								n = strlen(p2) - strlen(p1);
++
++END OF fetchmail-SA-2009-01.txt
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000451.html">[fetchmail-svn] r5391 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000453.html">[fetchmail-svn] r5393 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#452">[ date ]</a>
+              <a href="thread.html#452">[ thread ]</a>
+              <a href="subject.html#452">[ subject ]</a>
+              <a href="author.html#452">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

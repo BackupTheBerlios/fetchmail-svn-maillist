@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5458 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-November/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5458%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20091122022422.2A4CF21EF06%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000515.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5458 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5458%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20091122022422.2A4CF21EF06%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5458 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Sun Nov 22 03:24:22 CET 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000515.html">[fetchmail-svn] r5457 - in branches/BRANCH_6-3: . po
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#516">[ date ]</a>
+              <a href="thread.html#516">[ thread ]</a>
+              <a href="subject.html#516">[ subject ]</a>
+              <a href="author.html#516">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-11-21 20:24:21 -0600 (Sat, 21 Nov 2009)
+New Revision: 5458
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Add logrotate support to TODO.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2009-11-16 23:36:57 UTC (rev 5457)
++++ branches/BRANCH_6-3/TODO.txt	2009-11-22 02:24:21 UTC (rev 5458)
+@@ -134,6 +134,8 @@
+ - allow forcing RETR (RETR vs. TOP, fetchmail-users, drbob 2008-01-11)
+ - CRYPTO: use SASL?
+ - make logfile more useful (redirect not only in daemon mode)
++- close/reopen logfile on certain signals (for newsyslog/logrotate
++  support)
+ - for virtual mapping, we don't currently support local user aliases or 
+   regexp matching with replacement. This would be useful for hosting 
+   several virtual domains in one multidrop mailbox, as in 
+@@ -160,6 +162,7 @@
+   does it expect, what does it get instead, what does that mean, how can the
+   user fix it; references to the manual)
+ 
++
+ DOCUMENTATION:
+ - Add info whether Keywords are global, server or user keywords
+ - consolidate multidrop documentation
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000515.html">[fetchmail-svn] r5457 - in branches/BRANCH_6-3: . po
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#516">[ date ]</a>
+              <a href="thread.html#516">[ thread ]</a>
+              <a href="subject.html#516">[ subject ]</a>
+              <a href="author.html#516">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5341 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-May/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5341%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090525215914.844E621EF62%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000374.html">
+   <LINK REL="Next"  HREF="000376.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5341 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5341%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090525215914.844E621EF62%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5341 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Mon May 25 23:59:14 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000374.html">[fetchmail-svn] r5340 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000376.html">[fetchmail-svn] r5342 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#375">[ date ]</a>
+              <a href="thread.html#375">[ thread ]</a>
+              <a href="subject.html#375">[ subject ]</a>
+              <a href="author.html#375">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-05-25 16:59:14 -0500 (Mon, 25 May 2009)
+New Revision: 5341
+
+Modified:
+   branches/BRANCH_6-3/smbutil.c
+Log:
+Revise allocbuf to make it a macro, quenches type-aliasing warnings.
+
+Modified: branches/BRANCH_6-3/smbutil.c
+===================================================================
+--- branches/BRANCH_6-3/smbutil.c	2009-05-25 16:00:22 UTC (rev 5340)
++++ branches/BRANCH_6-3/smbutil.c	2009-05-25 21:59:14 UTC (rev 5341)
+@@ -82,17 +82,16 @@
+     fprintf(fp,&quot;\n&quot;);
+   }
+ 
+-/* helper function to destructively resize buffers; assumes that bufsiz
++/* helper macro to destructively resize buffers; assumes that bufsiz
+  * is initialized to 0 if buf is unallocated! */
+-static void allocbuf(char **buf, size_t *bufsiz, size_t need)
+-  {
+-  if (need &gt; *bufsiz)
+-    {
+-    *bufsiz = (need &lt; 1024) ? 1024 : need;
+-    xfree(*buf);
+-    *buf = xmalloc(*bufsiz);
+-    }
+-  }
++#define allocbuf(buf, bufsiz, need) do { \
++  if ((need) &gt; (bufsiz)) \
++    { \
++    (bufsiz) = ((need) &lt; 1024) ? 1024 : (need); \
++    xfree(buf); \
++    (buf) = xmalloc(bufsiz); \
++    } \
++  } while (0);
+ 
+ /* this is a brute-force conversion from UCS-2LE to US-ASCII, discarding
+  * the upper 9 bits */
+@@ -102,7 +101,7 @@
+   static char *buf;
+   static size_t bufsiz;
+ 
+-  allocbuf(&amp;buf, &amp;bufsiz, len + 1);
++  allocbuf(buf, bufsiz, len + 1);
+ 
+   for (i=0; i&lt;len; ++i)
+     {
+@@ -122,7 +121,7 @@
+   size_t l = strlen(p);
+   int i = 0;
+ 
+-  allocbuf((char **)&amp;buf, &amp;bufsiz, l * 2);
++  allocbuf(buf, bufsiz, l * 2);
+ 
+   while (l--)
+     {
+@@ -138,7 +137,7 @@
+   static unsigned char *buf;
+   static size_t bufsiz;
+ 
+-  allocbuf((char **)&amp;buf, &amp;bufsiz, len + 1);
++  allocbuf(buf, bufsiz, len + 1);
+ 
+   memcpy(buf,p,len);
+   buf[len] = 0;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000374.html">[fetchmail-svn] r5340 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000376.html">[fetchmail-svn] r5342 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#375">[ date ]</a>
+              <a href="thread.html#375">[ thread ]</a>
+              <a href="subject.html#375">[ subject ]</a>
+              <a href="author.html#375">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

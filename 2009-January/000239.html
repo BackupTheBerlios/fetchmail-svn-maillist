@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5259 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-January/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5259%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090104142333.9378721F137%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000238.html">
+   <LINK REL="Next"  HREF="000240.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5259 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5259%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090104142333.9378721F137%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5259 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Sun Jan  4 15:23:33 CET 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000238.html">[fetchmail-svn] r5258 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000240.html">[fetchmail-svn] r5260 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#239">[ date ]</a>
+              <a href="thread.html#239">[ thread ]</a>
+              <a href="subject.html#239">[ subject ]</a>
+              <a href="author.html#239">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-01-04 08:23:32 -0600 (Sun, 04 Jan 2009)
+New Revision: 5259
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+Log:
+Revise future plans part a bit.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-01-04 14:07:07 UTC (rev 5258)
++++ branches/BRANCH_6-3/NEWS	2009-01-04 14:23:32 UTC (rev 5259)
+@@ -9,15 +9,15 @@
+ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
+ 
+ # ADVANCE WARNING OF FEATURES TO BE REMOVED OR CHANGED IN FUTURE VERSIONS
+-(There are no plans to remove these features from a 6.3.X release, but they may
+-be removed from a 6.4.0 or newer release.)
++(There are no plans to remove features from a 6.3.X release, but they may be
++removed from a 6.4.0 or newer release.)
+ * The MX and host alias DNS lookups that fetchmail performs in multidrop mode
+   are based on assumptions that are rarely met in practice, somewhat defective,
+-  deprecated and may be removed from a future fetchmail version.  They have
+-  never supported IPv6 (including IPv6-mapped IPv4).
++  deprecated and may be removed from a future fetchmail version.
++  They have never supported IPv6 (including IPv6-mapped IPv4).
+   Non-DNS based alias keywords such as &quot;aka&quot; will remain in fetchmail.
+ * The monitor and interface options may be removed from a future fetchmail
+-  version as they are not reasonably portable.
++  version as they are not reasonably portable across operating systems.
+ * POP2 is obsolete, support will be removed from a future fetchmail version.
+ * RPOP is obsolete, support will be removed from a future fetchmail release.
+ * --sslcertck will become a default setting in a future fetchmail version.
+@@ -39,6 +39,10 @@
+   cause fetchmail to terminate - it was broken for many years.
+ * Support for operating systems that are not sufficiently POSIX compliant may be
+   removed or operation on such systems may be suboptimal for future releases.
++  This means that fetchmail may only continue to work on C99 and POSIX 2001
++  based systems.
++* The maintainer may migrate fetchmail to C++ with STL or C#, and impose further
++  requirements (dependencies), such as Boost or other class libraries.
+ 
+ --------------------------------------------------------------------------------
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000238.html">[fetchmail-svn] r5258 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000240.html">[fetchmail-svn] r5260 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#239">[ date ]</a>
+              <a href="thread.html#239">[ thread ]</a>
+              <a href="subject.html#239">[ subject ]</a>
+              <a href="author.html#239">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

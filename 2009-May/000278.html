@@ -1,0 +1,289 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5290 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-May/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5290%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090504215232.D9E7B21F058%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000277.html">
+   <LINK REL="Next"  HREF="000279.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5290 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5290%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090504215232.D9E7B21F058%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5290 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Mon May  4 23:52:32 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000277.html">[fetchmail-svn] r5289 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000279.html">[fetchmail-svn] r5291 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#278">[ date ]</a>
+              <a href="thread.html#278">[ thread ]</a>
+              <a href="subject.html#278">[ subject ]</a>
+              <a href="author.html#278">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-05-04 16:52:32 -0500 (Mon, 04 May 2009)
+New Revision: 5290
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/driver.c
+   branches/BRANCH_6-3/fetchmail.c
+   branches/BRANCH_6-3/fetchmail.h
+   branches/BRANCH_6-3/fetchmail.man
+   branches/BRANCH_6-3/transact.c
+Log:
+Major progress ticker bugfix/overhaul.
+
+Progress tickers had been used inconsistently for a long time, and
+documentation was outdated, too. Factor out common code to ease
+maintenance, use the report_flush() function, and add and use a macro
+(want_progress()) to determine if progress ticker output is desired.
+
+This makes for a much more consistent look on screen and in logfiles and
+should be much easier to fix later on.
+
+TODO: test syslog output.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-05-04 21:52:22 UTC (rev 5289)
++++ branches/BRANCH_6-3/NEWS	2009-05-04 21:52:32 UTC (rev 5290)
+@@ -64,6 +64,11 @@
+   termination signal properly through sys/wait.h macros.
+ * When acquiring a body, understand NIL (&quot;no such data item&quot;), as returned by
+   some MS Exchange versions. Fixes BerliOS Bug #11980 by KB Sriram.
++* Make progress tickers (-v/--showdots) consistent, and update documentation 
++  accordingly (&quot;.&quot; for each 1024 octets read, &quot;#&quot; for a header written, and &quot;*&quot; 
++  for each body line written.)
++  The conditions under which these had been printed were inconsistent, 
++  illogical, and documentation hadn't matched real behaviour for long.
+ 
+ # CHANGES
+ * Make the comparison of the SSL fingerprints case insensitive, to
+
+Modified: branches/BRANCH_6-3/driver.c
+===================================================================
+--- branches/BRANCH_6-3/driver.c	2009-05-04 21:52:22 UTC (rev 5289)
++++ branches/BRANCH_6-3/driver.c	2009-05-04 21:52:32 UTC (rev 5290)
+@@ -418,6 +418,14 @@
+     }
+ }
+ 
++static int eat_trailer(int sock, struct query *ctl)
++{
++    /* we only need this LF if we're printing ticker dots
++     * AND we are dumping protocol traces. */
++    if (outlevel &gt;= O_VERBOSE &amp;&amp; want_progress()) fputc('\n', stdout);
++    return (ctl-&gt;server.base_protocol-&gt;trail)(sock, ctl, tag);
++}
++
+ static int fetch_messages(int mailserver_socket, struct query *ctl, 
+ 			  int count, int **msgsizes, int maxfetch,
+ 			  int *fetches, int *dispatches, int *deletions)
+@@ -615,8 +623,11 @@
+ 		if (len &gt; 0)
+ 		    report_build(stdout, wholesize ? GT_(&quot; (%d octets)&quot;)
+ 				 : GT_(&quot; (%d header octets)&quot;), len);
+-		if (outlevel &gt;= O_VERBOSE)
+-		    report_complete(stdout, &quot;\n&quot;);
++		if (want_progress()) {
++		    /* flush and add a blank to append ticker dots */
++		    report_flush(stdout);
++		    putchar(' ');
++		}
+ 	    }
+ 
+ 	    /* 
+@@ -628,6 +639,7 @@
+ 			     /* pass the suppress_readbody flag only if the underlying
+ 			      * protocol does not fetch the body separately */
+ 			     separatefetchbody ? 0 : &amp;suppress_readbody);
++
+ 	    if (err == PS_RETAINED)
+ 		suppress_forward = suppress_delete = retained = TRUE;
+ 	    else if (err == PS_TRANSIENT)
+@@ -640,14 +652,8 @@
+ 	    /* tell server we got it OK and resynchronize */
+ 	    if (separatefetchbody &amp;&amp; ctl-&gt;server.base_protocol-&gt;trail)
+ 	    {
+-		if (outlevel &gt;= O_VERBOSE &amp;&amp; !is_a_file(1) &amp;&amp; !run.use_syslog)
+-		{
+-		    fputc('\n', stdout);
+-		    fflush(stdout);
+-		}
+-
+-		if ((err = (ctl-&gt;server.base_protocol-&gt;trail)(mailserver_socket, ctl, tag)))
+-		    return(err);
++		err = eat_trailer(mailserver_socket, ctl);
++		if (err) return(err);
+ 	    }
+ 
+ 	    /* do not read the body which is not being forwarded only if
+@@ -680,9 +686,15 @@
+ 		     */
+ 		    if (len == -1)
+ 			len = msgsize - msgblk.msglen;
+-		    if (outlevel &gt; O_SILENT &amp;&amp; !wholesize)
+-			report_build(stdout,
+-					GT_(&quot; (%d body octets)&quot;), len);
++		    if (!wholesize) {
++			if (outlevel &gt; O_SILENT)
++			    report_build(stdout,
++				    GT_(&quot; (%d body octets)&quot;), len);
++			if (want_progress()) {
++			    report_flush(stdout);
++			    putchar(' ');
++			}
++		    }
+ 		}
+ 
+ 		/* process the body now */
+@@ -690,23 +702,16 @@
+ 			      ctl,
+ 			      !suppress_forward,
+ 			      len);
++
+ 		if (err == PS_TRANSIENT)
+ 		    suppress_delete = suppress_forward = TRUE;
+ 		else if (err)
+ 		    return(err);
+ 
+ 		/* tell server we got it OK and resynchronize */
+-		if (ctl-&gt;server.base_protocol-&gt;trail)
+-		{
+-		    if (outlevel &gt;= O_VERBOSE &amp;&amp; !is_a_file(1) &amp;&amp; !run.use_syslog)
+-		    {
+-			fputc('\n', stdout);
+-			fflush(stdout);
+-		    }
+-
+-		    err = (ctl-&gt;server.base_protocol-&gt;trail)(mailserver_socket, ctl, tag);
+-		    if (err != 0)
+-			return(err);
++		if (ctl-&gt;server.base_protocol-&gt;trail) {
++		    err = eat_trailer(mailserver_socket, ctl);
++		    if (err) return(err);
+ 		}
+ 	    }
+ 
+
+Modified: branches/BRANCH_6-3/fetchmail.c
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.c	2009-05-04 21:52:22 UTC (rev 5289)
++++ branches/BRANCH_6-3/fetchmail.c	2009-05-04 21:52:32 UTC (rev 5290)
+@@ -1150,8 +1150,6 @@
+ 					flag = FALSE;\
+ 				else\
+ 					flag = (dflt)
+-    /* one global gets treated specially */
+-    DEFAULT(run.showdots, run.poll_interval==0 || nodetach);
+ 
+     /* merge in wired defaults, do sanity checks and prepare internal fields */
+     for (ctl = querylist; ctl; ctl = ctl-&gt;next)
+
+Modified: branches/BRANCH_6-3/fetchmail.h
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.h	2009-05-04 21:52:22 UTC (rev 5289)
++++ branches/BRANCH_6-3/fetchmail.h	2009-05-04 21:52:32 UTC (rev 5290)
+@@ -764,5 +764,11 @@
+ /* prototype from rfc822valid.c */
+ int rfc822_valid_msgid(const unsigned char *);
+ 
++/* macro to determine if we want to spam progress to stdout */
++#define want_progress() \
++	((outlevel &gt;= O_VERBOSE || (outlevel &gt; O_SILENT &amp;&amp; run.showdots)) \
++	&amp;&amp; !run.use_syslog \
++	&amp;&amp; (run.showdots || !is_a_file(1)))
++
+ #endif
+ /* fetchmail.h ends here */
+
+Modified: branches/BRANCH_6-3/fetchmail.man
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.man	2009-05-04 21:52:22 UTC (rev 5289)
++++ branches/BRANCH_6-3/fetchmail.man	2009-05-04 21:52:32 UTC (rev 5290)
+@@ -1315,9 +1315,9 @@
+ The
+ .B \-\-showdots
+ option (keyword: set showdots) forces fetchmail to show progress dots
+-even if the current tty is not stdout (for example logfiles).
+-Fetchmail shows the dots by default when run in nodetach mode or when
+-daemon mode is not enabled.
++even if the output goes to a file or fetchmail is not in verbose mode.
++Fetchmail shows the dots by default when run in \-\-verbose mode 
++\fIand\fP output goes to console. This option is ignored in \-\-silent mode.
+ .PP
+ By specifying the
+ .B \-\-tracepolls
+
+Modified: branches/BRANCH_6-3/transact.c
+===================================================================
+--- branches/BRANCH_6-3/transact.c	2009-05-04 21:52:22 UTC (rev 5289)
++++ branches/BRANCH_6-3/transact.c	2009-05-04 21:52:32 UTC (rev 5290)
+@@ -367,7 +367,7 @@
+     *tickervar += bytes;
+     while (*tickervar &gt;= SIZETICKER)
+     {
+-	if (outlevel &gt; O_SILENT &amp;&amp; run.showdots &amp;&amp; !run.use_syslog)
++	if (want_progress())
+ 	{
+ 	    fputc('.', stdout);
+ 	    fflush(stdout);
+@@ -1265,7 +1265,7 @@
+ 	return(PS_IOERR);
+     }
+     
+-    if ((run.poll_interval == 0 || nodetach) &amp;&amp; outlevel &gt;= O_VERBOSE &amp;&amp; !is_a_file(1) &amp;&amp; !run.use_syslog)
++    if (want_progress())
+ 	fputc('#', stdout);
+ 
+     /* write error notifications */
+@@ -1446,7 +1446,7 @@
+ 		release_sink(ctl);
+ 		return(PS_IOERR);
+ 	    }
+-	    else if (outlevel &gt;= O_VERBOSE &amp;&amp; !is_a_file(1) &amp;&amp; !run.use_syslog)
++	    else if (want_progress())
+ 	    {
+ 		fputc('*', stdout);
+ 		fflush(stdout);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000277.html">[fetchmail-svn] r5289 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000279.html">[fetchmail-svn] r5291 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#278">[ date ]</a>
+              <a href="thread.html#278">[ thread ]</a>
+              <a href="subject.html#278">[ subject ]</a>
+              <a href="author.html#278">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

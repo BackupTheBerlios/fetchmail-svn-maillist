@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5279 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-May/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5279%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090505051518.7D6F121F060%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000287.html">
+   <LINK REL="Next"  HREF="000289.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5279 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5279%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090505051518.7D6F121F060%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5279 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Tue May  5 07:15:18 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000287.html">[fetchmail-svn] r5278 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000289.html">[fetchmail-svn] r5280 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#288">[ date ]</a>
+              <a href="thread.html#288">[ thread ]</a>
+              <a href="subject.html#288">[ subject ]</a>
+              <a href="author.html#288">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: root
+Date: 2009-05-05 00:15:18 -0500 (Tue, 05 May 2009)
+New Revision: 5279
+
+Modified:
+   branches/BRANCH_6-3/transact.c
+Log:
+Fix formatting around MIME decoding.
+
+Modified: branches/BRANCH_6-3/transact.c
+===================================================================
+--- branches/BRANCH_6-3/transact.c	2009-05-04 19:01:05 UTC (rev 5278)
++++ branches/BRANCH_6-3/transact.c	2009-05-05 05:15:18 UTC (rev 5279)
+@@ -3,8 +3,6 @@
+  *
+  * Copyright 2001 by Eric S. Raymond
+  * For license terms, see the file COPYING in this directory.
+- *
+- * 
+  */
+ 
+ #include  &quot;config.h&quot;
+@@ -614,22 +612,23 @@
+ 	{
+ 	    print_ticker(&amp;sizeticker, linelen);
+ 	}
++
++	/*
++	 * Decode MIME encoded headers. We MUST do this before
++	 * looking at the Content-Type / Content-Transfer-Encoding
++	 * headers (RFC 2046).
++	 */
++	if ( ctl-&gt;mimedecode )
++	{
++	    char *tcp;
++	    UnMimeHeader(line);
++	    /* the line is now shorter. So we retrace back till we find
++	     * our terminating combination \n\0, we move backwards to
++	     * make sure that we don't catch some \n\0 stored in the
++	     * decoded part of the message */
++	    for (tcp = line + linelen - 1; tcp &gt; line &amp;&amp; (*tcp != 0 || tcp[-1] != '\n'); tcp--);
++	    if  (tcp &gt; line) linelen = tcp - line;
+ 	}
+-		/*
+-		 * Decode MIME encoded headers. We MUST do this before
+-		 * looking at the Content-Type / Content-Transfer-Encoding
+-		 * headers (RFC 2046).
+-		 */
+-		if ( ctl-&gt;mimedecode )
+-		{
+-		    char *tcp;
+-		    UnMimeHeader(line);
+-		    /* the line is now shorter. So we retrace back till we find our terminating
+-		     * combination \n\0, we move backwards to make sure that we don't catch som
+-		     * \n\0 stored in the decoded part of the message */
+-		    for(tcp = line + linelen - 1; tcp &gt; line &amp;&amp; (*tcp != 0 || tcp[-1] != '\n'); tcp--);
+-		    if(tcp &gt; line) linelen = tcp - line;
+-		}
+ 
+ 
+ 	/* skip processing if we are going to retain or refuse this mail */
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000287.html">[fetchmail-svn] r5278 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000289.html">[fetchmail-svn] r5280 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#288">[ date ]</a>
+              <a href="thread.html#288">[ thread ]</a>
+              <a href="subject.html#288">[ subject ]</a>
+              <a href="author.html#288">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

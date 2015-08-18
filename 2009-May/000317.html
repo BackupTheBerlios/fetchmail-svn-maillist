@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5303 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-May/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5303%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090524110728.E53BD21EF4D%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000316.html">
+   <LINK REL="Next"  HREF="000318.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5303 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5303%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090524110728.E53BD21EF4D%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5303 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Sun May 24 13:07:28 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000316.html">[fetchmail-svn] r5302 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000318.html">[fetchmail-svn] r5304 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#317">[ date ]</a>
+              <a href="thread.html#317">[ thread ]</a>
+              <a href="subject.html#317">[ subject ]</a>
+              <a href="author.html#317">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-05-24 06:07:28 -0500 (Sun, 24 May 2009)
+New Revision: 5303
+
+Modified:
+   branches/BRANCH_6-3/README
+Log:
+Update and reformat.
+
+Modified: branches/BRANCH_6-3/README
+===================================================================
+--- branches/BRANCH_6-3/README	2009-05-24 11:07:21 UTC (rev 5302)
++++ branches/BRANCH_6-3/README	2009-05-24 11:07:28 UTC (rev 5303)
+@@ -1,47 +1,65 @@
+-			 fetchmail README
++fetchmail README
++================
+ 
+-Fetchmail is a free, full-featured, robust, well-documented remote
+-mail retrieval and forwarding utility intended to be used over
+-on-demand TCP/IP links (such as SLIP or PPP connections).  It
+-retrieves mail from remote mail servers and forwards it to your local
+-(client) machine's delivery system, so it can then be be read by
+-normal mail user agents such as elm(1) or Mail(1).
++Introduction
++------------
+ 
+-Fetchmail supports all standard mail-retrieval protocols in use on the
+-Internet: POP2, POP3, RPOP, APOP, KPOP, IMAP2bis, IMAP4, IMAP4rev1
+-ESMTP ETRN, and ODMR.  Fetchmail also fully supports authentication
+-via GSSAPI, Kerberos 4 and 5, RFC1938 one-time passwords, Compuserve's
+-POP3 with RPA, Microsoft's NTLM, Demon Internet's SDPS, or CRAM-MD5
+-authentication a la RFC2195.  Fetchmail also supports end-to-end
+-encryption with OpenSSL.
++Fetchmail is a free, full-featured, robust, well-documented remote mail 
++retrieval and forwarding utility intended to be used over on-demand TCP/IP 
++links (such as SLIP or PPP connections).  It retrieves mail from remote mail 
++servers and forwards it to your local (client) machine's delivery system, so it 
++can then be be read by normal mail user agents such as mutt(1), elm(1) or 
++Mail(1).
+ 
+-The fetchmail code was developed under Linux, but has also been
+-extensively tested under the BSD variants, AIX, HP-UX versions 9 and
+-10, SunOS, Solaris, NEXTSTEP, OSF 3.2, IRIX, and Rhapsody.
++Fetchmail supports all standard mail-retrieval protocols in use on the 
++Internet: POP3 (including some variants such as RPOP, APOP, KPOP), IMAP4rev1 
++(also IMAP4, IMAP2bis), POP2, IMAP4, ETRN, and ODMR. On the output side, 
++fetchmail supports ESMTP/SMTP, LMTP, and invocation of a local delivery agent.
+ 
+-It should be readily portable to other Unix variants (it uses GNU
+-autoconf).  It has been ported to LynxOS and BeOS and will build there
+-without special action.  It has also been ported to QNX; to build
+-under QNX, see the header comments in the Makefile.  It is reported to
++Fetchmail also fully supports authentication via GSSAPI, Kerberos 4 and 5, 
++RFC1938 one-time passwords, Compuserve's POP3 with RPA, Microsoft's NTLM, Demon 
++Internet's SDPS, or CRAM-MD5 authentication a la RFC2195.
++
++Fetchmail supports end-to-end encryption with OpenSSL, do read README.SSL for 
++details on fetchmail's configuration and README.SSL-SERVER for server-side 
++requirements.  NOTE! To be compatible with earlier releases, fetchmail 6.3's 
++default behaviour is more relaxed than dictated by the standard - add options 
++such as --sslcertck to tighten certificate checking.
++
++Portability
++-----------
++
++The fetchmail code was developed under Linux, but has also been extensively 
++tested under the BSD variants, AIX, HP-UX versions 9 and 10, SunOS, Solaris, 
++NEXTSTEP, OSF 3.2, IRIX, and Rhapsody.
++
++It should be readily portable to other Unix variants and Unix-like operating 
++systems (it uses GNU autoconf).  It has been ported to Cygwin, LynxOS and BeOS 
++and will build there without special action.  It has also been ported to QNX; 
++to build under QNX, see the header comments in the Makefile.  It is reported to 
+ build and run under AmigaOS.
+ 
+-See the distribution files FEATURES for a full list of features, NEWS
+-for detailed information on recent changes, NOTES for design notes, and
+-TODO for a list of things that still need doing.
++Further reading
++---------------
+ 
+ The INSTALL file describes how to configure and install fetchmail.
+ 
+-The fetchmail code appears to be stable and free of bugs affecting
+-normal operation (that is, retrieving from POP3 or IMAP in single-drop
+-mode and forwarding via SMTP to sendmail).  It will probably undergo
+-substantial change only if and when support for a new retrieval
+-protocol or authentication mode is added.
++See the distribution files FEATURES for a full list of features, NEWS for 
++detailed information on recent changes, NOTES for design notes, and TODO for 
++a list of things that still need doing.  If you want to hack on this code, 
++a list of known bugs and to-do items can be found in the file todo.html.
+ 
+-If you want to hack on this code, a list of known bugs and to-do items
+-can be found in the file todo.html.
++Status, source code
++-------------------
+ 
++The fetchmail code appears to be stable and free of bugs affecting normal 
++operation (that is, retrieving from POP3 or IMAP in single-drop mode and 
++forwarding via SMTP to sendmail).
++
+ You can get the code from the fetchmail home page:
+ 
++	<A HREF="http://www.fetchmail.info/">http://www.fetchmail.info/</A>
++
+ 	<A HREF="http://fetchmail.berlios.de/">http://fetchmail.berlios.de/</A>
+ 
+ Enjoy!
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000316.html">[fetchmail-svn] r5302 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000318.html">[fetchmail-svn] r5304 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#317">[ date ]</a>
+              <a href="thread.html#317">[ thread ]</a>
+              <a href="subject.html#317">[ subject ]</a>
+              <a href="author.html#317">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

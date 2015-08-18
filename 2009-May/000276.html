@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5288 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-May/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5288%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090504215212.13B2321F058%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000275.html">
+   <LINK REL="Next"  HREF="000277.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5288 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5288%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090504215212.13B2321F058%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5288 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Mon May  4 23:52:12 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000275.html">[fetchmail-svn] r5287 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000277.html">[fetchmail-svn] r5289 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#276">[ date ]</a>
+              <a href="thread.html#276">[ thread ]</a>
+              <a href="subject.html#276">[ subject ]</a>
+              <a href="author.html#276">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-05-04 16:52:11 -0500 (Mon, 04 May 2009)
+New Revision: 5288
+
+Modified:
+   branches/BRANCH_6-3/report.c
+Log:
+Replace FF characters by LF.
+
+Modified: branches/BRANCH_6-3/report.c
+===================================================================
+--- branches/BRANCH_6-3/report.c	2009-05-04 21:52:02 UTC (rev 5287)
++++ branches/BRANCH_6-3/report.c	2009-05-04 21:52:11 UTC (rev 5288)
+@@ -145,7 +145,7 @@
+ 	fflush (errfp);
+     }
+ }
+-
++
+ /*
+  * Calling report_init(1) causes report_build and report_complete to write
+  * to errfp without buffering.  This is needed for the ticker dots to
+@@ -174,7 +174,7 @@
+ #endif /* HAVE_SYSLOG */
+     }
+ }
+-
++
+ /* Build an report message by appending MESSAGE, which is a printf-style
+    format string with optional args, to the existing report message (which may
+    be empty.)  The completed report message is finally printed (and reset to
+@@ -265,13 +265,12 @@
+ 	fputs(partial_message, errfp);
+     }
+ }
+-
++
+ /* Complete a report message by appending MESSAGE, which is a printf-style
+    format string with optional args, to the existing report message (which may
+    be empty.)  The completed report message is then printed (and reset to
+    empty.) */
+ /* VARARGS */
+-
+ void
+ #ifdef HAVE_STDARG_H
+ report_complete (FILE *errfp, const char *message, ...)
+@@ -338,7 +337,7 @@
+     else
+ 	report(errfp, &quot;%s&quot;, partial_message);
+ }
+-
++
+ /* Sometimes we want to have at most one error per line.  This
+    variable controls whether this mode is selected or not.  */
+ static int error_one_per_line;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000275.html">[fetchmail-svn] r5287 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000277.html">[fetchmail-svn] r5289 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#276">[ date ]</a>
+              <a href="thread.html#276">[ thread ]</a>
+              <a href="subject.html#276">[ subject ]</a>
+              <a href="author.html#276">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

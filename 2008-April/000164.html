@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5174 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2008-April/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5174%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20080424081936.22F776B01B2%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000163.html">
+   <LINK REL="Next"  HREF="000165.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5174 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5174%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20080424081936.22F776B01B2%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5174 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Thu Apr 24 10:19:36 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000163.html">[fetchmail-svn] r5173 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000165.html">[fetchmail-svn] r5175 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#164">[ date ]</a>
+              <a href="thread.html#164">[ thread ]</a>
+              <a href="subject.html#164">[ subject ]</a>
+              <a href="author.html#164">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2008-04-24 03:19:35 -0500 (Thu, 24 Apr 2008)
+New Revision: 5174
+
+Modified:
+   branches/BRANCH_6-3/fetchmail-FAQ.html
+Log:
+Add notes about Google mail.
+
+Modified: branches/BRANCH_6-3/fetchmail-FAQ.html
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-FAQ.html	2008-04-23 07:44:02 UTC (rev 5173)
++++ branches/BRANCH_6-3/fetchmail-FAQ.html	2008-04-24 08:19:35 UTC (rev 5174)
+@@ -150,6 +150,7 @@
+ &lt;a href=&quot;#I7&quot;&gt;I7. How can I use fetchmail with SpryNet?&lt;/a&gt;&lt;br/&gt;
+ &lt;a href=&quot;#I8&quot;&gt;I8. How can I use fetchmail with comcast.net or other
+     Maillennium servers?&lt;/a&gt;&lt;br/&gt;
++&lt;a href=&quot;#I9&quot;&gt;I9. How can I use fetchmail with GMail/Google Mail?&lt;/a&gt;&lt;br/&gt;
+ 
+ &lt;h2 id=&quot;C_K&quot;&gt;How to set up well-known security and authentication
+ methods&lt;/h2&gt;
+@@ -1969,6 +1970,16 @@
+ 
+ &lt;p&gt;Workaround for older versions: use the &lt;tt&gt;fetchall&lt;/tt&gt; option.&lt;/p&gt;
+ 
++&lt;h2&gt;&lt;a id=&quot;I9&quot; name=&quot;I9&quot;&gt;I9. How can I use fetchmail with GMail/Google Mail?&lt;/a&gt;&lt;/h2&gt;
++
++&lt;p&gt;Google's IMAP servers, as of April 2008, are broken and re-encode
++MIME-encoded headers improperly and are not feature-complete yet. The
++model how their servers organize mail also deviates in significant ways
++from what the POP3 or IMAP protocol 'fathers' conceived. This means all
++sorts of strange effects, for instance, your sent mail may show up in
++the mail that fetchmail fetches. It's best to avoid fetching mail from
++Google until they are using standards-compliant software.&lt;/p&gt;
++
+ &lt;hr/&gt;
+ &lt;h1&gt;How to set up well-known security and authentication
+ methods&lt;/h1&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000163.html">[fetchmail-svn] r5173 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000165.html">[fetchmail-svn] r5175 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#164">[ date ]</a>
+              <a href="thread.html#164">[ thread ]</a>
+              <a href="subject.html#164">[ subject ]</a>
+              <a href="author.html#164">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,183 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5349 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-May/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5349%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090530051515.C870421EF82%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000409.html">
+   <LINK REL="Next"  HREF="000410.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5349 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5349%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090530051515.C870421EF82%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5349 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Sat May 30 07:15:15 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000409.html">[fetchmail-svn] r5351 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000410.html">[fetchmail-svn] r5350 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#412">[ date ]</a>
+              <a href="thread.html#412">[ thread ]</a>
+              <a href="subject.html#412">[ subject ]</a>
+              <a href="author.html#412">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: root
+Date: 2009-05-30 00:15:15 -0500 (Sat, 30 May 2009)
+New Revision: 5349
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/fetchmail.c
+   branches/BRANCH_6-3/fetchmail.man
+   branches/BRANCH_6-3/report.c
+Log:
+Let logfile take precedence over syslog if and only if logfile is effective.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-05-27 19:12:05 UTC (rev 5348)
++++ branches/BRANCH_6-3/NEWS	2009-05-30 05:15:15 UTC (rev 5349)
+@@ -97,6 +97,10 @@
+   errors. Partially taken from Petr Cerny's patch in Novell Bugzilla #246829.
+   The 501 part of said patch was not added, as the maintainer is not convinced
+   501 is a temporary condition, and softbounce takes care of this anyways.
++* Proper precedence ordering for the syslog and logfile options. If the logfile
++  option is effective (i. e. we're not in daemon mode and nodetach isn't used),
++  kill the syslog option. If logfile is ineffective (we're not in daemon mode,
++  or nodetach is set), syslog takes precedence.
+ 
+ # CHANGES
+ * Make the comparison of the SSL fingerprints case insensitive, to
+
+Modified: branches/BRANCH_6-3/fetchmail.c
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.c	2009-05-27 19:12:05 UTC (rev 5348)
++++ branches/BRANCH_6-3/fetchmail.c	2009-05-30 05:15:15 UTC (rev 5349)
+@@ -302,6 +302,11 @@
+     if (!quitonly)
+ 	implicitmode = load_params(argc, argv, optind);
+ 
++    /* precedence: logfile (if effective) overrides syslog. */
++    if (run.logfile &amp;&amp; run.poll_interval &amp;&amp; !nodetach) {
++	run.use_syslog = 0;
++    }
++
+ #if defined(HAVE_SYSLOG)
+     /* logging should be set up early in case we were restarted from exec */
+     if (run.use_syslog)
+@@ -556,8 +561,13 @@
+     /* avoid zombies from plugins */
+     deal_with_sigchld();
+ 
++    /* Fix up log destination - if the if() is true, the precedence rule
++     * above hasn't killed off the syslog option, because the logfile
++     * option is ineffective (because we're not detached or not in
++     * deamon mode), so kill it for the benefit of other parts of the
++     * code. */
+     if (run.logfile &amp;&amp; run.use_syslog)
+-	fprintf(stderr, GT_(&quot;fetchmail: Warning: syslog and logfile are set. Check both for logs!\n&quot;));
++	run.logfile = 0;
+ 
+     /*
+      * Maybe time to go to demon mode...
+
+Modified: branches/BRANCH_6-3/fetchmail.man
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.man	2009-05-27 19:12:05 UTC (rev 5348)
++++ branches/BRANCH_6-3/fetchmail.man	2009-05-30 05:15:15 UTC (rev 5349)
+@@ -1224,9 +1224,8 @@
+ or
+ .B \-\-logfile &lt;filename&gt;
+ option (keyword: set logfile) is only effective when fetchmail is
+-detached and in daemon mode. Note that the logfile must exist BEFORE 
+-fetchmail is run, you
+-can use the
++detached and in daemon mode. Note that \fBthe logfile must exist
++before\fP fetchmail is run, you can use the
+ .BR touch (1)
+ command with the filename as its sole argument to create it.
+ .br
+@@ -1255,11 +1254,7 @@
+ .B \-\-nosyslog
+ option turns off use of
+ .BR syslog (3),
+-assuming it's turned on in the \fI~/.fetchmailrc\fP file, or that the
+-.B \-L
+-or
+-.B \-\-logfile &lt;file&gt;
+-option was used.
++assuming it's turned on in the \fI~/.fetchmailrc\fP file.
+ .PP
+ The
+ .B \-N
+@@ -2112,7 +2107,8 @@
+ followed by a string sets the same global specified by \-\-logfile.  A
+ command-line \-\-logfile option will override this. Note that \-\-logfile is
+ only effective if fetchmail detaches itself from the terminal and the
+-logfile already exists before fetchmail is run.  Also,
++logfile already exists before fetchmail is run, and it overrides
++\-\-syslog in this case.  Also,
+ \&amp;'set daemon' sets the poll interval as \-\-daemon does.  This can be
+ overridden by a command-line \-\-daemon option; in particular \-\-daemon\~0
+ can be used to force foreground operation. The 'set postmaster'
+
+Modified: branches/BRANCH_6-3/report.c
+===================================================================
+--- branches/BRANCH_6-3/report.c	2009-05-27 19:12:05 UTC (rev 5348)
++++ branches/BRANCH_6-3/report.c	2009-05-30 05:15:15 UTC (rev 5349)
+@@ -149,12 +149,11 @@
+     }
+ }
+ 
+-/*
+- * Calling report_init(1) causes report_build and report_complete to write
+- * to errfp without buffering.  This is needed for the ticker dots to
+- * work correctly.
++/**
++ * Configure the report module. The output is set according to
++ * \a mode.
+  */
+-void report_init(int mode)
++void report_init(int mode /** 0: regular output, 1: unbuffered output, -1: syslog */)
+ {
+     switch(mode)
+     {
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000409.html">[fetchmail-svn] r5351 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000410.html">[fetchmail-svn] r5350 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#412">[ date ]</a>
+              <a href="thread.html#412">[ thread ]</a>
+              <a href="subject.html#412">[ subject ]</a>
+              <a href="author.html#412">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

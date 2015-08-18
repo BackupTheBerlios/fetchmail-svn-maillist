@@ -1,0 +1,3068 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5411 - branches/BRANCH_MAPI
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-August/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5411%20-%20branches/BRANCH_MAPI&In-Reply-To=%3C20090812165257.15D3721F2CF%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000469.html">
+   <LINK REL="Next"  HREF="000471.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5411 - branches/BRANCH_MAPI</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5411%20-%20branches/BRANCH_MAPI&In-Reply-To=%3C20090812165257.15D3721F2CF%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5411 - branches/BRANCH_MAPI">svn at mknod.org
+       </A><BR>
+    <I>Wed Aug 12 18:52:56 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000469.html">[fetchmail-svn] r5410 - branches/BRANCH_MAPI
+</A></li>
+        <LI>Next message: <A HREF="000471.html">[fetchmail-svn] r5412 - branches/BRANCH_MAPI
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#470">[ date ]</a>
+              <a href="thread.html#470">[ thread ]</a>
+              <a href="subject.html#470">[ subject ]</a>
+              <a href="author.html#470">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: mojmir
+Date: 2009-08-12 11:52:56 -0500 (Wed, 12 Aug 2009)
+New Revision: 5411
+
+Modified:
+   branches/BRANCH_MAPI/mapi.c
+Log:
+* mainly formatting changes while reading the code
+
+
+
+Modified: branches/BRANCH_MAPI/mapi.c
+===================================================================
+--- branches/BRANCH_MAPI/mapi.c	2009-08-12 16:52:11 UTC (rev 5410)
++++ branches/BRANCH_MAPI/mapi.c	2009-08-12 16:52:56 UTC (rev 5411)
+@@ -24,52 +24,56 @@
+ 
+ #ifdef MAPI_ENABLE
+ #include &lt;libmapi/libmapi.h&gt;
+-#include  &lt;ctype.h&gt;
++#include &lt;ctype.h&gt;
+ 
+ #if defined(HAVE_UNISTD_H)
+ #include &lt;unistd.h&gt;
+ #endif
+ 
+ #if defined(STDC_HEADERS)
+-#include  &lt;stdlib.h&gt;
++#include &lt;stdlib.h&gt;
+ #endif
+ 
+-#include  &lt;errno.h&gt;
++#include &lt;errno.h&gt;
+ #include &lt;magic.h&gt;
+ 
+-#include  &quot;fetchmail.h&quot;
+-#include  &quot;i18n.h&quot;
+-#include  &quot;openchange-tools.h&quot;
++#include &quot;fetchmail.h&quot;
++#include &quot;i18n.h&quot;
++#include &quot;openchange-tools.h&quot;
+ 
++/* samba includes */
++#include &lt;ldb.h&gt;
++#include &lt;util/data_blob.h&gt;
++
+ #define DEFAULT_MAPI_PROFILES &quot;%s/.fetchmail_mapi_profiles.ldb&quot;
+-#define MAPI_BOUNDARY	&quot;=_DocE+STaALJfprDB&quot;
++#define MAPI_BOUNDARY &quot;=_DocE+STaALJfprDB&quot;
+ 
+ #ifndef PATH_MAX
+-#define PATH_MAX 1024
++# define PATH_MAX 1024
+ #endif
+ 
+-static TALLOC_CTX *mapi_mem_ctx;
+-static struct mapi_profile *mapi_profile;
+-static mapi_object_t mapi_obj_store;
+-static mapi_object_t mapi_obj_folder;
+-static mapi_object_t mapi_obj_table;
+-static mapi_id_array_t mapi_deleted_ids;
+-static struct SRowSet mapi_rowset;
+-static int      mapi_initialized = FALSE;
+-static char     mapi_profdb[PATH_MAX];	/* mapi profiles databse */
+-static char     password[128];
+-static struct mapi_session * s_mapi_session = NULL;
++static TALLOC_CTX * g_mapi_mem_ctx;
++static struct mapi_profile * mapi_profile;
++static mapi_object_t g_mapi_obj_store;
++static mapi_object_t g_mapi_obj_folder;
++static mapi_object_t g_mapi_obj_table;
++static mapi_id_array_t g_mapi_deleted_ids;
++static struct SRowSet g_mapi_rowset;
++static int g_mapi_initialized = FALSE;
++static char g_mapi_profdb[PATH_MAX]; /* mapi profiles databse */
++static char g_password[128];
++static struct mapi_session * g_mapi_session = NULL;
+ 
+ 
+-static DATA_BLOB mapi_buffer;
+-static int      mapi_buffer_count;
++static DATA_BLOB g_mapi_buffer;
++static size_t g_mapi_buffer_count;
+ 
+ 
+ 
+ /*
+- * ===  FUNCTION  ======================================================================
+- *         Name:  MapiWrite
+- *  Description:  write data into mapi_buffer
++ * ===	FUNCTION  ======================================================================
++ *		   Name:  MapiWrite
++ *	Description:  write data into g_mapi_buffer
+  * =====================================================================================
+  */
+ #if defined(HAVE_STDARG_H)
+@@ -77,84 +81,81 @@
+ {
+ #else
+ void MapiWrite(lenp, format, va_alist)
+-    int            *lenp;
+-    char           *format;
+-    va_dcl
++	int	* lenp;
++	char * format;
++	va_dcl
+ {
+ #endif
+ 
+-    va_list         ap;
+-    char           *temp_line;
++	va_list	ap;
++	char * temp_line;
+ #if defined(HAVE_STDARG_H)
+-    va_start(ap, format);
++	va_start(ap, format);
+ #else
+-    va_start(ap);
++	va_start(ap);
+ #endif
+-    temp_line = talloc_vasprintf(mapi_mem_ctx, format, ap);
+-    data_blob_append(mapi_mem_ctx, &amp;mapi_buffer, temp_line, strlen(temp_line));
+-    *lenp += strlen(temp_line);
+-    talloc_free(temp_line);
+-    va_end(ap);
++	temp_line = talloc_vasprintf(g_mapi_mem_ctx, format, ap);
++	data_blob_append(g_mapi_mem_ctx, &amp;g_mapi_buffer, temp_line, strlen(temp_line));
++	*lenp += strlen(temp_line);
++	talloc_free(temp_line);
++	va_end(ap);
+ 
+-    return;
++	return;
+ }
+ 
+ /*
+- * ===  FUNCTION  ======================================================================
+- *         Name:  MapiRead
+- *  Description:  match the interface of SockRead in socket.h to feed the driver with
+- *                MAPI data.
++ * ===	FUNCTION  ======================================================================
++ *		   Name:  MapiRead
++ *	Description:  match the interface of SockRead in socket.h to feed the driver with
++ *				  MAPI data.
+  * =====================================================================================
+  */
+-int MapiRead(int sock, char *buf, int len)
++int MapiRead (int sock, char *buf, int len)
+ {
+-    int             count = 0;
++	int count = 0;
+ 
+-    while (mapi_buffer_count &lt; mapi_buffer.length) {
+-	*(buf + count) = *(mapi_buffer.data + mapi_buffer_count);
+-	count++;
+-	mapi_buffer_count++;
+-	if (*(buf + count - 1) == '\n') {
+-	    *(buf + count) = '\0';
+-	    return count;
++	while (g_mapi_buffer_count &lt; g_mapi_buffer.length) {
++		*(buf + count) = *(g_mapi_buffer.data + g_mapi_buffer_count);
++		count++;
++		g_mapi_buffer_count++;
++		if (*(buf + count - 1) == '\n') {
++			*(buf + count) = '\0';
++			return count;
++		}
++		if (count == len - 1) {
++			*(buf + count) = '\0';
++			return count;
++		}
+ 	}
+-	if (count == len - 1) {
+-	    *(buf + count) = '\0';
+-	    return count;
+-	}
+-    }
+ 
+-    return -1;
++	return -1;
+ }
+ 
+ /*
+- * ===  FUNCTION  ======================================================================
+- *         Name:  MapiPeek
+- *  Description:  match the interface of SockPeek.
++ * ===	FUNCTION  ======================================================================
++ *		   Name:  MapiPeek
++ *	Description:  match the interface of SockPeek.
+  * =====================================================================================
+  */
+-int MapiPeek(int sock)
++int MapiPeek (int sock)
+ {
+-    if (mapi_buffer_count &lt; mapi_buffer.length)
+-	return *(mapi_buffer.data + mapi_buffer_count);
+-    else
+-	return -1;
++	if (g_mapi_buffer_count &lt; g_mapi_buffer.length)
++		return *(g_mapi_buffer.data + g_mapi_buffer_count);
++	else
++		return -1;
+ }
+ 
+ 
+-
+-static const char *get_filename(const char *filename)
++static const char * get_filename (const char * filename)
+ {
+-    const char     *substr;
++	const char * substr = 0;
+ 
+-    if (!filename)
+-	return NULL;
++	if (!filename) return NULL;
+ 
+-    substr = rindex(filename, '/');
+-    if (substr)
+-	return substr;
++	substr = rindex(filename, '/');
++	if (substr) return substr;
+ 
+-    return filename;
++	return filename;
+ }
+ 
+ /*
+@@ -162,1604 +163,1524 @@
+  * Samba4 code
+  * caller frees 
+  */
+-static char *ldb_base64_encode(void *mem_ctx, const char *buf, int len)
+-{
+-    const char     *b64 = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&quot;;
+-    int             bit_offset;
+-    int             byte_offset;
+-    int             idx;
+-    int             i;
+-    const uint8_t  *d = (const uint8_t *) buf;
+-    int             bytes = (len * 8 + 5) / 6;
+-    int             pad_bytes = (bytes % 4) ? 4 - (bytes % 4) : 0;
+-    char           *out;
+-
+-    out = talloc_array(mem_ctx, char, bytes + pad_bytes + 1);
+-    if (!out)
+-	return NULL;
+-
+-    for (i = 0; i &lt; bytes; i++) {
+-	byte_offset = (i * 6) / 8;
+-	bit_offset = (i * 6) % 8;
+-	if (bit_offset &lt; 3) {
+-	    idx = (d[byte_offset] &gt;&gt; (2 - bit_offset)) &amp; 0x3F;
+-	} else {
+-	    idx = (d[byte_offset] &lt;&lt; (bit_offset - 2)) &amp; 0x3F;
+-	    if (byte_offset + 1 &lt; len) {
+-		idx |= (d[byte_offset + 1] &gt;&gt; (8 - (bit_offset - 2)));
+-	    }
+-	}
+-	out[i] = b64[idx];
+-    }
+-
+-    for (; i &lt; bytes + pad_bytes; i++)
+-	out[i] = '=';
+-    out[i] = 0;
+-
+-    return out;
+-}
+-
+-
+ static char * get_base64_attachment (TALLOC_CTX * mem_ctx, mapi_object_t obj_attach, const uint32_t size, char ** magic)
+ {
+-    enum MAPISTATUS retval;
+-    mapi_object_t   obj_stream;
+-    DATA_BLOB	    data;
+-    size_t	    data_pos = 0;
+-    uint16_t	    read_bytes = 0;
+-    magic_t	    cookie = NULL;
++	enum MAPISTATUS retval;
++	mapi_object_t	obj_stream;
++	DATA_BLOB		data;
++	size_t		data_pos = 0;
++	uint16_t		read_bytes = 0;
++	magic_t		cookie = NULL;
+ 
+-    if (outlevel &gt;= O_MONITOR) report(stdout, GT_(&quot;MAPI&gt; mapi_get_base64_attachment(): size=%u\n&quot;), size);
++	if (outlevel &gt;= O_MONITOR) report(stdout, GT_(&quot;MAPI&gt; mapi_get_base64_attachment(): size=%u\n&quot;), size);
+ 
+-    if (OpenStream(&amp;obj_attach, PR_ATTACH_DATA_BIN, 0, &amp;obj_stream) != MAPI_E_SUCCESS)
+-	return NULL;
+-    if (GetStreamSize(&amp;obj_stream, &amp;data.length) != MAPI_E_SUCCESS)
+-	return NULL;
++	if (OpenStream(&amp;obj_attach, PR_ATTACH_DATA_BIN, 0, &amp;obj_stream) != MAPI_E_SUCCESS) return NULL;
++	if (GetStreamSize(&amp;obj_stream, &amp;data.length) != MAPI_E_SUCCESS) return NULL;
+ 
+-    data.data = talloc_size(mem_ctx, data.length);
+-    if (outlevel &gt;= O_MONITOR) report(stdout, GT_(&quot;MAPI&gt; allocated size=%u\n&quot;), data.length);
++	data.data = talloc_size(mem_ctx, data.length);
++	if (outlevel &gt;= O_MONITOR) report(stdout, GT_(&quot;MAPI&gt; allocated size=%u\n&quot;), data.length);
+ 
+-    do {
+-	if (ReadStream(&amp;obj_stream, data.data + data_pos, MSGBUFSIZE, &amp;read_bytes) != MAPI_E_SUCCESS)
+-	    return NULL;
+-	data_pos += read_bytes;
+-    } while (data_pos &lt; data.length);
++	do {
++		if (ReadStream(&amp;obj_stream, data.data + data_pos, MSGBUFSIZE, &amp;read_bytes) != MAPI_E_SUCCESS) return NULL;
++		data_pos += read_bytes;
++	} while (data_pos &lt; data.length);
+ 
+-    if (outlevel &gt;= O_MONITOR) report(stdout, GT_(&quot;MAPI&gt; All data received: data_pos=%u\n&quot;), data_pos);
++	if (outlevel &gt;= O_MONITOR) report(stdout, GT_(&quot;MAPI&gt; All data received: data_pos=%u\n&quot;), data_pos);
+ 
+-    cookie = magic_open(MAGIC_MIME);
+-    if (cookie == NULL) {
+-	report(stderr, GT_(&quot;MAPI&gt; mime error: %s\n&quot;), magic_error(cookie));
+-	return NULL;
+-    }
+-    if (magic_load(cookie, NULL) == -1) {
+-	report(stderr, GT_(&quot;MAPI&gt; mime error: %s\n&quot;), magic_error(cookie));
++	cookie = magic_open(MAGIC_MIME);
++	if (cookie == NULL) {
++		report(stderr, GT_(&quot;MAPI&gt; mime error: %s\n&quot;), magic_error(cookie));
++		return NULL;
++	}
++	if (magic_load(cookie, NULL) == -1) {
++		report(stderr, GT_(&quot;MAPI&gt; mime error: %s\n&quot;), magic_error(cookie));
++		magic_close(cookie);
++		return NULL;
++	}
++	*magic = talloc_strdup(mem_ctx, magic_buffer(cookie, data.data, data.length));
+ 	magic_close(cookie);
+-	return NULL;
+-    }
+-    *magic = talloc_strdup(mem_ctx, magic_buffer(cookie, data.data, data.length));
+-    magic_close(cookie);
+ 
+-    return ldb_base64_encode(mem_ctx, data.data, data.length);
++	return ldb_base64_encode(mem_ctx, data.data, data.length);
+ }
+ 
+ 
+ /*
+- * ===  FUNCTION  ======================================================================
+- *         Name:  is_safe_char
+- *  Description:  check if a character is safe to be represented as the ASCII character.
++ * ===	FUNCTION  ======================================================================
++ *		   Name:  is_safe_char
++ *	Description:  check if a character is safe to be represented as the ASCII character.
+  * =====================================================================================
+  */
+ static int is_safe_char(char ch)
+ {
+ 	/*-----------------------------------------------------------------------------
+-	 *  For total robustness, it is better to quote every character except for the
+-	 *  73-character set known to be invariant across all gateways, that is the 
+-	 *  letters anddigits (A-Z, a-z and 0-9) and the following 11 characters:
+-	 *  ' ( ) + , - . / : = ?
++	 *	For total robustness, it is better to quote every character except for the
++	 *	73-character set known to be invariant across all gateways, that is the 
++	 *	letters anddigits (A-Z, a-z and 0-9) and the following 11 characters:
++	 *	' ( ) + , - . / : = ?
+ 	 *-----------------------------------------------------------------------------*/
+-    return isalnum(ch) || ch == '\'' || ch == '(' || ch == ')' || ch == '+' || ch == ','
++	return isalnum(ch) || ch == '\'' || ch == '(' || ch == ')' || ch == '+' || ch == ','
+ 	|| ch == '-' || ch == '.' || ch == '/' || ch == ':' || ch == '=' || ch == '?';
+ }
+ 
+ 
+ /*
+- * ===  FUNCTION  ======================================================================
+- *         Name:  quoted_printable_encode
+- *  Description:  encode the body and append it to mapi_buffer 
++ * ===	FUNCTION  ======================================================================
++ *		   Name:  quoted_printable_encode
++ *	Description:  encode the body and append it to g_mapi_buffer 
+  * =====================================================================================
+  */
+ static void quoted_printable_encode(const DATA_BLOB * body, int *lenp)
+ {
+-    int             line_count = 0;
+-    int             body_count = 0;
+-    char            hex[16] = &quot;0123456789ABCDEF&quot;;
+-    char            ch;
+-    char            line[78];
++	int				line_count = 0;
++	int				body_count = 0;
++	char			hex[16] = &quot;0123456789ABCDEF&quot;;
++	char			ch;
++	char			line[78];
+ 
+-    while (body_count &lt; body-&gt;length) {
+-	ch = *(body-&gt;data + body_count);
+-	body_count++;
++	while (body_count &lt; body-&gt;length)
++	{
++		ch = *(body-&gt;data + body_count);
++		body_count++;
+ 
+-	if (is_safe_char(ch))
+-	    line[line_count++] = ch;
+-	else {
+-	    line[line_count++] = '=';
+-	    line[line_count++] = hex[(ch &gt;&gt; 4) &amp; 15];
+-	    line[line_count++] = hex[ch &amp; 15];
+-	}
++		if (is_safe_char(ch))
++			line[line_count++] = ch;
++		else {
++			line[line_count++] = '=';
++			line[line_count++] = hex[(ch &gt;&gt; 4) &amp; 15];
++			line[line_count++] = hex[ch &amp; 15];
++		}
+ 
+-	if (line_count &gt;= 73 || ch == '\n') {
+-	    if (ch != '\n')
+-		line[line_count++] = '=';
+-	    line[line_count++] = '\r';
+-	    line[line_count] = '\n';
++		if (line_count &gt;= 73 || ch == '\n') {
++			if (ch != '\n')
++				line[line_count++] = '=';
++			line[line_count++] = '\r';
++			line[line_count] = '\n';
+ 
+-	    data_blob_append(mapi_mem_ctx, &amp;mapi_buffer, line, line_count);
+-	    *lenp += line_count;
++			data_blob_append(g_mapi_mem_ctx, &amp;g_mapi_buffer, line, line_count);
++			*lenp += line_count;
+ 
+-	    line_count = 0;
++			line_count = 0;
++		}
+ 	}
+-    }
+-    if (line_count != 0) {
+-	line[line_count++] = '\r';
+-	line[line_count] = '\n';
+-	data_blob_append(mapi_mem_ctx, &amp;mapi_buffer, line, line_count);
+-	*lenp += line_count;
+-    }
++	if (line_count != 0) {
++		line[line_count++] = '\r';
++		line[line_count] = '\n';
++		data_blob_append(g_mapi_mem_ctx, &amp;g_mapi_buffer, line, line_count);
++		*lenp += line_count;
++	}
+ }
+ 
+ 
+ static void mapi_clean()
+ {
+-    mapi_object_release(&amp;mapi_obj_table);
+-    mapi_object_release(&amp;mapi_obj_folder);
+-    mapi_object_release(&amp;mapi_obj_store);
+-    MAPIUninitialize();
+-    talloc_free(mapi_mem_ctx);
++	mapi_object_release(&amp;g_mapi_obj_table);
++	mapi_object_release(&amp;g_mapi_obj_folder);
++	mapi_object_release(&amp;g_mapi_obj_store);
++	MAPIUninitialize();
++	talloc_free(g_mapi_mem_ctx);
+ 
+-    mapi_initialized = FALSE;
++	g_mapi_initialized = FALSE;
+ }
+ 
+ 
+ /*
+- * ===  FUNCTION  ======================================================================
+- *         Name:  mapi_open_folder
+- *  Description:  open folder that matches the name specified by --folder option
+- *                Note: it only searches in the top level, i.e. it's not recursive 
++ * ===	FUNCTION  ======================================================================
++ *		   Name:  mapi_open_folder
++ *	Description:  open folder that matches the name specified by --folder option
++ *				  Note: it only searches in the top level, i.e. it's not recursive 
+  * =====================================================================================
+  */
+ static int mapi_open_folder(mapi_object_t * obj_container, mapi_object_t * obj_child, const char *folder)
+ {
+-    enum MAPISTATUS retval;
+-    struct SPropTagArray *SPropTagArray;
+-    struct SPropValue		*lpProps;
+-    struct SRowSet  rowset;
+-    mapi_object_t   obj_htable;
+-    const char     *name;
+-    const uint64_t *fid;
+-    uint32_t        index;
+-    int             count;
++	enum MAPISTATUS retval;
++	struct SPropTagArray *SPropTagArray;
++	struct SPropValue		*lpProps;
++	struct SRowSet	rowset;
++	mapi_object_t	obj_htable;
++	const char	   *name;
++	const uint64_t *fid;
++	uint32_t		index;
++	int				count;
+ 
+-    mapi_object_init(&amp;obj_htable);
+-    retval = GetHierarchyTable(obj_container, &amp;obj_htable, 0, &amp;count);
+-    if (retval != MAPI_E_SUCCESS)
+-	return GetLastError();
++	mapi_object_init(&amp;obj_htable);
++	retval = GetHierarchyTable(obj_container, &amp;obj_htable, 0, &amp;count);
++	if (retval != MAPI_E_SUCCESS) return GetLastError();
+ 
+-    SPropTagArray = set_SPropTagArray(mapi_mem_ctx, 0x2, PR_DISPLAY_NAME, PR_FID);
+-    retval = SetColumns(&amp;obj_htable, SPropTagArray);
+-    MAPIFreeBuffer(SPropTagArray);
+-    if (retval != MAPI_E_SUCCESS)
+-	return GetLastError();
++	SPropTagArray = set_SPropTagArray(g_mapi_mem_ctx, 0x2, PR_DISPLAY_NAME, PR_FID);
++	retval = SetColumns(&amp;obj_htable, SPropTagArray);
++	MAPIFreeBuffer(SPropTagArray);
++	if (retval != MAPI_E_SUCCESS) return GetLastError();
+ 
+-    retval = QueryRows(&amp;obj_htable, count, TBL_ADVANCE, &amp;rowset);
+-    if (retval != MAPI_E_SUCCESS)
+-	return GetLastError();
++	retval = QueryRows(&amp;obj_htable, count, TBL_ADVANCE, &amp;rowset);
++	if (retval != MAPI_E_SUCCESS) return GetLastError();
+ 
+-    if (!rowset.cRows)
+-	return MAPI_E_NOT_FOUND;
++	if (!rowset.cRows) return MAPI_E_NOT_FOUND;
+ 
+-    for (index = 0; index &lt; rowset.cRows; index++) {
+-	fid = (const uint64_t *) find_SPropValue_data(&amp;rowset.aRow[index], PR_FID);
+-	name = (const char *) find_SPropValue_data(&amp;rowset.aRow[index], PR_DISPLAY_NAME);
++	for (index = 0; index &lt; rowset.cRows; index++)
++	{
++		fid = (const uint64_t *) find_SPropValue_data(&amp;rowset.aRow[index], PR_FID);
++		name = (const char *) find_SPropValue_data(&amp;rowset.aRow[index], PR_DISPLAY_NAME);
+ 
+-	if (fid &amp;&amp; !strcmp(name, folder)) {
+-	    retval = OpenFolder(obj_container, *fid, obj_child);
+-	    if (retval != MAPI_E_SUCCESS)
+-		break;
++		if (fid &amp;&amp; !strcmp(name, folder))
++		{
++			retval = OpenFolder(obj_container, *fid, obj_child);
++			if (retval != MAPI_E_SUCCESS) break;
+ 
+-	    /*-----------------------------------------------------------------------------
+-	     *  check the class of the folder, only IPF.Note and IPF.Post are supported
+-	     *-----------------------------------------------------------------------------*/
+-	    SPropTagArray = set_SPropTagArray(mapi_mem_ctx, 0x1, PR_CONTAINER_CLASS);
+-	    retval = GetProps(obj_container, SPropTagArray, &amp;lpProps, &amp;count);
+-	    MAPIFreeBuffer(SPropTagArray);
++			/*-----------------------------------------------------------------------------
++			 *	check the class of the folder, only IPF.Note and IPF.Post are supported
++			 *-----------------------------------------------------------------------------*/
++			SPropTagArray = set_SPropTagArray(g_mapi_mem_ctx, 0x1, PR_CONTAINER_CLASS);
++			retval = GetProps(obj_container, SPropTagArray, &amp;lpProps, &amp;count);
++			MAPIFreeBuffer(SPropTagArray);
+ 
+-	    if ((lpProps[0].ulPropTag != PR_CONTAINER_CLASS) || (retval != MAPI_E_SUCCESS))
+-		break;
++			if ((lpProps[0].ulPropTag != PR_CONTAINER_CLASS) || (retval != MAPI_E_SUCCESS)) break;
+ 
+-	    if (strcmp(lpProps[0].value.lpszA, &quot;IPF.Note&quot;) == 0 || strcmp(lpProps[0].value.lpszA, &quot;IPF.Post&quot;) == 0)
+-		return MAPI_E_SUCCESS;
++			if (strcmp(lpProps[0].value.lpszA, &quot;IPF.Note&quot;) == 0 || strcmp(lpProps[0].value.lpszA, &quot;IPF.Post&quot;) == 0)
++				return MAPI_E_SUCCESS;
++		}
+ 	}
+-    }
+ 
+-    report(stderr, GT_(&quot;MAPI: No folder matches the one specified by --folder option\n&quot;));
+-    return MAPI_E_NOT_FOUND;
++	report(stderr, GT_(&quot;MAPI: No folder matches the one specified by --folder option\n&quot;));
++	return MAPI_E_NOT_FOUND;
+ }
+ 
+ static int mapi_init(const char *folder)
+ {
+-    enum MAPISTATUS retval;
+-    mapi_object_t   obj_tis;
+-    mapi_id_t       id_folder;
+-    struct SPropTagArray *SPropTagArray = NULL;
+-    const char     *profname;
+-    uint32_t        count;
++	enum MAPISTATUS retval;
++	mapi_object_t	obj_tis;
++	mapi_id_t		id_folder;
++	struct SPropTagArray *SPropTagArray = NULL;
++	const char	   *profname;
++	uint32_t		count;
+ 
+-    if (mapi_initialized)
+-	mapi_clean();
++	if (g_mapi_initialized) mapi_clean();
+ 
+-    mapi_mem_ctx = talloc_init(&quot;fetchmail&quot;);
++	g_mapi_mem_ctx = talloc_init(&quot;fetchmail&quot;);
+ 
+-    /*-----------------------------------------------------------------------------
+-     *  Initialize MAPI subsystem
+-     *-----------------------------------------------------------------------------*/
+-    retval = MAPIInitialize(mapi_profdb);
+-    if (retval != MAPI_E_SUCCESS) {
+-	report(stderr, GT_(&quot;MAPI: MAPIInitialize failed\n&quot;));
+-	mapi_clean();
+-	return GetLastError();
+-    }
+-
+-    /*-----------------------------------------------------------------------------
+-     *  use the default mapi_profile
+-     *-----------------------------------------------------------------------------*/
+-    retval = GetDefaultProfile(&amp;profname);
+-    if (retval != MAPI_E_SUCCESS) {
+-	report(stderr, GT_(&quot;MAPI: GetDefaultProfile failed\n&quot;));
+-	mapi_clean();
+-	return GetLastError();
+-    }
+-
+-    retval = MapiLogonEx(&amp;s_mapi_session, profname, password);
+-    if (retval != MAPI_E_SUCCESS) {
+-	report(stderr, GT_(&quot;MAPI: MapiLogonEx failed\n&quot;));
+-	mapi_clean();
+-	return GetLastError();
+-    }
+-    mapi_profile = s_mapi_session-&gt;profile;
+-
+-    /*-----------------------------------------------------------------------------
+-     *  Open the default message store
+-     *-----------------------------------------------------------------------------*/
+-    mapi_object_init(&amp;mapi_obj_store);
+-    retval = OpenMsgStore(s_mapi_session, &amp;mapi_obj_store);
+-    if (retval != MAPI_E_SUCCESS) {
+-	report(stderr, GT_(&quot;MAPI: OpenMsgStore failed\n&quot;));
+-	mapi_clean();
+-	return GetLastError();
+-    }
+-
+-    if (folder != NULL) {
+ 	/*-----------------------------------------------------------------------------
+-         *  open TopInformationStore
+-         *-----------------------------------------------------------------------------*/
+-	retval = GetDefaultFolder(&amp;mapi_obj_store, &amp;id_folder, olFolderTopInformationStore);
++	 *	Initialize MAPI subsystem
++	 *-----------------------------------------------------------------------------*/
++	retval = MAPIInitialize(g_mapi_profdb);
+ 	if (retval != MAPI_E_SUCCESS) {
+-	    report(stderr, GT_(&quot;MAPI: GetDefaultFolder-olFolderTopInformationStore failed\n&quot;));
+-	    mapi_clean();
+-	    return GetLastError();
++		report(stderr, GT_(&quot;MAPI: MAPIInitialize failed\n&quot;));
++		mapi_clean();
++		return GetLastError();
+ 	}
+ 
+-	mapi_object_init(&amp;obj_tis);
+-	retval = OpenFolder(&amp;mapi_obj_store, id_folder, &amp;obj_tis);
++	/*-----------------------------------------------------------------------------
++	 *	use the default mapi_profile
++	 *-----------------------------------------------------------------------------*/
++	retval = GetDefaultProfile(&amp;profname);
+ 	if (retval != MAPI_E_SUCCESS) {
+-	    report(stderr, GT_(&quot;MAPI: OpenFolder-olFolderTopInformationStore failed\n&quot;));
+-	    mapi_clean();
+-	    return GetLastError();
++		report(stderr, GT_(&quot;MAPI: GetDefaultProfile failed\n&quot;));
++		mapi_clean();
++		return GetLastError();
+ 	}
+ 
+-	retval = mapi_open_folder(&amp;obj_tis, &amp;mapi_obj_folder, folder);
++	retval = MapiLogonEx(&amp;g_mapi_session, profname, g_password);
+ 	if (retval != MAPI_E_SUCCESS) {
+-	    report(stderr, GT_(&quot;MAPI: mapi_open_folder failed\n&quot;));
+-	    mapi_clean();
+-	    return retval;
++		report(stderr, GT_(&quot;MAPI: MapiLogonEx failed\n&quot;));
++		mapi_clean();
++		return GetLastError();
+ 	}
+-    } else {
++	mapi_profile = g_mapi_session-&gt;profile;
++
+ 	/*-----------------------------------------------------------------------------
+-         *  open default Inbox
+-         *-----------------------------------------------------------------------------*/
+-	retval = GetDefaultFolder(&amp;mapi_obj_store, &amp;id_folder, olFolderInbox);
++	 *	Open the default message store
++	 *-----------------------------------------------------------------------------*/
++	mapi_object_init(&amp;g_mapi_obj_store);
++	retval = OpenMsgStore(g_mapi_session, &amp;g_mapi_obj_store);
+ 	if (retval != MAPI_E_SUCCESS) {
+-	    report(stderr, GT_(&quot;MAPI: GetDefaultFolder-olFolderInbox failed\n&quot;));
+-	    mapi_clean();
+-	    return GetLastError();
++		report(stderr, GT_(&quot;MAPI: OpenMsgStore failed\n&quot;));
++		mapi_clean();
++		return GetLastError();
+ 	}
+ 
+-	mapi_object_init(&amp;mapi_obj_folder);
+-	retval = OpenFolder(&amp;mapi_obj_store, id_folder, &amp;mapi_obj_folder);
+-	if (retval != MAPI_E_SUCCESS) {
+-	    report(stderr, GT_(&quot;MAPI: OpenFolder failed\n&quot;));
+-	    mapi_clean();
+-	    return GetLastError();
++	if (folder != NULL)
++	{
++		/*-----------------------------------------------------------------------------
++		 *	open TopInformationStore
++		 *-----------------------------------------------------------------------------*/
++		retval = GetDefaultFolder(&amp;g_mapi_obj_store, &amp;id_folder, olFolderTopInformationStore);
++		if (retval != MAPI_E_SUCCESS) {
++			report(stderr, GT_(&quot;MAPI: GetDefaultFolder-olFolderTopInformationStore failed\n&quot;));
++			mapi_clean();
++			return GetLastError();
++		}
++
++		mapi_object_init(&amp;obj_tis);
++		retval = OpenFolder(&amp;g_mapi_obj_store, id_folder, &amp;obj_tis);
++		if (retval != MAPI_E_SUCCESS) {
++			report(stderr, GT_(&quot;MAPI: OpenFolder-olFolderTopInformationStore failed\n&quot;));
++			mapi_clean();
++			return GetLastError();
++		}
++
++		retval = mapi_open_folder(&amp;obj_tis, &amp;g_mapi_obj_folder, folder);
++		if (retval != MAPI_E_SUCCESS) {
++			report(stderr, GT_(&quot;MAPI: mapi_open_folder failed\n&quot;));
++			mapi_clean();
++			return retval;
++		}
+ 	}
+-    }
++	else
++	{
++		/*-----------------------------------------------------------------------------
++		 *	open default Inbox
++		 *-----------------------------------------------------------------------------*/
++		retval = GetDefaultFolder(&amp;g_mapi_obj_store, &amp;id_folder, olFolderInbox);
++		if (retval != MAPI_E_SUCCESS) {
++			report(stderr, GT_(&quot;MAPI: GetDefaultFolder-olFolderInbox failed\n&quot;));
++			mapi_clean();
++			return GetLastError();
++		}
+ 
+-    mapi_object_init(&amp;mapi_obj_table);
+-    retval = GetContentsTable(&amp;mapi_obj_folder, &amp;mapi_obj_table, 0, &amp;count);
+-    if (retval != MAPI_E_SUCCESS) {
+-	report(stderr, GT_(&quot;MAPI: GetContentsTable failed\n&quot;));
+-	mapi_clean();
+-	return GetLastError();
+-    }
++		mapi_object_init(&amp;g_mapi_obj_folder);
++		retval = OpenFolder(&amp;g_mapi_obj_store, id_folder, &amp;g_mapi_obj_folder);
++		if (retval != MAPI_E_SUCCESS) {
++			report(stderr, GT_(&quot;MAPI: OpenFolder failed\n&quot;));
++			mapi_clean();
++			return GetLastError();
++		}
++	}
+ 
+-    SPropTagArray = set_SPropTagArray(mapi_mem_ctx, 0x2, PR_FID, PR_MID);
+-    retval = SetColumns(&amp;mapi_obj_table, SPropTagArray);
+-    MAPIFreeBuffer(SPropTagArray);
+-    if (retval != MAPI_E_SUCCESS) {
+-	report(stderr, GT_(&quot;MAPI: SetColumns failed\n&quot;));
+-	mapi_clean();
+-	return GetLastError();
+-    }
++	mapi_object_init(&amp;g_mapi_obj_table);
++	retval = GetContentsTable(&amp;g_mapi_obj_folder, &amp;g_mapi_obj_table, 0, &amp;count);
++	if (retval != MAPI_E_SUCCESS) {
++		report(stderr, GT_(&quot;MAPI: GetContentsTable failed\n&quot;));
++		mapi_clean();
++		return GetLastError();
++	}
+ 
+-    retval = QueryRows(&amp;mapi_obj_table, count, TBL_ADVANCE, &amp;mapi_rowset);
+-    if (retval != MAPI_E_SUCCESS) {
+-	report(stderr, GT_(&quot;MAPI: QueryRows failed\n&quot;));
+-	mapi_clean();
+-	return GetLastError();
+-    }
++	SPropTagArray = set_SPropTagArray(g_mapi_mem_ctx, 0x2, PR_FID, PR_MID);
++	retval = SetColumns(&amp;g_mapi_obj_table, SPropTagArray);
++	MAPIFreeBuffer(SPropTagArray);
++	if (retval != MAPI_E_SUCCESS) {
++		report(stderr, GT_(&quot;MAPI: SetColumns failed\n&quot;));
++		mapi_clean();
++		return GetLastError();
++	}
+ 
+-    mapi_id_array_init(&amp;mapi_deleted_ids);
+-    mapi_initialized = TRUE;
+-    return MAPI_E_SUCCESS;
++	retval = QueryRows(&amp;g_mapi_obj_table, count, TBL_ADVANCE, &amp;g_mapi_rowset);
++	if (retval != MAPI_E_SUCCESS) {
++		report(stderr, GT_(&quot;MAPI: QueryRows failed\n&quot;));
++		mapi_clean();
++		return GetLastError();
++	}
++
++	mapi_id_array_init(&amp;g_mapi_deleted_ids);
++	g_mapi_initialized = TRUE;
++	return MAPI_E_SUCCESS;
+ }
+ 
+ /*
+- * ===  FUNCTION  ======================================================================
+- *         Name:  translate_mapi_error
+- *  Description:  translate mapi error code into fetchmail error code
++ * ===	FUNCTION  ======================================================================
++ *		   Name:  translate_mapi_error
++ *	Description:  translate mapi error code into fetchmail error code
+  * =====================================================================================
+  */
+ static int translate_mapi_error(enum MAPISTATUS mapi_error)
+ {
+-    switch (mapi_error) {
+-    case MAPI_E_SUCCESS:
+-	return PS_SUCCESS;
+-    case MAPI_E_CALL_FAILED:
+-    case MAPI_E_NO_SUPPORT:
+-    case MAPI_E_BAD_CHARWIDTH:
+-    case MAPI_E_STRING_TOO_LONG:
+-    case MAPI_E_UNKNOWN_FLAGS:
+-    case MAPI_E_INVALID_ENTRYID:
+-    case MAPI_E_INVALID_OBJECT:
+-    case MAPI_E_OBJECT_CHANGED:
+-    case MAPI_E_OBJECT_DELETED:
+-    case MAPI_E_BUSY:
+-    case MAPI_E_NOT_ENOUGH_DISK:
+-    case MAPI_E_NOT_ENOUGH_RESOURCES:
+-    case MAPI_E_NOT_FOUND:
+-    case MAPI_E_VERSION:
+-    case MAPI_E_LOGON_FAILED:
+-    case MAPI_E_SESSION_LIMIT:
+-    case MAPI_E_USER_CANCEL:
+-    case MAPI_E_UNABLE_TO_ABORT:
+-    case MAPI_E_NETWORK_ERROR:
+-    case MAPI_E_DISK_ERROR:
+-    case MAPI_E_TOO_COMPLEX:
+-    case MAPI_E_BAD_COLUMN:
+-    case MAPI_E_EXTENDED_ERROR:
+-    case MAPI_E_COMPUTED:
+-    case MAPI_E_CORRUPT_DATA:
+-    case MAPI_E_UNCONFIGURED:
+-    case MAPI_E_FAILONEPROVIDER:
+-    case MAPI_E_UNKNOWN_CPID:
+-    case MAPI_E_UNKNOWN_LCID:
+-    case MAPI_E_PASSWORD_CHANGE_REQUIRED:
+-    case MAPI_E_PASSWORD_EXPIRED:
+-    case MAPI_E_INVALID_WORKSTATION_ACCOUNT:
+-    case MAPI_E_INVALID_ACCESS_TIME:
+-    case MAPI_E_ACCOUNT_DISABLED:
+-    case MAPI_E_END_OF_SESSION:
+-    case MAPI_E_UNKNOWN_ENTRYID:
+-    case MAPI_E_MISSING_REQUIRED_COLUMN:
+-    case MAPI_W_NO_SERVICE:
+-    case MAPI_E_BAD_VALUE:
+-    case MAPI_E_INVALID_TYPE:
+-    case MAPI_E_TYPE_NO_SUPPORT:
+-    case MAPI_E_UNEXPECTED_TYPE:
+-    case MAPI_E_TOO_BIG:
+-    case MAPI_E_DECLINE_COPY:
+-    case MAPI_E_UNEXPECTED_ID:
+-    case MAPI_W_ERRORS_RETURNED:
+-    case MAPI_E_UNABLE_TO_COMPLETE:
+-    case MAPI_E_TIMEOUT:
+-    case MAPI_E_TABLE_EMPTY:
+-    case MAPI_E_TABLE_TOO_BIG:
+-    case MAPI_E_INVALID_BOOKMARK:
+-    case MAPI_W_POSITION_CHANGED:
+-    case MAPI_W_APPROX_COUNT:
+-    case MAPI_E_WAIT:
+-    case MAPI_E_CANCEL:
+-    case MAPI_E_NOT_ME:
+-    case MAPI_W_CANCEL_MESSAGE:
+-    case MAPI_E_CORRUPT_STORE:
+-    case MAPI_E_NOT_IN_QUEUE:
+-    case MAPI_E_NO_SUPPRESS:
+-    case MAPI_E_COLLISION:
+-    case MAPI_E_NOT_INITIALIZED:
+-    case MAPI_E_NON_STANDARD:
+-    case MAPI_E_NO_RECIPIENTS:
+-    case MAPI_E_SUBMITTED:
+-    case MAPI_E_HAS_FOLDERS:
+-    case MAPI_E_HAS_MESAGES:
+-    case MAPI_E_FOLDER_CYCLE:
+-    case MAPI_W_PARTIAL_COMPLETION:
+-    case MAPI_E_AMBIGUOUS_RECIP:
+-    case MAPI_E_NO_ACCESS:
+-    case MAPI_E_INVALID_PARAMETER:
+-    case MAPI_E_RESERVED:
+-    default:
+-	return PS_UNDEFINED;
+-    }
++	switch (mapi_error) {
++		case MAPI_E_SUCCESS: return PS_SUCCESS;
++		case MAPI_E_CALL_FAILED:
++		case MAPI_E_NO_SUPPORT:
++		case MAPI_E_BAD_CHARWIDTH:
++		case MAPI_E_STRING_TOO_LONG:
++		case MAPI_E_UNKNOWN_FLAGS:
++		case MAPI_E_INVALID_ENTRYID:
++		case MAPI_E_INVALID_OBJECT:
++		case MAPI_E_OBJECT_CHANGED:
++		case MAPI_E_OBJECT_DELETED:
++		case MAPI_E_BUSY:
++		case MAPI_E_NOT_ENOUGH_DISK:
++		case MAPI_E_NOT_ENOUGH_RESOURCES:
++		case MAPI_E_NOT_FOUND:
++		case MAPI_E_VERSION:
++		case MAPI_E_LOGON_FAILED:
++		case MAPI_E_SESSION_LIMIT:
++		case MAPI_E_USER_CANCEL:
++		case MAPI_E_UNABLE_TO_ABORT:
++		case MAPI_E_NETWORK_ERROR:
++		case MAPI_E_DISK_ERROR:
++		case MAPI_E_TOO_COMPLEX:
++		case MAPI_E_BAD_COLUMN:
++		case MAPI_E_EXTENDED_ERROR:
++		case MAPI_E_COMPUTED:
++		case MAPI_E_CORRUPT_DATA:
++		case MAPI_E_UNCONFIGURED:
++		case MAPI_E_FAILONEPROVIDER:
++		case MAPI_E_UNKNOWN_CPID:
++		case MAPI_E_UNKNOWN_LCID:
++		case MAPI_E_PASSWORD_CHANGE_REQUIRED:
++		case MAPI_E_PASSWORD_EXPIRED:
++		case MAPI_E_INVALID_WORKSTATION_ACCOUNT:
++		case MAPI_E_INVALID_ACCESS_TIME:
++		case MAPI_E_ACCOUNT_DISABLED:
++		case MAPI_E_END_OF_SESSION:
++		case MAPI_E_UNKNOWN_ENTRYID:
++		case MAPI_E_MISSING_REQUIRED_COLUMN:
++		case MAPI_W_NO_SERVICE:
++		case MAPI_E_BAD_VALUE:
++		case MAPI_E_INVALID_TYPE:
++		case MAPI_E_TYPE_NO_SUPPORT:
++		case MAPI_E_UNEXPECTED_TYPE:
++		case MAPI_E_TOO_BIG:
++		case MAPI_E_DECLINE_COPY:
++		case MAPI_E_UNEXPECTED_ID:
++		case MAPI_W_ERRORS_RETURNED:
++		case MAPI_E_UNABLE_TO_COMPLETE:
++		case MAPI_E_TIMEOUT:
++		case MAPI_E_TABLE_EMPTY:
++		case MAPI_E_TABLE_TOO_BIG:
++		case MAPI_E_INVALID_BOOKMARK:
++		case MAPI_W_POSITION_CHANGED:
++		case MAPI_W_APPROX_COUNT:
++		case MAPI_E_WAIT:
++		case MAPI_E_CANCEL:
++		case MAPI_E_NOT_ME:
++		case MAPI_W_CANCEL_MESSAGE:
++		case MAPI_E_CORRUPT_STORE:
++		case MAPI_E_NOT_IN_QUEUE:
++		case MAPI_E_NO_SUPPRESS:
++		case MAPI_E_COLLISION:
++		case MAPI_E_NOT_INITIALIZED:
++		case MAPI_E_NON_STANDARD:
++		case MAPI_E_NO_RECIPIENTS:
++		case MAPI_E_SUBMITTED:
++		case MAPI_E_HAS_FOLDERS:
++		case MAPI_E_HAS_MESAGES:
++		case MAPI_E_FOLDER_CYCLE:
++		case MAPI_W_PARTIAL_COMPLETION:
++		case MAPI_E_AMBIGUOUS_RECIP:
++		case MAPI_E_NO_ACCESS:
++		case MAPI_E_INVALID_PARAMETER:
++		case MAPI_E_RESERVED:
++
++		default: return PS_UNDEFINED;
++	}
+ }
+ 
+ /*
+- * ===  FUNCTION  ======================================================================
+- *         Name:  expunge_deleted
+- *  Description:  perform hard delete
++ * ===	FUNCTION  ======================================================================
++ *		   Name:  expunge_deleted
++ *	Description:  perform hard delete
+  * =====================================================================================
+  */
+ static int expunge_deleted()
+ {
+-    enum MAPISTATUS retval;
+-    mapi_id_t      *deleted_ids;
++	enum MAPISTATUS retval;
++	mapi_id_t	   *deleted_ids;
+ 
+-    if (mapi_deleted_ids.count == 0)
+-	return (PS_SUCCESS);
+-    /*-----------------------------------------------------------------------------
+-     *  perform hard delete
+-     *-----------------------------------------------------------------------------*/
+-    mapi_id_array_get(mapi_mem_ctx, &amp;mapi_deleted_ids, &amp;deleted_ids);
+-    retval = DeleteMessage(&amp;mapi_obj_folder, deleted_ids, mapi_deleted_ids.count);
+-    if (retval != MAPI_E_SUCCESS) {
+-	report(stderr, &quot;MAPI: DeleteMessages failed\n&quot;);
+-	talloc_free(deleted_ids);
+-	return translate_mapi_error(GetLastError());
+-    }
++	if (g_mapi_deleted_ids.count == 0) return PS_SUCCESS;
++	/*-----------------------------------------------------------------------------
++	 *	perform hard delete
++	 *-----------------------------------------------------------------------------*/
++	mapi_id_array_get(g_mapi_mem_ctx, &amp;g_mapi_deleted_ids, &amp;deleted_ids);
++	retval = DeleteMessage(&amp;g_mapi_obj_folder, deleted_ids, g_mapi_deleted_ids.count);
++	if (retval != MAPI_E_SUCCESS) {
++		report(stderr, &quot;MAPI: DeleteMessages failed\n&quot;);
++		talloc_free(deleted_ids);
++		return translate_mapi_error(GetLastError());
++	}
+ 
+-    talloc_free(deleted_ids);
+-    return (PS_SUCCESS);
++	talloc_free(deleted_ids);
++	return PS_SUCCESS;
+ }
+ 
+ 
+ /*
+- * ===  FUNCTION  ======================================================================
+- *         Name:  mapi_ok
+- *  Description:  no need to parse response in MAPI, return PS_SUCCESS to fake the driver
++ * ===	FUNCTION  ======================================================================
++ *		   Name:  mapi_ok
++ *	Description:  no need to parse response in MAPI, return PS_SUCCESS to fake the driver
+  * =====================================================================================
+  */
+ static int mapi_ok(int sock, char *argbuf)
+ {
+-    if (outlevel &gt;= O_MONITOR)
+-	report(stdout, &quot;MAPI&gt; mapi_ok()\n&quot;);
+-
+-    return (PS_SUCCESS);
++	if (outlevel &gt;= O_MONITOR) report(stdout, &quot;MAPI&gt; mapi_ok()\n&quot;);
++	return PS_SUCCESS;
+ }
+ 
+ 
+ /*
+- * ===  FUNCTION  ======================================================================
+- *         Name:  callback
+- *  Description:  when not running in daemon mode, give a chance to choose an account
+- *                while multiple accounts match the user name.
+- *                when running in daemon mode, skip this and mapi_getauth will return
+- *                PS_AUTHFAIL.
++ * ===	FUNCTION  ======================================================================
++ *		   Name:  callback
++ *	Description:  when not running in daemon mode, give a chance to choose an account
++ *				  while multiple accounts match the user name.
++ *				  when running in daemon mode, skip this and mapi_getauth will return
++ *				  PS_AUTHFAIL.
+  * =====================================================================================
+  */
+ static uint32_t callback(struct SRowSet *rowset, void *private)
+ {
+-    /* TODO: check if running in daemon mode*/
+-    int             daemon_mode = FALSE;
++	/* TODO: check if running in daemon mode*/
++	int				daemon_mode = FALSE;
+ 
+-    if (!daemon_mode) {
+-	uint32_t        i;
+-	struct SPropValue *lpProp;
+-	FILE           *fd;
+-	uint32_t        index;
+-	char            entry[10];
+-	const char     *label = (const char *) private;
++	if (!daemon_mode) 
++	{
++		uint32_t		i;
++		struct SPropValue *lpProp;
++		FILE		   *fd;
++		uint32_t		index;
++		char			entry[10];
++		const char	   *label = (const char *) private;
+ 
+-	printf(&quot;%s:\n&quot;, label);
+-	for (i = 0; i &lt; rowset-&gt;cRows; i++) {
+-	    lpProp = get_SPropValue_SRow(&amp;(rowset-&gt;aRow[i]), PR_DISPLAY_NAME);
+-	    if (lpProp &amp;&amp; lpProp-&gt;value.lpszA) {
+-		printf(&quot;\t[%d] %s\n&quot;, i, lpProp-&gt;value.lpszA);
+-	    }
+-	}
+-	printf(&quot;\t[%d] cancel operation\n&quot;, i);
+-	fd = fdopen(0, &quot;r&quot;);
+-      getentry:
+-	printf(&quot;Enter username id [0]: &quot;);
+-	fgets(entry, 10, fd);
+-	index = atoi(entry);
+-	if (index &gt; i) {
+-	    printf(&quot;Invalid id - Must be contained between 0 and %d\n&quot;, i);
+-	    goto getentry;
+-	}
++		printf(&quot;%s:\n&quot;, label);
++		for (i = 0; i &lt; rowset-&gt;cRows; i++) {
++			lpProp = get_SPropValue_SRow(&amp;(rowset-&gt;aRow[i]), PR_DISPLAY_NAME);
++			if (lpProp &amp;&amp; lpProp-&gt;value.lpszA)
++				printf(&quot;\t[%d] %s\n&quot;, i, lpProp-&gt;value.lpszA);
++		}
++		printf(&quot;\t[%d] cancel operation\n&quot;, i);
++		fd = fdopen(0, &quot;r&quot;);
++		  getentry:
++		printf(&quot;Enter username id [0]: &quot;);
++		fgets(entry, 10, fd);
++		index = atoi(entry);
++		if (index &gt; i) {
++			printf(&quot;Invalid id - Must be contained between 0 and %d\n&quot;, i);
++			goto getentry;
++		}
+ 
+-	fclose(fd);
+-	return (index);
+-    } else
+-	return rowset-&gt;cRows;
++		fclose(fd);
++		return index;
++	}
++	else
++		return rowset-&gt;cRows;
+ }
+ 
+ /*
+- * ===  FUNCTION  ======================================================================
+- *         Name:  mapi_getauth
+- *  Description:  1. synchronize mapi_profile with the setting
+- *                2. open the mapi_profile and initialize MAPI
+- *                if all of the operations are successful, it will be considered
+- *                a successful anthentication. 
++ * ===	FUNCTION  ======================================================================
++ *		   Name:  mapi_getauth
++ *	Description:  1. synchronize mapi_profile with the setting
++ *				  2. open the mapi_profile and initialize MAPI
++ *				  if all of the operations are successful, it will be considered
++ *				  a successful anthentication. 
+  * =====================================================================================
+  */
+ static int mapi_getauth(int sock, struct query *ctl, char *greeting)
+ {
+-    enum MAPISTATUS retval;
+-    struct mapi_session *session = NULL;
+-    struct SRowSet  proftable;
+-    int             profcount;
+-    char            localhost_name[256];
+-    const char     *workstation = NULL;
+-    const char     *ldif = NULL;
+-    const char     *profname = NULL;
+-    const char     *name_in_proftable = NULL;
+-    uint32_t        flags;
+-    char           *realhost = ctl-&gt;server.via ? ctl-&gt;server.via : ctl-&gt;server.pollname;
++	enum MAPISTATUS retval;
++	struct mapi_session *session = NULL;
++	struct SRowSet	proftable;
++	int				profcount;
++	char			localhost_name[256];
++	const char	   *workstation = NULL;
++	const char	   *ldif = NULL;
++	const char	   *profname = NULL;
++	const char	   *name_in_proftable = NULL;
++	uint32_t		flags;
++	char		   *realhost = ctl-&gt;server.via ? ctl-&gt;server.via : ctl-&gt;server.pollname;
+ 
+-    if (outlevel &gt; O_MONITOR)
+-	report(stdout, &quot;MAPI&gt; mapi_getauth()\n&quot;);
++	if (outlevel &gt; O_MONITOR) report(stdout, &quot;MAPI&gt; mapi_getauth()\n&quot;);
+ 
+-    mapi_mem_ctx = talloc_init(&quot;mapi_getauth&quot;);
+-    /*-----------------------------------------------------------------------------
+-     *  initialize several options
+-     *-----------------------------------------------------------------------------*/
+-    strcpy(password, ctl-&gt;password);
+-    if (!ctl-&gt;mapi_ldif)
+-	ldif = talloc_strdup(mapi_mem_ctx, mapi_profile_get_ldif_path());
+-    else
+-	ldif = ctl-&gt;mapi_ldif;
++	g_mapi_mem_ctx = talloc_init(&quot;mapi_getauth&quot;);
++	/*-----------------------------------------------------------------------------
++	 *	initialize several options
++	 *-----------------------------------------------------------------------------*/
++	strcpy(g_password, ctl-&gt;password);
++	if (!ctl-&gt;mapi_ldif)
++		ldif = talloc_strdup(g_mapi_mem_ctx, mapi_profile_get_ldif_path());
++	else
++		ldif = ctl-&gt;mapi_ldif;
+ 
+-    if (!ctl-&gt;mapi_profname)
+-	profname = ctl-&gt;remotename;	/* use the remotename as the profile name */
+-    else
+-	profname = ctl-&gt;mapi_profname;
++	if (!ctl-&gt;mapi_profname)
++		profname = ctl-&gt;remotename;	/* use the remotename as the profile name */
++	else
++		profname = ctl-&gt;mapi_profname;
+ 
+-    if (!ctl-&gt;mapi_profdb)
+-	sprintf(mapi_profdb, DEFAULT_MAPI_PROFILES, getenv(&quot;HOME&quot;));
+-    else
+-	strcpy(mapi_profdb, ctl-&gt;mapi_profdb);
++	if (!ctl-&gt;mapi_profdb)
++		sprintf(g_mapi_profdb, DEFAULT_MAPI_PROFILES, getenv(&quot;HOME&quot;));
++	else
++		strcpy(g_mapi_profdb, ctl-&gt;mapi_profdb);
+ 
+-    if (!ctl-&gt;mapi_workstation) {
+-	gethostname(localhost_name, sizeof(localhost_name) - 1);
+-	localhost_name[sizeof(localhost_name) - 1] = 0;
+-	workstation = localhost_name;
+-    } else
+-	workstation = ctl-&gt;mapi_workstation;
++	if (!ctl-&gt;mapi_workstation) {
++		gethostname(localhost_name, sizeof(localhost_name) - 1);
++		localhost_name[sizeof(localhost_name) - 1] = 0;
++		workstation = localhost_name;
++	} else
++		workstation = ctl-&gt;mapi_workstation;
+ 
+-    /*-----------------------------------------------------------------------------
+-     *  mapi_domain is a required option! how to check if it is specified?
+-     *  if not specified, default values of workstation, ldif and mapi_lcid (set in 
+-     *  fetchmail.c) are used
+-     *-----------------------------------------------------------------------------*/
+-    if (!ctl-&gt;mapi_domain || !workstation || !ldif || !ctl-&gt;mapi_lcid) {
+-	talloc_free(mapi_mem_ctx);
+-	return PS_AUTHFAIL;
+-    }
++	/*-----------------------------------------------------------------------------
++	 *	mapi_domain is a required option! how to check if it is specified?
++	 *	if not specified, default values of workstation, ldif and mapi_lcid (set in 
++	 *	fetchmail.c) are used
++	 *-----------------------------------------------------------------------------*/
++	if (!ctl-&gt;mapi_domain || !workstation || !ldif || !ctl-&gt;mapi_lcid) {
++		talloc_free(g_mapi_mem_ctx);
++		return PS_AUTHFAIL;
++	}
+ 
+-    if (access(mapi_profdb, F_OK) != 0) {
+-    /*-----------------------------------------------------------------------------
+-     *  create mapi mapi_profile database
+-     *-----------------------------------------------------------------------------*/
+-	retval = CreateProfileStore(mapi_profdb, ldif);
+-	if (retval != MAPI_E_SUCCESS) {
+-	    talloc_free(mapi_mem_ctx);
+-	    return translate_mapi_error(GetLastError());
++	if (access(g_mapi_profdb, F_OK) != 0) {
++		/*-----------------------------------------------------------------------------
++		 *	create mapi mapi_profile database
++		 *-----------------------------------------------------------------------------*/
++		retval = CreateProfileStore(g_mapi_profdb, ldif);
++		if (retval != MAPI_E_SUCCESS) {
++			talloc_free(g_mapi_mem_ctx);
++			return translate_mapi_error(GetLastError());
++		}
++		if (outlevel == O_DEBUG) report(stdout, GT_(&quot;MAPI&gt; MAPI mapi_profile database %s created\n&quot;), g_mapi_profdb);
+ 	}
+-	if (outlevel == O_DEBUG)
+-	    report(stdout, GT_(&quot;MAPI&gt; MAPI mapi_profile database %s created\n&quot;), mapi_profdb);
+-    }
+ 
+-    retval = MAPIInitialize(mapi_profdb);
+-    if (retval != MAPI_E_SUCCESS)
+-	goto clean;
+-    if (outlevel == O_DEBUG)
+-	report(stdout, GT_(&quot;MAPI&gt; MAPI initialized\n&quot;));
++	retval = MAPIInitialize(g_mapi_profdb);
++	if (retval != MAPI_E_SUCCESS) goto clean;
++	if (outlevel == O_DEBUG) report(stdout, GT_(&quot;MAPI&gt; MAPI initialized\n&quot;));
+ 
+-    memset(&amp;proftable, 0, sizeof(struct SRowSet));
+-    retval = GetProfileTable(&amp;proftable);
+-    if (retval != MAPI_E_SUCCESS)
+-	goto clean;
+-    if (outlevel == O_DEBUG)
+-	report(stdout, GT_(&quot;MAPI&gt; MAPI GetProfiletable\n&quot;));
++	memset(&amp;proftable, 0, sizeof(struct SRowSet));
++	retval = GetProfileTable(&amp;proftable);
++	if (retval != MAPI_E_SUCCESS) goto clean;
++	if (outlevel == O_DEBUG) report(stdout, GT_(&quot;MAPI&gt; MAPI GetProfiletable\n&quot;));
+ 
++	for (profcount = 0; profcount != proftable.cRows; profcount++) {
++		name_in_proftable = proftable.aRow[profcount].lpProps[0].value.lpszA;
++		if (strcmp(name_in_proftable, profname) == 0) break;
++	}
+ 
+-    for (profcount = 0; profcount != proftable.cRows; profcount++) {
+-	name_in_proftable = proftable.aRow[profcount].lpProps[0].value.lpszA;
+-	if (strcmp(name_in_proftable, profname) == 0)
+-	    break;
+-    }
++	if (profcount == proftable.cRows)
++	{
++		flags = 0;		/* do not save g_password in the mapi_profile */
++		retval = CreateProfile(profname, ctl-&gt;remotename, g_password, flags);
++		if (retval != MAPI_E_SUCCESS) goto clean;
+ 
+-    if (profcount == proftable.cRows) {
+-	flags = 0;		/* do not save password in the mapi_profile */
+-	retval = CreateProfile(profname, ctl-&gt;remotename, password, flags);
+-	if (retval != MAPI_E_SUCCESS)
+-	    goto clean;
++		mapi_profile_add_string_attr(profname, &quot;binding&quot;, realhost);
++		mapi_profile_add_string_attr(profname, &quot;workstation&quot;, workstation);
++		mapi_profile_add_string_attr(profname, &quot;domain&quot;, ctl-&gt;mapi_domain);
++		mapi_profile_add_string_attr(profname, &quot;codepage&quot;, &quot;0x4e4&quot;);
++		mapi_profile_add_string_attr(profname, &quot;language&quot;, ctl-&gt;mapi_lcid);
++		mapi_profile_add_string_attr(profname, &quot;method&quot;, &quot;0x409&quot;);
++		if (outlevel == O_DEBUG) report(stdout, GT_(&quot;MAPI&gt; MAPI mapi_profile %s created\n&quot;), profname);
++	}
++	else
++	{
++		mapi_profile_modify_string_attr(profname, &quot;binding&quot;, realhost);
++		mapi_profile_modify_string_attr(profname, &quot;workstation&quot;, workstation);
++		mapi_profile_modify_string_attr(profname, &quot;domain&quot;, ctl-&gt;mapi_domain);
++		mapi_profile_modify_string_attr(profname, &quot;codepage&quot;, &quot;0x4e4&quot;);
++		mapi_profile_modify_string_attr(profname, &quot;language&quot;, ctl-&gt;mapi_lcid);
++		mapi_profile_modify_string_attr(profname, &quot;method&quot;, &quot;0x409&quot;);
+ 
+-	mapi_profile_add_string_attr(profname, &quot;binding&quot;, realhost);
+-	mapi_profile_add_string_attr(profname, &quot;workstation&quot;, workstation);
+-	mapi_profile_add_string_attr(profname, &quot;domain&quot;, ctl-&gt;mapi_domain);
+-	mapi_profile_add_string_attr(profname, &quot;codepage&quot;, &quot;0x4e4&quot;);
+-	mapi_profile_add_string_attr(profname, &quot;language&quot;, ctl-&gt;mapi_lcid);
+-	mapi_profile_add_string_attr(profname, &quot;method&quot;, &quot;0x409&quot;);
+-	if (outlevel == O_DEBUG)
+-	    report(stdout, GT_(&quot;MAPI&gt; MAPI mapi_profile %s created\n&quot;), profname);
+-    } else {
+-	mapi_profile_modify_string_attr(profname, &quot;binding&quot;, realhost);
+-	mapi_profile_modify_string_attr(profname, &quot;workstation&quot;, workstation);
+-	mapi_profile_modify_string_attr(profname, &quot;domain&quot;, ctl-&gt;mapi_domain);
+-	mapi_profile_modify_string_attr(profname, &quot;codepage&quot;, &quot;0x4e4&quot;);
+-	mapi_profile_modify_string_attr(profname, &quot;language&quot;, ctl-&gt;mapi_lcid);
+-	mapi_profile_modify_string_attr(profname, &quot;method&quot;, &quot;0x409&quot;);
++		if (outlevel == O_DEBUG) report(stdout, GT_(&quot;MAPI&gt; MAPI mapi_profile %s updated\n&quot;), profname);
++	}
+ 
+-	if (outlevel == O_DEBUG)
+-	    report(stdout, GT_(&quot;MAPI&gt; MAPI mapi_profile %s updated\n&quot;), profname);
+-    }
++	retval = MapiLogonProvider(&amp;session, profname, g_password, PROVIDER_ID_NSPI);
++	if (retval != MAPI_E_SUCCESS) goto clean;
++	if (outlevel == O_DEBUG) report(stdout, GT_(&quot;MAPI&gt; MapiLogonProvider\n&quot;));
+ 
++	retval = ProcessNetworkProfile(session, ctl-&gt;remotename, (mapi_profile_callback_t) callback, &quot;Select a user id&quot;);
++	if (retval != MAPI_E_SUCCESS) goto clean;
++	if (outlevel == O_DEBUG) report(stdout, GT_(&quot;MAPI&gt; processed a full and automated MAPI mapi_profile creation\n&quot;));
+ 
+-    retval = MapiLogonProvider(&amp;session, profname, password, PROVIDER_ID_NSPI);
+-    if (retval != MAPI_E_SUCCESS)
+-	goto clean;
+-    if (outlevel == O_DEBUG)
+-	report(stdout, GT_(&quot;MAPI&gt; MapiLogonProvider\n&quot;));
++	retval = SetDefaultProfile(profname);
++	if (retval != MAPI_E_SUCCESS) goto clean;
++	if (outlevel == O_DEBUG) report(stdout, GT_(&quot;MAPI&gt; set default mapi_profile to %s\n&quot;), profname);
+ 
++	MAPIUninitialize();
++	talloc_free(g_mapi_mem_ctx);
++	return PS_SUCCESS;
+ 
+-    retval = ProcessNetworkProfile(session, ctl-&gt;remotename, (mapi_profile_callback_t) callback, &quot;Select a user id&quot;);
+-    if (retval != MAPI_E_SUCCESS)
+-	goto clean;
+-    if (outlevel == O_DEBUG)
+-	report(stdout, GT_(&quot;MAPI&gt; processed a full and automated MAPI mapi_profile creation\n&quot;));
+-
+-
+-    retval = SetDefaultProfile(profname);
+-    if (retval != MAPI_E_SUCCESS)
+-	goto clean;
+-    if (outlevel == O_DEBUG)
+-	report(stdout, GT_(&quot;MAPI&gt; set default mapi_profile to %s\n&quot;), profname);
+-
+-    MAPIUninitialize();
+-    talloc_free(mapi_mem_ctx);
+-    return PS_SUCCESS;
+-
+-  clean:MAPIUninitialize();
+-    talloc_free(mapi_mem_ctx);
+-    return translate_mapi_error(GetLastError());
++clean:
++	MAPIUninitialize();
++	talloc_free(g_mapi_mem_ctx);
++	return translate_mapi_error(GetLastError());
+ }
+ 
+ 
+ /*
+- * ===  FUNCTION  ======================================================================
+- *         Name:  mapi_getrange
+- *  Description:  get range of messages to be fetched
++ * ===	FUNCTION  ======================================================================
++ *		   Name:  mapi_getrange
++ *	Description:  get range of messages to be fetched
+  * =====================================================================================
+  */
+ static int mapi_getrange(int sock, struct query *ctl, const char *folder, int *countp, int *newp, int *bytes)
+ {
+-    enum MAPISTATUS retval;
+-    int             flag = PS_SUCCESS;
+-    struct SPropTagArray *SPropTagArray = NULL;
+-    struct SPropValue *lpProps;
+-    struct SRow     aRow;
+-    const char     *msgid;
+-    int             props_count;
+-    mapi_object_t   obj_message;
+-    mapi_id_t      *fid;
+-    mapi_id_t      *mid;
+-    int             i;
++	enum MAPISTATUS retval;
++	int				flag = PS_SUCCESS;
++	struct SPropTagArray *SPropTagArray = NULL;
++	struct SPropValue *lpProps;
++	struct SRow		aRow;
++	const char	   *msgid;
++	int				props_count;
++	mapi_object_t	obj_message;
++	mapi_id_t	   *fid;
++	mapi_id_t	   *mid;
++	int				i;
+ 
+-    if (outlevel &gt;= O_MONITOR)
+-	report(stdout, &quot;MAPI&gt; mapi_getrange()\n&quot;);
++	if (outlevel &gt;= O_MONITOR) report(stdout, &quot;MAPI&gt; mapi_getrange()\n&quot;);
+ 
+-    *countp = 0;
+-    *newp = 0;
+-    *bytes = 0;
++	*countp = 0;
++	*newp = 0;
++	*bytes = 0;
+ 
+ 
+-    /*-----------------------------------------------------------------------------
+-     * initialize mapi here
+-     *-----------------------------------------------------------------------------*/
+-    flag = mapi_init(folder);
+-    if (flag) {
+-	report(stderr, GT_(&quot;MAPI: MAPI is not initialized\n&quot;));
+-	return (PS_UNDEFINED);
+-    }
++	/*-----------------------------------------------------------------------------
++	 * initialize mapi here
++	 *-----------------------------------------------------------------------------*/
++	flag = mapi_init(folder);
++	if (flag) {
++		report(stderr, GT_(&quot;MAPI: MAPI is not initialized\n&quot;));
++		return PS_UNDEFINED;
++	}
+ 
+-    *countp = mapi_rowset.cRows;
++	*countp = g_mapi_rowset.cRows;
+ 
+-    for (i = 0; i &lt; mapi_rowset.cRows; i++) {
+-	fid = (mapi_id_t *) find_SPropValue_data(&amp;(mapi_rowset.aRow[i]), PR_FID);
+-	mid = (mapi_id_t *) find_SPropValue_data(&amp;(mapi_rowset.aRow[i]), PR_MID);
+-	mapi_object_init(&amp;obj_message);
++	for (i = 0; i &lt; g_mapi_rowset.cRows; i++) {
++		fid = (mapi_id_t *) find_SPropValue_data(&amp;(g_mapi_rowset.aRow[i]), PR_FID);
++		mid = (mapi_id_t *) find_SPropValue_data(&amp;(g_mapi_rowset.aRow[i]), PR_MID);
++		mapi_object_init(&amp;obj_message);
+ 
+-	retval = OpenMessage(&amp;mapi_obj_store, *fid, *mid, &amp;obj_message, 0x0);
++		retval = OpenMessage(&amp;g_mapi_obj_store, *fid, *mid, &amp;obj_message, 0x0);
+ 
+-	if (retval == MAPI_E_SUCCESS) {
+-	    SPropTagArray = set_SPropTagArray(mapi_mem_ctx, 0x3, PR_INTERNET_MESSAGE_ID, PR_MESSAGE_FLAGS, PR_MESSAGE_SIZE);
+-	    retval = GetProps(&amp;obj_message, SPropTagArray, &amp;lpProps, &amp;props_count);
+-	    MAPIFreeBuffer(SPropTagArray);
+-	    if (retval != MAPI_E_SUCCESS) {
+-		flag = translate_mapi_error(GetLastError());
+-		talloc_free(lpProps);
+-		mapi_object_release(&amp;obj_message);
+-		mapi_clean();
+-		return flag;
+-	    }
++		if (retval == MAPI_E_SUCCESS)
++		{
++			SPropTagArray = set_SPropTagArray(g_mapi_mem_ctx, 0x3, PR_INTERNET_MESSAGE_ID, PR_MESSAGE_FLAGS, PR_MESSAGE_SIZE);
++			retval = GetProps(&amp;obj_message, SPropTagArray, &amp;lpProps, &amp;props_count);
++			MAPIFreeBuffer(SPropTagArray);
++			if (retval != MAPI_E_SUCCESS) {
++				flag = translate_mapi_error(GetLastError());
++				talloc_free(lpProps);
++				mapi_object_release(&amp;obj_message);
++				mapi_clean();
++				return flag;
++			}
+ 
+-	    /*-----------------------------------------------------------------------------
+-	     *  build a SRow structure
+-	     *-----------------------------------------------------------------------------*/
+-	    aRow.ulAdrEntryPad = 0;
+-	    aRow.cValues = props_count;
+-	    aRow.lpProps = lpProps;
++			/*-----------------------------------------------------------------------------
++			 *	build a SRow structure
++			 *-----------------------------------------------------------------------------*/
++			aRow.ulAdrEntryPad = 0;
++			aRow.cValues = props_count;
++			aRow.lpProps = lpProps;
+ 
+-	    msgid = (const char *) find_SPropValue_data(&amp;aRow, PR_INTERNET_MESSAGE_ID);
+-	    long            message_flags = *(const long *) find_SPropValue_data(&amp;aRow,
+-										 PR_MESSAGE_FLAGS);
+-	    if (msgid &amp;&amp; !(message_flags &amp; MSGFLAG_READ)) {
+-		(*newp)++;
+-		(*bytes)
+-		    += *(const long *)
+-		    find_SPropValue_data(&amp;aRow, PR_MESSAGE_SIZE);
+-	    }
+-	    talloc_free(lpProps);
++			msgid = (const char *) find_SPropValue_data(&amp;aRow, PR_INTERNET_MESSAGE_ID);
++			long	message_flags = *(const long *) find_SPropValue_data(&amp;aRow, PR_MESSAGE_FLAGS);
++			if (msgid &amp;&amp; !(message_flags &amp; MSGFLAG_READ))
++			{
++				(*newp)++;
++				(*bytes) += *(const long *) find_SPropValue_data(&amp;aRow, PR_MESSAGE_SIZE);
++			}
++			talloc_free(lpProps);
++		}
++		mapi_object_release(&amp;obj_message);
+ 	}
+-	mapi_object_release(&amp;obj_message);
+-    }
+ 
+-    return PS_SUCCESS;
++	return PS_SUCCESS;
+ }
+ 
+ /*
+- * ===  FUNCTION  ======================================================================
+- *         Name:  mapi_getpartialsizes
+- *  Description:  capture the sizes of messages #first-#last
++ * ===	FUNCTION  ======================================================================
++ *		   Name:  mapi_getpartialsizes
++ *	Description:  capture the sizes of messages #first-#last
+  * =====================================================================================
+  */
+ static int mapi_getpartialsizes(int sock, int first, int last, int *sizes)
+ {
+-    enum MAPISTATUS retval;
+-    int             flag = PS_SUCCESS;
+-    struct SPropTagArray *SPropTagArray = NULL;
+-    struct SPropValue *lpProps;
+-    struct SRow     aRow;
+-    int             props_count;
+-    mapi_object_t   obj_message;
+-    const char     *msgid;
+-    mapi_id_t      *fid;
+-    mapi_id_t      *mid;
+-    int             i;
++	enum MAPISTATUS retval;
++	int				flag = PS_SUCCESS;
++	struct SPropTagArray *SPropTagArray = NULL;
++	struct SPropValue *lpProps;
++	struct SRow		aRow;
++	int				props_count;
++	mapi_object_t	obj_message;
++	const char	   *msgid;
++	mapi_id_t	   *fid;
++	mapi_id_t	   *mid;
++	int				i;
+ 
+-    if (first != -1) {
+-	if (outlevel &gt;= O_MONITOR)
+-	    report(stdout, &quot;MAPI&gt; mapi_getpartialsizes(first %d, last %d)\n&quot;, first, last);
+-    } else
+-	first = 1;
++	if (first != -1)
++	{
++		if (outlevel &gt;= O_MONITOR) report(stdout, &quot;MAPI&gt; mapi_getpartialsizes(first %d, last %d)\n&quot;, first, last);
++	}
++	else
++		first = 1;
+ 
+-    if (!mapi_initialized) {
+-	report(stderr, GT_(&quot;MAPI: MAPI is not initialized\n&quot;));
+-	return (PS_UNDEFINED);
+-    }
++	if (!g_mapi_initialized) {
++		report(stderr, GT_(&quot;MAPI: MAPI is not initialized\n&quot;));
++		return PS_UNDEFINED;
++	}
+ 
+-    for (i = first; i &lt;= mapi_rowset.cRows &amp;&amp; i &lt;= last; i++) {
+-	fid = (mapi_id_t *) find_SPropValue_data(&amp;(mapi_rowset.aRow[i - 1]), PR_FID);
+-	mid = (mapi_id_t *) find_SPropValue_data(&amp;(mapi_rowset.aRow[i - 1]), PR_MID);
+-	mapi_object_init(&amp;obj_message);
++	for (i = first; i &lt;= g_mapi_rowset.cRows &amp;&amp; i &lt;= last; i++)
++	{
++		fid = (mapi_id_t *) find_SPropValue_data(&amp;(g_mapi_rowset.aRow[i - 1]), PR_FID);
++		mid = (mapi_id_t *) find_SPropValue_data(&amp;(g_mapi_rowset.aRow[i - 1]), PR_MID);
++		mapi_object_init(&amp;obj_message);
+ 
+-	retval = OpenMessage(&amp;mapi_obj_store, *fid, *mid, &amp;obj_message, 0x0);
++		retval = OpenMessage(&amp;g_mapi_obj_store, *fid, *mid, &amp;obj_message, 0x0);
+ 
+-	if (retval == MAPI_E_SUCCESS) {
+-	    SPropTagArray = set_SPropTagArray(mapi_mem_ctx, 0x2, PR_INTERNET_MESSAGE_ID, PR_MESSAGE_SIZE);
+-	    retval = GetProps(&amp;obj_message, SPropTagArray, &amp;lpProps, &amp;props_count);
+-	    MAPIFreeBuffer(SPropTagArray);
+-	    if (retval != MAPI_E_SUCCESS) {
+-		flag = translate_mapi_error(GetLastError());
+-		talloc_free(lpProps);
+-		mapi_object_release(&amp;obj_message);
+-		mapi_clean();
+-		return flag;
+-	    }
++		if (retval == MAPI_E_SUCCESS)
++		{
++			SPropTagArray = set_SPropTagArray(g_mapi_mem_ctx, 0x2, PR_INTERNET_MESSAGE_ID, PR_MESSAGE_SIZE);
++			retval = GetProps(&amp;obj_message, SPropTagArray, &amp;lpProps, &amp;props_count);
++			MAPIFreeBuffer(SPropTagArray);
++			if (retval != MAPI_E_SUCCESS)
++			{
++				flag = translate_mapi_error(GetLastError());
++				talloc_free(lpProps);
++				mapi_object_release(&amp;obj_message);
++				mapi_clean();
++				return flag;
++			}
+ 
+-	    /*
+-	     * Build a SRow structure 
+-	     */
+-	    aRow.ulAdrEntryPad = 0;
+-	    aRow.cValues = props_count;
+-	    aRow.lpProps = lpProps;
++			/*
++			 * Build a SRow structure 
++			 */
++			aRow.ulAdrEntryPad = 0;
++			aRow.cValues = props_count;
++			aRow.lpProps = lpProps;
+ 
+-	    msgid = (const char *) find_SPropValue_data(&amp;aRow, PR_INTERNET_MESSAGE_ID);
+-	    if (msgid) {
+-		sizes[i - first] = *(const long *)
+-		    find_SPropValue_data(&amp;aRow, PR_MESSAGE_SIZE);
+-	    }
+-	    talloc_free(lpProps);
++			msgid = (const char *) find_SPropValue_data(&amp;aRow, PR_INTERNET_MESSAGE_ID);
++			if (msgid)
++				sizes[i - first] = *(const long *) find_SPropValue_data(&amp;aRow, PR_MESSAGE_SIZE);
++			talloc_free(lpProps);
++		}
++		mapi_object_release(&amp;obj_message);
+ 	}
+-	mapi_object_release(&amp;obj_message);
+-    }
+ 
+-    return PS_SUCCESS;
++	return PS_SUCCESS;
+ }
+ 
+ /*
+- * ===  FUNCTION  ======================================================================
+- *         Name:  mapi_getsizes
+- *  Description:  capture the sizes of all messages
++ * ===	FUNCTION  ======================================================================
++ *		   Name:  mapi_getsizes
++ *	Description:  capture the sizes of all messages
+  * =====================================================================================
+  */
+ static int mapi_getsizes(int sock, int mail_count, int *sizes)
+ {
+-    if (outlevel &gt;= O_MONITOR)
+-	report(stdout, &quot;MAPI&gt; mapi_getsizes(mail_count %d)\n&quot;, mail_count);
++	if (outlevel &gt;= O_MONITOR) report(stdout, &quot;MAPI&gt; mapi_getsizes(mail_count %d)\n&quot;, mail_count);
+ 
+-    /*-----------------------------------------------------------------------------
+-     *  set first to -1 to shut down report message in mapi_getpartialsizes()
+-     *-----------------------------------------------------------------------------*/
+-    return mapi_getpartialsizes(sock, -1, mail_count, sizes);
++	/*-----------------------------------------------------------------------------
++	 *	set first to -1 to shut down report message in mapi_getpartialsizes()
++	 *-----------------------------------------------------------------------------*/
++	return mapi_getpartialsizes(sock, -1, mail_count, sizes);
+ }
+ 
+-
+ /*
+- * ===  FUNCTION  ======================================================================
+- *         Name:  mapi_is_old
+- *  Description:  is the given message old?
++ * ===	FUNCTION  ======================================================================
++ *		   Name:  mapi_is_old
++ *	Description:  is the given message old?
+  * =====================================================================================
+  */
+ static int mapi_is_old(int sock, struct query *ctl, int number)
+ {
+-    enum MAPISTATUS retval;
+-    int             flag = FALSE;
+-    struct SPropTagArray *SPropTagArray = NULL;
+-    struct SPropValue *lpProps;
+-    struct SRow     aRow;
+-    mapi_object_t   obj_message;
+-    const char     *msgid;
+-    mapi_id_t      *fid;
+-    mapi_id_t      *mid;
+-    int             props_count;
++	enum MAPISTATUS retval;
++	int				flag = FALSE;
++	struct SPropTagArray *SPropTagArray = NULL;
++	struct SPropValue *lpProps;
++	struct SRow		aRow;
++	mapi_object_t	obj_message;
++	const char	   *msgid;
++	mapi_id_t	   *fid;
++	mapi_id_t	   *mid;
++	int				props_count;
+ 
+-    if (outlevel &gt;= O_MONITOR)
+-	report(stdout, &quot;MAPI&gt; mapi_is_old(number %d)\n&quot;, number);
++	if (outlevel &gt;= O_MONITOR) report(stdout, &quot;MAPI&gt; mapi_is_old(number %d)\n&quot;, number);
+ 
+-    if (!mapi_initialized) {
+-	report(stderr, GT_(&quot;MAPI: MAPI is not initialized\n&quot;));
+-	return (PS_UNDEFINED);
+-    }
++	if (!g_mapi_initialized) {
++		report(stderr, GT_(&quot;MAPI: MAPI is not initialized\n&quot;));
++		return PS_UNDEFINED;
++	}
+ 
+-    if (mapi_rowset.cRows &lt; number)
+-	return FALSE;
++	if (g_mapi_rowset.cRows &lt; number) return FALSE;
+ 
+-    fid = (mapi_id_t *) find_SPropValue_data(&amp;(mapi_rowset.aRow[number - 1]), PR_FID);
+-    mid = (mapi_id_t *) find_SPropValue_data(&amp;(mapi_rowset.aRow[number - 1]), PR_MID);
+-    mapi_object_init(&amp;obj_message);
++	fid = (mapi_id_t *) find_SPropValue_data(&amp;(g_mapi_rowset.aRow[number - 1]), PR_FID);
++	mid = (mapi_id_t *) find_SPropValue_data(&amp;(g_mapi_rowset.aRow[number - 1]), PR_MID);
++	mapi_object_init(&amp;obj_message);
+ 
+-    retval = OpenMessage(&amp;mapi_obj_store, *fid, *mid, &amp;obj_message, 0x0);
+-    if (retval == MAPI_E_SUCCESS) {
+-	SPropTagArray = set_SPropTagArray(mapi_mem_ctx, 0x1, PR_INTERNET_MESSAGE_ID);
+-	retval = GetProps(&amp;obj_message, SPropTagArray, &amp;lpProps, &amp;props_count);
+-	MAPIFreeBuffer(SPropTagArray);
+-	if (retval == MAPI_E_SUCCESS) {
+-	    /*
+-	     * Build a SRow structure 
+-	     */
+-	    aRow.ulAdrEntryPad = 0;
+-	    aRow.cValues = props_count;
+-	    aRow.lpProps = lpProps;
+-
+-	    msgid = (const char *) find_SPropValue_data(&amp;aRow, PR_INTERNET_MESSAGE_ID);
+-	    if (msgid) {
+-		retval = FindProfileAttr(mapi_profile, &quot;Message-ID&quot;, msgid);
++	retval = OpenMessage(&amp;g_mapi_obj_store, *fid, *mid, &amp;obj_message, 0x0);
++	if (retval == MAPI_E_SUCCESS)
++	{
++		SPropTagArray = set_SPropTagArray(g_mapi_mem_ctx, 0x1, PR_INTERNET_MESSAGE_ID);
++		retval = GetProps(&amp;obj_message, SPropTagArray, &amp;lpProps, &amp;props_count);
++		MAPIFreeBuffer(SPropTagArray);
+ 		if (retval == MAPI_E_SUCCESS) {
+-		    if (outlevel == O_DEBUG)
+-			report(stdout, &quot;MAPI&gt; message %d with Message-ID=%s is old\n&quot;, number, msgid);
+-		    flag = TRUE;
++			/* Build a SRow structure */
++			aRow.ulAdrEntryPad = 0;
++			aRow.cValues = props_count;
++			aRow.lpProps = lpProps;
++
++			msgid = (const char *) find_SPropValue_data(&amp;aRow, PR_INTERNET_MESSAGE_ID);
++			if (msgid) {
++				retval = FindProfileAttr(mapi_profile, &quot;Message-ID&quot;, msgid);
++				if (retval == MAPI_E_SUCCESS) {
++					if (outlevel == O_DEBUG) report(stdout, &quot;MAPI&gt; message %d with Message-ID=%s is old\n&quot;, number, msgid);
++					flag = TRUE;
++				}
++			}
+ 		}
+-	    }
+-	} else
+-	    mapi_clean();
+-	talloc_free(lpProps);
+-    }
++		else
++			mapi_clean();
++		talloc_free(lpProps);
++	}
+ 
+-    mapi_object_release(&amp;obj_message);
+-    return flag;
++	mapi_object_release(&amp;obj_message);
++	return flag;
+ }
+ 
+ /*
+- * ===  FUNCTION  ======================================================================
+- *         Name:  smtp_address
+- *  Description:  write the smtp address which is crosponding to the given display name,
+- *                into mapi_buffer
++ * ===	FUNCTION  ======================================================================
++ *		   Name:  smtp_address
++ *	Description:  write the smtp address which is crosponding to the given display name,
++ *				  into g_mapi_buffer
+  * =====================================================================================
+  */
+ static void smtp_address(int *lenp, const char *name)
+ {
+-    struct SPropTagArray *SPropTagArray;
+-    struct SRowSet *SRowSet;
+-    enum MAPISTATUS retval;
+-    const char     *display_name = NULL;
+-    uint32_t        i;
+-    uint32_t        count;
+-    uint8_t         ulFlags;
++	struct SPropTagArray *SPropTagArray;
++	struct SRowSet *SRowSet;
++	enum MAPISTATUS retval;
++	const char	   *display_name = NULL;
++	uint32_t		i;
++	uint32_t		count;
++	uint8_t			ulFlags;
+ 
+-    SPropTagArray = set_SPropTagArray(mapi_mem_ctx, 0x02, PR_DISPLAY_NAME_UNICODE, PR_SMTP_ADDRESS_UNICODE);
+-    count = 0x7;
+-    ulFlags = TABLE_START;
+-    do {
+-	count += 0x2;
+-	retval = GetGALTable(s_mapi_session, SPropTagArray, &amp;SRowSet, count, ulFlags);
+-	if (retval != MAPI_E_SUCCESS) {
+-	    MapiWrite(lenp, &quot;\n&quot;);
+-	    report(stderr, &quot;MAPI: Error when translate display name into smtp address\n&quot;);
+-	    MAPIFreeBuffer(SRowSet);
+-	    MAPIFreeBuffer(SPropTagArray);
+-	    return;
+-	}
+-	if (SRowSet-&gt;cRows) {
+-	    for (i = 0; i &lt; SRowSet-&gt;cRows; i++) {
+-		display_name = (const char *) find_SPropValue_data(&amp;SRowSet-&gt;aRow[i], PR_DISPLAY_NAME_UNICODE);
+-		if (strcmp(display_name, name) == 0) {
+-		    MapiWrite(lenp, &quot; &lt;%s&gt;\n&quot;,
+-			      (const char *) find_SPropValue_data(&amp;SRowSet-&gt;aRow[i], PR_SMTP_ADDRESS_UNICODE));
+-		    MAPIFreeBuffer(SRowSet);
+-		    MAPIFreeBuffer(SPropTagArray);
+-		    return;
++	SPropTagArray = set_SPropTagArray(g_mapi_mem_ctx, 0x02, PR_DISPLAY_NAME_UNICODE, PR_SMTP_ADDRESS_UNICODE);
++	count = 0x7;
++	ulFlags = TABLE_START;
++	do {
++		count += 0x2;
++		retval = GetGALTable(g_mapi_session, SPropTagArray, &amp;SRowSet, count, ulFlags);
++		if (retval != MAPI_E_SUCCESS)
++		{
++			MapiWrite(lenp, &quot;\n&quot;);
++			report(stderr, &quot;MAPI: Error when translate display name into smtp address\n&quot;);
++			MAPIFreeBuffer(SRowSet);
++			MAPIFreeBuffer(SPropTagArray);
++			return;
+ 		}
+-	    }
+-	}
+-	ulFlags = TABLE_CUR;
+-	MAPIFreeBuffer(SRowSet);
+-    } while (SRowSet-&gt;cRows == count);
+-    MAPIFreeBuffer(SPropTagArray);
+ 
+-    MapiWrite(lenp, &quot;\n&quot;);
+-    return;
++		if (SRowSet-&gt;cRows)
++		{
++			for (i = 0; i &lt; SRowSet-&gt;cRows; i++)
++			{
++				display_name = (const char *) find_SPropValue_data(&amp;SRowSet-&gt;aRow[i], PR_DISPLAY_NAME_UNICODE);
++				if (strcmp(display_name, name) == 0)
++				{
++					MapiWrite(lenp, &quot; &lt;%s&gt;\n&quot;, (const char *) find_SPropValue_data(&amp;SRowSet-&gt;aRow[i], PR_SMTP_ADDRESS_UNICODE));
++					MAPIFreeBuffer(SRowSet);
++					MAPIFreeBuffer(SPropTagArray);
++					return;
++				}
++			}
++		}
++		ulFlags = TABLE_CUR;
++		MAPIFreeBuffer(SRowSet);
++	} while (SRowSet-&gt;cRows == count);
++	MAPIFreeBuffer(SPropTagArray);
++
++	MapiWrite(lenp, &quot;\n&quot;);
++	return;
+ }
+ /*
+- * ===  FUNCTION  ======================================================================
+- *         Name:  mapi_fetch_headers
+- *  Description:  request headers of the nth message, write message headers data into
+- *                mapi_buffer
++ * ===	FUNCTION  ======================================================================
++ *		   Name:  mapi_fetch_headers
++ *	Description:  request headers of the nth message, write message headers data into
++ *				  g_mapi_buffer
+  * =====================================================================================
+  */
+ static int mapi_fetch_headers(int sock, struct query *ctl, int number, int *lenp)
+ {
+-    enum MAPISTATUS retval;
+-    struct SPropTagArray *SPropTagArray = NULL;
+-    struct SPropValue *lpProps;
+-    struct SRow     aRow;
+-    mapi_object_t   obj_message;
+-    const char     *msgid;
+-    mapi_id_t      *fid;
+-    mapi_id_t      *mid;
+-    const uint64_t *delivery_date;
+-    const char     *date = NULL;
+-    const char     *from = NULL;
+-    const char     *to = NULL;
+-    const char     *cc = NULL;
+-    const char     *bcc = NULL;
+-    const char     *subject = NULL;
+-    const uint8_t  *has_attach = NULL;
+-    uint8_t         format;
+-    int             props_count;
++	enum MAPISTATUS retval;
++	struct SPropTagArray *SPropTagArray = NULL;
++	struct SPropValue *lpProps;
++	struct SRow		aRow;
++	mapi_object_t	obj_message;
++	const char	   *msgid;
++	mapi_id_t	   *fid;
++	mapi_id_t	   *mid;
++	const uint64_t *delivery_date;
++	const char	   *date = NULL;
++	const char	   *from = NULL;
++	const char	   *to = NULL;
++	const char	   *cc = NULL;
++	const char	   *bcc = NULL;
++	const char	   *subject = NULL;
++	const uint8_t  *has_attach = NULL;
++	uint8_t			format;
++	int				props_count;
+ 
+-    (void) ctl;
+-    *lenp = 0;
++	(void) ctl;
++	*lenp = 0;
+ 
+-    if (outlevel &gt;= O_MONITOR)
+-	report(stdout, &quot;MAPI&gt; mapi_fetch_headers(number %d)\n&quot;, number);
++	if (outlevel &gt;= O_MONITOR) report(stdout, &quot;MAPI&gt; mapi_fetch_headers(number %d)\n&quot;, number);
+ 
+-    if (!mapi_initialized) {
+-	report(stderr, GT_(&quot;MAPI: MAPI is not initialized\n&quot;));
+-	return (PS_UNDEFINED);
+-    }
++	if (!g_mapi_initialized) {
++		report(stderr, GT_(&quot;MAPI: MAPI is not initialized\n&quot;));
++		return (PS_UNDEFINED);
++	}
+ 
+-    if (mapi_rowset.cRows &lt; number)
+-	return PS_UNDEFINED;
++	if (g_mapi_rowset.cRows &lt; number) return PS_UNDEFINED;
+ 
+-    fid = (mapi_id_t *) find_SPropValue_data(&amp;(mapi_rowset.aRow[number - 1]), PR_FID);
+-    mid = (mapi_id_t *) find_SPropValue_data(&amp;(mapi_rowset.aRow[number - 1]), PR_MID);
+-    mapi_object_init(&amp;obj_message);
++	fid = (mapi_id_t *) find_SPropValue_data(&amp;(g_mapi_rowset.aRow[number - 1]), PR_FID);
++	mid = (mapi_id_t *) find_SPropValue_data(&amp;(g_mapi_rowset.aRow[number - 1]), PR_MID);
++	mapi_object_init(&amp;obj_message);
+ 
+-    retval = OpenMessage(&amp;mapi_obj_store, *fid, *mid, &amp;obj_message, 0x0);
+-    if (retval == MAPI_E_SUCCESS) {
+-	SPropTagArray = set_SPropTagArray(mapi_mem_ctx,
+-					  0x09,
+-					  PR_INTERNET_MESSAGE_ID,
+-					  PR_CONVERSATION_TOPIC,
+-					  PR_MESSAGE_DELIVERY_TIME,
+-					  PR_SENT_REPRESENTING_NAME,
+-					  PR_DISPLAY_TO, PR_DISPLAY_CC, PR_DISPLAY_BCC, PR_HASATTACH, PR_MSG_EDITOR_FORMAT);
+-	retval = GetProps(&amp;obj_message, SPropTagArray, &amp;lpProps, &amp;props_count);
+-	MAPIFreeBuffer(SPropTagArray);
+-	if (retval != MAPI_E_SUCCESS) {
+-	    mapi_object_release(&amp;obj_message);
+-	    return translate_mapi_error(GetLastError());
++	retval = OpenMessage(&amp;g_mapi_obj_store, *fid, *mid, &amp;obj_message, 0x0);
++	if (retval == MAPI_E_SUCCESS) {
++		SPropTagArray = set_SPropTagArray(g_mapi_mem_ctx,
++						  0x09,
++						  PR_INTERNET_MESSAGE_ID,
++						  PR_CONVERSATION_TOPIC,
++						  PR_MESSAGE_DELIVERY_TIME,
++						  PR_SENT_REPRESENTING_NAME,
++						  PR_DISPLAY_TO, PR_DISPLAY_CC, PR_DISPLAY_BCC, PR_HASATTACH, PR_MSG_EDITOR_FORMAT);
++		retval = GetProps(&amp;obj_message, SPropTagArray, &amp;lpProps, &amp;props_count);
++		MAPIFreeBuffer(SPropTagArray);
++		if (retval != MAPI_E_SUCCESS) {
++			mapi_object_release(&amp;obj_message);
++			return translate_mapi_error(GetLastError());
++		}
+ 	}
+-    }
+-    /*
+-     * Build a SRow structure 
+-     */
+-    aRow.ulAdrEntryPad = 0;
+-    aRow.cValues = props_count;
+-    aRow.lpProps = lpProps;
+ 
+-    msgid = (const char *) find_SPropValue_data(&amp;aRow, PR_INTERNET_MESSAGE_ID);
+-    if (msgid) {
+-	has_attach = (const uint8_t *) octool_get_propval(&amp;aRow, PR_HASATTACH);
+-	from = (const char *) octool_get_propval(&amp;aRow, PR_SENT_REPRESENTING_NAME);
+-	to = (const char *) octool_get_propval(&amp;aRow, PR_DISPLAY_TO);
+-	cc = (const char *) octool_get_propval(&amp;aRow, PR_DISPLAY_CC);
+-	bcc = (const char *) octool_get_propval(&amp;aRow, PR_DISPLAY_BCC);
++	/* Build a SRow structure */
++	aRow.ulAdrEntryPad = 0;
++	aRow.cValues = props_count;
++	aRow.lpProps = lpProps;
+ 
+-	/*-----------------------------------------------------------------------------
+-	 * octool_get_propval() will not return NULL even if PR_DISPLAY_TO,
+-	 * PR_DISPLAY_CC or PR_DISPLAY_TO is null, so have a test on their lengths.
+-	 *-----------------------------------------------------------------------------*/
+-	if (strlen(to) * strlen(cc) * strlen(bcc)) {
+-	    talloc_free(lpProps);
+-	    mapi_object_release(&amp;obj_message);
+-	    return (PS_UNDEFINED);
+-	}
++	msgid = (const char *) find_SPropValue_data(&amp;aRow, PR_INTERNET_MESSAGE_ID);
++	if (msgid)
++	{
++		has_attach = (const uint8_t *) octool_get_propval(&amp;aRow, PR_HASATTACH);
++		from = (const char *) octool_get_propval(&amp;aRow, PR_SENT_REPRESENTING_NAME);
++		to = (const char *) octool_get_propval(&amp;aRow, PR_DISPLAY_TO);
++		cc = (const char *) octool_get_propval(&amp;aRow, PR_DISPLAY_CC);
++		bcc = (const char *) octool_get_propval(&amp;aRow, PR_DISPLAY_BCC);
+ 
+-	delivery_date = (const uint64_t *) octool_get_propval(&amp;aRow, PR_MESSAGE_DELIVERY_TIME);
+-	if (delivery_date) {
+-	    date = nt_time_string(mapi_mem_ctx, *delivery_date);
+-	} else {
+-	    date = &quot;None&quot;;
+-	}
+-	subject = (const char *) octool_get_propval(&amp;aRow, PR_CONVERSATION_TOPIC);
++		/*-----------------------------------------------------------------------------
++		 * octool_get_propval() will not return NULL even if PR_DISPLAY_TO,
++		 * PR_DISPLAY_CC or PR_DISPLAY_TO is null, so have a test on their lengths.
++		 *-----------------------------------------------------------------------------*/
++		if (strlen(to) * strlen(cc) * strlen(bcc)) {
++			talloc_free(lpProps);
++			mapi_object_release(&amp;obj_message);
++			return (PS_UNDEFINED);
++		}
+ 
+-	/*
+-	 * initialize body DATA_BLOB 
+-	 */
+-	mapi_buffer.data = NULL;
+-	mapi_buffer.length = 0;
+-	mapi_buffer_count = 0;
++		delivery_date = (const uint64_t *) octool_get_propval(&amp;aRow, PR_MESSAGE_DELIVERY_TIME);
++		if (delivery_date) date = nt_time_string(g_mapi_mem_ctx, *delivery_date);
++		else date = &quot;None&quot;;
+ 
+-	MapiWrite(lenp, &quot;Date: %s\n&quot;, date);
++		subject = (const char *) octool_get_propval(&amp;aRow, PR_CONVERSATION_TOPIC);
+ 
+-	MapiWrite(lenp, &quot;From: %s&quot;, from);
+-	smtp_address(lenp, from ? from : &quot;&lt;empty&gt;&quot;);
++		/* initialize body DATA_BLOB */
++		g_mapi_buffer.data = NULL;
++		g_mapi_buffer.length = 0;
++		g_mapi_buffer_count = 0;
+ 
+-	if (strlen(to)) {
+-	    MapiWrite(lenp, &quot;To: %s&quot;, to);
+-	    smtp_address(lenp, to);
+-	}
++		MapiWrite(lenp, &quot;Date: %s\n&quot;, date);
++		MapiWrite(lenp, &quot;From: %s&quot;, from);
++		smtp_address(lenp, from ? from : &quot;&lt;empty&gt;&quot;);
+ 
+-	if (strlen(cc)) {
+-	    MapiWrite(lenp, &quot;Cc: %s&quot;, cc);
+-	    smtp_address(lenp, cc ? cc : &quot;&lt;empty&gt;&quot;);
+-	}
++		if (strlen(to)) {
++			MapiWrite(lenp, &quot;To: %s&quot;, to);
++			smtp_address(lenp, to);
++		}
+ 
+-	if (strlen(bcc)) {
+-	    MapiWrite(lenp, &quot;Bcc: %s&quot;, bcc);
+-	    smtp_address(lenp, bcc);
+-	}
++		if (strlen(cc)) {
++			MapiWrite(lenp, &quot;Cc: %s&quot;, cc);
++			smtp_address(lenp, cc ? cc : &quot;&lt;empty&gt;&quot;);
++		}
+ 
+-	if (subject)
+-	    MapiWrite(lenp, &quot;Subject: %s\n&quot;, subject);
++		if (strlen(bcc)) {
++			MapiWrite(lenp, &quot;Bcc: %s&quot;, bcc);
++			smtp_address(lenp, bcc);
++		}
+ 
+-	MapiWrite(lenp, &quot;Message-ID: %s\n&quot;, msgid);
+-	MapiWrite(lenp, &quot;MIME-Version: 1.0\n&quot;);
++		if (subject) MapiWrite(lenp, &quot;Subject: %s\n&quot;, subject);
+ 
+-	if (has_attach &amp;&amp; *has_attach) {
+-	    /*-----------------------------------------------------------------------------
+-	     * simple structure 
+-	     *-----------------------------------------------------------------------------*/
+-	    MapiWrite(lenp, &quot;Content-Type: multipart/mixed; boundary=\&quot;%s\&quot;\n&quot;, MAPI_BOUNDARY);
+-	} else {
+-	    /*-----------------------------------------------------------------------------
+-	     * complex structure 
+-	     *-----------------------------------------------------------------------------*/
+-	    retval = GetBestBody(&amp;obj_message, &amp;format);
+-	    switch (format) {
+-	    case olEditorText:
+-		MapiWrite(lenp, &quot;Content-Type: text/plain; charset=us-ascii\n&quot;);
+-		MapiWrite(lenp, &quot;Content-Transfer-Encoding: quoted-printable\n&quot;);
+-		break;
+-	    case olEditorHTML:
+-		MapiWrite(lenp, &quot;Content-Type: text/html\n&quot;);
+-		MapiWrite(lenp, &quot;Content-Transfer-Encoding: quoted-printable\n&quot;);
+-		break;
+-	    case olEditorRTF:
+-		MapiWrite(lenp, &quot;Content-Type: text/rtf\n&quot;);
+-		MapiWrite(lenp, &quot;Content-Transfer-Encoding: quoted-printable\n&quot;);
+-		break;
+-	    }
++		MapiWrite(lenp, &quot;Message-ID: %s\n&quot;, msgid);
++		MapiWrite(lenp, &quot;MIME-Version: 1.0\n&quot;);
++
++		if (has_attach &amp;&amp; *has_attach)
++		{
++			/*-----------------------------------------------------------------------------
++			 * simple structure 
++			 *-----------------------------------------------------------------------------*/
++			MapiWrite(lenp, &quot;Content-Type: multipart/mixed; boundary=\&quot;%s\&quot;\n&quot;, MAPI_BOUNDARY);
++		}
++		else
++		{
++			/*-----------------------------------------------------------------------------
++			 * complex structure 
++			 *-----------------------------------------------------------------------------*/
++			retval = GetBestBody(&amp;obj_message, &amp;format);
++			switch (format)
++			{
++				case olEditorText:
++					MapiWrite(lenp, &quot;Content-Type: text/plain; charset=us-ascii\n&quot;);
++					MapiWrite(lenp, &quot;Content-Transfer-Encoding: quoted-printable\n&quot;);
++					break;
++				case olEditorHTML:
++					MapiWrite(lenp, &quot;Content-Type: text/html\n&quot;);
++					MapiWrite(lenp, &quot;Content-Transfer-Encoding: quoted-printable\n&quot;);
++					break;
++				case olEditorRTF:
++					MapiWrite(lenp, &quot;Content-Type: text/rtf\n&quot;);
++					MapiWrite(lenp, &quot;Content-Transfer-Encoding: quoted-printable\n&quot;);
++					break;
++			}
++		}
++
++		MapiWrite(lenp, &quot;\n&quot;);
++
+ 	}
+-	MapiWrite(lenp, &quot;\n&quot;);
+-    } else {
++	else
++	{
++		talloc_free(lpProps);
++		mapi_object_release(&amp;obj_message);
++		return PS_UNDEFINED;
++	}
+ 	talloc_free(lpProps);
+ 	mapi_object_release(&amp;obj_message);
+-	return (PS_UNDEFINED);
+-    }
+-    talloc_free(lpProps);
+-    mapi_object_release(&amp;obj_message);
+ 
+-    return (PS_SUCCESS);
++	return PS_SUCCESS;
+ }
+ 
+ 
+ /*
+- * ===  FUNCTION  ======================================================================
+- *         Name:  mapi_fetch_body
+- *  Description:  request body of nth message, write message body data into mapi_buffer
++ * ===	FUNCTION  ======================================================================
++ *		   Name:  mapi_fetch_body
++ *	Description:  request body of nth message, write message body data into g_mapi_buffer
+  * =====================================================================================
+  */
+ static int mapi_fetch_body(int sock, struct query *ctl, int number, int *lenp)
+ {
+-    enum MAPISTATUS retval;
+-    struct SPropTagArray *SPropTagArray = NULL;
+-    struct SPropValue *lpProps = NULL;
+-    struct SPropValue *attach_lpProps = NULL;
+-    struct SRow     aRow;
+-    struct SRow     aRow2;
+-    struct SRowSet  rowset_attach;
+-    mapi_object_t   obj_message;
+-    mapi_object_t   obj_tb_attach;
+-    mapi_object_t   obj_attach;
+-    const char     *msgid;
+-    mapi_id_t      *fid;
+-    mapi_id_t      *mid;
+-    const uint8_t  *has_attach = NULL;
+-    const uint32_t *attach_num = NULL;
+-    DATA_BLOB       body;
+-    const char     *attach_filename;
+-    const uint32_t *attach_size;
+-    char           *attachment_data;
+-    char           *magic;
+-    int             props_count;
+-    int             attach_count;
+-    uint8_t         format;
++	enum MAPISTATUS retval;
++	struct SPropTagArray *SPropTagArray = NULL;
++	struct SPropValue *lpProps = NULL;
++	struct SPropValue *attach_lpProps = NULL;
++	struct SRow		aRow;
++	struct SRow		aRow2;
++	struct SRowSet	rowset_attach;
++	mapi_object_t	obj_message;
++	mapi_object_t	obj_tb_attach;
++	mapi_object_t	obj_attach;
++	const char	   *msgid;
++	mapi_id_t	   *fid;
++	mapi_id_t	   *mid;
++	const uint8_t  *has_attach = NULL;
++	const uint32_t *attach_num = NULL;
++	DATA_BLOB		body;
++	const char	   *attach_filename;
++	const uint32_t *attach_size;
++	char		   *attachment_data;
++	char		   *magic;
++	int				props_count;
++	int				attach_count;
++	uint8_t			format;
+ 
+-    (void) ctl;
+-    *lenp = 0;
++	(void) ctl;
++	*lenp = 0;
+ 
+-    if (outlevel &gt;= O_MONITOR)
+-	report(stdout, &quot;MAPI&gt; mapi_fetch_body(number %d)\n&quot;, number);
++	if (outlevel &gt;= O_MONITOR) report(stdout, &quot;MAPI&gt; mapi_fetch_body(number %d)\n&quot;, number);
+ 
+-    if (!mapi_initialized) {
+-	report(stderr, GT_(&quot;MAPI: MAPI is not initialized\n&quot;));
+-	return (PS_UNDEFINED);
+-    }
++	if (!g_mapi_initialized) {
++		report(stderr, GT_(&quot;MAPI: MAPI is not initialized\n&quot;));
++		return (PS_UNDEFINED);
++	}
+ 
+-    if (mapi_rowset.cRows &lt; number)
+-	return (PS_UNDEFINED);
++	if (g_mapi_rowset.cRows &lt; number) return (PS_UNDEFINED);
+ 
+-    fid = (mapi_id_t *) find_SPropValue_data(&amp;(mapi_rowset.aRow[number - 1]), PR_FID);
+-    mid = (mapi_id_t *) find_SPropValue_data(&amp;(mapi_rowset.aRow[number - 1]), PR_MID);
+-    mapi_object_init(&amp;obj_message);
++	fid = (mapi_id_t *) find_SPropValue_data(&amp;(g_mapi_rowset.aRow[number - 1]), PR_FID);
++	mid = (mapi_id_t *) find_SPropValue_data(&amp;(g_mapi_rowset.aRow[number - 1]), PR_MID);
++	mapi_object_init(&amp;obj_message);
+ 
+-    retval = OpenMessage(&amp;mapi_obj_store, *fid, *mid, &amp;obj_message, 0x0);
+-    if (retval != MAPI_E_SUCCESS) {
+-	mapi_object_release(&amp;obj_message);
+-	return translate_mapi_error(GetLastError());
+-    }
+-    SPropTagArray = set_SPropTagArray(mapi_mem_ctx,
+-				      0x07,
+-				      PR_INTERNET_MESSAGE_ID,
+-				      PR_MSG_EDITOR_FORMAT,
+-				      PR_BODY, PR_BODY_UNICODE, PR_HTML, PR_RTF_COMPRESSED, PR_HASATTACH);
+-    retval = GetProps(&amp;obj_message, SPropTagArray, &amp;lpProps, &amp;props_count);
+-    MAPIFreeBuffer(SPropTagArray);
+-    if (retval != MAPI_E_SUCCESS) {
+-	mapi_object_release(&amp;obj_message);
+-	return translate_mapi_error(GetLastError());
+-    }
+-
+-    /*-----------------------------------------------------------------------------
+-     *  build a SRow structure
+-     *-----------------------------------------------------------------------------*/
+-    aRow.ulAdrEntryPad = 0;
+-    aRow.cValues = props_count;
+-    aRow.lpProps = lpProps;
+-
+-    msgid = (const char *) find_SPropValue_data(&amp;aRow, PR_INTERNET_MESSAGE_ID);
+-    if (!msgid) {
+-	talloc_free(lpProps);
+-	mapi_object_release(&amp;obj_message);
+-	return (PS_UNDEFINED);
+-    }
+-
+-    has_attach = (const uint8_t *) find_SPropValue_data(&amp;aRow, PR_HASATTACH);
+-    retval = octool_get_body(mapi_mem_ctx, &amp;obj_message, &amp;aRow, &amp;body);
+-
+-    /*-----------------------------------------------------------------------------
+-     *  body
+-     *-----------------------------------------------------------------------------*/
+-    if (body.length) {
+-	if (has_attach &amp;&amp; *has_attach) {
+-	    MapiWrite(lenp, &quot;--%s\n&quot;, MAPI_BOUNDARY);
+-
+-	    /*-----------------------------------------------------------------------------
+-	     *  complex structure
+-	     *-----------------------------------------------------------------------------*/
+-	    retval = GetBestBody(&amp;obj_message, &amp;format);
+-	    switch (format) {
+-	    case olEditorText:
+-		MapiWrite(lenp, &quot;Content-Type: text/plain; charset=us-ascii\n&quot;);
+-		MapiWrite(lenp, &quot;Content-Transfer-Encoding: quoted-printable\n&quot;);
+-		/*
+-		 * Just display UTF8 content inline 
+-		 */
+-		MapiWrite(lenp, &quot;Content-Disposition: inline\n&quot;);
+-		break;
+-	    case olEditorHTML:
+-		MapiWrite(lenp, &quot;Content-Type: text/html\n&quot;);
+-		MapiWrite(lenp, &quot;Content-Transfer-Encoding: quoted-printable\n&quot;);
+-		break;
+-	    case olEditorRTF:
+-		MapiWrite(lenp, &quot;Content-Type: text/rtf\n&quot;);
+-		MapiWrite(lenp, &quot;Content-Transfer-Encoding: quoted-printable\n&quot;);
+-		MapiWrite(lenp, &quot;--%s\n&quot;, MAPI_BOUNDARY);
+-		break;
+-	    }
++	retval = OpenMessage(&amp;g_mapi_obj_store, *fid, *mid, &amp;obj_message, 0x0);
++	if (retval != MAPI_E_SUCCESS) {
++		mapi_object_release(&amp;obj_message);
++		return translate_mapi_error(GetLastError());
+ 	}
++	SPropTagArray = set_SPropTagArray(g_mapi_mem_ctx,
++					  0x07,
++					  PR_INTERNET_MESSAGE_ID,
++					  PR_MSG_EDITOR_FORMAT,
++					  PR_BODY, PR_BODY_UNICODE, PR_HTML, PR_RTF_COMPRESSED, PR_HASATTACH);
++	retval = GetProps(&amp;obj_message, SPropTagArray, &amp;lpProps, &amp;props_count);
++	MAPIFreeBuffer(SPropTagArray);
++	if (retval != MAPI_E_SUCCESS) {
++		mapi_object_release(&amp;obj_message);
++		return translate_mapi_error(GetLastError());
++	}
+ 
+ 	/*-----------------------------------------------------------------------------
+-	 *  encode body.data into quoted printable and append to mapi_buffer
++	 *	build a SRow structure
+ 	 *-----------------------------------------------------------------------------*/
+-	quoted_printable_encode(&amp;body, lenp);
+-	talloc_free(body.data);
++	aRow.ulAdrEntryPad = 0;
++	aRow.cValues = props_count;
++	aRow.lpProps = lpProps;
+ 
++	msgid = (const char *) find_SPropValue_data(&amp;aRow, PR_INTERNET_MESSAGE_ID);
++	if (!msgid) {
++		talloc_free(lpProps);
++		mapi_object_release(&amp;obj_message);
++		return (PS_UNDEFINED);
++	}
++
++	has_attach = (const uint8_t *) find_SPropValue_data(&amp;aRow, PR_HASATTACH);
++	retval = octool_get_body(g_mapi_mem_ctx, &amp;obj_message, &amp;aRow, &amp;body);
++
+ 	/*-----------------------------------------------------------------------------
+-	 *  fetch attachments
++	 *	body
+ 	 *-----------------------------------------------------------------------------*/
+-	if (has_attach &amp;&amp; *has_attach) {
+-	    mapi_object_init(&amp;obj_tb_attach);
+-	    retval = GetAttachmentTable(&amp;obj_message, &amp;obj_tb_attach);
+-	    if (retval == MAPI_E_SUCCESS) {
+-		SPropTagArray = set_SPropTagArray(mapi_mem_ctx, 0x1, PR_ATTACH_NUM);
+-		retval = SetColumns(&amp;obj_tb_attach, SPropTagArray);
+-		MAPIFreeBuffer(SPropTagArray);
+-		if (retval != MAPI_E_SUCCESS) {
+-		    mapi_object_release(&amp;obj_message);
+-		    return translate_mapi_error(GetLastError());
+-		}
++	if (body.length)
++	{
++		if (has_attach &amp;&amp; *has_attach)
++		{
++			MapiWrite(lenp, &quot;--%s\n&quot;, MAPI_BOUNDARY);
+ 
+-		retval = QueryRows(&amp;obj_tb_attach, 0xa, TBL_ADVANCE, &amp;rowset_attach);
+-		if (retval != MAPI_E_SUCCESS) {
+-		    mapi_object_release(&amp;obj_message);
+-		    return translate_mapi_error(GetLastError());
++			/*-----------------------------------------------------------------------------
++			 *	complex structure
++			 *-----------------------------------------------------------------------------*/
++			retval = GetBestBody(&amp;obj_message, &amp;format);
++			switch (format) {
++				case olEditorText:
++					MapiWrite(lenp, &quot;Content-Type: text/plain; charset=us-ascii\n&quot;);
++					MapiWrite(lenp, &quot;Content-Transfer-Encoding: quoted-printable\n&quot;);
++					/* Just display UTF8 content inline */
++					MapiWrite(lenp, &quot;Content-Disposition: inline\n&quot;);
++					break;
++				case olEditorHTML:
++					MapiWrite(lenp, &quot;Content-Type: text/html\n&quot;);
++					MapiWrite(lenp, &quot;Content-Transfer-Encoding: quoted-printable\n&quot;);
++					break;
++				case olEditorRTF:
++					MapiWrite(lenp, &quot;Content-Type: text/rtf\n&quot;);
++					MapiWrite(lenp, &quot;Content-Transfer-Encoding: quoted-printable\n&quot;);
++					MapiWrite(lenp, &quot;--%s\n&quot;, MAPI_BOUNDARY);
++					break;
++			}
+ 		}
+ 
+-		for (attach_count = 0; attach_count &lt; rowset_attach.cRows; attach_count++) {
+-		    attach_num = (const uint32_t *) find_SPropValue_data(&amp;(rowset_attach.aRow[attach_count]), PR_ATTACH_NUM);
+-		    retval = OpenAttach(&amp;obj_message, *attach_num, &amp;obj_attach);
+-		    if (retval == MAPI_E_SUCCESS) {
+-			SPropTagArray = set_SPropTagArray(mapi_mem_ctx, 0x3,
+-							  PR_ATTACH_FILENAME, PR_ATTACH_LONG_FILENAME, PR_ATTACH_SIZE);
+-			retval = GetProps(&amp;obj_attach, SPropTagArray, &amp;attach_lpProps, &amp;props_count);
+-			MAPIFreeBuffer(SPropTagArray);
++		/*-----------------------------------------------------------------------------
++		 *	encode body.data into quoted printable and append to g_mapi_buffer
++		 *-----------------------------------------------------------------------------*/
++		quoted_printable_encode(&amp;body, lenp);
++		talloc_free(body.data);
++
++		/*-----------------------------------------------------------------------------
++		 *	fetch attachments
++		 *-----------------------------------------------------------------------------*/
++		if (has_attach &amp;&amp; *has_attach) {
++			mapi_object_init(&amp;obj_tb_attach);
++			retval = GetAttachmentTable(&amp;obj_message, &amp;obj_tb_attach);
+ 			if (retval == MAPI_E_SUCCESS) {
+-			    aRow2.ulAdrEntryPad = 0;
+-			    aRow2.cValues = props_count;
+-			    aRow2.lpProps = attach_lpProps;
++				SPropTagArray = set_SPropTagArray(g_mapi_mem_ctx, 0x1, PR_ATTACH_NUM);
++				retval = SetColumns(&amp;obj_tb_attach, SPropTagArray);
++				MAPIFreeBuffer(SPropTagArray);
++				if (retval != MAPI_E_SUCCESS) {
++					mapi_object_release(&amp;obj_message);
++					return translate_mapi_error(GetLastError());
++				}
+ 
+-			    attach_filename = get_filename(octool_get_propval(&amp;aRow2, PR_ATTACH_LONG_FILENAME));
+-			    if (!attach_filename || (attach_filename &amp;&amp; !strcmp(attach_filename, &quot;&quot;))) {
+-				attach_filename = get_filename(octool_get_propval(&amp;aRow2, PR_ATTACH_FILENAME));
+-			    }
+-			    attach_size = (const uint32_t *) octool_get_propval(&amp;aRow2, PR_ATTACH_SIZE);
+-			    attachment_data = get_base64_attachment(mapi_mem_ctx, obj_attach, *attach_size, &amp;magic);
+-			    if (attachment_data) {
+-				MapiWrite(lenp, &quot;\n\n--%s\n&quot;, MAPI_BOUNDARY);
+-				MapiWrite(lenp, &quot;Content-Disposition: attachment; filename=\&quot;%s\&quot;\n&quot;, attach_filename);
+-				MapiWrite(lenp, &quot;Content-Type: \&quot;%s\&quot;\n&quot;, magic);
+-				MapiWrite(lenp, &quot;Content-Transfer-Encoding: base64\n\n&quot;);
+-				data_blob_append(mapi_mem_ctx, &amp;mapi_buffer, attachment_data, strlen(attachment_data));
+-				*lenp += strlen(attachment_data);
+-				talloc_free(attachment_data);
+-			    }
+-			}
+-			talloc_free(attach_lpProps);
+-		    }
+-		}
+-		MapiWrite(lenp, &quot;\n--%s--\n&quot;, MAPI_BOUNDARY);
+-	    }			/* if GetAttachmentTable returns success */
+-	}			/* if (has_attach &amp;&amp; *has_attach) */
+-    }
+-    /*-----------------------------------------------------------------------------
+-     *  send the message delimiter
+-     *-----------------------------------------------------------------------------*/
+-    MapiWrite(lenp, &quot;\n.\n\0&quot;);
++				retval = QueryRows(&amp;obj_tb_attach, 0xa, TBL_ADVANCE, &amp;rowset_attach);
++				if (retval != MAPI_E_SUCCESS) {
++					mapi_object_release(&amp;obj_message);
++					return translate_mapi_error(GetLastError());
++				}
+ 
+-    talloc_free(lpProps);
+-    mapi_object_release(&amp;obj_message);
++				for (attach_count = 0; attach_count &lt; rowset_attach.cRows; attach_count++)
++				{
++					attach_num = (const uint32_t *) find_SPropValue_data(&amp;(rowset_attach.aRow[attach_count]), PR_ATTACH_NUM);
++					retval = OpenAttach(&amp;obj_message, *attach_num, &amp;obj_attach);
++					if (retval == MAPI_E_SUCCESS)
++					{
++						SPropTagArray = set_SPropTagArray(g_mapi_mem_ctx, 0x3,
++										  PR_ATTACH_FILENAME, PR_ATTACH_LONG_FILENAME, PR_ATTACH_SIZE);
++						retval = GetProps(&amp;obj_attach, SPropTagArray, &amp;attach_lpProps, &amp;props_count);
++						MAPIFreeBuffer(SPropTagArray);
++						if (retval == MAPI_E_SUCCESS) {
++							aRow2.ulAdrEntryPad = 0;
++							aRow2.cValues = props_count;
++							aRow2.lpProps = attach_lpProps;
+ 
+-    return (PS_SUCCESS);
++							attach_filename = get_filename(octool_get_propval(&amp;aRow2, PR_ATTACH_LONG_FILENAME));
++							if (!attach_filename || (attach_filename &amp;&amp; !strcmp(attach_filename, &quot;&quot;)))
++								attach_filename = get_filename(octool_get_propval(&amp;aRow2, PR_ATTACH_FILENAME));
++							attach_size = (const uint32_t *) octool_get_propval(&amp;aRow2, PR_ATTACH_SIZE);
++							attachment_data = get_base64_attachment(g_mapi_mem_ctx, obj_attach, *attach_size, &amp;magic);
++							if (attachment_data)
++							{
++								MapiWrite(lenp, &quot;\n\n--%s\n&quot;, MAPI_BOUNDARY);
++								MapiWrite(lenp, &quot;Content-Disposition: attachment; filename=\&quot;%s\&quot;\n&quot;, attach_filename);
++								MapiWrite(lenp, &quot;Content-Type: \&quot;%s\&quot;\n&quot;, magic);
++								MapiWrite(lenp, &quot;Content-Transfer-Encoding: base64\n\n&quot;);
++								data_blob_append(g_mapi_mem_ctx, &amp;g_mapi_buffer, attachment_data, strlen(attachment_data));
++								*lenp += strlen(attachment_data);
++								talloc_free(attachment_data);
++							}
++						}
++						talloc_free(attach_lpProps);
++					}
++				}
++				MapiWrite(lenp, &quot;\n--%s--\n&quot;, MAPI_BOUNDARY);
++			}			/* if GetAttachmentTable returns success */
++		}			/* if (has_attach &amp;&amp; *has_attach) */
++	}
++	/*-----------------------------------------------------------------------------
++	 *	send the message delimiter
++	 *-----------------------------------------------------------------------------*/
++	MapiWrite(lenp, &quot;\n.\n\0&quot;);
++
++	talloc_free(lpProps);
++	mapi_object_release(&amp;obj_message);
++
++	return (PS_SUCCESS);
+ }
+ 
+ /*
+- * ===  FUNCTION  ======================================================================
+- *         Name:  mapi_tail
+- *  Description:  will be invoked after mapi_fetch_body and mapi_fetch_headers to clear
+- *                mapi_buffer.
++ * ===	FUNCTION  ======================================================================
++ *		   Name:  mapi_tail
++ *	Description:  will be invoked after mapi_fetch_body and mapi_fetch_headers to clear
++ *				  g_mapi_buffer.
+  * =====================================================================================
+  */
+ static int mapi_trail(int sock, struct query *ctl, const char *tag)
+ {
+-    if (outlevel &gt;= O_MONITOR)
+-	report(stdout, &quot;MAPI&gt; mapi_trail(tag %s)\n&quot;, tag);
++	if (outlevel &gt;= O_MONITOR) report(stdout, &quot;MAPI&gt; mapi_trail(tag %s)\n&quot;, tag);
+ 
++	/*-----------------------------------------------------------------------------
++	 *	clear mapi buffer
++	 *-----------------------------------------------------------------------------*/
++	talloc_free(g_mapi_buffer.data);
++	g_mapi_buffer.data = NULL;
++	g_mapi_buffer.length = 0;
++	g_mapi_buffer_count = 0;
+ 
+-    /*-----------------------------------------------------------------------------
+-     *  clear mapi buffer
+-     *-----------------------------------------------------------------------------*/
+-    talloc_free(mapi_buffer.data);
+-    mapi_buffer.data = NULL;
+-    mapi_buffer.length = 0;
+-    mapi_buffer_count = 0;
+-
+-    return PS_SUCCESS;
++	return PS_SUCCESS;
+ }
+ /*
+- * ===  FUNCTION  ======================================================================
+- *         Name:  mapi_fetch_delete
+- *  Description:  set delete flag for given message
++ * ===	FUNCTION  ======================================================================
++ *		   Name:  mapi_fetch_delete
++ *	Description:  set delete flag for given message
+  * =====================================================================================
+  */
+ static int mapi_delete(int sock, struct query *ctl, int number)
+ {
+-    mapi_container_list_t *element;
+-    enum MAPISTATUS retval;
+-    const char     *profname = NULL;
+-    int             flag = PS_UNDEFINED;
+-    struct SPropTagArray *SPropTagArray = NULL;
+-    struct SPropValue *lpProps;
+-    struct SRow     aRow;
+-    mapi_object_t   obj_message;
+-    const char     *msgid;
+-    mapi_id_t      *fid;
+-    mapi_id_t      *mid;
+-    int             props_count;
++	mapi_container_list_t *element;
++	enum MAPISTATUS retval;
++	const char	   *profname = NULL;
++	int				flag = PS_UNDEFINED;
++	struct SPropTagArray *SPropTagArray = NULL;
++	struct SPropValue *lpProps;
++	struct SRow		aRow;
++	mapi_object_t	obj_message;
++	const char	   *msgid;
++	mapi_id_t	   *fid;
++	mapi_id_t	   *mid;
++	int				props_count;
+ 
+-    if (outlevel &gt;= O_MONITOR)
+-	report(stdout, &quot;MAPI&gt; mapi_delete(number %d)\n&quot;, number);
++	if (outlevel &gt;= O_MONITOR) report(stdout, &quot;MAPI&gt; mapi_delete(number %d)\n&quot;, number);
+ 
+-    if (!mapi_initialized)
+-	return (PS_UNDEFINED);
++	if (!g_mapi_initialized) return PS_UNDEFINED;
++	if (g_mapi_rowset.cRows == 0) return PS_NOMAIL;
+ 
+-    if (mapi_rowset.cRows == 0)
+-	return (PS_NOMAIL);
++	element = talloc_zero((TALLOC_CTX *) g_mapi_deleted_ids.lpContainerList, mapi_container_list_t);
++	element-&gt;id = g_mapi_rowset.aRow[number - 1].lpProps[1].value.d;
++	DLIST_ADD(g_mapi_deleted_ids.lpContainerList, element);
++	g_mapi_deleted_ids.count++;
+ 
+-    element = talloc_zero((TALLOC_CTX *) mapi_deleted_ids.lpContainerList, mapi_container_list_t);
+-    element-&gt;id = mapi_rowset.aRow[number - 1].lpProps[1].value.d;
+-    DLIST_ADD(mapi_deleted_ids.lpContainerList, element);
+-    mapi_deleted_ids.count++;
++	/*-----------------------------------------------------------------------------
++	 *	remove id in the profile
++	 *-----------------------------------------------------------------------------*/
++	if (!ctl-&gt;mapi_profname)
++		profname = ctl-&gt;remotename;	/* use the remotename as the profile name */
++	else
++		profname = ctl-&gt;mapi_profname;
+ 
+-    /*-----------------------------------------------------------------------------
+-     *  remove id in the profile
+-     *-----------------------------------------------------------------------------*/
+-    if (!ctl-&gt;mapi_profname)
+-	profname = ctl-&gt;remotename;	/* use the remotename as the profile name */
+-    else
+-	profname = ctl-&gt;mapi_profname;
++	fid = (mapi_id_t *) find_SPropValue_data(&amp;(g_mapi_rowset.aRow[number - 1]), PR_FID);
++	mid = (mapi_id_t *) find_SPropValue_data(&amp;(g_mapi_rowset.aRow[number - 1]), PR_MID);
++	mapi_object_init(&amp;obj_message);
+ 
+-    fid = (mapi_id_t *) find_SPropValue_data(&amp;(mapi_rowset.aRow[number - 1]), PR_FID);
+-    mid = (mapi_id_t *) find_SPropValue_data(&amp;(mapi_rowset.aRow[number - 1]), PR_MID);
+-    mapi_object_init(&amp;obj_message);
++	retval = OpenMessage(&amp;g_mapi_obj_store, *fid, *mid, &amp;obj_message, 0x0);
++	if (retval == MAPI_E_SUCCESS)
++	{
++		SPropTagArray = set_SPropTagArray(g_mapi_mem_ctx, 0x1, PR_INTERNET_MESSAGE_ID);
++		retval = GetProps(&amp;obj_message, SPropTagArray, &amp;lpProps, &amp;props_count);
++		MAPIFreeBuffer(SPropTagArray);
++		if (retval == MAPI_E_SUCCESS)
++		{
++			/* Build a SRow structure */
++			aRow.ulAdrEntryPad = 0;
++			aRow.cValues = props_count;
++			aRow.lpProps = lpProps;
+ 
+-    retval = OpenMessage(&amp;mapi_obj_store, *fid, *mid, &amp;obj_message, 0x0);
+-    if (retval == MAPI_E_SUCCESS) {
+-	SPropTagArray = set_SPropTagArray(mapi_mem_ctx, 0x1, PR_INTERNET_MESSAGE_ID);
+-	retval = GetProps(&amp;obj_message, SPropTagArray, &amp;lpProps, &amp;props_count);
+-	MAPIFreeBuffer(SPropTagArray);
+-	if (retval == MAPI_E_SUCCESS) {
+-	    /*
+-	     * Build a SRow structure 
+-	     */
+-	    aRow.ulAdrEntryPad = 0;
+-	    aRow.cValues = props_count;
+-	    aRow.lpProps = lpProps;
+-
+-	    msgid = (const char *) find_SPropValue_data(&amp;aRow, PR_INTERNET_MESSAGE_ID);
+-	    if (msgid) {
+-		retval = mapi_profile_delete_string_attr(profname, &quot;Message-ID&quot;, msgid);
+-		if (retval == MAPI_E_SUCCESS) {
+-		    if (outlevel == O_DEBUG)
+-			report(stdout, &quot;MAPI&gt; message %d with Message-ID=%s will be deleted\n&quot;, number, msgid);
+-		    flag = PS_SUCCESS;
++			msgid = (const char *) find_SPropValue_data(&amp;aRow, PR_INTERNET_MESSAGE_ID);
++			if (msgid) {
++				retval = mapi_profile_delete_string_attr(profname, &quot;Message-ID&quot;, msgid);
++				if (retval == MAPI_E_SUCCESS) {
++					if (outlevel == O_DEBUG) report(stdout, &quot;MAPI&gt; message %d with Message-ID=%s will be deleted\n&quot;, number, msgid);
++					flag = PS_SUCCESS;
++				}
++			}
+ 		}
+-	    }
+-	} else
+-	    mapi_clean();
+-	talloc_free(lpProps);
+-    }
++		else mapi_clean();
++		talloc_free(lpProps);
++	}
+ 
+-    mapi_object_release(&amp;obj_message);
+-    return flag;
++	mapi_object_release(&amp;obj_message);
++	return flag;
+ }
+ 
+ 
+ /*
+- * ===  FUNCTION  ======================================================================
+- *         Name:  mapi_mark_seen
+- *  Description:  make the given message as seen in both client and server sides
++ * ===	FUNCTION  ======================================================================
++ *		   Name:  mapi_mark_seen
++ *	Description:  make the given message as seen in both client and server sides
+  * =====================================================================================
+  */
+ static int mapi_mark_seen(int sock, struct query *ctl, int number)
+ {
+-    enum MAPISTATUS retval;
+-    int             flag = FALSE;
+-    struct SPropTagArray *SPropTagArray = NULL;
+-    struct SPropValue *lpProps;
+-    struct SRow     aRow;
+-    mapi_object_t   obj_message;
+-    const char     *msgid = NULL;
+-    const char     *profname = NULL;
+-    mapi_id_t      *fid;
+-    mapi_id_t      *mid;
+-    int             props_count;
+-    long            message_flags;
++	enum MAPISTATUS retval;
++	int				flag = FALSE;
++	struct SPropTagArray *SPropTagArray = NULL;
++	struct SPropValue *lpProps;
++	struct SRow		aRow;
++	mapi_object_t	obj_message;
++	const char	   *msgid = NULL;
++	const char	   *profname = NULL;
++	mapi_id_t	   *fid;
++	mapi_id_t	   *mid;
++	int				props_count;
++	long			message_flags;
+ 
+-    if (outlevel &gt;= O_MONITOR)
+-	report(stdout, &quot;MAPI&gt; mapi_mark_seen(number %d)\n&quot;, number);
++	if (outlevel &gt;= O_MONITOR) report(stdout, &quot;MAPI&gt; mapi_mark_seen(number %d)\n&quot;, number);
+ 
+-    if (!mapi_initialized) {
+-	report(stderr, GT_(&quot;MAPI: MAPI is not initialized\n&quot;));
+-	return (PS_UNDEFINED);
+-    }
++	if (!g_mapi_initialized) {
++		report(stderr, GT_(&quot;MAPI: MAPI is not initialized\n&quot;));
++		return PS_UNDEFINED;
++	}
+ 
+-    if (mapi_rowset.cRows &lt; number)
+-	return FALSE;
++	if (g_mapi_rowset.cRows &lt; number) return FALSE;
+ 
+-    fid = (mapi_id_t *) find_SPropValue_data(&amp;(mapi_rowset.aRow[number - 1]), PR_FID);
+-    mid = (mapi_id_t *) find_SPropValue_data(&amp;(mapi_rowset.aRow[number - 1]), PR_MID);
+-    mapi_object_init(&amp;obj_message);
++	fid = (mapi_id_t *) find_SPropValue_data(&amp;(g_mapi_rowset.aRow[number - 1]), PR_FID);
++	mid = (mapi_id_t *) find_SPropValue_data(&amp;(g_mapi_rowset.aRow[number - 1]), PR_MID);
++	mapi_object_init(&amp;obj_message);
+ 
+-    retval = OpenMessage(&amp;mapi_obj_store, *fid, *mid, &amp;obj_message, 0x0);
+-    if (retval == MAPI_E_SUCCESS) {
+-	SPropTagArray = set_SPropTagArray(mapi_mem_ctx, 0x2, PR_INTERNET_MESSAGE_ID, PR_MESSAGE_FLAGS);
+-	retval = GetProps(&amp;obj_message, SPropTagArray, &amp;lpProps, &amp;props_count);
+-	MAPIFreeBuffer(SPropTagArray);
++	retval = OpenMessage(&amp;g_mapi_obj_store, *fid, *mid, &amp;obj_message, 0x0);
+ 	if (retval == MAPI_E_SUCCESS) {
+-	    /*
+-	     * Build a SRow structure 
+-	     */
+-	    aRow.ulAdrEntryPad = 0;
+-	    aRow.cValues = props_count;
+-	    aRow.lpProps = lpProps;
++		SPropTagArray = set_SPropTagArray(g_mapi_mem_ctx, 0x2, PR_INTERNET_MESSAGE_ID, PR_MESSAGE_FLAGS);
++		retval = GetProps(&amp;obj_message, SPropTagArray, &amp;lpProps, &amp;props_count);
++		MAPIFreeBuffer(SPropTagArray);
++		if (retval == MAPI_E_SUCCESS)
++		{
++			/* Build a SRow structure */
++			aRow.ulAdrEntryPad = 0;
++			aRow.cValues = props_count;
++			aRow.lpProps = lpProps;
+ 
+-	    msgid = (const char *) find_SPropValue_data(&amp;aRow, PR_INTERNET_MESSAGE_ID);
+-	    message_flags = *(const long *) find_SPropValue_data(&amp;aRow, PR_MESSAGE_FLAGS);
+-	    if (msgid) {
++			msgid = (const char *) find_SPropValue_data(&amp;aRow, PR_INTERNET_MESSAGE_ID);
++			message_flags = *(const long *) find_SPropValue_data(&amp;aRow, PR_MESSAGE_FLAGS);
++			if (msgid)
++			{
++				retval = FindProfileAttr(mapi_profile, &quot;Message-ID&quot;, msgid);
++				if (retval == MAPI_E_SUCCESS)
++				{
++					if (outlevel == O_DEBUG) report(stdout, &quot;MAPI&gt; message %d with Message-ID=%s is already marked as seen\n&quot;, number, msgid);
++					flag = TRUE;
++					talloc_free(lpProps);
++					mapi_object_release(&amp;obj_message);
++					return flag;
++				}
+ 
+-		retval = FindProfileAttr(mapi_profile, &quot;Message-ID&quot;, msgid);
+-		if (retval == MAPI_E_SUCCESS) {
+-		    if (outlevel == O_DEBUG)
+-			report(stdout, &quot;MAPI&gt; message %d with Message-ID=%s is already marked as seen\n&quot;, number, msgid);
+-		    flag = TRUE;
+-		    talloc_free(lpProps);
+-		    mapi_object_release(&amp;obj_message);
+-		    return flag;
+-		}
++				/*-----------------------------------------------------------------------------
++				 * mark seen in the client side
++				 *-----------------------------------------------------------------------------*/
++				if (!ctl-&gt;mapi_profname) profname = ctl-&gt;remotename;	/* use the remotename as the profile name */
++				else profname = ctl-&gt;mapi_profname;
++				mapi_profile_add_string_attr(profname, &quot;Message-ID&quot;, msgid);
++				if (retval == MAPI_E_SUCCESS) {
++					if (outlevel == O_DEBUG) report(stdout, &quot;MAPI&gt; marked message %d with Message-ID=%s seen\n&quot;, number, msgid);
++					flag = TRUE;
++				}
+ 
+-		/*-----------------------------------------------------------------------------
+-		 * mark seen in the client side
+-		 *-----------------------------------------------------------------------------*/
+-		if (!ctl-&gt;mapi_profname)
+-		    profname = ctl-&gt;remotename;	/* use the remotename as the profile name */
+-		else
+-		    profname = ctl-&gt;mapi_profname;
+-		mapi_profile_add_string_attr(profname, &quot;Message-ID&quot;, msgid);
+-		if (retval == MAPI_E_SUCCESS) {
+-		    if (outlevel == O_DEBUG)
+-			report(stdout, &quot;MAPI&gt; marked message %d with Message-ID=%s seen\n&quot;, number, msgid);
+-		    flag = TRUE;
++				/*-----------------------------------------------------------------------------
++				 *	mark seen in the server side
++				 *-----------------------------------------------------------------------------*/
++				if (!(message_flags &amp; MSGFLAG_READ))
++				{
++					retval = SetMessageReadFlag(&amp;g_mapi_obj_folder, &amp;obj_message, MSGFLAG_READ);
++					if (retval != MAPI_E_SUCCESS) {
++						talloc_free(lpProps);
++						mapi_object_release(&amp;obj_message);
++						return flag;
++					}
++				}
++			}
+ 		}
++		else mapi_clean();
++		talloc_free(lpProps);
++	}
++	mapi_object_release(&amp;obj_message);
+ 
+-		/*-----------------------------------------------------------------------------
+-		 *  mark seen in the server side
+-		 *-----------------------------------------------------------------------------*/
+-		if (!(message_flags &amp; MSGFLAG_READ)) {
+-		    retval = SetMessageReadFlag(&amp;mapi_obj_folder, &amp;obj_message, MSGFLAG_READ);
+-		    if (retval != MAPI_E_SUCCESS) {
+-			talloc_free(lpProps);
+-			mapi_object_release(&amp;obj_message);
+-			return flag;
+-		    }
+-		}
+-	    }
+-	} else
+-	    mapi_clean();
+-	talloc_free(lpProps);
+-    }
+-    mapi_object_release(&amp;obj_message);
+-
+-    return flag;
++	return flag;
+ }
+ 
+ 
+ /*
+- * ===  FUNCTION  ======================================================================
+- *         Name:  mapi_end_mailbox_poll
+- *  Description:  perform hard delete here
++ * ===	FUNCTION  ======================================================================
++ *		   Name:  mapi_end_mailbox_poll
++ *	Description:  perform hard delete here
+  * =====================================================================================
+  */
+ static int mapi_end_mailbox_poll(int sock, struct query *ctl)
+ {
+-    int             flag = PS_SUCCESS;
+-    (void) ctl;
++	int				flag = PS_SUCCESS;
++	(void) ctl;
++	if (outlevel &gt;= O_MONITOR) report(stdout, &quot;MAPI&gt; mapi_end_mailbox_poll()\n&quot;);
+ 
+-    if (outlevel &gt;= O_MONITOR)
+-	report(stdout, &quot;MAPI&gt; mapi_end_mailbox_poll()\n&quot;);
+-
+-    flag = expunge_deleted();
+-    mapi_id_array_release(&amp;mapi_deleted_ids);
+-    mapi_clean();
+-    return flag;
++	flag = expunge_deleted();
++	mapi_id_array_release(&amp;g_mapi_deleted_ids);
++	mapi_clean();
++	return flag;
+ }
+ 
+ 
+ /*
+- * ===  FUNCTION  ======================================================================
+- *         Name:  mapi_logout
+- *  Description:  
++ * ===	FUNCTION  ======================================================================
++ *		   Name:  mapi_logout
++ *	Description:  
+  * =====================================================================================
+  */
+ static int mapi_logout(int sock, struct query *ctl)
+ {
+-    (void) ctl;
++	(void) ctl;
++	if (outlevel &gt;= O_MONITOR) report(stdout, &quot;MAPI&gt; mapi_logout()\n&quot;);
+ 
+-    if (outlevel &gt;= O_MONITOR)
+-	report(stdout, &quot;MAPI&gt; mapi_logout()\n&quot;);
+-
+-    if (mapi_initialized)
+-	mapi_clean();
+-
+-    return (PS_SUCCESS);
++	if (g_mapi_initialized) mapi_clean();
++	return PS_SUCCESS;
+ }
+ 
+ static const struct method mapi = {
+-    &quot;MAPI&quot;,			/* Messaging Application Programming Interface */
+-    NULL,			/* unencrypted port, not used by MAPI */
+-    NULL,			/* SSL port, not used by MAPI */
+-    FALSE,			/* this is not a tagged protocol */
+-    TRUE,			/* since it's hard to calculate message size in MAPI, use a message delimiter */
+-    mapi_ok,			/* parse command response */
+-    mapi_getauth,		/* get authorization */
+-    mapi_getrange,		/* query range of messages */
+-    mapi_getsizes,		/* we can get a list of sizes */
+-    mapi_getpartialsizes,	/* we can get the size of 1 mail */
+-    mapi_is_old,		/* how do we tell a message is old? */
+-    mapi_fetch_headers,		/* request given message headers */
+-    mapi_fetch_body,		/* request given message body */
+-    mapi_trail,			/* eat message trailer */
+-    mapi_delete,		/* delete the message */
+-    mapi_mark_seen,		/* how to mark a message as seen */
+-    mapi_end_mailbox_poll,	/* end_of_mailbox processing */
+-    mapi_logout,		/* log out, we're done */
+-    TRUE,			/* yes, we can re-poll */
++	&quot;MAPI&quot;,			/* Messaging Application Programming Interface */
++	NULL,			/* unencrypted port, not used by MAPI */
++	NULL,			/* SSL port, not used by MAPI */
++	FALSE,			/* this is not a tagged protocol */
++	TRUE,			/* since it's hard to calculate message size in MAPI, use a message delimiter */
++	mapi_ok,			/* parse command response */
++	mapi_getauth,		/* get authorization */
++	mapi_getrange,		/* query range of messages */
++	mapi_getsizes,		/* we can get a list of sizes */
++	mapi_getpartialsizes,	/* we can get the size of 1 mail */
++	mapi_is_old,		/* how do we tell a message is old? */
++	mapi_fetch_headers,		/* request given message headers */
++	mapi_fetch_body,		/* request given message body */
++	mapi_trail,			/* eat message trailer */
++	mapi_delete,		/* delete the message */
++	mapi_mark_seen,		/* how to mark a message as seen */
++	mapi_end_mailbox_poll,	/* end_of_mailbox processing */
++	mapi_logout,		/* log out, we're done */
++	TRUE,			/* yes, we can re-poll */
+ };
+ 
+ 
+ /*
+- * ===  FUNCTION  ======================================================================
+- *         Name:  doMAPI
+- *  Description:  retrieve messages using MAPI
++ * ===	FUNCTION  ======================================================================
++ *		   Name:  doMAPI
++ *	Description:  retrieve messages using MAPI
+  * =====================================================================================
+  */
+ int doMAPI(struct query *ctl)
+ {
+-    return (do_protocol(ctl, &amp;mapi));
++	return do_protocol(ctl, &amp;mapi);
+ }
+ #endif				/* case MAPI_ENABLE */
+ /*
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000469.html">[fetchmail-svn] r5410 - branches/BRANCH_MAPI
+</A></li>
+	<LI>Next message: <A HREF="000471.html">[fetchmail-svn] r5412 - branches/BRANCH_MAPI
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#470">[ date ]</a>
+              <a href="thread.html#470">[ thread ]</a>
+              <a href="subject.html#470">[ subject ]</a>
+              <a href="author.html#470">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

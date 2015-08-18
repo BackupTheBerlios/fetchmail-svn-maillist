@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5159 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2008-February/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5159%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20080222140218.7BA7C6B0118%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000148.html">
+   <LINK REL="Next"  HREF="000150.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5159 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5159%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20080222140218.7BA7C6B0118%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5159 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Fri Feb 22 15:02:18 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000148.html">[fetchmail-svn] r5158 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000150.html">[fetchmail-svn] r5160 - in branches/BRANCH_6-3: . po
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#149">[ date ]</a>
+              <a href="thread.html#149">[ thread ]</a>
+              <a href="subject.html#149">[ subject ]</a>
+              <a href="author.html#149">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2008-02-22 08:02:18 -0600 (Fri, 22 Feb 2008)
+New Revision: 5159
+
+Modified:
+   branches/BRANCH_6-3/fetchmail.c
+Log:
+Undo accidental commit.
+
+Modified: branches/BRANCH_6-3/fetchmail.c
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.c	2008-02-22 13:57:36 UTC (rev 5158)
++++ branches/BRANCH_6-3/fetchmail.c	2008-02-22 14:02:18 UTC (rev 5159)
+@@ -608,10 +608,6 @@
+     /* here's the exclusion lock */
+     fm_lock_or_die();
+ 
+-    if (check_only &amp;&amp; outlevel &gt;= O_VERBOSE) {
+-	report(stdout, GT_(&quot;--check mode enabled, not fetching mail\n&quot;));
+-    }
+-
+     /*
+      * Query all hosts. If there's only one, the error return will
+      * reflect the status of that transaction.
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000148.html">[fetchmail-svn] r5158 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000150.html">[fetchmail-svn] r5160 - in branches/BRANCH_6-3: . po
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#149">[ date ]</a>
+              <a href="thread.html#149">[ thread ]</a>
+              <a href="subject.html#149">[ subject ]</a>
+              <a href="author.html#149">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

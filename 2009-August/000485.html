@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5426 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-August/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5426%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090824190347.626CF21F4FF%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000484.html">
+   <LINK REL="Next"  HREF="000486.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5426 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5426%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090824190347.626CF21F4FF%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5426 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Mon Aug 24 21:03:46 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000484.html">[fetchmail-svn] r5425 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000486.html">[fetchmail-svn] r5428 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#485">[ date ]</a>
+              <a href="thread.html#485">[ thread ]</a>
+              <a href="subject.html#485">[ subject ]</a>
+              <a href="author.html#485">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-08-24 14:03:43 -0500 (Mon, 24 Aug 2009)
+New Revision: 5426
+
+Modified:
+   branches/BRANCH_6-3/README.SSL
+Log:
+Correct grammar, get rid of apostrophes.
+
+Modified: branches/BRANCH_6-3/README.SSL
+===================================================================
+--- branches/BRANCH_6-3/README.SSL	2009-08-20 00:21:37 UTC (rev 5425)
++++ branches/BRANCH_6-3/README.SSL	2009-08-24 19:03:43 UTC (rev 5426)
+@@ -43,7 +43,7 @@
+ practically impossible.
+ 
+ This works as following: the server has a key pair (a secret and a public key), 
+-and it sends the client it's public key. Messages encrypted with the public key 
++and it sends the client its public key. Messages encrypted with the public key 
+ can be decrypted using the private one and vice versa.
+ 
+ A symmetric session key (symmetric means that the same key is used for 
+@@ -56,8 +56,8 @@
+ 
+ However, so called man-in-the-middle attacks are still possible: in such 
+ a setting, an attacker pretends to be the server, and thus can e.g. get your 
+-authentication information if you don't use a challenge based authentication 
+-mechanism (because he is thought to be the real server, fetchmail will try to 
++authentication information if you do not use a challenge based authentication 
++mechanism (because it is thought to be the real server, fetchmail will try to 
+ authenticate against it by telling it your password).
+ 
+ So, not only you need to prove your identity to the server, the server likewise 
+@@ -77,8 +77,8 @@
+ certificates, and point fetchmail to it. Fetchmail will then accept 
+ certificates signed by the owner of that certificate with the private key 
+ belonging to the public key in the certificate.
+-You can specify this path using the &quot;sslcertpath&quot; option if it's different from 
+-the one OpenSSL uses by default.
++You can specify this path using the &quot;sslcertpath&quot; option if it is 
++different from the one OpenSSL uses by default.
+ 
+ The idea is that the CA only gives certificates to entities whose identity it 
+ has checked and verified (and in this case, that the server name you specify 
+@@ -97,7 +97,7 @@
+ The certificate directory must be hashed in a way OpenSSL expects it: each time 
+ you modify a file in that directory or add a file to it, you need to use the 
+ &quot;c_rehash&quot; perl script that comes with OpenSSL (in the tools/ subdirectory, in 
+-case that it isn't installed). Additionally, you might need to convert the 
++case that it is not installed). Additionally, you might need to convert the 
+ certificates to different formats (the PEM format is expected and usually is 
+ available, DER is another one; you can convert between both using the 
+ openssl(1) utility's x509 sub-mode).
+@@ -109,7 +109,7 @@
+ the original key in reasonable time. So, if the fingerprint matches, you can be 
+ reasonable sure that you talk to the original server, because only that knows 
+ the secret key, and it is very hard to generate a matching secret key from the 
+-public key. If it doesn't, it might be an attack, but keep in mind that the 
++public key. If it does not, it might be an attack, but keep in mind that the 
+ server key may also have changed legitimately before panicking ;)
+ 
+ Fetchmail will present the fingerprint to you in verbose mode. You can have 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000484.html">[fetchmail-svn] r5425 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000486.html">[fetchmail-svn] r5428 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#485">[ date ]</a>
+              <a href="thread.html#485">[ thread ]</a>
+              <a href="subject.html#485">[ subject ]</a>
+              <a href="author.html#485">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

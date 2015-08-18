@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5084 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2007-April/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5084%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20070406180140.AA655630181%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000075.html">
+   <LINK REL="Next"  HREF="000077.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5084 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5084%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20070406180140.AA655630181%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5084 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Fri Apr  6 20:01:40 CEST 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000075.html">[fetchmail-svn] r5083 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000077.html">[fetchmail-svn] r5085 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#76">[ date ]</a>
+              <a href="thread.html#76">[ thread ]</a>
+              <a href="subject.html#76">[ subject ]</a>
+              <a href="author.html#76">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2007-04-06 13:01:39 -0500 (Fri, 06 Apr 2007)
+New Revision: 5084
+
+Modified:
+   branches/BRANCH_6-3/fetchmail-FAQ.html
+   branches/BRANCH_6-3/fetchmail.man
+Log:
+Flank APOP by comments about it being insecure.
+
+Modified: branches/BRANCH_6-3/fetchmail-FAQ.html
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-FAQ.html	2007-04-04 12:19:51 UTC (rev 5083)
++++ branches/BRANCH_6-3/fetchmail-FAQ.html	2007-04-06 18:01:39 UTC (rev 5084)
+@@ -627,11 +627,12 @@
+ you see something in the greeting line that looks like an
+ angle-bracket-enclosed Internet address with a numeric left-hand
+ part, that's an APOP challenge (it will vary each time you log in).
+-You can register a secret on the host (using
+-&lt;code&gt;popauth(8)&lt;/code&gt; or some program like it). Specify the
++For some hosts, you need to register a secret on the host (using
++&lt;code&gt;popauth(8)&lt;/code&gt; or some program like that). Specify the
+ secret as your password in your .fetchmailrc; it will be used to
+ encrypt the current challenge, and the encrypted form will be sent
+-back the the server for verification.&lt;/p&gt;
++back the the server for verification. Note that APOP is no longer
++considered secure since March 2007.&lt;/p&gt;
+ 
+ &lt;p&gt;Alternatively, you may have Kerberos available. This may require
+ you to set up some magic files in your home directory on your
+@@ -647,8 +648,8 @@
+ response.&lt;/p&gt;
+ 
+ &lt;p&gt;If you are fetching mail from a CompuServe POP3 account, you can
+-use their RPA authentication (which works much like APOP). See &lt;a
+-href=&quot;#I1&quot;&gt;I1&lt;/a&gt; for details. If you are fetching mail from
++use their RPA authentication. See &lt;a href=&quot;#I1&quot;&gt;I1&lt;/a&gt; for details.
++If you are fetching mail from
+ Microsoft Exchange using IMAP, you will be able to use NTLM.&lt;/p&gt;
+ 
+ &lt;p&gt;Your POP3 server may have the RFC1938 OTP capability to use
+
+Modified: branches/BRANCH_6-3/fetchmail.man
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.man	2007-04-04 12:19:51 UTC (rev 5083)
++++ branches/BRANCH_6-3/fetchmail.man	2007-04-06 18:01:39 UTC (rev 5084)
+@@ -1057,7 +1057,7 @@
+ password as a pass phrase to generate the required response. This
+ avoids sending secrets over the net unencrypted.
+ .PP
+-Compuserve's RPA authentication (similar to APOP) is supported. If you
++Compuserve's RPA authentication is supported. If you
+ compile in the support, \fIfetchmail\fR will try to perform an RPA pass-phrase
+ authentication instead of sending over the password en clair if it
+ detects &quot;@compuserve.com&quot; in the hostname.
+@@ -2057,7 +2057,7 @@
+ (only for POP3), 'ntlm', 'ssh', 'external' (only IMAP).
+ The 'password' type specifies
+ authentication by normal transmission of a password (the password may be
+-plain text or subject to protocol-specific encryption as in APOP);
++plain text or subject to protocol-specific encryption as in CRAM-MD5);
+ \&amp;'kerberos' tells \fIfetchmail\fR to try to get a Kerberos ticket at the
+ start of each query instead, and send an arbitrary string as the
+ password; and 'gssapi' tells fetchmail to use GSSAPI authentication.
+@@ -2757,7 +2757,7 @@
+ RFC 2195, RFC 2449.
+ .TP 5
+ APOP:
+-RFC 1460, RFC 1725, RFC 1939.
++RFC 1939.
+ .TP 5
+ RPOP:
+ RFC 1081, RFC 1225.
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000075.html">[fetchmail-svn] r5083 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000077.html">[fetchmail-svn] r5085 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#76">[ date ]</a>
+              <a href="thread.html#76">[ thread ]</a>
+              <a href="subject.html#76">[ subject ]</a>
+              <a href="author.html#76">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

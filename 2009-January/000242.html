@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5262 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-January/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5262%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090122121116.93A3C21EF14%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000241.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5262 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5262%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090122121116.93A3C21EF14%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5262 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Thu Jan 22 13:11:16 CET 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000241.html">[fetchmail-svn] r5261 - branches/BRANCH_6-3
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#242">[ date ]</a>
+              <a href="thread.html#242">[ thread ]</a>
+              <a href="subject.html#242">[ subject ]</a>
+              <a href="author.html#242">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-01-22 06:11:16 -0600 (Thu, 22 Jan 2009)
+New Revision: 5262
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/socket.c
+Log:
+case-insensitive check of SSL fingerprints (Daniel Richard G.)
+
+Daniel Richard G. writes:
+|<i> I was clearing out an old Fetchmail SVN checkout I had lying around
+</I>|<i> here, and came across one small change that I forgot to send in.
+</I>|<i>
+</I>|<i> In socket.c, there's a bit of code that compares SSL certificate
+</I>|<i> fingerprints: [...]
+</I>|<i>
+</I>|<i> That strcmp() call should be an strcasecmp(). At one point, I
+</I>|<i> encountered a certificate where the fingerprint's hex digits were in a
+</I>|<i> different case than what was expected, and the connection attempt failed
+</I>|<i> because of that.  Not exactly what you'd call a potential MitM attack
+</I>|<i> :-)
+</I>
+He's right, we can compare case-insensitively without sacrificing
+fetchmail's security, so let's just do that for the sake of ease of use.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-01-14 01:56:15 UTC (rev 5261)
++++ branches/BRANCH_6-3/NEWS	2009-01-22 12:11:16 UTC (rev 5262)
+@@ -57,6 +57,9 @@
+ * Do not overlap source and destination fields in snprintf() in interface.c.
+   Courtesy of Nico Golde, Debian.
+ 
++# CHANGES
++* Make the comparison of the SSL fingerprints case insensitive, to
++  ease its use. Suggested by Daniel Richard G.
+ # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
+ * [it] Italian (Vincenzo Campanella)
+ 
+
+Modified: branches/BRANCH_6-3/socket.c
+===================================================================
+--- branches/BRANCH_6-3/socket.c	2009-01-14 01:56:15 UTC (rev 5261)
++++ branches/BRANCH_6-3/socket.c	2009-01-22 12:11:16 UTC (rev 5262)
+@@ -717,7 +717,7 @@
+ 			if (outlevel &gt; O_NORMAL)
+ 			    report(stdout, GT_(&quot;%s key fingerprint: %s\n&quot;), _server_label, text);
+ 			if (_check_digest != NULL) {
+-				if (strcmp(text, _check_digest) == 0) {
++				if (strcasecmp(text, _check_digest) == 0) {
+ 				    if (outlevel &gt; O_NORMAL)
+ 					report(stdout, GT_(&quot;%s fingerprints match.\n&quot;), _server_label);
+ 				} else {
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000241.html">[fetchmail-svn] r5261 - branches/BRANCH_6-3
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#242">[ date ]</a>
+              <a href="thread.html#242">[ thread ]</a>
+              <a href="subject.html#242">[ subject ]</a>
+              <a href="author.html#242">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

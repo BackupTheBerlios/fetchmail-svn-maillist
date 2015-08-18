@@ -1,0 +1,585 @@
+From svn at mknod.org  Sun Jan  4 15:07:08 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Sun,  4 Jan 2009 08:07:08 -0600
+Subject: [fetchmail-svn] r5258 - branches/BRANCH_6-3
+Message-ID: <20090104140708.E865021F137@mknod.org>
+
+Author: m-a
+Date: 2009-01-04 08:07:07 -0600 (Sun, 04 Jan 2009)
+New Revision: 5258
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/configure.ac
+Log:
+Berlios Patch #2525, courtesy of Diego E. "Flameeyes" Petten?\195?\178:
+
+"The AC_CANONICAL_TARGET macro and the $target_os variables are used for the
+target of compilers and other code-generation tools, and should not be used
+during cross-compile of generic software. Replace them with
+AC_CANONICAL_HOST and $host_os instead, as they should have been from the
+start.
+
+For a breakdown of what host, build and target machines are, please see
+http://blog.flameeyes.eu/s/canonical-target ."
+
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2008-12-17 16:21:11 UTC (rev 5257)
++++ branches/BRANCH_6-3/NEWS	2009-01-04 14:07:07 UTC (rev 5258)
+@@ -45,12 +45,17 @@
+ fetchmail 6.3.10 (not yet released):
+ 
+ # BUGFIXES
++* Fix misuse of canonical autoconf target as _TARGET when it should have been
++  _HOST. Report and patch courtesy of Diego E. "Flameeyes" Petten?.
++  Details: http://blog.flameeyes.eu/2009/01/01/the-canonical-target
+ * Do not lose PS_MAXFETCH (13) exit status when hitting maxpoll. Reported by
+   Michelle Konzack, Debian Bug#508667.
+ 
+ # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
+ * [it] Italian (Vincenzo Campanella)
+ 
++
++
+ fetchmail 6.3.9 (2008-11-16):
+ 
+ # SECURITY AND CRITICAL BUG FIXES:
+
+Modified: branches/BRANCH_6-3/configure.ac
+===================================================================
+--- branches/BRANCH_6-3/configure.ac	2008-12-17 16:21:11 UTC (rev 5257)
++++ branches/BRANCH_6-3/configure.ac	2009-01-04 14:07:07 UTC (rev 5258)
+@@ -13,7 +13,7 @@
+ AC_CONFIG_HEADERS([config.h])
+ AC_CONFIG_LIBOBJ_DIR([.])
+ 
+-AC_CANONICAL_TARGET
++AC_CANONICAL_HOST
+ 
+ dnl automake options are in Makefile.am
+ AC_PREREQ(2.60)
+@@ -88,7 +88,7 @@
+ AC_PROG_YACC
+ 
+ # Check for OS special cases
+-case $target_os in
++case $host_os in
+ darwin*)
+     AC_MSG_NOTICE(found Darwin - Adding -DBIND_8_COMPAT to CFLAGS)
+     CPPFLAGS="$CPPFLAGS -DBIND_8_COMPAT"
+@@ -498,7 +498,7 @@
+     AC_MSG_CHECKING(if your getaddrinfo is async-signal-safe)
+     gai_ts=no
+     dnl we have getaddrinfo() - check if the OS is known to have a async-signal-safe implementation
+-    case $target_os in
++    case $host_os in
+ 	darwin9*)				gai_ts=yes ;;
+ 	linux*)					gai_ts=yes ;;
+ 	freebsd5.5|freebsd6*|freebsd7*)		gai_ts=yes ;;
+
+
+
+From svn at mknod.org  Sun Jan  4 15:23:33 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Sun,  4 Jan 2009 08:23:33 -0600
+Subject: [fetchmail-svn] r5259 - branches/BRANCH_6-3
+Message-ID: <20090104142333.9378721F137@mknod.org>
+
+Author: m-a
+Date: 2009-01-04 08:23:32 -0600 (Sun, 04 Jan 2009)
+New Revision: 5259
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+Log:
+Revise future plans part a bit.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-01-04 14:07:07 UTC (rev 5258)
++++ branches/BRANCH_6-3/NEWS	2009-01-04 14:23:32 UTC (rev 5259)
+@@ -9,15 +9,15 @@
+ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
+ 
+ # ADVANCE WARNING OF FEATURES TO BE REMOVED OR CHANGED IN FUTURE VERSIONS
+-(There are no plans to remove these features from a 6.3.X release, but they may
+-be removed from a 6.4.0 or newer release.)
++(There are no plans to remove features from a 6.3.X release, but they may be
++removed from a 6.4.0 or newer release.)
+ * The MX and host alias DNS lookups that fetchmail performs in multidrop mode
+   are based on assumptions that are rarely met in practice, somewhat defective,
+-  deprecated and may be removed from a future fetchmail version.  They have
+-  never supported IPv6 (including IPv6-mapped IPv4).
++  deprecated and may be removed from a future fetchmail version.
++  They have never supported IPv6 (including IPv6-mapped IPv4).
+   Non-DNS based alias keywords such as "aka" will remain in fetchmail.
+ * The monitor and interface options may be removed from a future fetchmail
+-  version as they are not reasonably portable.
++  version as they are not reasonably portable across operating systems.
+ * POP2 is obsolete, support will be removed from a future fetchmail version.
+ * RPOP is obsolete, support will be removed from a future fetchmail release.
+ * --sslcertck will become a default setting in a future fetchmail version.
+@@ -39,6 +39,10 @@
+   cause fetchmail to terminate - it was broken for many years.
+ * Support for operating systems that are not sufficiently POSIX compliant may be
+   removed or operation on such systems may be suboptimal for future releases.
++  This means that fetchmail may only continue to work on C99 and POSIX 2001
++  based systems.
++* The maintainer may migrate fetchmail to C++ with STL or C#, and impose further
++  requirements (dependencies), such as Boost or other class libraries.
+ 
+ --------------------------------------------------------------------------------
+ 
+
+
+
+From svn at mknod.org  Tue Jan  6 19:00:21 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Tue,  6 Jan 2009 12:00:21 -0600
+Subject: [fetchmail-svn] r5260 - branches/BRANCH_6-3
+Message-ID: <20090106180022.4731121F13B@mknod.org>
+
+Author: m-a
+Date: 2009-01-06 12:00:21 -0600 (Tue, 06 Jan 2009)
+New Revision: 5260
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/interface.c
+Log:
+Fix: Do not overlap source and destination fields in snprintf() in
+interface.c.  Courtesy of Nico Golde, Debian.
+
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-01-04 14:23:32 UTC (rev 5259)
++++ branches/BRANCH_6-3/NEWS	2009-01-06 18:00:21 UTC (rev 5260)
+@@ -54,6 +54,8 @@
+   Details: http://blog.flameeyes.eu/2009/01/01/the-canonical-target
+ * Do not lose PS_MAXFETCH (13) exit status when hitting maxpoll. Reported by
+   Michelle Konzack, Debian Bug#508667.
++* Do not overlap source and destination fields in snprintf() in interface.c.
++  Courtesy of Nico Golde, Debian.
+ 
+ # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
+ * [it] Italian (Vincenzo Campanella)
+
+Modified: branches/BRANCH_6-3/interface.c
+===================================================================
+--- branches/BRANCH_6-3/interface.c	2009-01-04 14:23:32 UTC (rev 5259)
++++ branches/BRANCH_6-3/interface.c	2009-01-06 18:00:21 UTC (rev 5260)
+@@ -271,7 +271,7 @@
+ 	{
+ 		kvm_read(kvmfd, ifnet_addr, &ifnet, sizeof(ifnet));
+ 		kvm_read(kvmfd, (unsigned long) ifnet.if_name, tname, sizeof tname);
+-		snprintf(tname, sizeof tname, "%s%d", tname, ifnet.if_unit);
++		snprintf(tname + strlen(tname), sizeof(tname) - strlen(tname), "%d", ifnet.if_unit);
+ 
+ 		if (!strcmp(tname, iname))
+ 		{
+
+
+
+From svn at mknod.org  Wed Jan 14 02:56:15 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Tue, 13 Jan 2009 19:56:15 -0600
+Subject: [fetchmail-svn] r5261 - branches/BRANCH_6-3
+Message-ID: <20090114015615.BF16721EFF9@mknod.org>
+
+Author: m-a
+Date: 2009-01-13 19:56:15 -0600 (Tue, 13 Jan 2009)
+New Revision: 5261
+
+Modified:
+   branches/BRANCH_6-3/env.c
+   branches/BRANCH_6-3/fetchmail.c
+   branches/BRANCH_6-3/imap.c
+   branches/BRANCH_6-3/interface.c
+   branches/BRANCH_6-3/pop3.c
+   branches/BRANCH_6-3/rcfile_l.l
+   branches/BRANCH_6-3/rcfile_y.y
+   branches/BRANCH_6-3/report.c
+   branches/BRANCH_6-3/rfc2047e.c
+   branches/BRANCH_6-3/rfc822.c
+   branches/BRANCH_6-3/sink.c
+   branches/BRANCH_6-3/socket.c
+   branches/BRANCH_6-3/transact.c
+   branches/BRANCH_6-3/uid.c
+   branches/BRANCH_6-3/unmime.c
+Log:
+Fix a few compiler warnings around implicit conversion or extra ";".
+
+Modified: branches/BRANCH_6-3/env.c
+===================================================================
+--- branches/BRANCH_6-3/env.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/env.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -292,7 +292,7 @@
+ 
+     if (needed > vbufs) {
+ 	vbufs = needed;
+-	vbuf = xrealloc(vbuf, vbufs);
++	vbuf = (char *)xrealloc(vbuf, vbufs);
+     }
+ 
+     tp = vbuf;
+
+Modified: branches/BRANCH_6-3/fetchmail.c
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/fetchmail.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -532,7 +532,7 @@
+ 		const char* password_prompt = GT_("Enter password for %s@%s: ");
+ 		size_t pplen = strlen(password_prompt) + strlen(ctl->remotename) + strlen(ctl->server.pollname) + 1;
+ 
+-		tmpbuf = xmalloc(pplen);
++		tmpbuf = (char *)xmalloc(pplen);
+ 		snprintf(tmpbuf, pplen, password_prompt,
+ 			ctl->remotename, ctl->server.pollname);
+ 		ctl->password = xstrdup((char *)fm_getpassword(tmpbuf));
+
+Modified: branches/BRANCH_6-3/imap.c
+===================================================================
+--- branches/BRANCH_6-3/imap.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/imap.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -617,8 +617,8 @@
+ 	size_t rnl, pwl;
+ 	rnl = 2 * strlen(ctl->remotename) + 1;
+ 	pwl = 2 * strlen(ctl->password) + 1;
+-	remotename = xmalloc(rnl);
+-	password = xmalloc(pwl);
++	remotename = (char *)xmalloc(rnl);
++	password = (char *)xmalloc(pwl);
+ 
+ 	imap_canonicalize(remotename, ctl->remotename, rnl);
+ 	imap_canonicalize(password, ctl->password, pwl);
+
+Modified: branches/BRANCH_6-3/interface.c
+===================================================================
+--- branches/BRANCH_6-3/interface.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/interface.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -418,7 +418,7 @@
+ 	    GT_("get_ifinfo: sysctl (iflist estimate) failed"));
+ 	exit(1);
+     }
+-    if ((buf = malloc(needed)) == NULL)
++    if ((buf = (char *)malloc(needed)) == NULL)
+     {
+  	report(stderr, 
+ 	    GT_("get_ifinfo: malloc failed"));
+@@ -736,5 +736,5 @@
+ #endif /* CAN_MONITOR */
+ 
+ #ifndef have_interface_init
+-void interface_init(void) {};
++void interface_init(void) {}
+ #endif
+
+Modified: branches/BRANCH_6-3/pop3.c
+===================================================================
+--- branches/BRANCH_6-3/pop3.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/pop3.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -687,7 +687,7 @@
+ 	}
+ 
+ 	/* copy timestamp and password into digestion buffer */
+-	msg = xmalloc((end-start+1) + strlen(ctl->password) + 1);
++	msg = (char *)xmalloc((end-start+1) + strlen(ctl->password) + 1);
+ 	strcpy(msg,start);
+ 	strcat(msg,ctl->password);
+ 	strcpy(ctl->digest, MD5Digest((unsigned char *)msg));
+
+Modified: branches/BRANCH_6-3/rcfile_l.l
+===================================================================
+--- branches/BRANCH_6-3/rcfile_l.l	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/rcfile_l.l	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -55,7 +55,7 @@
+ 
+ 			if ((size_t)yyleng + 1 > ins) {
+ 			    ins = yyleng + 1;
+-			    in = xrealloc(in, ins);
++			    in = (char *)xrealloc(in, ins);
+ 			}
+ 			memcpy(in, yytext, yyleng);
+ 			in[yyleng] = '\0';
+
+Modified: branches/BRANCH_6-3/rcfile_y.y
+===================================================================
+--- branches/BRANCH_6-3/rcfile_y.y	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/rcfile_y.y	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -573,7 +573,7 @@
+ 	strcmp(file, "-") == 0 ||	/* stdin/stdout */
+ 	!dir[0])			/* we don't HAVE_GETCWD */
+ 	return xstrdup (file);
+-    newfile = xmalloc (strlen (dir) + 1 + strlen (file) + 1);
++    newfile = (char *)xmalloc (strlen (dir) + 1 + strlen (file) + 1);
+     if (dir[strlen(dir) - 1] != '/')
+ 	sprintf (newfile, "%s/%s", dir, file);
+     else
+
+Modified: branches/BRANCH_6-3/report.c
+===================================================================
+--- branches/BRANCH_6-3/report.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/report.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -211,13 +211,13 @@
+     {
+ 	partial_message_size_used = 0;
+ 	partial_message_size = 2048;
+-	partial_message = MALLOC (partial_message_size);
++	partial_message = (char *)MALLOC (partial_message_size);
+     }
+     else
+ 	if (partial_message_size - partial_message_size_used < 1024)
+ 	{
+ 	    partial_message_size += 2048;
+-	    partial_message = REALLOC (partial_message, partial_message_size);
++	    partial_message = (char *)REALLOC (partial_message, partial_message_size);
+ 	}
+ }
+ 
+@@ -258,7 +258,7 @@
+ 	}
+ 
+ 	partial_message_size += 2048;
+-	partial_message = REALLOC (partial_message, partial_message_size);
++	partial_message = (char *)REALLOC (partial_message, partial_message_size);
+     }
+ #else
+     for ( ; ; )
+@@ -326,7 +326,7 @@
+ 	}
+ 
+ 	partial_message_size += 2048;
+-	partial_message = REALLOC (partial_message, partial_message_size);
++	partial_message = (char *)REALLOC (partial_message, partial_message_size);
+     }
+ #else
+     for ( ; ; )
+
+Modified: branches/BRANCH_6-3/rfc2047e.c
+===================================================================
+--- branches/BRANCH_6-3/rfc2047e.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/rfc2047e.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -52,7 +52,7 @@
+ 	l += strlen(words[i]) * 3; /* worst case, encode everything */
+     l += (strlen(charset) + 8) * (l/60 + 1);
+ 
+-    out = v = xmalloc(l);
++    out = v = (char *)xmalloc(l);
+     t = stpcpy(out, "=?");
+     t = stpcpy(t, charset);
+     t = stpcpy(t, "?Q?");
+@@ -110,14 +110,14 @@
+     r = string;
+     while (*r) {
+ 	l = strcspn(r, ws);
+-	words[idx] = xmalloc(l+1);
++	words[idx] = (char *)xmalloc(l+1);
+ 	memcpy(words[idx], r, l);
+ 	words[idx][l] = '\0';
+ 	idx++;
+ 	r += l;
+ 	if (!*r) break;
+ 	l = strspn(r, ws);
+-	words[idx] = xmalloc(l+1);
++	words[idx] = (char *)xmalloc(l+1);
+ 	memcpy(words[idx], r, l);
+ 	words[idx][l] = '\0';
+ 	idx++;
+@@ -157,7 +157,7 @@
+     /* phase 3: limit lengths */
+     minlen = strlen(charset) + 7;
+     /* allocate ample memory */
+-    out = xmalloc(l + (l / (72 - minlen) + 1) * (minlen + 2) + 1);
++    out = (char *)xmalloc(l + (l / (72 - minlen) + 1) * (minlen + 2) + 1);
+ 
+     if (count)
+ 	t = stpcpy(out, words[0]);
+
+Modified: branches/BRANCH_6-3/rfc822.c
+===================================================================
+--- branches/BRANCH_6-3/rfc822.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/rfc822.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -79,7 +79,7 @@
+     for (cp = buf; *cp; cp++)
+ 	if (*cp == ',' || isspace((unsigned char)*cp))
+ 	    addresscount++;
+-    buf = xrealloc(buf, strlen(buf) + addresscount * (strlen(host) + 1) + 1);
++    buf = (char *)xrealloc(buf, strlen(buf) + addresscount * (strlen(host) + 1) + 1);
+ #endif /* MAIN */
+ 
+     /*
+
+Modified: branches/BRANCH_6-3/sink.c
+===================================================================
+--- branches/BRANCH_6-3/sink.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/sink.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -1155,7 +1155,7 @@
+ 	    sp += 2;
+ 	}
+ 
+-	after = xmalloc(length + 1);
++	after = (char *)xmalloc(length + 1);
+ 
+ 	/* copy mda source string to after, while expanding %[sTF] */
+ 	for (dp = after, sp = before; (*dp = *sp); dp++, sp++) {
+
+Modified: branches/BRANCH_6-3/socket.c
+===================================================================
+--- branches/BRANCH_6-3/socket.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/socket.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -468,7 +468,7 @@
+ 			 * We don't have a string to pass through
+ 			 * the strchr at this point yet */
+ 			newline = NULL;
+-		} else if ((newline = memchr(bp, '\n', n)) != NULL)
++		} else if ((newline = (char *)memchr(bp, '\n', n)) != NULL)
+ 			n = newline - bp + 1;
+ 		/* Matthias Andree: SSL_read can return 0, in that case
+ 		 * we must call SSL_get_error to figure if there was
+@@ -638,7 +638,7 @@
+ 				
+ 				/* RFC 2595 section 2.4: find a matching name
+ 				 * first find a match among alternative names */
+-				gens = X509_get_ext_d2i(x509_cert, NID_subject_alt_name, NULL, NULL);
++				gens = (STACK_OF(GENERAL_NAME) *)X509_get_ext_d2i(x509_cert, NID_subject_alt_name, NULL, NULL);
+ 				if (gens) {
+ 					int i, r;
+ 					for (i = 0, r = sk_GENERAL_NAME_num(gens); i < r; ++i) {
+
+Modified: branches/BRANCH_6-3/transact.c
+===================================================================
+--- branches/BRANCH_6-3/transact.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/transact.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -446,7 +446,7 @@
+     {
+ 	char *line, *rline;
+ 
+-	line = xmalloc(sizeof(buf));
++	line = (char *)xmalloc(sizeof(buf));
+ 	linelen = 0;
+ 	line[0] = '\0';
+ 	do {
+@@ -807,7 +807,7 @@
+ 	if (!msgblk.headers)
+ 	{
+ 	    oldlen = linelen;
+-	    msgblk.headers = xmalloc(oldlen + 1);
++	    msgblk.headers = (char *)xmalloc(oldlen + 1);
+ 	    (void) memcpy(msgblk.headers, line, linelen);
+ 	    msgblk.headers[oldlen] = '\0';
+ 	    free(line);
+@@ -1300,7 +1300,7 @@
+ 		if (idp->val.status.mark == XMIT_RCPTBAD)
+ 		    errlen += strlen(idp->id) + 2;
+ 
+-	    errmsg = xmalloc(errlen + 3);
++	    errmsg = (char *)xmalloc(errlen + 3);
+ 	    strcpy(errmsg, errhd);
+ 	    for (idp = msgblk.recipients; idp; idp = idp->next)
+ 		if (idp->val.status.mark == XMIT_RCPTBAD)
+
+Modified: branches/BRANCH_6-3/uid.c
+===================================================================
+--- branches/BRANCH_6-3/uid.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/uid.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -619,7 +619,7 @@
+ 	if (unlink(idfile) && errno != ENOENT)
+ 	    report(stderr, GT_("Error deleting %s: %s\n"), idfile, strerror(errno));
+     } else {
+-	char *newnam = xmalloc(strlen(idfile) + 2);
++	char *newnam = (char *)xmalloc(strlen(idfile) + 2);
+ 	strcpy(newnam, idfile);
+ 	strcat(newnam, "_");
+ 	if (outlevel >= O_DEBUG)
+
+Modified: branches/BRANCH_6-3/unmime.c
+===================================================================
+--- branches/BRANCH_6-3/unmime.c	2009-01-06 18:00:21 UTC (rev 5260)
++++ branches/BRANCH_6-3/unmime.c	2009-01-14 01:56:15 UTC (rev 5261)
+@@ -434,7 +434,7 @@
+ 	    if (p == NULL) p = NxtHdr + strlen(NxtHdr);
+ 
+ 	    xfree(CntType);
+-	    CntType = xmalloc(p-NxtHdr+1);
++	    CntType = (char *)xmalloc(p-NxtHdr+1);
+ 	    strlcpy(CntType, NxtHdr, p-NxtHdr+1);
+ 	    HdrsFound++;
+ 	}
+@@ -707,7 +707,7 @@
+     buf_p++;
+     if ((unsigned)(buf_p - buffer) == BufSize) {
+        /* Buffer is full! Get more room. */
+-       buffer = xrealloc(buffer, BufSize+BUFSIZE_INCREMENT);
++       buffer = (char *)xrealloc(buffer, BufSize+BUFSIZE_INCREMENT);
+        buf_p = buffer + BufSize;
+        BufSize += BUFSIZE_INCREMENT;
+     }
+
+
+
+From svn at mknod.org  Thu Jan 22 13:11:16 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 22 Jan 2009 06:11:16 -0600
+Subject: [fetchmail-svn] r5262 - branches/BRANCH_6-3
+Message-ID: <20090122121116.93A3C21EF14@mknod.org>
+
+Author: m-a
+Date: 2009-01-22 06:11:16 -0600 (Thu, 22 Jan 2009)
+New Revision: 5262
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/socket.c
+Log:
+case-insensitive check of SSL fingerprints (Daniel Richard G.)
+
+Daniel Richard G. writes:
+| I was clearing out an old Fetchmail SVN checkout I had lying around
+| here, and came across one small change that I forgot to send in.
+|
+| In socket.c, there's a bit of code that compares SSL certificate
+| fingerprints: [...]
+|
+| That strcmp() call should be an strcasecmp(). At one point, I
+| encountered a certificate where the fingerprint's hex digits were in a
+| different case than what was expected, and the connection attempt failed
+| because of that.  Not exactly what you'd call a potential MitM attack
+| :-)
+
+He's right, we can compare case-insensitively without sacrificing
+fetchmail's security, so let's just do that for the sake of ease of use.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-01-14 01:56:15 UTC (rev 5261)
++++ branches/BRANCH_6-3/NEWS	2009-01-22 12:11:16 UTC (rev 5262)
+@@ -57,6 +57,9 @@
+ * Do not overlap source and destination fields in snprintf() in interface.c.
+   Courtesy of Nico Golde, Debian.
+ 
++# CHANGES
++* Make the comparison of the SSL fingerprints case insensitive, to
++  ease its use. Suggested by Daniel Richard G.
+ # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
+ * [it] Italian (Vincenzo Campanella)
+ 
+
+Modified: branches/BRANCH_6-3/socket.c
+===================================================================
+--- branches/BRANCH_6-3/socket.c	2009-01-14 01:56:15 UTC (rev 5261)
++++ branches/BRANCH_6-3/socket.c	2009-01-22 12:11:16 UTC (rev 5262)
+@@ -717,7 +717,7 @@
+ 			if (outlevel > O_NORMAL)
+ 			    report(stdout, GT_("%s key fingerprint: %s\n"), _server_label, text);
+ 			if (_check_digest != NULL) {
+-				if (strcmp(text, _check_digest) == 0) {
++				if (strcasecmp(text, _check_digest) == 0) {
+ 				    if (outlevel > O_NORMAL)
+ 					report(stdout, GT_("%s fingerprints match.\n"), _server_label);
+ 				} else {
+
+
+

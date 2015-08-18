@@ -1,0 +1,234 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5219 - branches/BRANCH_MAPI
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2008-July/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5219%20-%20branches/BRANCH_MAPI&In-Reply-To=%3C20080725150308.A1F096B00FA%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000206.html">
+   <LINK REL="Next"  HREF="000208.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5219 - branches/BRANCH_MAPI</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5219%20-%20branches/BRANCH_MAPI&In-Reply-To=%3C20080725150308.A1F096B00FA%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5219 - branches/BRANCH_MAPI">svn at mknod.org
+       </A><BR>
+    <I>Fri Jul 25 17:03:08 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000206.html">[fetchmail-svn] r5218 - branches/BRANCH_MAPI
+</A></li>
+        <LI>Next message: <A HREF="000208.html">[fetchmail-svn] r5220 - branches/BRANCH_MAPI
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#207">[ date ]</a>
+              <a href="thread.html#207">[ thread ]</a>
+              <a href="subject.html#207">[ subject ]</a>
+              <a href="author.html#207">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: yangyanl
+Date: 2008-07-25 10:03:08 -0500 (Fri, 25 Jul 2008)
+New Revision: 5219
+
+Modified:
+   branches/BRANCH_MAPI/mapi.c
+Log:
+fixed bug in mapi_delete.
+
+Modified: branches/BRANCH_MAPI/mapi.c
+===================================================================
+--- branches/BRANCH_MAPI/mapi.c	2008-07-17 13:41:47 UTC (rev 5218)
++++ branches/BRANCH_MAPI/mapi.c	2008-07-25 15:03:08 UTC (rev 5219)
+@@ -88,7 +88,6 @@
+     return -1;
+ }
+ 
+-
+ /*
+  * ===  FUNCTION  ======================================================================
+  *         Name:  MapiPeek
+@@ -498,54 +497,28 @@
+ /*
+  * ===  FUNCTION  ======================================================================
+  *         Name:  expunge_deleted
+- *  Description:  move the emails in the mapi_deleted_list into &quot;deleted items&quot; folder
++ *  Description:  
+  * =====================================================================================
+  */
+ static int
+ expunge_deleted()
+ {
+     enum MAPISTATUS retval;
+-    mapi_id_t       id_folder;
+-    mapi_object_t   obj_deleted;	/* &quot;deleted items&quot; folder, for soft delete */
+-    mapi_id_t      *hard_deleted_ids;	/* ids of to-be-deleted messages, for hard deleted */
+-    int             hard_delete = TRUE;
++    mapi_id_t      *deleted_ids;
+ 
++    if (mapi_deleted_ids.count == 0)
++	return (PS_SUCCESS);
+     /*-----------------------------------------------------------------------------
+      *  perform hard delete
+      *-----------------------------------------------------------------------------*/
+-    if (hard_delete) {
+-	mapi_id_array_get(mapi_mem_ctx, &amp;mapi_deleted_ids, &amp;hard_deleted_ids);
+-	retval = DeleteMessage(&amp;mapi_obj_inbox, hard_deleted_ids, mapi_deleted_ids.count);
+-	if (retval != MAPI_E_SUCCESS) {
+-	    report(stderr, &quot;MAPI: DeleteMessages failed &quot;);
+-	    talloc_free(hard_deleted_ids);
+-	    return translate_mapi_error(GetLastError());
+-	}
+-	talloc_free(hard_deleted_ids);
+-	return (PS_SUCCESS);
+-    }
+-
+-    /*-----------------------------------------------------------------------------
+-     *  perform soft delete, move to-be-deleted messages to &quot;deleted items&quot; folder
+-     *-----------------------------------------------------------------------------*/
+-
+-    /*-----------------------------------------------------------------------------
+-     *  open &quot;deleted items&quot; folder
+-     *-----------------------------------------------------------------------------*/
+-    mapi_object_init(&amp;obj_deleted);
+-    retval = GetDefaultFolder(&amp;mapi_obj_store, &amp;id_folder, olFolderDeletedItems);
+-    retval = OpenFolder(&amp;mapi_obj_store, id_folder, &amp;obj_deleted);
++    mapi_id_array_get(mapi_mem_ctx, &amp;mapi_deleted_ids, &amp;deleted_ids);
++    retval = DeleteMessage(&amp;mapi_obj_inbox, deleted_ids, mapi_deleted_ids.count);
+     if (retval != MAPI_E_SUCCESS) {
+-	report(stderr, &quot;MAPI: OpenFolder failed\n&quot;);
++	report(stderr, &quot;MAPI: DeleteMessages failed\n&quot;);
++	talloc_free(deleted_ids);
+ 	return translate_mapi_error(GetLastError());
+     }
+-
+-    retval = MoveCopyMessages(&amp;mapi_obj_inbox, &amp;obj_deleted, &amp;mapi_deleted_ids, 0);
+-    if (retval != MAPI_E_SUCCESS) {
+-	report(stderr, &quot;MAPI: MoveCopyMessages failed\n&quot;);
+-	return translate_mapi_error(GetLastError());
+-    }
+-
++    talloc_free(deleted_ids);
+     return (PS_SUCCESS);
+ }
+ 
+@@ -1062,8 +1035,7 @@
+     retval = OpenMessage(&amp;mapi_obj_store, *fid, *mid, &amp;obj_message, 0x0);
+     if (retval == MAPI_E_SUCCESS) {
+ 	SPropTagArray = set_SPropTagArray(mapi_mem_ctx,
+-					  0x0a,
+-					  PR_MESSAGE_FLAGS,
++					  0x09,
+ 					  PR_INTERNET_MESSAGE_ID,
+ 					  PR_CONVERSATION_TOPIC,
+ 					  PR_MESSAGE_DELIVERY_TIME,
+@@ -1283,8 +1255,7 @@
+     retval = OpenMessage(&amp;mapi_obj_store, *fid, *mid, &amp;obj_message, 0x0);
+     if (retval == MAPI_E_SUCCESS) {
+ 	SPropTagArray = set_SPropTagArray(mapi_mem_ctx,
+-					  0x08,
+-					  PR_MESSAGE_FLAGS,
++					  0x07,
+ 					  PR_INTERNET_MESSAGE_ID,
+ 					  PR_MSG_EDITOR_FORMAT,
+ 					  PR_BODY, PR_BODY_UNICODE, PR_HTML, PR_RTF_COMPRESSED, PR_HASATTACH);
+@@ -1445,12 +1416,10 @@
+ 			    MAPIFreeBuffer(lpProps);
+ 			}
+ 		    }
+-		    if (has_attach &amp;&amp; *has_attach) {
+-			temp_line = talloc_asprintf(mapi_mem_ctx, &quot;\n--%s--\n&quot;, MAPI_BOUNDARY);
+-			data_blob_append(mapi_mem_ctx, &amp;mapi_buffer, temp_line, strlen(temp_line));
+-			*lenp += strlen(temp_line);
+-			talloc_free(temp_line);
+-		    }
++		    temp_line = talloc_asprintf(mapi_mem_ctx, &quot;\n--%s--\n&quot;, MAPI_BOUNDARY);
++		    data_blob_append(mapi_mem_ctx, &amp;mapi_buffer, temp_line, strlen(temp_line));
++		    *lenp += strlen(temp_line);
++		    talloc_free(temp_line);
+ 		}		/* if GetAttachmentTable returns success */
+ 	    }			/* if (has_attach &amp;&amp; *has_attach) */
+ 	}
+@@ -1502,16 +1471,7 @@
+ static int
+ mapi_delete(int sock, struct query *ctl, int number)
+ {
+-    enum MAPISTATUS retval;
+-    struct SPropTagArray *SPropTagArray = NULL;
+-    struct SPropValue *lpProps;
+-    struct SRow     aRow;
+-    int             ok;
+-    const char     *msgid;
+-    mapi_object_t   obj_message;
+-    mapi_id_t      *fid;
+-    mapi_id_t      *mid;
+-    int             props_count;
++    mapi_container_list_t *element;
+ 
+     if (outlevel &gt;= O_MONITOR)
+ 	report(stdout, &quot;MAPI&gt; mapi_delete(number %d)\n&quot;, number);
+@@ -1522,27 +1482,10 @@
+     if (mapi_rowset.cRows == 0)
+ 	return PS_NOMAIL;
+ 
+-
+-    fid = (mapi_id_t *)
+-	find_SPropValue_data(&amp;(mapi_rowset.aRow[number - 1]), PR_FID);
+-    mid = (mapi_id_t *)
+-	find_SPropValue_data(&amp;(mapi_rowset.aRow[number - 1]), PR_MID);
+-    mapi_object_init(&amp;obj_message);
+-
+-    retval = OpenMessage(&amp;mapi_obj_store, *fid, *mid, &amp;obj_message, 0x0);
+-    if (retval == MAPI_E_SUCCESS) {
+-	    /*-----------------------------------------------------------------------------
+-	     * add the message id to the list 
+-	     *-----------------------------------------------------------------------------*/
+-	mapi_id_array_add_obj(&amp;mapi_deleted_ids, &amp;obj_message);
+-	if (outlevel == O_DEBUG)
+-	    report(stdout, &quot;message in mapi_rowset.aRow[%d] will be deleted\n&quot;, number - 1);
+-    } else {
+-	mapi_object_release(&amp;obj_message);
+-	return translate_mapi_error(GetLastError());
+-    }
+-    mapi_object_release(&amp;obj_message);
+-
++    element = talloc_zero((TALLOC_CTX *) mapi_deleted_ids.lpContainerList, mapi_container_list_t);
++    element-&gt;id = mapi_rowset.aRow[number - 1].lpProps[1].value.d;;
++    DLIST_ADD(mapi_deleted_ids.lpContainerList, element);
++    mapi_deleted_ids.count++;
+     return PS_SUCCESS;
+ }
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000206.html">[fetchmail-svn] r5218 - branches/BRANCH_MAPI
+</A></li>
+	<LI>Next message: <A HREF="000208.html">[fetchmail-svn] r5220 - branches/BRANCH_MAPI
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#207">[ date ]</a>
+              <a href="thread.html#207">[ thread ]</a>
+              <a href="subject.html#207">[ subject ]</a>
+              <a href="author.html#207">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

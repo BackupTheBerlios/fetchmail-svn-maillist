@@ -1,0 +1,813 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5443 - branches/BRANCH_6-3/po
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-October/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5443%20-%20branches/BRANCH_6-3/po&In-Reply-To=%3C20091021071411.1FC4921F093%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000500.html">
+   <LINK REL="Next"  HREF="000502.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5443 - branches/BRANCH_6-3/po</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5443%20-%20branches/BRANCH_6-3/po&In-Reply-To=%3C20091021071411.1FC4921F093%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5443 - branches/BRANCH_6-3/po">svn at mknod.org
+       </A><BR>
+    <I>Wed Oct 21 09:14:11 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000500.html">[fetchmail-svn] r5442 - branches/BRANCH_6-3/po
+</A></li>
+        <LI>Next message: <A HREF="000502.html">[fetchmail-svn] r5444 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#501">[ date ]</a>
+              <a href="thread.html#501">[ thread ]</a>
+              <a href="subject.html#501">[ subject ]</a>
+              <a href="author.html#501">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-10-21 02:14:10 -0500 (Wed, 21 Oct 2009)
+New Revision: 5443
+
+Modified:
+   branches/BRANCH_6-3/po/nl.po
+Log:
+Updated Dutch translation courtesy of Erwin Poeze.
+
+Modified: branches/BRANCH_6-3/po/nl.po
+===================================================================
+--- branches/BRANCH_6-3/po/nl.po	2009-10-20 22:27:27 UTC (rev 5442)
++++ branches/BRANCH_6-3/po/nl.po	2009-10-21 07:14:10 UTC (rev 5443)
+@@ -1,21 +1,21 @@
+ # Dutch translations for fetchmail.
+-# Copyright (C) 2007 Eric S. Raymond (msgids)
++# Copyright (C) 2008 Eric S. Raymond (msgids)
+ # This file is distributed under the same license as the fetchmail package.
+ #
+ # Tony Vroon &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">tony at vroon.org</A>&gt;, 2003.
+ # Benno Schulenberg &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">benno at vertaalt.nl</A>&gt;, 2008.
++# Erwin Poeze &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">erwin.poeze at gmail.com</A>&gt;, 2009
+ msgid &quot;&quot;
+ msgstr &quot;&quot;
+-&quot;Project-Id-Version: fetchmail-6.3.8\n&quot;
++&quot;Project-Id-Version: fetchmail-6.3.12\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+ &quot;POT-Creation-Date: 2009-08-24 21:16+0200\n&quot;
+-&quot;PO-Revision-Date: 2008-05-16 00:27+0200\n&quot;
+-&quot;Last-Translator: Benno Schulenberg &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">benno at vertaalt.nl</A>&gt;\n&quot;
++&quot;PO-Revision-Date: 2009-10-21 08:33+0100\n&quot;
++&quot;Last-Translator: Erwin Poeze &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">erwin.poeze at gmail.com</A>&gt;\n&quot;
+ &quot;Language-Team: Dutch &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">vertaling at vrijschrift.org</A>&gt;\n&quot;
+ &quot;MIME-Version: 1.0\n&quot;
+ &quot;Content-Type: text/plain; charset=UTF-8\n&quot;
+ &quot;Content-Transfer-Encoding: 8bit\n&quot;
+-&quot;X-Generator: KBabel 1.11.4\n&quot;
+ &quot;Plural-Forms: nplurals=2; plural=(n != 1);\n&quot;
+ 
+ #: checkalias.c:179
+@@ -56,9 +56,9 @@
+ msgstr &quot;Kerberos-fout %s\n&quot;
+ 
+ #: driver.c:249
+-#, fuzzy, c-format
++#, c-format
+ msgid &quot;krb5_sendauth: %s [server says '%s'] \n&quot;
+-msgstr &quot;krb5_sendauth(): %s [server zegt '%*s'] \n&quot;
++msgstr &quot;krb5_sendauth(): %s [server zegt '%s'] \n&quot;
+ 
+ #: driver.c:254
+ #, c-format
+@@ -67,7 +67,7 @@
+ 
+ #: driver.c:335
+ msgid &quot;Subject: Fetchmail oversized-messages warning&quot;
+-msgstr &quot;Subject: Fetchmail-waarschuwing -- te grote berichten&quot;
++msgstr &quot;Subject: fetchmail-waarschuwing -- te grote berichten&quot;
+ 
+ #: driver.c:339
+ #, c-format
+@@ -222,9 +222,9 @@
+ &quot;Fetchmail blijft van deze mailbox af tot u het programma herstart.\n&quot;
+ 
+ #: driver.c:946
+-#, fuzzy, c-format
++#, c-format
+ msgid &quot;pre-connection command terminated with signal %d\n&quot;
+-msgstr &quot;pre-verbindingscommando is mislukt met aflsuitwaarde %d\n&quot;
++msgstr &quot;pre-verbindingscommando is mislukt met afsluitwaarde %d\n&quot;
+ 
+ #: driver.c:949
+ #, c-format
+@@ -252,7 +252,7 @@
+ 
+ #: driver.c:1084
+ msgid &quot;Subject: Fetchmail unreachable-server warning.&quot;
+-msgstr &quot;Subject: Fetchmail-waarschuwing -- onbereikbare server.&quot;
++msgstr &quot;Subject: fetchmail-waarschuwing -- onbereikbare server.&quot;
+ 
+ #: driver.c:1086
+ #, c-format
+@@ -261,7 +261,7 @@
+ 
+ #: driver.c:1114
+ msgid &quot;SSL connection failed.\n&quot;
+-msgstr &quot;SSL-connectie is mislukt.\n&quot;
++msgstr &quot;SSL-verbinding is mislukt.\n&quot;
+ 
+ #: driver.c:1167
+ #, c-format
+@@ -285,7 +285,7 @@
+ #: driver.c:1200
+ #, c-format
+ msgid &quot;Subject: fetchmail authentication failed on %s@%s&quot;
+-msgstr &quot;Subject: Fetchmail-aanmelding is mislukt voor %s@%s&quot;
++msgstr &quot;Subject: fetchmail-aanmelding is mislukt voor %s@%s&quot;
+ 
+ #: driver.c:1204
+ #, c-format
+@@ -316,8 +316,8 @@
+ &quot;is restored.&quot;
+ msgstr &quot;&quot;
+ &quot;\n&quot;
+-&quot;Als echter uw login-gegevens zijn veranderd nadat u de fetchmail-service\n&quot;
+-&quot;startte, dan moet u de fetchmail-service stoppen, de configuratie wijzigen,\n&quot;
++&quot;Als echter uw logingegevens zijn veranderd nadat u de fetchmail-service\n&quot;
++&quot;startte, dan moet u de fetchmail-service stoppen, de configuratie wijzigen\n&quot;
+ &quot;en dan de service herstarten.\n&quot;
+ &quot;\n&quot;
+ &quot;Fetchmail blijft draaien en probeert de aanmelding elke ronde opnieuw.\n&quot;
+@@ -360,7 +360,7 @@
+ #: driver.c:1275
+ #, c-format
+ msgid &quot;Subject: fetchmail authentication OK on %s@%s&quot;
+-msgstr &quot;Subject: Fetchmail-aanmelding is geslaagd voor %s@%s&quot;
++msgstr &quot;Subject: fetchmail-aanmelding is geslaagd voor %s@%s&quot;
+ 
+ #: driver.c:1279
+ #, c-format
+@@ -480,7 +480,7 @@
+ msgstr &quot;%s fout tijdens het ophalen van %s@%s\n&quot;
+ 
+ #: driver.c:1583
+-#, fuzzy, c-format
++#, c-format
+ msgid &quot;post-connection command terminated with signal %d\n&quot;
+ msgstr &quot;na-verbindingscommando is mislukt met afsluitwaarde %d\n&quot;
+ 
+@@ -525,7 +525,7 @@
+ &quot;Dit is gevaarlijk, qmail-inject of de sendmail-wrapper van qmail zouden\n&quot;
+ &quot;je From: en/of Message-ID: headers kunnen verpesten.\n&quot;
+ &quot;Probeer \&quot;env QMAILINJECT= %s JOUW PARAMETERS HIER\&quot;\n&quot;
+-&quot;%s: Gestopt.\n&quot;
++&quot;%s: Stoppen.\n&quot;
+ 
+ #: env.c:71
+ #, c-format
+@@ -537,17 +537,17 @@
+ &quot;Try \&quot;env NULLMAILER_FLAGS= %s YOUR ARGUMENTS HERE\&quot;\n&quot;
+ &quot;%s: Abort.\n&quot;
+ msgstr &quot;&quot;
+-&quot;%s:&#183;De&#183;NULLMAILER_FLAGS&#183;shell-variable&#183;is toegekend.\n&quot;
+-&quot;Dit&#183;is&#183;gevaarlijk,&#183;nullmailer-inject&#183;of&#183;de&#183;sendmail-&quot;
+-&quot;wrapper&#183;van&#183;nullmailer&#183;zouden\n&quot;
+-&quot;je&#183;From:&#183;en/of&#183;Message-ID:&#183;headers&#183;kunnen&#183;verpesten.\n&quot;
+-&quot;Probeer&#183;\&quot;env&#183;NULLMAILER_FLAGS=&#183;%s&#183;JOUW&#183;PARAMETERS&#183;HIER\&quot;\n&quot;
+-&quot;%s:&#183;Gestopt.\n&quot;
++&quot;%s: De NULLMAILER_FLAGS shell-variable is toegekend.\n&quot;
++&quot;Dit is gevaarlijk, nullmailer-inject of de sendmail-wrapper van nullmailer &quot;
++&quot;zouden\n&quot;
++&quot;je From: en/of Message-ID: headers kunnen verpesten.\n&quot;
++&quot;Probeer \&quot;env NULLMAILER_FLAGS= %s JOUW&#183;PARAMETERS HIER\&quot;\n&quot;
++&quot;%s: Stoppen.\n&quot;
+ 
+ #: env.c:83
+ #, c-format
+ msgid &quot;%s: You don't exist.  Go away.\n&quot;
+-msgstr &quot;%s: U bestaat niet.  Ga weg.\n&quot;
++msgstr &quot;%s: U bestaat niet. Ga weg.\n&quot;
+ 
+ #: env.c:145
+ #, c-format
+@@ -562,6 +562,8 @@
+ #: env.c:170
+ msgid &quot;Cannot find my own host in hosts database to qualify it!\n&quot;
+ msgstr &quot;&quot;
++&quot;Kan mijn eigen host niet in de hostsdatabase vinden om deze te &quot;
++&quot;kwalificeren!\n&quot;
+ 
+ #: env.c:174
+ msgid &quot;&quot;
+@@ -570,6 +572,10 @@
+ &quot;problems!\n&quot;
+ &quot;DO repair your /etc/hosts, DNS, NIS or LDAP instead.\n&quot;
+ msgstr &quot;&quot;
++&quot;Probeert door te gaan met een niet gekwalificeerde hostname.\n&quot;
++&quot;Rapporteer GEEN misvormde berichten: koppen, HELO/EHLO-regels of &quot;
++&quot;soortgelijke problemen!\n&quot;
++&quot;Repareer in plaats daarvan uw /etc/hosts, NDS, NIS of LDAP.\n&quot;
+ 
+ #: etrn.c:49 odmr.c:60
+ #, c-format
+@@ -636,7 +642,6 @@
+ msgstr &quot;Optie '--check' is niet mogelijk met ETRN\n&quot;
+ 
+ #: fetchmail.c:137
+-#, fuzzy
+ msgid &quot;&quot;
+ &quot;Copyright (C) 2002, 2003 Eric S. Raymond\n&quot;
+ &quot;Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham &quot;
+@@ -647,8 +652,8 @@
+ &quot;Copyright (C) 2002, 2003 Eric S. Raymond\n&quot;
+ &quot;Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham &quot;
+ &quot;Wilson\n&quot;
+-&quot;Copyright (C) 2005-2006 Sunil Shetye\n&quot;
+-&quot;Copyright (C) 2005-2007 Matthias Andree\n&quot;
++&quot;Copyright (C) 2005 - 2006 Sunil Shetye\n&quot;
++&quot;Copyright (C) 2005 - 2009 Matthias Andree\n&quot;
+ 
+ #: fetchmail.c:142
+ msgid &quot;&quot;
+@@ -768,7 +773,7 @@
+ 
+ #: fetchmail.c:582
+ msgid &quot;fetchmail: Cannot detach into background. Aborting.\n&quot;
+-msgstr &quot;fetchmail: Kan niet naar de achtergrond gaan.  Gestopt.\n&quot;
++msgstr &quot;fetchmail: Kan niet naar de achtergrond gaan. Gestopt.\n&quot;
+ 
+ #: fetchmail.c:586
+ #, c-format
+@@ -788,7 +793,7 @@
+ 
+ #: fetchmail.c:625
+ msgid &quot;--check mode enabled, not fetching mail\n&quot;
+-msgstr &quot;&quot;
++msgstr &quot;--controlemodus ingeschakeld, geen e-mailontvangst\n&quot;
+ 
+ #: fetchmail.c:647
+ #, c-format
+@@ -950,11 +955,13 @@
+ #: fetchmail.c:1284
+ #, c-format
+ msgid &quot;warning: multidrop for %s requires envelope option!\n&quot;
+-msgstr &quot;&quot;
++msgstr &quot;waarschuwing: multidrop van %s vereist envelopoptie!\n&quot;
+ 
+ #: fetchmail.c:1285
+ msgid &quot;warning: Do not ask for support if all mail goes to postmaster!\n&quot;
+ msgstr &quot;&quot;
++&quot;waarschuwing: vraag niet om ondersteuning als alle e-mail naar postmaster &quot;
++&quot;gaat!\n&quot;
+ 
+ #: fetchmail.c:1302
+ #, c-format
+@@ -1064,15 +1071,16 @@
+ msgstr &quot;Fetchmail zal foutmeldingen naar de afzender sturen.\n&quot;
+ 
+ #: fetchmail.c:1557
+-#, fuzzy
+ msgid &quot;Fetchmail will treat permanent errors as permanent (drop messsages).\n&quot;
+ msgstr &quot;&quot;
+-&quot;Fetchmail zal onjuist geadresseerde multidrop-berichten doorsturen naar %s.\n&quot;
++&quot;Fetchmail zal definitieve foutmeldingen als definitief afhandelen (berichten &quot;
++&quot;verwijderen).\n&quot;
+ 
+ #: fetchmail.c:1559
+-#, fuzzy
+ msgid &quot;Fetchmail will treat permanent errors as temporary (keep messages).\n&quot;
+-msgstr &quot;Fetchmail zal foutmeldingen naar de afzender sturen.\n&quot;
++msgstr &quot;&quot;
++&quot;Fetchmail zal definitieve foutmeldingen als tijdelijk afhandelen (berichten &quot;
++&quot;behouden).\n&quot;
+ 
+ #: fetchmail.c:1566
+ #, c-format
+@@ -1187,9 +1195,9 @@
+ msgstr &quot;  Versleuteling van-eindpunt-tot-eindpunt wordt aangenomen.\n&quot;
+ 
+ #: fetchmail.c:1650
+-#, fuzzy, c-format
++#, c-format
+ msgid &quot;  Mail service principal is: %s\n&quot;
+-msgstr &quot;  Mail-service principal is: %s\n&quot;
++msgstr &quot;  Belangrijkste mailservice is: %s\n&quot;
+ 
+ #: fetchmail.c:1653
+ msgid &quot;  SSL encrypted sessions enabled.\n&quot;
+@@ -1210,14 +1218,14 @@
+ msgstr &quot;  Map voor vertrouwde SSL-certificaten: %s\n&quot;
+ 
+ #: fetchmail.c:1662
+-#, fuzzy, c-format
++#, c-format
+ msgid &quot;  SSL server CommonName: %s\n&quot;
+-msgstr &quot;Gewone servernaam: %s\n&quot;
++msgstr &quot;  CommonName SLL-server: %s\n&quot;
+ 
+ #: fetchmail.c:1664
+ #, c-format
+ msgid &quot;  SSL key fingerprint (checked against the server key): %s\n&quot;
+-msgstr &quot;  SSL-sleutel-afdruk (geverifieerd tegenover server-sleutel): %s\n&quot;
++msgstr &quot;  SSL-sleutelafdruk (geverifieerd tegenover serversleutel): %s\n&quot;
+ 
+ #: fetchmail.c:1667
+ #, c-format
+@@ -1286,13 +1294,13 @@
+ #: fetchmail.c:1699
+ msgid &quot;  Rewrite of server-local addresses is enabled (--norewrite off).\n&quot;
+ msgstr &quot;&quot;
+-&quot;  Herschrijven van lokale server-adressen is ingeschakeld ('--norewrite &quot;
++&quot;  Herschrijven van lokale serveradressen is ingeschakeld ('--norewrite &quot;
+ &quot;off').\n&quot;
+ 
+ #: fetchmail.c:1700
+ msgid &quot;  Rewrite of server-local addresses is disabled (--norewrite on).\n&quot;
+ msgstr &quot;&quot;
+-&quot;  Herschrijven van lokale server-adressen is uitgeschakeld ('--norewrite &quot;
++&quot;  Herschrijven van lokale serveradressen is uitgeschakeld ('--norewrite &quot;
+ &quot;on').\n&quot;
+ 
+ #: fetchmail.c:1702
+@@ -1416,14 +1424,13 @@
+ &quot;0').\n&quot;
+ 
+ #: fetchmail.c:1755
+-#, fuzzy, c-format
++#, c-format
+ msgid &quot;  SMTP message batch limit is %d.\n&quot;
+-msgstr &quot;  SMTP bericht-stapel limiet is %d.\n&quot;
++msgstr &quot;  Limiet SMTP-berichtenbatch is %d.\n&quot;
+ 
+ #: fetchmail.c:1757
+-#, fuzzy
+ msgid &quot;  No SMTP message batch limit (--batchlimit 0).\n&quot;
+-msgstr &quot;  Er is geen SMTP bericht-stapel limiet (--batchlimit 0).\n&quot;
++msgstr &quot;  Er is geen limiet voor SMTP-berichtenbatch (--batchlimit 0).\n&quot;
+ 
+ #: fetchmail.c:1761
+ #, c-format
+@@ -1480,7 +1487,7 @@
+ #: fetchmail.c:1821
+ #, c-format
+ msgid &quot;  Server connection will be brought up with \&quot;%s\&quot;.\n&quot;
+-msgstr &quot;  Server connectie wordt tot stand gebracht met \&quot;%s\&quot;.\n&quot;
++msgstr &quot;  Serververbinding wordt tot stand gebracht met \&quot;%s\&quot;.\n&quot;
+ 
+ #: fetchmail.c:1824
+ msgid &quot;  No pre-connection command.\n&quot;
+@@ -1489,7 +1496,7 @@
+ #: fetchmail.c:1826
+ #, c-format
+ msgid &quot;  Server connection will be taken down with \&quot;%s\&quot;.\n&quot;
+-msgstr &quot;  Server connectie wordt verbroken met \&quot;%s\&quot;.\n&quot;
++msgstr &quot;  Serververbinding wordt verbroken met \&quot;%s\&quot;.\n&quot;
+ 
+ #: fetchmail.c:1829
+ msgid &quot;  No post-connection command.\n&quot;
+@@ -1501,11 +1508,11 @@
+ 
+ #: fetchmail.c:1842
+ msgid &quot;  Multi-drop mode: &quot;
+-msgstr &quot;  Multi-drop mode: &quot;
++msgstr &quot;  Multi-drop modus: &quot;
+ 
+ #: fetchmail.c:1844
+ msgid &quot;  Single-drop mode: &quot;
+-msgstr &quot;  Single-drop mode: &quot;
++msgstr &quot;  Single-drop modus: &quot;
+ 
+ #: fetchmail.c:1846
+ #, c-format
+@@ -1541,12 +1548,12 @@
+ #: fetchmail.c:1874
+ #, c-format
+ msgid &quot;  Envelope header is assumed to be: %s\n&quot;
+-msgstr &quot;  Envelop-header is aangenomen als zijnde: %s\n&quot;
++msgstr &quot;  Envelopkoppen is aangenomen als zijnde: %s\n&quot;
+ 
+ #: fetchmail.c:1877
+ #, c-format
+ msgid &quot;  Number of envelope headers to be skipped over: %d\n&quot;
+-msgstr &quot;  Aantal over te slaan envelop-headers: %d\n&quot;
++msgstr &quot;  Aantal over te slaan envelopkoppen: %d\n&quot;
+ 
+ #: fetchmail.c:1880
+ #, c-format
+@@ -1577,7 +1584,7 @@
+ #: fetchmail.c:1913
+ #, c-format
+ msgid &quot;  Polling loop will monitor %s.\n&quot;
+-msgstr &quot;  Ophaal-lus monitort %s.\n&quot;
++msgstr &quot;  Ophaallus monitort %s.\n&quot;
+ 
+ #: fetchmail.c:1915
+ msgid &quot;  No monitor interface specified.\n&quot;
+@@ -1586,7 +1593,7 @@
+ #: fetchmail.c:1919
+ #, c-format
+ msgid &quot;  Server connections will be made via plugin %s (--plugin %s).\n&quot;
+-msgstr &quot;  Server-connecties worden gelegd via plugin %s ('--plugin %s').\n&quot;
++msgstr &quot;  Serverconnecties worden gelegd via plugin %s ('--plugin %s').\n&quot;
+ 
+ #: fetchmail.c:1921
+ msgid &quot;  No plugin command specified.\n&quot;
+@@ -1613,19 +1620,19 @@
+ 
+ #: fetchmail.c:1947
+ msgid &quot;  Poll trace information will be added to the Received header.\n&quot;
+-msgstr &quot;  Poll trace informatie wordt toegevoegd aan de Received header.\n&quot;
++msgstr &quot;  Poll-trace-informatie wordt toegevoegd aan de Received-header.\n&quot;
+ 
+ #: fetchmail.c:1949
+ msgid &quot;&quot;
+ &quot;  No poll trace information will be added to the Received header.\n&quot;
+ &quot;.\n&quot;
+ msgstr &quot;&quot;
+-&quot;  Er wordt geen poll trace informatie aan de Received header toegevoegd.\n&quot;
++&quot;  Er wordt geen poll-trace-informatie aan de Received-header toegevoegd.\n&quot;
+ 
+ #: fetchmail.c:1952
+ #, c-format
+ msgid &quot;  Pass-through properties \&quot;%s\&quot;.\n&quot;
+-msgstr &quot;  Doorvoer-eigenschappen \&quot;%s\&quot;.\n&quot;
++msgstr &quot;  Doorvoereigenschappen \&quot;%s\&quot;.\n&quot;
+ 
+ #: getpass.c:71
+ msgid &quot;ERROR: no support for getpassword() routine\n&quot;
+@@ -1642,16 +1649,16 @@
+ #: gssapi.c:66
+ #, c-format
+ msgid &quot;Couldn't get service name for [%s]\n&quot;
+-msgstr &quot;Kan geen service-naam vinden voor [%s]\n&quot;
++msgstr &quot;Kan geen servicenaam vinden voor [%s]\n&quot;
+ 
+ #: gssapi.c:72
+ #, c-format
+ msgid &quot;Using service name [%s]\n&quot;
+-msgstr &quot;Service-naam [%s] wordt gebruikt\n&quot;
++msgstr &quot;Servicenaam [%s] wordt gebruikt\n&quot;
+ 
+ #: gssapi.c:89
+ msgid &quot;Sending credentials\n&quot;
+-msgstr &quot;Versturen van login-gegevens\n&quot;
++msgstr &quot;Versturen van logingegevens\n&quot;
+ 
+ #: gssapi.c:107
+ msgid &quot;Error exchanging credentials\n&quot;
+@@ -1740,10 +1747,9 @@
+ msgstr &quot;Benodigde LOGIN-mogelijkheid wordt niet door server ondersteund\n&quot;
+ 
+ #: imap.c:676
+-#, fuzzy, c-format
++#, c-format
+ msgid &quot;mail expunge mismatch (%d actual != %d expected)\n&quot;
+-msgstr &quot;&quot;
+-&quot;bericht %s@%s:%d was niet van de verwachte lengte (was %d != verwachtte %d)\n&quot;
++msgstr &quot;bericht-expunge komt niet overeen (is %d, waar %d verwacht)\n&quot;
+ 
+ #: imap.c:782 imap.c:841
+ msgid &quot;re-poll failed\n&quot;
+@@ -1795,16 +1801,16 @@
+ #: imap.c:1002
+ msgid &quot;&quot;
+ &quot;Warning: ignoring bogus data for message sizes returned by the server.\n&quot;
+-msgstr &quot;&quot;
++msgstr &quot;Waarschuwing: server geeft onzinnige berichtgrootten terug.\n&quot;
+ 
+ #: interface.c:256
+ msgid &quot;Unable to open kvm interface. Make sure fetchmail is SGID kmem.&quot;
+-msgstr &quot;Kan kvm-interface niet openen.  Controleer of fetchmail SGID-kmem is.&quot;
++msgstr &quot;Kan kvm-interface niet openen. Controleer of fetchmail SGID-kmem is.&quot;
+ 
+ #: interface.c:396
+ #, c-format
+ msgid &quot;Unable to parse interface name from %s&quot;
+-msgstr &quot;Kan interface-naam van %s niet verwerken&quot;
++msgstr &quot;Kan interfacenaam van %s niet verwerken&quot;
+ 
+ #: interface.c:418
+ msgid &quot;get_ifinfo: sysctl (iflist estimate) failed&quot;
+@@ -1835,15 +1841,15 @@
+ 
+ #: interface.c:589
+ msgid &quot;missing IP interface address\n&quot;
+-msgstr &quot;IP-interface-adres is niet gevonden\n&quot;
++msgstr &quot;IP-interfaceadres is niet gevonden\n&quot;
+ 
+ #: interface.c:605
+ msgid &quot;invalid IP interface address\n&quot;
+-msgstr &quot;ongeldig IP-interface-adres\n&quot;
++msgstr &quot;ongeldig IP-interfaceadres\n&quot;
+ 
+ #: interface.c:611
+ msgid &quot;invalid IP interface mask\n&quot;
+-msgstr &quot;ongeldig IP-interface-masker\n&quot;
++msgstr &quot;ongeldig IP-interfacemasker\n&quot;
+ 
+ #: interface.c:650
+ #, c-format
+@@ -1928,7 +1934,7 @@
+ #: odmr.c:66
+ #, c-format
+ msgid &quot;%s's SMTP listener does not support ATRN\n&quot;
+-msgstr &quot;%s's SMTP-programma ondersteund geen ATRN\n&quot;
++msgstr &quot;%s's SMTP-programma ondersteunt geen ATRN\n&quot;
+ 
+ #: odmr.c:104
+ msgid &quot;Turnaround now...\n&quot;
+@@ -1981,7 +1987,7 @@
+ 
+ #: opie.c:42
+ msgid &quot;server recv fatal\n&quot;
+-msgstr &quot;&quot;
++msgstr &quot;server recv is mislukt\n&quot;
+ 
+ #: opie.c:56
+ msgid &quot;Could not decode OTP challenge\n&quot;
+@@ -1994,7 +2000,7 @@
+ #: options.c:172 options.c:216
+ #, c-format
+ msgid &quot;String '%s' is not a valid number string.\n&quot;
+-msgstr &quot;String '%s' is geen geldige numerieke string.\n&quot;
++msgstr &quot;String '%s' is geen geldige numerieke tekenreeks.\n&quot;
+ 
+ #: options.c:181
+ #, c-format
+@@ -2104,12 +2110,16 @@
+ msgid &quot;&quot;
+ &quot;      --nosoftbounce fetchmail deletes permanently undeliverable messages.\n&quot;
+ msgstr &quot;&quot;
++&quot;      --nosoftbounce fetchmail verwijdert definitief niet-bestelbare &quot;
++&quot;berichten.\n&quot;
+ 
+ #: options.c:621
+ msgid &quot;&quot;
+ &quot;      --softbounce  keep permanently undeliverable messages on server &quot;
+ &quot;(default).\n&quot;
+ msgstr &quot;&quot;
++&quot;      --softbounce  definitief onbestelbare berichten op de server behouden &quot;
++&quot;(standaard).\n&quot;
+ 
+ #: options.c:623
+ msgid &quot;  -I, --interface   interface required specification\n&quot;
+@@ -2121,11 +2131,11 @@
+ 
+ #: options.c:627
+ msgid &quot;      --ssl         enable ssl encrypted session\n&quot;
+-msgstr &quot;      --ssl        SSL-beveiligde sessies inschakelen\n&quot;
++msgstr &quot;      --ssl         SSL-beveiligde sessies inschakelen\n&quot;
+ 
+ #: options.c:628
+ msgid &quot;      --sslkey      ssl private key file\n&quot;
+-msgstr &quot;     --sslkey      bestand met SSL-priv&#233;sleutels\n&quot;
++msgstr &quot;      --sslkey      bestand met SSL-priv&#233;sleutels\n&quot;
+ 
+ #: options.c:629
+ msgid &quot;      --sslcert     ssl client certificate\n&quot;
+@@ -2144,12 +2154,15 @@
+ msgid &quot;&quot;
+ &quot;      --sslcommonname  expect this CommonName from server (discouraged)\n&quot;
+ msgstr &quot;&quot;
++&quot;      --sslcommonname  verwacht deze CommonName van server (afgeraden)\n&quot;
+ 
+ #: options.c:633
+ msgid &quot;&quot;
+ &quot;      --sslfingerprint fingerprint that must match that of the server's &quot;
+ &quot;cert.\n&quot;
+ msgstr &quot;&quot;
++&quot;      --sslfingerprint fingerprint dat overeen moet komen met het &quot;
++&quot;servercertificaat.\n&quot;
+ 
+ #: options.c:634
+ msgid &quot;      --sslproto    force ssl protocol (SSL2/SSL3/TLS1)\n&quot;
+@@ -2192,7 +2205,7 @@
+ 
+ #: options.c:645
+ msgid &quot;  -E, --envelope    envelope address header\n&quot;
+-msgstr &quot;  -E, --envelope    envelop-adres-header\n&quot;
++msgstr &quot;  -E, --envelope    envelopadreskop\n&quot;
+ 
+ #: options.c:646
+ msgid &quot;  -Q, --qvirtual    prefix to remove from local user id\n&quot;
+@@ -2310,14 +2323,17 @@
+ &quot;Warning: \&quot;Maillennium POP3/PROXY server\&quot; found, using RETR command instead &quot;
+ &quot;of TOP.\n&quot;
+ msgstr &quot;&quot;
++&quot;Waarschuwing: \&quot;Maillennium POP3/PROXY server\&quot; gevonden, gebruik RETR-&quot;
++&quot;commando in plaats van TOP.\n&quot;
+ 
+ #: pop3.c:454
+ msgid &quot;TLS is mandatory for this session, but server refused CAPA command.\n&quot;
+ msgstr &quot;&quot;
++&quot;TLS is verplicht voor deze sessie, maar de server weigert CAPA-opdracht.\n&quot;
+ 
+ #: pop3.c:455
+ msgid &quot;The CAPA command is however necessary for TLS.\n&quot;
+-msgstr &quot;&quot;
++msgstr &quot;De CAPA-opdracht is echter nodig voor TLS.\n&quot;
+ 
+ #: pop3.c:538
+ #, c-format
+@@ -2327,6 +2343,8 @@
+ #: pop3.c:646
+ msgid &quot;We've run out of allowed authenticators and cannot continue.\n&quot;
+ msgstr &quot;&quot;
++&quot;Het maximum aantal toegestane authenticators is bereikt, kan niet verder &quot;
++&quot;gaan.\n&quot;
+ 
+ #: pop3.c:660
+ msgid &quot;Required APOP timestamp not found in greeting\n&quot;
+@@ -2350,11 +2368,11 @@
+ 
+ #: pop3.c:809
+ msgid &quot;Cannot handle UIDL response from upstream server.\n&quot;
+-msgstr &quot;&quot;
++msgstr &quot;UIDL-respons van upstreamserver kan niet worden verwerkt.\n&quot;
+ 
+ #: pop3.c:832
+ msgid &quot;Server responded with UID for wrong message.\n&quot;
+-msgstr &quot;&quot;
++msgstr &quot;Server reageerde met UID voor verkeerd bericht.\n&quot;
+ 
+ #: pop3.c:859 pop3.c:1105
+ #, c-format
+@@ -2423,11 +2441,11 @@
+ msgstr &quot;Bestand %s moet een regulier bestand zijn.\n&quot;
+ 
+ #: rcfile_y.y:433
+-#, fuzzy, c-format
++#, c-format
+ msgid &quot;File %s must have no more than -rwx------ (0700) permissions.\n&quot;
+ msgstr &quot;&quot;
+-&quot;Bestandspermissies op %s mogen niet minder strak zijn dan -rwx--x--- &quot;
+-&quot;(0710).\n&quot;
++&quot;Bestandspermissies op %s mogen niet minder stringent zijn dan -rwx------ &quot;
++&quot;(0700).\n&quot;
+ 
+ #: rcfile_y.y:445
+ #, c-format
+@@ -2439,9 +2457,9 @@
+ msgstr &quot;Onbekende systeemfout&quot;
+ 
+ #: report.c:92
+-#, fuzzy, c-format
++#, c-format
+ msgid &quot;%s (log message incomplete)\n&quot;
+-msgstr &quot;%s (log-entry niet compleet)&quot;
++msgstr &quot;%s (log-entry niet compleet)\n&quot;
+ 
+ #: rfc822.c:76
+ #, c-format
+@@ -2486,7 +2504,7 @@
+ #: rpa.c:199
+ #, c-format
+ msgid &quot;Service timestamp %s\n&quot;
+-msgstr &quot;Service tijdstempel %s\n&quot;
++msgstr &quot;Service-tijdstempel %s\n&quot;
+ 
+ #: rpa.c:204
+ msgid &quot;RPA token 2 length error\n&quot;
+@@ -2531,12 +2549,12 @@
+ #: rpa.c:297
+ #, c-format
+ msgid &quot;RPA User Authentication length error: %d\n&quot;
+-msgstr &quot;RPA gebruikersidentificatie: onjuiste lengte: %d\n&quot;
++msgstr &quot;RPA-gebruikersidentificatie: onjuiste lengte: %d\n&quot;
+ 
+ #: rpa.c:302
+ #, c-format
+ msgid &quot;RPA Session key length error: %d\n&quot;
+-msgstr &quot;RPA Sessie-sleutel: onjuiste lengte: %d\n&quot;
++msgstr &quot;RPA-sessiesleutel: onjuiste lengte: %d\n&quot;
+ 
+ #: rpa.c:308
+ msgid &quot;RPA _service_ auth fail. Spoof server?\n&quot;
+@@ -2548,7 +2566,7 @@
+ 
+ #: rpa.c:344
+ msgid &quot;RPA authorisation complete\n&quot;
+-msgstr &quot;RPA authorisatie voltooid\n&quot;
++msgstr &quot;RPA-authorisatie voltooid\n&quot;
+ 
+ #: rpa.c:371
+ msgid &quot;Get response\n&quot;
+@@ -2646,7 +2664,7 @@
+ #: sink.c:220
+ #, c-format
+ msgid &quot;forwarding to %s\n&quot;
+-msgstr &quot;forwarden naar %s\n&quot;
++msgstr &quot;doorsturen naar %s\n&quot;
+ 
+ #: sink.c:306
+ msgid &quot;SMTP: (bounce-message body)\n&quot;
+@@ -2669,7 +2687,7 @@
+ 
+ #: sink.c:550
+ msgid &quot;SMTP server requires STARTTLS, keeping message.\n&quot;
+-msgstr &quot;&quot;
++msgstr &quot;SMTP-server vereist STARTTLS, bericht behouden.\n&quot;
+ 
+ #: sink.c:730
+ #, c-format
+@@ -2702,7 +2720,7 @@
+ #: sink.c:1061
+ #, c-format
+ msgid &quot;no address matches; forwarding to %s.\n&quot;
+-msgstr &quot;geen adres komt overeen; forwarden naar %s.\n&quot;
++msgstr &quot;geen adres komt overeen; doorsturen naar %s.\n&quot;
+ 
+ #: sink.c:1217
+ #, c-format
+@@ -2743,7 +2761,7 @@
+ msgid &quot;&quot;
+ &quot;Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n&quot;
+ msgstr &quot;&quot;
+-&quot;VreemdRaar: pclose() van MDA gaf %d terug en foutcode %d/%s;\n&quot;
++&quot;Vreemd: pclose() van MDA gaf %d terug en foutcode %d/%s;\n&quot;
+ &quot;kan dit niet verwerken, op %s:%d\n&quot;
+ 
+ #: sink.c:1395
+@@ -2901,19 +2919,17 @@
+ msgstr &quot;Ongeldig certificaat: Subject CN is te lang!\n&quot;
+ 
+ #: socket.c:644
+-#, fuzzy
+ msgid &quot;Bad certificate: Subject CommonName contains NUL, aborting!\n&quot;
+-msgstr &quot;Ongeldig certificaat: Subject CN is te lang!\n&quot;
++msgstr &quot;Ongeldig certificaat: Subject CommonNane bevat NUL, afbreken!\n&quot;
+ 
+ #: socket.c:665
+ #, c-format
+ msgid &quot;Subject Alternative Name: %s\n&quot;
+-msgstr &quot;&quot;
++msgstr &quot;Subject Alternative Name: %s\n&quot;
+ 
+ #: socket.c:671
+-#, fuzzy
+ msgid &quot;Bad certificate: Subject Alternative Name contains NUL, aborting!\n&quot;
+-msgstr &quot;Ongeldig certificaat: Subject CN is te lang!\n&quot;
++msgstr &quot;Ongeldig certificaat: Subject Alternative Name bevat NUL, afbreken!\n&quot;
+ 
+ #: socket.c:699
+ #, c-format
+@@ -2942,7 +2958,7 @@
+ 
+ #: socket.c:737
+ msgid &quot;Digest text buffer too small!\n&quot;
+-msgstr &quot;Tekstbuffer voor digest is te klein!\n&quot;
++msgstr &quot;Tekstbuffer voor controlegetal is te klein!\n&quot;
+ 
+ #: socket.c:743
+ #, c-format
+@@ -2974,7 +2990,7 @@
+ msgstr &quot;Bestandsdescriptor valt buiten bereik voor SSL&quot;
+ 
+ #: socket.c:867
+-#, fuzzy, c-format
++#, c-format
+ msgid &quot;Invalid SSL protocol '%s' specified, using default (SSLv23).\n&quot;
+ msgstr &quot;&quot;
+ &quot;Ongeldig SSL-protocol '%s' opgegeven; standaard (SSLv23) wordt gebruikt.\n&quot;
+@@ -3006,7 +3022,7 @@
+ #: transact.c:154
+ #, c-format
+ msgid &quot;passed through %s matching %s\n&quot;
+-msgstr &quot;&quot;
++msgstr &quot;via %s overeenkomend met %s\n&quot;
+ 
+ #: transact.c:224
+ #, c-format
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000500.html">[fetchmail-svn] r5442 - branches/BRANCH_6-3/po
+</A></li>
+	<LI>Next message: <A HREF="000502.html">[fetchmail-svn] r5444 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#501">[ date ]</a>
+              <a href="thread.html#501">[ thread ]</a>
+              <a href="subject.html#501">[ subject ]</a>
+              <a href="author.html#501">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

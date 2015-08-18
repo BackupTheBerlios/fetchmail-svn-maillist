@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5134 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2007-November/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5134%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20071106153944.1C69321800A%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000123.html">
+   <LINK REL="Next"  HREF="000125.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5134 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5134%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20071106153944.1C69321800A%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5134 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Tue Nov  6 16:39:44 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000123.html">[fetchmail-svn] r5133 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000125.html">[fetchmail-svn] r5135 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#124">[ date ]</a>
+              <a href="thread.html#124">[ thread ]</a>
+              <a href="subject.html#124">[ subject ]</a>
+              <a href="author.html#124">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2007-11-06 09:39:43 -0600 (Tue, 06 Nov 2007)
+New Revision: 5134
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/fetchmail.h
+Log:
+Remove FETCHMAIL_DEBUG diversion that couldn't be officially enabled and was
+prone to symlink attacks. Found by Nico Golde.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2007-11-06 09:01:12 UTC (rev 5133)
++++ branches/BRANCH_6-3/NEWS	2007-11-06 15:39:43 UTC (rev 5134)
+@@ -67,6 +67,11 @@
+   Fixes Debian Bug#421446 (Holger Leskien), Novell Bug #247233 (Jon Nelson).
+   Thanks to Matthias Strau&#223; for a configuration to reproduce the issue.
+ 
++# CHANGES:
++* Removed dead FETCHMAIL_DEBUG code from fetchmail.h that was disabled by 
++  default with no switches in configure to enable it. However, the macro would 
++  have been prone to a symlink attack. Found by Nico Golde.
++
+ # DOCUMENTATION:
+ * Add fetchmail-SA-2007-02.txt
+ * Re-add two lines to the manual page that had accidentally become comments 
+
+Modified: branches/BRANCH_6-3/fetchmail.h
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.h	2007-11-06 09:01:12 UTC (rev 5133)
++++ branches/BRANCH_6-3/fetchmail.h	2007-11-06 15:39:43 UTC (rev 5134)
+@@ -716,18 +716,6 @@
+ char *stpcpy(char *, const char*);
+ #endif
+ 
+-#ifdef FETCHMAIL_DEBUG
+-#define exit(e) do { \
+-       FILE *out; \
+-       out = fopen(&quot;/tmp/fetchmail.log&quot;, &quot;a&quot;); \
+-       fprintf(out, \
+-               &quot;Exiting fetchmail from file %s, line %d with status %d\n&quot;, \
+-               __FILE__, __LINE__, e); \
+-       fclose(out); \
+-       _exit(e); \
+-       } while(0)
+-#endif /* FETCHMAIL_DEBUG */
+-
+ #ifdef __CYGWIN__
+ #define ROOT_UID 18
+ #else /* !__CYGWIN__ */
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000123.html">[fetchmail-svn] r5133 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000125.html">[fetchmail-svn] r5135 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#124">[ date ]</a>
+              <a href="thread.html#124">[ thread ]</a>
+              <a href="subject.html#124">[ subject ]</a>
+              <a href="author.html#124">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

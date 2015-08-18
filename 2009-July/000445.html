@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5385 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-July/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5385%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090708142403.7FE7721F372%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000444.html">
+   <LINK REL="Next"  HREF="000446.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5385 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5385%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090708142403.7FE7721F372%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5385 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Wed Jul  8 16:24:03 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000444.html">[fetchmail-svn] r5384 - branches/BRANCH_MAPI
+</A></li>
+        <LI>Next message: <A HREF="000446.html">[fetchmail-svn] r5386 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#445">[ date ]</a>
+              <a href="thread.html#445">[ thread ]</a>
+              <a href="subject.html#445">[ subject ]</a>
+              <a href="author.html#445">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-07-08 09:24:02 -0500 (Wed, 08 Jul 2009)
+New Revision: 5385
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+Log:
+Fix statement about logfile/syslog ordering.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-07-06 21:28:22 UTC (rev 5384)
++++ branches/BRANCH_6-3/NEWS	2009-07-08 14:24:02 UTC (rev 5385)
+@@ -109,7 +109,7 @@
+ * Make the comparison of the SSL fingerprints case insensitive, to
+   ease its use. Suggested by Daniel Richard G.
+ * Proper precedence ordering for the syslog and logfile options. If the logfile
+-  option is effective (i. e. we're not in daemon mode and nodetach isn't used),
++  option is effective (i. e. we're in daemon mode and nodetach isn't used),
+   reset the syslog option. If logfile is ineffective (we're not in daemon mode,
+   or nodetach is set), syslog takes precedence.
+ * The sleeping at/awakened at messages appear in logfiles and syslog only if
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000444.html">[fetchmail-svn] r5384 - branches/BRANCH_MAPI
+</A></li>
+	<LI>Next message: <A HREF="000446.html">[fetchmail-svn] r5386 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#445">[ date ]</a>
+              <a href="thread.html#445">[ thread ]</a>
+              <a href="subject.html#445">[ subject ]</a>
+              <a href="author.html#445">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

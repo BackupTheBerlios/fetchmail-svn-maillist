@@ -1,0 +1,1637 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5039 - in branches/BRANCH_6-3: . po
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2007-February/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5039%20-%20in%20branches/BRANCH_6-3%3A%20.%20po&In-Reply-To=%3C20070218190236.29EBA218001%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000031.html">
+   <LINK REL="Next"  HREF="000033.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5039 - in branches/BRANCH_6-3: . po</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5039%20-%20in%20branches/BRANCH_6-3%3A%20.%20po&In-Reply-To=%3C20070218190236.29EBA218001%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5039 - in branches/BRANCH_6-3: . po">svn at mknod.org
+       </A><BR>
+    <I>Sun Feb 18 20:02:36 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000031.html">[fetchmail-svn] r5038 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000033.html">[fetchmail-svn] r5040 - in branches/BRANCH_6-3: . po
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#32">[ date ]</a>
+              <a href="thread.html#32">[ thread ]</a>
+              <a href="subject.html#32">[ subject ]</a>
+              <a href="author.html#32">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2007-02-18 13:02:35 -0600 (Sun, 18 Feb 2007)
+New Revision: 5039
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/driver.c
+   branches/BRANCH_6-3/po/de.po
+   branches/BRANCH_6-3/po/en_GB.po
+   branches/BRANCH_6-3/po/fr.po
+Log:
+Fix pluralization in oversized-messages warning.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2007-02-18 16:50:09 UTC (rev 5038)
++++ branches/BRANCH_6-3/NEWS	2007-02-18 19:02:35 UTC (rev 5039)
+@@ -42,20 +42,11 @@
+ 
+ --------------------------------------------------------------------------------
+ 
+-fetchmail 6.3.7 (released 2007-02-18):
++fetchmail 6.3.8 (not yet released):
+ 
+-# FIXES FOR REGRESSIONS IN 6.3.6
+-* Fix KPOP. Patch by Miloslav Trmac.
+-* Fix repoll when server disconnects after opportunistic TLS failed for POP3.
+-  Berlios Bug #10133 = Gentoo Bug #163782 reported by Andrej Kacian.
++# BUG FIXES:
++* Fix pluralization of oversized-message warning mails.
+ 
+-# TRANSLATION UPDATES
+-* Japanese (Takeshi Hamasaki), Polish (Jakub Bogusz)
+-
+-# CHANGES
+-* Consider getaddrinfo() on Darwin 9 (Mac OS X 10.5 &quot;Leopard&quot;) thread-safe.
+-  Reported by Uli Zappe.
+-
+ # KNOWN BUGS AND WORKAROUNDS:
+   (this section floats upwards through the NEWS file so it stays with the
+   current release information)
+@@ -74,6 +65,22 @@
+ * some of the documentation is still not up to date
+ 
+ 
++
++fetchmail 6.3.7 (released 2007-02-18):
++
++# FIXES FOR REGRESSIONS IN 6.3.6
++* Fix KPOP. Patch by Miloslav Trmac.
++* Fix repoll when server disconnects after opportunistic TLS failed for POP3.
++  Berlios Bug #10133 = Gentoo Bug #163782 reported by Andrej Kacian.
++
++# TRANSLATION UPDATES
++* Japanese (Takeshi Hamasaki), Polish (Jakub Bogusz)
++
++# CHANGES
++* Consider getaddrinfo() on Darwin 9 (Mac OS X 10.5 &quot;Leopard&quot;) thread-safe.
++  Reported by Uli Zappe.
++
++
+ fetchmail 6.3.6 (released 2007-01-04):
+ 
+ # SECURITY FIXES:
+
+Modified: branches/BRANCH_6-3/driver.c
+===================================================================
+--- branches/BRANCH_6-3/driver.c	2007-02-18 16:50:09 UTC (rev 5038)
++++ branches/BRANCH_6-3/driver.c	2007-02-18 19:02:35 UTC (rev 5039)
+@@ -359,11 +359,13 @@
+ 	    size = atoi(current-&gt;id);
+ 	    if (ctl-&gt;limitflush)
+ 		stuff_warning(NULL, ctl,
+-			GT_(&quot;  %d msg %d octets long deleted by fetchmail.&quot;),
++			ngettext(&quot;  %d message  %d octets long deleted by fetchmail.&quot;,
++			         &quot;  %d messages %d octets long deleted by fetchmail.&quot;, nbr),
+ 			nbr, size);
+ 	    else
+ 		stuff_warning(NULL, ctl,
+-			GT_(&quot;  %d msg %d octets long skipped by fetchmail.&quot;),
++			ngettext(&quot;  %d message  %d octets long skipped by fetchmail.&quot;,
++			         &quot;  %d messages %d octets long skipped by fetchmail.&quot;, nbr),
+ 			nbr, size);
+ 	}
+ 	current-&gt;val.status.num++;
+
+Modified: branches/BRANCH_6-3/po/de.po
+===================================================================
+--- branches/BRANCH_6-3/po/de.po	2007-02-18 16:50:09 UTC (rev 5038)
++++ branches/BRANCH_6-3/po/de.po	2007-02-18 19:02:35 UTC (rev 5039)
+@@ -8,7 +8,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: de\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-02-03 01:17+0100\n&quot;
++&quot;POT-Creation-Date: 2007-02-18 19:57+0100\n&quot;
+ &quot;PO-Revision-Date: 2006-11-27 04:32+0100\n&quot;
+ &quot;Last-Translator: Matthias Andree &lt;matthias.andree&gt;\n&quot;
+ &quot;Language-Team: Deutsch &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">de at li.org</A>&gt;\n&quot;
+@@ -82,59 +82,63 @@
+ 
+ #: driver.c:362
+ #, c-format
+-msgid &quot;  %d msg %d octets long deleted by fetchmail.&quot;
+-msgstr &quot;  %d Nachricht, %d Bytes lang, von fetchmail ausgelassen.&quot;
++msgid &quot;  %d message  %d octets long deleted by fetchmail.&quot;
++msgid_plural &quot;  %d messages %d octets long deleted by fetchmail.&quot;
++msgstr[0] &quot;  %d Nachricht,   %d Bytes lang, von fetchmail ausgelassen.&quot;
++msgstr[1] &quot;  %d Nachrichten, %d Bytes lang, von fetchmail ausgelassen.&quot;
+ 
+-#: driver.c:366
++#: driver.c:367
+ #, c-format
+-msgid &quot;  %d msg %d octets long skipped by fetchmail.&quot;
+-msgstr &quot;  %d Nachricht, %d Bytes lang, von fetchmail ausgelassen.&quot;
++msgid &quot;  %d message  %d octets long skipped by fetchmail.&quot;
++msgid_plural &quot;  %d messages %d octets long skipped by fetchmail.&quot;
++msgstr[0] &quot;  %d Nachricht,   %d Bytes lang, von fetchmail ausgelassen.&quot;
++msgstr[1] &quot;  %d Nachrichten, %d Bytes lang, von fetchmail ausgelassen.&quot;
+ 
+-#: driver.c:501
++#: driver.c:503
+ #, c-format
+ msgid &quot;skipping message %s@%s:%d&quot;
+ msgstr &quot;Nachricht %s@%s:%d wird ausgelassen&quot;
+ 
+-#: driver.c:555
++#: driver.c:557
+ #, c-format
+ msgid &quot;skipping message %s@%s:%d (%d octets)&quot;
+ msgstr &quot;Nachricht %s@%s:%d (%d Bytes) wird ausgelassen&quot;
+ 
+-#: driver.c:571
++#: driver.c:573
+ msgid &quot; (length -1)&quot;
+ msgstr &quot; (L&#228;nge -1)&quot;
+ 
+-#: driver.c:574
++#: driver.c:576
+ msgid &quot; (oversized)&quot;
+ msgstr &quot; (&#252;bergro&#223;)&quot;
+ 
+-#: driver.c:589
++#: driver.c:591
+ #, c-format
+ msgid &quot;couldn't fetch headers, message %s@%s:%d (%d octets)\n&quot;
+ msgstr &quot;&quot;
+ &quot;Kopfzeilen konnten nicht geholt werden, Nachricht %s@%s:%d (%d Bytes)\n&quot;
+ 
+-#: driver.c:606
++#: driver.c:608
+ #, c-format
+ msgid &quot;reading message %s@%s:%d of %d&quot;
+ msgstr &quot;Nachricht %s@%s:%d von %d wird gelesen&quot;
+ 
+-#: driver.c:611
++#: driver.c:613
+ #, c-format
+ msgid &quot; (%d octets)&quot;
+ msgstr &quot; (%d Bytes)&quot;
+ 
+-#: driver.c:612
++#: driver.c:614
+ #, c-format
+ msgid &quot; (%d header octets)&quot;
+ msgstr &quot; (%d Bytes im Nachrichtenkopf)&quot;
+ 
+-#: driver.c:680
++#: driver.c:682
+ #, c-format
+ msgid &quot; (%d body octets)&quot;
+ msgstr &quot; (%d Bytes im Nachrichtenk&#246;rper)&quot;
+ 
+-#: driver.c:741
++#: driver.c:743
+ #, c-format
+ msgid &quot;&quot;
+ &quot;message %s@%s:%d was not the expected length (%d actual != %d expected)\n&quot;
+@@ -142,19 +146,19 @@
+ &quot;Nachricht %s@%s:%d hatte nicht die erwartete L&#228;nge (%d tats&#228;chlich != %d &quot;
+ &quot;erwartet)\n&quot;
+ 
+-#: driver.c:772
++#: driver.c:774
+ msgid &quot; retained\n&quot;
+ msgstr &quot; aufbewahrt\n&quot;
+ 
+-#: driver.c:782
++#: driver.c:784
+ msgid &quot; flushed\n&quot;
+ msgstr &quot; gel&#246;scht\n&quot;
+ 
+-#: driver.c:799
++#: driver.c:801
+ msgid &quot; not flushed\n&quot;
+ msgstr &quot; nicht gel&#246;scht\n&quot;
+ 
+-#: driver.c:817
++#: driver.c:819
+ #, c-format
+ msgid &quot;fetchlimit %d reached; %d message left on server %s account %s\n&quot;
+ msgid_plural &quot;&quot;
+@@ -164,40 +168,40 @@
+ msgstr[1] &quot;&quot;
+ &quot;fetchlimit %d erreicht; %d Nachrichten auf Server %s Konto %s verblieben\n&quot;
+ 
+-#: driver.c:874
++#: driver.c:876
+ #, c-format
+ msgid &quot;timeout after %d seconds waiting to connect to server %s.\n&quot;
+ msgstr &quot;&quot;
+ &quot;Zeit&#252;berschreitung nach %d Sekunden beim Warten auf Verbindung mit Server %&quot;
+ &quot;s.\n&quot;
+ 
+-#: driver.c:878
++#: driver.c:880
+ #, c-format
+ msgid &quot;timeout after %d seconds waiting for server %s.\n&quot;
+ msgstr &quot;Zeit&#252;berschreitung nach %d Sekunden beim Warten auf Server %s.\n&quot;
+ 
+-#: driver.c:882
++#: driver.c:884
+ #, c-format
+ msgid &quot;timeout after %d seconds waiting for %s.\n&quot;
+ msgstr &quot;Zeit&#252;berschreitung nach %d Sekunden beim Warten auf %s.\n&quot;
+ 
+-#: driver.c:887
++#: driver.c:889
+ #, c-format
+ msgid &quot;timeout after %d seconds waiting for listener to respond.\n&quot;
+ msgstr &quot;&quot;
+ &quot;Zeit&#252;berschreitung nach %d Sekunden beim Warten Antwort des SMTP/LMTP-&quot;
+ &quot;Servers.\n&quot;
+ 
+-#: driver.c:890
++#: driver.c:892
+ #, c-format
+ msgid &quot;timeout after %d seconds.\n&quot;
+ msgstr &quot;Zeit&#252;berschreitung nach %d Sekunden.\n&quot;
+ 
+-#: driver.c:902
++#: driver.c:904
+ msgid &quot;Subject: fetchmail sees repeated timeouts&quot;
+ msgstr &quot;Subject: fetchmail erlebt wiederholte Zeit&#252;berschreitungen&quot;
+ 
+-#: driver.c:905
++#: driver.c:907
+ #, c-format
+ msgid &quot;&quot;
+ &quot;Fetchmail saw more than %d timeouts while attempting to get mail from %s@%&quot;
+@@ -206,7 +210,7 @@
+ &quot;Fetchmail hat mehr als %d Zeit&#252;berschreitungen erhalten beim Versuch, Mail &quot;
+ &quot;von %s@%s abzuholen.\n&quot;
+ 
+-#: driver.c:909
++#: driver.c:911
+ msgid &quot;&quot;
+ &quot;This could mean that your mailserver is stuck, or that your SMTP\n&quot;
+ &quot;server is wedged, or that your mailbox file on the server has been\n&quot;
+@@ -223,74 +227,74 @@
+ &quot;\n&quot;
+ &quot;Fetchmail wird diese Mailbox nicht mehr abfragen, bis Sie es erneut starten\n&quot;
+ 
+-#: driver.c:934
++#: driver.c:936
+ #, c-format
+ msgid &quot;pre-connection command failed with status %d\n&quot;
+ msgstr &quot;Vor-Verbindungs-Befehl scheiterte mit Status %d\n&quot;
+ 
+-#: driver.c:958
++#: driver.c:960
+ #, c-format
+ msgid &quot;couldn't find HESIOD pobox for %s\n&quot;
+ msgstr &quot;konnte das HESIOD-Postfach f&#252;r %s nicht finden\n&quot;
+ 
+-#: driver.c:979
++#: driver.c:981
+ msgid &quot;Lead server has no name.\n&quot;
+ msgstr &quot;Erster Server hat keinen Namen.\n&quot;
+ 
+-#: driver.c:1003
++#: driver.c:1005
+ #, c-format
+ msgid &quot;couldn't find canonical DNS name of %s (%s): %s\n&quot;
+ msgstr &quot;konnte kanonischen DNS-Namen von %s (%s) nicht finden: %s\n&quot;
+ 
+-#: driver.c:1050
++#: driver.c:1052
+ #, c-format
+ msgid &quot;%s connection to %s failed&quot;
+ msgstr &quot;%s-Verbindung zu %s fehlgeschlagen&quot;
+ 
+-#: driver.c:1066
++#: driver.c:1068
+ msgid &quot;Subject: Fetchmail unreachable-server warning.&quot;
+ msgstr &quot;Subject: Fetchmail-Warnung: Server nicht erreichbar.&quot;
+ 
+-#: driver.c:1068
++#: driver.c:1070
+ #, c-format
+ msgid &quot;Fetchmail could not reach the mail server %s:&quot;
+ msgstr &quot;Fetchmail konnte keine Mail von %s erhalten:&quot;
+ 
+-#: driver.c:1094
++#: driver.c:1096
+ msgid &quot;SSL connection failed.\n&quot;
+ msgstr &quot;SSL-Verbindung fehlgeschlagen.\n&quot;
+ 
+-#: driver.c:1147
++#: driver.c:1149
+ #, c-format
+ msgid &quot;Lock-busy error on %s@%s\n&quot;
+ msgstr &quot;Lock-besch&#228;ftigt-Fehler bei %s@%s\n&quot;
+ 
+-#: driver.c:1151
++#: driver.c:1153
+ #, c-format
+ msgid &quot;Server busy error on %s@%s\n&quot;
+ msgstr &quot;Server-besch&#228;ftigt-Fehler bei %s@%s\n&quot;
+ 
+-#: driver.c:1156
++#: driver.c:1158
+ #, c-format
+ msgid &quot;Authorization failure on %s@%s%s\n&quot;
+ msgstr &quot;Authentifikationsfehlschlag bei %s@%s%s\n&quot;
+ 
+-#: driver.c:1159
++#: driver.c:1161
+ msgid &quot; (previously authorized)&quot;
+ msgstr &quot; (vormals autorisiert)&quot;
+ 
+-#: driver.c:1180
++#: driver.c:1182
+ #, c-format
+ msgid &quot;Subject: fetchmail authentication failed on %s@%s&quot;
+ msgstr &quot;Subject: Fetchmail: Authentifikation fehlgeschlagen bei %s@%s&quot;
+ 
+-#: driver.c:1184
++#: driver.c:1186
+ #, c-format
+ msgid &quot;Fetchmail could not get mail from %s@%s.\n&quot;
+ msgstr &quot;Fetchmail konnte keine Mail von %s@%s erhalten.\n&quot;
+ 
+ #
+-#: driver.c:1188
++#: driver.c:1190
+ msgid &quot;&quot;
+ &quot;The attempt to get authorization failed.\n&quot;
+ &quot;Since we have already succeeded in getting authorization for this\n&quot;
+@@ -305,7 +309,7 @@
+ &quot;brauchbare Fehlermeldung geliefert hat.&quot;
+ 
+ #
+-#: driver.c:1194
++#: driver.c:1196
+ msgid &quot;&quot;
+ &quot;\n&quot;
+ &quot;However, if you HAVE changed your account details since starting the\n&quot;
+@@ -327,7 +331,7 @@
+ &quot;Wiederherstellung des Dienstes keine weiteren Meldungen gesendet.&quot;
+ 
+ #
+-#: driver.c:1204
++#: driver.c:1206
+ msgid &quot;&quot;
+ &quot;The attempt to get authorization failed.\n&quot;
+ &quot;This probably means your password is invalid, but some servers have\n&quot;
+@@ -349,168 +353,168 @@
+ &quot;versuchen, eine Verbindung herzustellen. Es werden bis zur\n&quot;
+ &quot;Wiederherstellung des Dienstes keine weiteren Meldungen gesendet.&quot;
+ 
+-#: driver.c:1220
++#: driver.c:1222
+ #, c-format
+ msgid &quot;Repoll immediately on %s@%s\n&quot;
+ msgstr &quot;Sofortige erneute Abfrage von %s@%s\n&quot;
+ 
+-#: driver.c:1225
++#: driver.c:1227
+ #, c-format
+ msgid &quot;Unknown login or authentication error on %s@%s\n&quot;
+ msgstr &quot;Unbekannter Einlogg- oder Authentifikationsfehler bei %s@%s\n&quot;
+ 
+-#: driver.c:1249
++#: driver.c:1251
+ #, c-format
+ msgid &quot;Authorization OK on %s@%s\n&quot;
+ msgstr &quot;Authentifikation OK bei %s@%s\n&quot;
+ 
+-#: driver.c:1255
++#: driver.c:1257
+ #, c-format
+ msgid &quot;Subject: fetchmail authentication OK on %s@%s&quot;
+ msgstr &quot;Subject: Fetchmail: Authentifikation OK bei %s@%s&quot;
+ 
+-#: driver.c:1259
++#: driver.c:1261
+ #, c-format
+ msgid &quot;Fetchmail was able to log into %s@%s.\n&quot;
+ msgstr &quot;Fetchmail war in der Lage, sich bei %s@%s einzuloggen.\n&quot;
+ 
+ #
+-#: driver.c:1263
++#: driver.c:1265
+ msgid &quot;Service has been restored.\n&quot;
+ msgstr &quot;Der Dienst ist wieder hergestellt.\n&quot;
+ 
+-#: driver.c:1295
++#: driver.c:1297
+ #, c-format
+ msgid &quot;selecting or re-polling folder %s\n&quot;
+ msgstr &quot;Ordner %s wird gew&#228;hlt oder erneut abgefragt\n&quot;
+ 
+-#: driver.c:1297
++#: driver.c:1299
+ msgid &quot;selecting or re-polling default folder\n&quot;
+ msgstr &quot;Vorgabe-Ordner wird gew&#228;hlt oder erneut abgefragt\n&quot;
+ 
+-#: driver.c:1309
++#: driver.c:1311
+ #, c-format
+ msgid &quot;%s at %s (folder %s)&quot;
+ msgstr &quot;%s bei %s (Ordner %s)&quot;
+ 
+-#: driver.c:1312 rcfile_y.y:381
++#: driver.c:1314 rcfile_y.y:381
+ #, c-format
+ msgid &quot;%s at %s&quot;
+ msgstr &quot;%s bei %s&quot;
+ 
+-#: driver.c:1317
++#: driver.c:1319
+ #, c-format
+ msgid &quot;Polling %s\n&quot;
+ msgstr &quot;Frage %s ab\n&quot;
+ 
+-#: driver.c:1321
++#: driver.c:1323
+ #, c-format
+ msgid &quot;%d message (%d %s) for %s&quot;
+ msgid_plural &quot;%d messages (%d %s) for %s&quot;
+ msgstr[0] &quot;%d Nachricht (%d %s) f&#252;r %s&quot;
+ msgstr[1] &quot;%d Nachrichten (%d %s) f&#252;r %s&quot;
+ 
+-#: driver.c:1324
++#: driver.c:1326
+ msgid &quot;seen&quot;
+ msgid_plural &quot;seen&quot;
+ msgstr[0] &quot;gesehene&quot;
+ msgstr[1] &quot;gesehene&quot;
+ 
+-#: driver.c:1327
++#: driver.c:1329
+ #, c-format
+ msgid &quot;%d message for %s&quot;
+ msgid_plural &quot;%d messages for %s&quot;
+ msgstr[0] &quot;%d Nachricht f&#252;r %s&quot;
+ msgstr[1] &quot;%d Nachrichten f&#252;r %s&quot;
+ 
+-#: driver.c:1334
++#: driver.c:1336
+ #, c-format
+ msgid &quot; (%d octets).\n&quot;
+ msgstr &quot; (%d Bytes).\n&quot;
+ 
+-#: driver.c:1340
++#: driver.c:1342
+ #, c-format
+ msgid &quot;No mail for %s\n&quot;
+ msgstr &quot;Keine Post f&#252;r %s\n&quot;
+ 
+-#: driver.c:1373 imap.c:90
++#: driver.c:1375 imap.c:90
+ msgid &quot;bogus message count!&quot;
+ msgstr &quot;ung&#252;ltige Nachrichtenanzahl!&quot;
+ 
+-#: driver.c:1515
++#: driver.c:1517
+ msgid &quot;socket&quot;
+ msgstr &quot;Socket&quot;
+ 
+-#: driver.c:1518
++#: driver.c:1520
+ msgid &quot;missing or bad RFC822 header&quot;
+ msgstr &quot;fehlende oder fehlerhafte RFC822-Kopfzeile&quot;
+ 
+-#: driver.c:1521
++#: driver.c:1523
+ msgid &quot;MDA&quot;
+ msgstr &quot;MDA&quot;
+ 
+-#: driver.c:1524
++#: driver.c:1526
+ msgid &quot;client/server synchronization&quot;
+ msgstr &quot;Klient/Server-Synchronisation&quot;
+ 
+-#: driver.c:1527
++#: driver.c:1529
+ msgid &quot;client/server protocol&quot;
+ msgstr &quot;Klient/Server-Protokoll&quot;
+ 
+-#: driver.c:1530
++#: driver.c:1532
+ msgid &quot;lock busy on server&quot;
+ msgstr &quot;Lock auf Server besch&#228;ftigt&quot;
+ 
+-#: driver.c:1533
++#: driver.c:1535
+ msgid &quot;SMTP transaction&quot;
+ msgstr &quot;SMTP-Transaktion&quot;
+ 
+-#: driver.c:1536
++#: driver.c:1538
+ msgid &quot;DNS lookup&quot;
+ msgstr &quot;DNS-Nachschlag&quot;
+ 
+-#: driver.c:1539
++#: driver.c:1541
+ msgid &quot;undefined&quot;
+ msgstr &quot;undefinierter&quot;
+ 
+-#: driver.c:1545
++#: driver.c:1547
+ #, c-format
+ msgid &quot;%s error while fetching from %s@%s and delivering to SMTP host %s\n&quot;
+ msgstr &quot;%s-Fehler beim Abholen von %s@%s und Auslieferung zum SMTP-Host %s\n&quot;
+ 
+-#: driver.c:1547
++#: driver.c:1549
+ msgid &quot;unknown&quot;
+ msgstr &quot;unbekannt&quot;
+ 
+-#: driver.c:1549
++#: driver.c:1551
+ #, c-format
+ msgid &quot;%s error while fetching from %s@%s\n&quot;
+ msgstr &quot;%s-Fehler beim Abholen von %s@%s\n&quot;
+ 
+-#: driver.c:1560
++#: driver.c:1562
+ #, c-format
+ msgid &quot;post-connection command failed with status %d\n&quot;
+ msgstr &quot;Nach-Verbindungs-Befehl scheiterte mit Status %d\n&quot;
+ 
+-#: driver.c:1579
++#: driver.c:1581
+ msgid &quot;Kerberos V4 support not linked.\n&quot;
+ msgstr &quot;Kerberos-V4-Unterst&#252;tzung nicht vorhanden.\n&quot;
+ 
+-#: driver.c:1587
++#: driver.c:1589
+ msgid &quot;Kerberos V5 support not linked.\n&quot;
+ msgstr &quot;Kerberos-V5-Unterst&#252;tzung nicht vorhanden.\n&quot;
+ 
+-#: driver.c:1598
++#: driver.c:1600
+ #, c-format
+ msgid &quot;Option --flush is not supported with %s\n&quot;
+ msgstr &quot;Option --flush ist mit %s nicht unterst&#252;tzt\n&quot;
+ 
+-#: driver.c:1604
++#: driver.c:1606
+ #, c-format
+ msgid &quot;Option --all is not supported with %s\n&quot;
+ msgstr &quot;Option --all ist mit %s nicht unterst&#252;tzt\n&quot;
+ 
+-#: driver.c:1613
++#: driver.c:1615
+ #, c-format
+ msgid &quot;Option --limit is not supported with %s\n&quot;
+ msgstr &quot;Option --limit ist mit %s nicht unterst&#252;tzt\n&quot;
+
+Modified: branches/BRANCH_6-3/po/en_GB.po
+===================================================================
+--- branches/BRANCH_6-3/po/en_GB.po	2007-02-18 16:50:09 UTC (rev 5038)
++++ branches/BRANCH_6-3/po/en_GB.po	2007-02-18 19:02:35 UTC (rev 5039)
+@@ -7,7 +7,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.3.5\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-02-03 01:17+0100\n&quot;
++&quot;POT-Creation-Date: 2007-02-18 19:57+0100\n&quot;
+ &quot;PO-Revision-Date: 2006-11-02 06:58-0000\n&quot;
+ &quot;Last-Translator: David Lodge &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">dave at cirt.net</A>&gt;\n&quot;
+ &quot;Language-Team: English (British) &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">en_gb at li.org</A>&gt;\n&quot;
+@@ -74,77 +74,81 @@
+ 
+ #: driver.c:362
+ #, c-format
+-msgid &quot;  %d msg %d octets long deleted by fetchmail.&quot;
+-msgstr &quot;  %d msg %d octets long deleted by fetchmail.&quot;
++msgid &quot;  %d message  %d octets long deleted by fetchmail.&quot;
++msgid_plural &quot;  %d messages %d octets long deleted by fetchmail.&quot;
++msgstr[0] &quot;  %d message  %d octets long deleted by fetchmail.&quot;
++msgstr[1] &quot;  %d messages %d octets long deleted by fetchmail.&quot;
+ 
+-#: driver.c:366
++#: driver.c:367
+ #, c-format
+-msgid &quot;  %d msg %d octets long skipped by fetchmail.&quot;
+-msgstr &quot;  %d msg %d octets long skipped by fetchmail.&quot;
++msgid &quot;  %d message  %d octets long skipped by fetchmail.&quot;
++msgid_plural &quot;  %d messages %d octets long skipped by fetchmail.&quot;
++msgstr[0] &quot;  %d message  %d octets long skipped by fetchmail.&quot;
++msgstr[1] &quot;  %d messages %d octets long skipped by fetchmail.&quot;
+ 
+-#: driver.c:501
++#: driver.c:503
+ #, c-format
+ msgid &quot;skipping message %s@%s:%d&quot;
+ msgstr &quot;skipping message %s@%s:%d&quot;
+ 
+-#: driver.c:555
++#: driver.c:557
+ #, c-format
+ msgid &quot;skipping message %s@%s:%d (%d octets)&quot;
+ msgstr &quot;skipping message %s@%s:%d (%d octets)&quot;
+ 
+-#: driver.c:571
++#: driver.c:573
+ msgid &quot; (length -1)&quot;
+ msgstr &quot; (length -1)&quot;
+ 
+-#: driver.c:574
++#: driver.c:576
+ msgid &quot; (oversized)&quot;
+ msgstr &quot; (oversized)&quot;
+ 
+-#: driver.c:589
++#: driver.c:591
+ #, c-format
+ msgid &quot;couldn't fetch headers, message %s@%s:%d (%d octets)\n&quot;
+ msgstr &quot;couldn't fetch headers, message %s@%s:%d (%d octets)\n&quot;
+ 
+-#: driver.c:606
++#: driver.c:608
+ #, c-format
+ msgid &quot;reading message %s@%s:%d of %d&quot;
+ msgstr &quot;reading message %s@%s:%d of %d&quot;
+ 
+-#: driver.c:611
++#: driver.c:613
+ #, c-format
+ msgid &quot; (%d octets)&quot;
+ msgstr &quot; (%d octets)&quot;
+ 
+-#: driver.c:612
++#: driver.c:614
+ #, c-format
+ msgid &quot; (%d header octets)&quot;
+ msgstr &quot; (%d header octets)&quot;
+ 
+-#: driver.c:680
++#: driver.c:682
+ #, c-format
+ msgid &quot; (%d body octets)&quot;
+ msgstr &quot; (%d body octets)&quot;
+ 
+-#: driver.c:741
++#: driver.c:743
+ #, c-format
+ msgid &quot;&quot;
+ &quot;message %s@%s:%d was not the expected length (%d actual != %d expected)\n&quot;
+ msgstr &quot;&quot;
+ &quot;message %s@%s:%d was not the expected length (%d actual != %d expected)\n&quot;
+ 
+-#: driver.c:772
++#: driver.c:774
+ msgid &quot; retained\n&quot;
+ msgstr &quot; retained\n&quot;
+ 
+-#: driver.c:782
++#: driver.c:784
+ msgid &quot; flushed\n&quot;
+ msgstr &quot; flushed\n&quot;
+ 
+-#: driver.c:799
++#: driver.c:801
+ msgid &quot; not flushed\n&quot;
+ msgstr &quot; not flushed\n&quot;
+ 
+-#: driver.c:817
++#: driver.c:819
+ #, c-format
+ msgid &quot;fetchlimit %d reached; %d message left on server %s account %s\n&quot;
+ msgid_plural &quot;&quot;
+@@ -152,36 +156,36 @@
+ msgstr[0] &quot;fetchlimit %d reached; %d message left on server %s account %s\n&quot;
+ msgstr[1] &quot;fetchlimit %d reached; %d messages left on server %s account %s\n&quot;
+ 
+-#: driver.c:874
++#: driver.c:876
+ #, c-format
+ msgid &quot;timeout after %d seconds waiting to connect to server %s.\n&quot;
+ msgstr &quot;timeout after %d seconds waiting to connect to server %s.\n&quot;
+ 
+-#: driver.c:878
++#: driver.c:880
+ #, c-format
+ msgid &quot;timeout after %d seconds waiting for server %s.\n&quot;
+ msgstr &quot;timeout after %d seconds waiting for server %s.\n&quot;
+ 
+-#: driver.c:882
++#: driver.c:884
+ #, c-format
+ msgid &quot;timeout after %d seconds waiting for %s.\n&quot;
+ msgstr &quot;timeout after %d seconds waiting for %s.\n&quot;
+ 
+-#: driver.c:887
++#: driver.c:889
+ #, c-format
+ msgid &quot;timeout after %d seconds waiting for listener to respond.\n&quot;
+ msgstr &quot;timeout after %d seconds waiting for listener to respond.\n&quot;
+ 
+-#: driver.c:890
++#: driver.c:892
+ #, c-format
+ msgid &quot;timeout after %d seconds.\n&quot;
+ msgstr &quot;timeout after %d seconds.\n&quot;
+ 
+-#: driver.c:902
++#: driver.c:904
+ msgid &quot;Subject: fetchmail sees repeated timeouts&quot;
+ msgstr &quot;Subject: fetchmail sees repeated timeouts&quot;
+ 
+-#: driver.c:905
++#: driver.c:907
+ #, c-format
+ msgid &quot;&quot;
+ &quot;Fetchmail saw more than %d timeouts while attempting to get mail from %s@%&quot;
+@@ -190,7 +194,7 @@
+ &quot;Fetchmail saw more than %d timeouts while attempting to get mail from %s@%&quot;
+ &quot;s.\n&quot;
+ 
+-#: driver.c:909
++#: driver.c:911
+ msgid &quot;&quot;
+ &quot;This could mean that your mailserver is stuck, or that your SMTP\n&quot;
+ &quot;server is wedged, or that your mailbox file on the server has been\n&quot;
+@@ -206,73 +210,73 @@
+ &quot;\n&quot;
+ &quot;Fetchmail won't poll this mailbox again until you restart it.\n&quot;
+ 
+-#: driver.c:934
++#: driver.c:936
+ #, c-format
+ msgid &quot;pre-connection command failed with status %d\n&quot;
+ msgstr &quot;pre-connection command failed with status %d\n&quot;
+ 
+-#: driver.c:958
++#: driver.c:960
+ #, c-format
+ msgid &quot;couldn't find HESIOD pobox for %s\n&quot;
+ msgstr &quot;couldn't find HESIOD pobox for %s\n&quot;
+ 
+-#: driver.c:979
++#: driver.c:981
+ msgid &quot;Lead server has no name.\n&quot;
+ msgstr &quot;Lead server has no name.\n&quot;
+ 
+-#: driver.c:1003
++#: driver.c:1005
+ #, c-format
+ msgid &quot;couldn't find canonical DNS name of %s (%s): %s\n&quot;
+ msgstr &quot;couldn't find canonical DNS name of %s (%s): %s\n&quot;
+ 
+-#: driver.c:1050
++#: driver.c:1052
+ #, c-format
+ msgid &quot;%s connection to %s failed&quot;
+ msgstr &quot;%s connection to %s failed&quot;
+ 
+-#: driver.c:1066
++#: driver.c:1068
+ msgid &quot;Subject: Fetchmail unreachable-server warning.&quot;
+ msgstr &quot;Subject: Fetchmail unreachable-server warning.&quot;
+ 
+-#: driver.c:1068
++#: driver.c:1070
+ #, c-format
+ msgid &quot;Fetchmail could not reach the mail server %s:&quot;
+ msgstr &quot;Fetchmail could not reach the mail server %s:&quot;
+ 
+-#: driver.c:1094
++#: driver.c:1096
+ msgid &quot;SSL connection failed.\n&quot;
+ msgstr &quot;SSL connection failed.\n&quot;
+ 
+-#: driver.c:1147
++#: driver.c:1149
+ #, c-format
+ msgid &quot;Lock-busy error on %s@%s\n&quot;
+ msgstr &quot;Lock-busy error on %s@%s\n&quot;
+ 
+-#: driver.c:1151
++#: driver.c:1153
+ #, c-format
+ msgid &quot;Server busy error on %s@%s\n&quot;
+ msgstr &quot;Server busy error on %s@%s\n&quot;
+ 
+-#: driver.c:1156
++#: driver.c:1158
+ #, c-format
+ msgid &quot;Authorization failure on %s@%s%s\n&quot;
+ msgstr &quot;Authorisation failure on %s@%s%s\n&quot;
+ 
+-#: driver.c:1159
++#: driver.c:1161
+ msgid &quot; (previously authorized)&quot;
+ msgstr &quot; (previously authorised)&quot;
+ 
+-#: driver.c:1180
++#: driver.c:1182
+ #, c-format
+ msgid &quot;Subject: fetchmail authentication failed on %s@%s&quot;
+ msgstr &quot;Subject: fetchmail authentication failed on %s@%s&quot;
+ 
+-#: driver.c:1184
++#: driver.c:1186
+ #, c-format
+ msgid &quot;Fetchmail could not get mail from %s@%s.\n&quot;
+ msgstr &quot;Fetchmail could not get mail from %s@%s.\n&quot;
+ 
+-#: driver.c:1188
++#: driver.c:1190
+ msgid &quot;&quot;
+ &quot;The attempt to get authorization failed.\n&quot;
+ &quot;Since we have already succeeded in getting authorization for this\n&quot;
+@@ -286,7 +290,7 @@
+ &quot;that fetchmail cannot distinguish because the server didn't send a useful\n&quot;
+ &quot;error message.&quot;
+ 
+-#: driver.c:1194
++#: driver.c:1196
+ msgid &quot;&quot;
+ &quot;\n&quot;
+ &quot;However, if you HAVE changed your account details since starting the\n&quot;
+@@ -306,7 +310,7 @@
+ &quot;at each cycle.  No future notifications will be sent until service\n&quot;
+ &quot;is restored.&quot;
+ 
+-#: driver.c:1204
++#: driver.c:1206
+ msgid &quot;&quot;
+ &quot;The attempt to get authorization failed.\n&quot;
+ &quot;This probably means your password is invalid, but some servers have\n&quot;
+@@ -326,167 +330,167 @@
+ &quot;at each cycle.  No future notifications will be sent until service\n&quot;
+ &quot;is restored.&quot;
+ 
+-#: driver.c:1220
++#: driver.c:1222
+ #, c-format
+ msgid &quot;Repoll immediately on %s@%s\n&quot;
+ msgstr &quot;Repoll immediately on %s@%s\n&quot;
+ 
+-#: driver.c:1225
++#: driver.c:1227
+ #, c-format
+ msgid &quot;Unknown login or authentication error on %s@%s\n&quot;
+ msgstr &quot;Unknown login or authentication error on %s@%s\n&quot;
+ 
+-#: driver.c:1249
++#: driver.c:1251
+ #, c-format
+ msgid &quot;Authorization OK on %s@%s\n&quot;
+ msgstr &quot;Authorisation OK on %s@%s\n&quot;
+ 
+-#: driver.c:1255
++#: driver.c:1257
+ #, c-format
+ msgid &quot;Subject: fetchmail authentication OK on %s@%s&quot;
+ msgstr &quot;Subject: fetchmail authentication OK on %s@%s&quot;
+ 
+-#: driver.c:1259
++#: driver.c:1261
+ #, c-format
+ msgid &quot;Fetchmail was able to log into %s@%s.\n&quot;
+ msgstr &quot;Fetchmail was able to log into %s@%s.\n&quot;
+ 
+-#: driver.c:1263
++#: driver.c:1265
+ msgid &quot;Service has been restored.\n&quot;
+ msgstr &quot;Service has been restored.\n&quot;
+ 
+-#: driver.c:1295
++#: driver.c:1297
+ #, c-format
+ msgid &quot;selecting or re-polling folder %s\n&quot;
+ msgstr &quot;selecting or re-polling folder %s\n&quot;
+ 
+-#: driver.c:1297
++#: driver.c:1299
+ msgid &quot;selecting or re-polling default folder\n&quot;
+ msgstr &quot;selecting or re-polling default folder\n&quot;
+ 
+-#: driver.c:1309
++#: driver.c:1311
+ #, c-format
+ msgid &quot;%s at %s (folder %s)&quot;
+ msgstr &quot;%s at %s (folder %s)&quot;
+ 
+-#: driver.c:1312 rcfile_y.y:381
++#: driver.c:1314 rcfile_y.y:381
+ #, c-format
+ msgid &quot;%s at %s&quot;
+ msgstr &quot;%s at %s&quot;
+ 
+-#: driver.c:1317
++#: driver.c:1319
+ #, c-format
+ msgid &quot;Polling %s\n&quot;
+ msgstr &quot;Polling %s\n&quot;
+ 
+-#: driver.c:1321
++#: driver.c:1323
+ #, c-format
+ msgid &quot;%d message (%d %s) for %s&quot;
+ msgid_plural &quot;%d messages (%d %s) for %s&quot;
+ msgstr[0] &quot;%d message (%d %s) for %s&quot;
+ msgstr[1] &quot;%d messages (%d %s) for %s&quot;
+ 
+-#: driver.c:1324
++#: driver.c:1326
+ msgid &quot;seen&quot;
+ msgid_plural &quot;seen&quot;
+ msgstr[0] &quot;seen&quot;
+ msgstr[1] &quot;seen&quot;
+ 
+-#: driver.c:1327
++#: driver.c:1329
+ #, c-format
+ msgid &quot;%d message for %s&quot;
+ msgid_plural &quot;%d messages for %s&quot;
+ msgstr[0] &quot;%d message for %s&quot;
+ msgstr[1] &quot;%d messages for %s&quot;
+ 
+-#: driver.c:1334
++#: driver.c:1336
+ #, c-format
+ msgid &quot; (%d octets).\n&quot;
+ msgstr &quot; (%d octets).\n&quot;
+ 
+-#: driver.c:1340
++#: driver.c:1342
+ #, c-format
+ msgid &quot;No mail for %s\n&quot;
+ msgstr &quot;No mail for %s\n&quot;
+ 
+-#: driver.c:1373 imap.c:90
++#: driver.c:1375 imap.c:90
+ msgid &quot;bogus message count!&quot;
+ msgstr &quot;bogus message count!&quot;
+ 
+-#: driver.c:1515
++#: driver.c:1517
+ msgid &quot;socket&quot;
+ msgstr &quot;socket&quot;
+ 
+-#: driver.c:1518
++#: driver.c:1520
+ msgid &quot;missing or bad RFC822 header&quot;
+ msgstr &quot;missing or bad RFC822 header&quot;
+ 
+-#: driver.c:1521
++#: driver.c:1523
+ msgid &quot;MDA&quot;
+ msgstr &quot;MDA&quot;
+ 
+-#: driver.c:1524
++#: driver.c:1526
+ msgid &quot;client/server synchronization&quot;
+ msgstr &quot;client/server synchronisation&quot;
+ 
+-#: driver.c:1527
++#: driver.c:1529
+ msgid &quot;client/server protocol&quot;
+ msgstr &quot;client/server protocol&quot;
+ 
+-#: driver.c:1530
++#: driver.c:1532
+ msgid &quot;lock busy on server&quot;
+ msgstr &quot;lock busy on server&quot;
+ 
+-#: driver.c:1533
++#: driver.c:1535
+ msgid &quot;SMTP transaction&quot;
+ msgstr &quot;SMTP transaction&quot;
+ 
+-#: driver.c:1536
++#: driver.c:1538
+ msgid &quot;DNS lookup&quot;
+ msgstr &quot;DNS lookup&quot;
+ 
+-#: driver.c:1539
++#: driver.c:1541
+ msgid &quot;undefined&quot;
+ msgstr &quot;undefined&quot;
+ 
+-#: driver.c:1545
++#: driver.c:1547
+ #, c-format
+ msgid &quot;%s error while fetching from %s@%s and delivering to SMTP host %s\n&quot;
+ msgstr &quot;%s error while fetching from %s@%s and delivering to SMTP host %s\n&quot;
+ 
+-#: driver.c:1547
++#: driver.c:1549
+ msgid &quot;unknown&quot;
+ msgstr &quot;unknown&quot;
+ 
+-#: driver.c:1549
++#: driver.c:1551
+ #, c-format
+ msgid &quot;%s error while fetching from %s@%s\n&quot;
+ msgstr &quot;%s error while fetching from %s@%s\n&quot;
+ 
+-#: driver.c:1560
++#: driver.c:1562
+ #, c-format
+ msgid &quot;post-connection command failed with status %d\n&quot;
+ msgstr &quot;post-connection command failed with status %d\n&quot;
+ 
+-#: driver.c:1579
++#: driver.c:1581
+ msgid &quot;Kerberos V4 support not linked.\n&quot;
+ msgstr &quot;Kerberos V4 support not linked.\n&quot;
+ 
+-#: driver.c:1587
++#: driver.c:1589
+ msgid &quot;Kerberos V5 support not linked.\n&quot;
+ msgstr &quot;Kerberos V5 support not linked.\n&quot;
+ 
+-#: driver.c:1598
++#: driver.c:1600
+ #, c-format
+ msgid &quot;Option --flush is not supported with %s\n&quot;
+ msgstr &quot;Option --flush is not supported with %s\n&quot;
+ 
+-#: driver.c:1604
++#: driver.c:1606
+ #, c-format
+ msgid &quot;Option --all is not supported with %s\n&quot;
+ msgstr &quot;Option --all is not supported with %s\n&quot;
+ 
+-#: driver.c:1613
++#: driver.c:1615
+ #, c-format
+ msgid &quot;Option --limit is not supported with %s\n&quot;
+ msgstr &quot;Option --limit is not supported with %s\n&quot;
+@@ -619,7 +623,6 @@
+ msgstr &quot;Option --check is not supported with ETRN\n&quot;
+ 
+ #: fetchmail.c:137
+-#, fuzzy
+ msgid &quot;&quot;
+ &quot;Copyright (C) 2002, 2003 Eric S. Raymond\n&quot;
+ &quot;Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Rob F. Funk, Graham &quot;
+@@ -630,7 +633,8 @@
+ &quot;Copyright (C) 2002, 2003 Eric S. Raymond\n&quot;
+ &quot;Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Rob F. Funk, Graham &quot;
+ &quot;Wilson\n&quot;
+-&quot;Copyright (C) 2005-2006 Matthias Andree, Sunil Shetye\n&quot;
++&quot;Copyright (C) 2005-2006 Sunil Shetye\n&quot;
++&quot;Copyright (C) 2005-2007 Matthias Andree\n&quot;
+ 
+ #: fetchmail.c:142
+ msgid &quot;&quot;
+@@ -2217,11 +2221,11 @@
+ 
+ #: pop3.c:449
+ msgid &quot;TLS is mandatory for this session, but server refused CAPA command.\n&quot;
+-msgstr &quot;&quot;
++msgstr &quot;TLS is mandatory for this session, but server refused CAPA command.\n&quot;
+ 
+ #: pop3.c:450
+ msgid &quot;The CAPA command is however necessary for TLS.\n&quot;
+-msgstr &quot;&quot;
++msgstr &quot;The CAPA command is however necessary for TLS.\n&quot;
+ 
+ #: pop3.c:525
+ #, c-format
+@@ -2230,7 +2234,7 @@
+ 
+ #: pop3.c:633
+ msgid &quot;We've run out of allowed authenticators and cannot continue.\n&quot;
+-msgstr &quot;&quot;
++msgstr &quot;We've run out of allowed authenticators and cannot continue.\n&quot;
+ 
+ #: pop3.c:647
+ msgid &quot;Required APOP timestamp not found in greeting\n&quot;
+
+Modified: branches/BRANCH_6-3/po/fr.po
+===================================================================
+--- branches/BRANCH_6-3/po/fr.po	2007-02-18 16:50:09 UTC (rev 5038)
++++ branches/BRANCH_6-3/po/fr.po	2007-02-18 19:02:35 UTC (rev 5039)
+@@ -15,7 +15,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.2.9-rc9\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-02-03 01:17+0100\n&quot;
++&quot;POT-Creation-Date: 2007-02-18 19:57+0100\n&quot;
+ &quot;PO-Revision-Date: 2005-12-18 11:50+0100\n&quot;
+ &quot;Last-Translator: Matthias Andree &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">matthias.andree at gmx.de</A>&gt;\n&quot;
+ &quot;Language-Team: French &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">traduc at traduc.org</A>&gt;\n&quot;
+@@ -88,58 +88,62 @@
+ 
+ #: driver.c:362
+ #, c-format
+-msgid &quot;  %d msg %d octets long deleted by fetchmail.&quot;
+-msgstr &quot;  message %d de %d octets effac&#233; par fetchmail.&quot;
++msgid &quot;  %d message  %d octets long deleted by fetchmail.&quot;
++msgid_plural &quot;  %d messages %d octets long deleted by fetchmail.&quot;
++msgstr[0] &quot;  %d message  de %d octets effac&#233; par fetchmail.&quot;
++msgstr[1] &quot;  %d messages de %d octets effac&#233; par fetchmail.&quot;
+ 
+-#: driver.c:366
++#: driver.c:367
+ #, c-format
+-msgid &quot;  %d msg %d octets long skipped by fetchmail.&quot;
+-msgstr &quot;  message %d de %d octets ignor&#233; par fetchmail.&quot;
++msgid &quot;  %d message  %d octets long skipped by fetchmail.&quot;
++msgid_plural &quot;  %d messages %d octets long skipped by fetchmail.&quot;
++msgstr[0] &quot;  %d message  de %d octets ignor&#233; par fetchmail.&quot;
++msgstr[1] &quot;  %d messages de %d octets ignor&#233; par fetchmail.&quot;
+ 
+-#: driver.c:501
++#: driver.c:503
+ #, c-format
+ msgid &quot;skipping message %s@%s:%d&quot;
+ msgstr &quot;message %s@%s:%d ignor&#233;&quot;
+ 
+-#: driver.c:555
++#: driver.c:557
+ #, c-format
+ msgid &quot;skipping message %s@%s:%d (%d octets)&quot;
+ msgstr &quot;message %s@%s:%d ignor&#233; (%d octets)&quot;
+ 
+-#: driver.c:571
++#: driver.c:573
+ msgid &quot; (length -1)&quot;
+ msgstr &quot; (longueur -1)&quot;
+ 
+-#: driver.c:574
++#: driver.c:576
+ msgid &quot; (oversized)&quot;
+ msgstr &quot; (trop volumineux)&quot;
+ 
+-#: driver.c:589
++#: driver.c:591
+ #, c-format
+ msgid &quot;couldn't fetch headers, message %s@%s:%d (%d octets)\n&quot;
+ msgstr &quot;impossible de r&#233;cup&#233;rer l'en-t&#234;te du message %s@%s:%d (%d octets)\n&quot;
+ 
+-#: driver.c:606
++#: driver.c:608
+ #, c-format
+ msgid &quot;reading message %s@%s:%d of %d&quot;
+ msgstr &quot;lecture du message %s@%s:%d parmi %d&quot;
+ 
+-#: driver.c:611
++#: driver.c:613
+ #, c-format
+ msgid &quot; (%d octets)&quot;
+ msgstr &quot; (%d octets)&quot;
+ 
+-#: driver.c:612
++#: driver.c:614
+ #, c-format
+ msgid &quot; (%d header octets)&quot;
+ msgstr &quot; (%d octets dans l'en-t&#234;te)&quot;
+ 
+-#: driver.c:680
++#: driver.c:682
+ #, c-format
+ msgid &quot; (%d body octets)&quot;
+ msgstr &quot; (%d octets dans le corps)&quot;
+ 
+-#: driver.c:741
++#: driver.c:743
+ #, c-format
+ msgid &quot;&quot;
+ &quot;message %s@%s:%d was not the expected length (%d actual != %d expected)\n&quot;
+@@ -147,19 +151,19 @@
+ &quot;le message %s@%s:%d n'est pas de la longueur attendue (%d actuelle != %d &quot;
+ &quot;attendue)\n&quot;
+ 
+-#: driver.c:772
++#: driver.c:774
+ msgid &quot; retained\n&quot;
+ msgstr &quot; conserv&#233;\n&quot;
+ 
+-#: driver.c:782
++#: driver.c:784
+ msgid &quot; flushed\n&quot;
+ msgstr &quot; &#233;limin&#233;\n&quot;
+ 
+-#: driver.c:799
++#: driver.c:801
+ msgid &quot; not flushed\n&quot;
+ msgstr &quot; non &#233;limin&#233;\n&quot;
+ 
+-#: driver.c:817
++#: driver.c:819
+ #, c-format
+ msgid &quot;fetchlimit %d reached; %d message left on server %s account %s\n&quot;
+ msgid_plural &quot;&quot;
+@@ -169,40 +173,40 @@
+ msgstr[1] &quot;&quot;
+ &quot;fetchlimit %d atteinte; %d messages demeurent sur le serveur %s (compte %s)\n&quot;
+ 
+-#: driver.c:874
++#: driver.c:876
+ #, c-format
+ msgid &quot;timeout after %d seconds waiting to connect to server %s.\n&quot;
+ msgstr &quot;&quot;
+ &quot;d&#233;lai d&#233;pass&#233; apr&#232;s %d secondes d'attente d'une connexion avec le serveur %&quot;
+ &quot;s.\n&quot;
+ 
+-#: driver.c:878
++#: driver.c:880
+ #, c-format
+ msgid &quot;timeout after %d seconds waiting for server %s.\n&quot;
+ msgstr &quot;d&#233;lai d&#233;pass&#233; apr&#232;s %d secondes d'attente du serveur %s.\n&quot;
+ 
+-#: driver.c:882
++#: driver.c:884
+ #, c-format
+ msgid &quot;timeout after %d seconds waiting for %s.\n&quot;
+ msgstr &quot;d&#233;lai d&#233;pass&#233; apr&#232;s %d secondes d'attente de %s.\n&quot;
+ 
+-#: driver.c:887
++#: driver.c:889
+ #, c-format
+ msgid &quot;timeout after %d seconds waiting for listener to respond.\n&quot;
+ msgstr &quot;d&#233;lai d&#233;pass&#233; apr&#232;s %d secondes d'attente de la r&#233;ponse du client.\n&quot;
+ 
+-#: driver.c:890
++#: driver.c:892
+ #, c-format
+ msgid &quot;timeout after %d seconds.\n&quot;
+ msgstr &quot;d&#233;lai d'attente d&#233;pass&#233; apr&#232;s %d secondes.\n&quot;
+ 
+-#: driver.c:902
++#: driver.c:904
+ msgid &quot;Subject: fetchmail sees repeated timeouts&quot;
+ msgstr &quot;&quot;
+ &quot;Subject: fetchmail a rencontr&#233; des d&#233;passements de d&#233;lais &#224; plusieurs &quot;
+ &quot;reprises&quot;
+ 
+-#: driver.c:905
++#: driver.c:907
+ #, c-format
+ msgid &quot;&quot;
+ &quot;Fetchmail saw more than %d timeouts while attempting to get mail from %s@%&quot;
+@@ -211,7 +215,7 @@
+ &quot;Fetchmail a rencontr&#233; plus de %d d&#233;passements de d&#233;lais en r&#233;cup&#233;rant du &quot;
+ &quot;courrier depuis %s@%s.\n&quot;
+ 
+-#: driver.c:909
++#: driver.c:911
+ msgid &quot;&quot;
+ &quot;This could mean that your mailserver is stuck, or that your SMTP\n&quot;
+ &quot;server is wedged, or that your mailbox file on the server has been\n&quot;
+@@ -229,74 +233,74 @@
+ &quot;Fetchmail n'interrogera pas de nouveau cette bo&#238;te aux lettres\n&quot;
+ &quot;tant que vous ne l'aurez pas red&#233;marr&#233;.\n&quot;
+ 
+-#: driver.c:934
++#: driver.c:936
+ #, c-format
+ msgid &quot;pre-connection command failed with status %d\n&quot;
+ msgstr &quot;la commande de pr&#233;-connexion a &#233;chou&#233; avec l'&#233;tat %d\n&quot;
+ 
+-#: driver.c:958
++#: driver.c:960
+ #, c-format
+ msgid &quot;couldn't find HESIOD pobox for %s\n&quot;
+ msgstr &quot;impossible de trouver la bo&#238;te HESIOD pour %s\n&quot;
+ 
+-#: driver.c:979
++#: driver.c:981
+ msgid &quot;Lead server has no name.\n&quot;
+ msgstr &quot;Le serveur principal n'a pas de nom\n&quot;
+ 
+-#: driver.c:1003
++#: driver.c:1005
+ #, c-format
+ msgid &quot;couldn't find canonical DNS name of %s (%s): %s\n&quot;
+ msgstr &quot;impossible de trouver le nom canonique DNS de %s (%s) : %s\n&quot;
+ 
+-#: driver.c:1050
++#: driver.c:1052
+ #, c-format
+ msgid &quot;%s connection to %s failed&quot;
+ msgstr &quot;&#201;chec de connexion %s avec %s&quot;
+ 
+-#: driver.c:1066
++#: driver.c:1068
+ msgid &quot;Subject: Fetchmail unreachable-server warning.&quot;
+ msgstr &quot;Subject: avertissement de serveur non accessible par Fetchmail.&quot;
+ 
+-#: driver.c:1068
++#: driver.c:1070
+ #, c-format
+ msgid &quot;Fetchmail could not reach the mail server %s:&quot;
+ msgstr &quot;Fetchmail n'a pas pu recevoir le courrier de %s:&quot;
+ 
+-#: driver.c:1094
++#: driver.c:1096
+ msgid &quot;SSL connection failed.\n&quot;
+ msgstr &quot;&#201;chec de la connexion SSL\n&quot;
+ 
+-#: driver.c:1147
++#: driver.c:1149
+ #, c-format
+ msgid &quot;Lock-busy error on %s@%s\n&quot;
+ msgstr &quot;Erreur &#171;lock-busy&#187; sur %s@%s\n&quot;
+ 
+-#: driver.c:1151
++#: driver.c:1153
+ #, c-format
+ msgid &quot;Server busy error on %s@%s\n&quot;
+ msgstr &quot;Erreur &#171;busy&#187; sur %s@%s\n&quot;
+ 
+-#: driver.c:1156
++#: driver.c:1158
+ #, c-format
+ msgid &quot;Authorization failure on %s@%s%s\n&quot;
+ msgstr &quot;&#201;chec de l'autorisation sur %s@%s%s\n&quot;
+ 
+-#: driver.c:1159
++#: driver.c:1161
+ msgid &quot; (previously authorized)&quot;
+ msgstr &quot; (pr&#233;c&#233;demment autoris&#233;e)&quot;
+ 
+-#: driver.c:1180
++#: driver.c:1182
+ #, c-format
+ msgid &quot;Subject: fetchmail authentication failed on %s@%s&quot;
+ msgstr &quot;Subject: l'authentification de fetchmail a &#233;chou&#233; sur %s@%s&quot;
+ 
+-#: driver.c:1184
++#: driver.c:1186
+ #, c-format
+ msgid &quot;Fetchmail could not get mail from %s@%s.\n&quot;
+ msgstr &quot;Fetchmail n'a pas pu recevoir le courrier de %s@%s.\n&quot;
+ 
+ # XXX FIXME
+-#: driver.c:1188
++#: driver.c:1190
+ msgid &quot;&quot;
+ &quot;The attempt to get authorization failed.\n&quot;
+ &quot;Since we have already succeeded in getting authorization for this\n&quot;
+@@ -310,7 +314,7 @@
+ &quot;de celle-ci car ils n'envoient pas de messages d'erreur utiles\n&quot;
+ &quot;en cas d'&#233;chec du login.&quot;
+ 
+-#: driver.c:1194
++#: driver.c:1196
+ msgid &quot;&quot;
+ &quot;\n&quot;
+ &quot;However, if you HAVE changed your account details since starting the\n&quot;
+@@ -330,7 +334,7 @@
+ &quot;a chaque r&#233;veil. Il n'y aura plus d'autre notifications jusqu'&#224; ce que\n&quot;
+ &quot;le service soit r&#233;activ&#233;.&quot;
+ 
+-#: driver.c:1204
++#: driver.c:1206
+ msgid &quot;&quot;
+ &quot;The attempt to get authorization failed.\n&quot;
+ &quot;This probably means your password is invalid, but some servers have\n&quot;
+@@ -351,168 +355,168 @@
+ &quot;a chaque r&#233;veil. Il n'y aura plus d'autre notifications jusqu'&#224; ce que\n&quot;
+ &quot;le service soit r&#233;activ&#233;.&quot;
+ 
+-#: driver.c:1220
++#: driver.c:1222
+ #, c-format
+ msgid &quot;Repoll immediately on %s@%s\n&quot;
+ msgstr &quot;Re-r&#233;cup&#233;ration imm&#233;diate sur %s@%s\n&quot;
+ 
+-#: driver.c:1225
++#: driver.c:1227
+ #, c-format
+ msgid &quot;Unknown login or authentication error on %s@%s\n&quot;
+ msgstr &quot;Erreur de login ou d'identification inconnue pour %s@%s\n&quot;
+ 
+-#: driver.c:1249
++#: driver.c:1251
+ #, c-format
+ msgid &quot;Authorization OK on %s@%s\n&quot;
+ msgstr &quot;Autorisation OK sur %s@%s\n&quot;
+ 
+-#: driver.c:1255
++#: driver.c:1257
+ #, c-format
+ msgid &quot;Subject: fetchmail authentication OK on %s@%s&quot;
+ msgstr &quot;Subject: l'authentification de fetchmail a r&#233;ussie sur %s@%s&quot;
+ 
+-#: driver.c:1259
++#: driver.c:1261
+ #, c-format
+ msgid &quot;Fetchmail was able to log into %s@%s.\n&quot;
+ msgstr &quot;Fetchmail n'a pu enregistrer dans le journal (%s@%s).\n&quot;
+ 
+-#: driver.c:1263
++#: driver.c:1265
+ msgid &quot;Service has been restored.\n&quot;
+ msgstr &quot;Le service a &#233;t&#233; r&#233;activ&#233;\n&quot;
+ 
+-#: driver.c:1295
++#: driver.c:1297
+ #, c-format
+ msgid &quot;selecting or re-polling folder %s\n&quot;
+ msgstr &quot;s&#233;lection ou re-r&#233;ception du dossier %s\n&quot;
+ 
+-#: driver.c:1297
++#: driver.c:1299
+ msgid &quot;selecting or re-polling default folder\n&quot;
+ msgstr &quot;s&#233;lection ou re-r&#233;ception du dossier par d&#233;faut\n&quot;
+ 
+-#: driver.c:1309
++#: driver.c:1311
+ #, c-format
+ msgid &quot;%s at %s (folder %s)&quot;
+ msgstr &quot;%s dans %s (dossier %s)&quot;
+ 
+-#: driver.c:1312 rcfile_y.y:381
++#: driver.c:1314 rcfile_y.y:381
+ #, c-format
+ msgid &quot;%s at %s&quot;
+ msgstr &quot;%s dans %s&quot;
+ 
+-#: driver.c:1317
++#: driver.c:1319
+ #, c-format
+ msgid &quot;Polling %s\n&quot;
+ msgstr &quot;R&#233;ception de %s\n&quot;
+ 
+-#: driver.c:1321
++#: driver.c:1323
+ #, c-format
+ msgid &quot;%d message (%d %s) for %s&quot;
+ msgid_plural &quot;%d messages (%d %s) for %s&quot;
+ msgstr[0] &quot;%d message (%d %s) pour %s&quot;
+ msgstr[1] &quot;%d messages (%d %s) pour %s&quot;
+ 
+-#: driver.c:1324
++#: driver.c:1326
+ msgid &quot;seen&quot;
+ msgid_plural &quot;seen&quot;
+ msgstr[0] &quot;d&#233;j&#224; vu&quot;
+ msgstr[1] &quot;d&#233;j&#224; vus&quot;
+ 
+-#: driver.c:1327
++#: driver.c:1329
+ #, c-format
+ msgid &quot;%d message for %s&quot;
+ msgid_plural &quot;%d messages for %s&quot;
+ msgstr[0] &quot;%d message pour %s&quot;
+ msgstr[1] &quot;%d messages pour %s&quot;
+ 
+-#: driver.c:1334
++#: driver.c:1336
+ #, c-format
+ msgid &quot; (%d octets).\n&quot;
+ msgstr &quot; (%d octets).\n&quot;
+ 
+-#: driver.c:1340
++#: driver.c:1342
+ #, c-format
+ msgid &quot;No mail for %s\n&quot;
+ msgstr &quot;Aucun message pour %s\n&quot;
+ 
+-#: driver.c:1373 imap.c:90
++#: driver.c:1375 imap.c:90
+ msgid &quot;bogus message count!&quot;
+ msgstr &quot;nombre de messages erron&#233; !&quot;
+ 
+-#: driver.c:1515
++#: driver.c:1517
+ msgid &quot;socket&quot;
+ msgstr &quot;socket&quot;
+ 
+-#: driver.c:1518
++#: driver.c:1520
+ msgid &quot;missing or bad RFC822 header&quot;
+ msgstr &quot;l'en-t&#234;te RFC822 est manquant ou endommag&#233;&quot;
+ 
+-#: driver.c:1521
++#: driver.c:1523
+ msgid &quot;MDA&quot;
+ msgstr &quot;MDA&quot;
+ 
+-#: driver.c:1524
++#: driver.c:1526
+ msgid &quot;client/server synchronization&quot;
+ msgstr &quot;synchronisation client/serveur&quot;
+ 
+-#: driver.c:1527
++#: driver.c:1529
+ msgid &quot;client/server protocol&quot;
+ msgstr &quot;protocole client/serveur&quot;
+ 
+-#: driver.c:1530
++#: driver.c:1532
+ msgid &quot;lock busy on server&quot;
+ msgstr &quot;verrou occup&#233; sur le serveur&quot;
+ 
+-#: driver.c:1533
++#: driver.c:1535
+ msgid &quot;SMTP transaction&quot;
+ msgstr &quot;Transaction SMTP&quot;
+ 
+-#: driver.c:1536
++#: driver.c:1538
+ msgid &quot;DNS lookup&quot;
+ msgstr &quot;requ&#234;te au DNS&quot;
+ 
+-#: driver.c:1539
++#: driver.c:1541
+ msgid &quot;undefined&quot;
+ msgstr &quot;non d&#233;finie&quot;
+ 
+-#: driver.c:1545
++#: driver.c:1547
+ #, c-format
+ msgid &quot;%s error while fetching from %s@%s and delivering to SMTP host %s\n&quot;
+ msgstr &quot;&quot;
+ &quot;erreur %s durant la r&#233;ception de %s@%s et l'envoi vers le serveur SMTP %s\n&quot;
+ 
+-#: driver.c:1547
++#: driver.c:1549
+ msgid &quot;unknown&quot;
+ msgstr &quot;inconnu&quot;
+ 
+-#: driver.c:1549
++#: driver.c:1551
+ #, c-format
+ msgid &quot;%s error while fetching from %s@%s\n&quot;
+ msgstr &quot;erreur %s durant la r&#233;ception de %s@%s\n&quot;
+ 
+-#: driver.c:1560
++#: driver.c:1562
+ #, c-format
+ msgid &quot;post-connection command failed with status %d\n&quot;
+ msgstr &quot;la commande de post-connexion a &#233;chou&#233; avec l'&#233;tat %d\n&quot;
+ 
+-#: driver.c:1579
++#: driver.c:1581
+ msgid &quot;Kerberos V4 support not linked.\n&quot;
+ msgstr &quot;Support de Kerberos V4 non inclus.\n&quot;
+ 
+-#: driver.c:1587
++#: driver.c:1589
+ msgid &quot;Kerberos V5 support not linked.\n&quot;
+ msgstr &quot;Support de Kerberos V5 non inclus.\n&quot;
+ 
+-#: driver.c:1598
++#: driver.c:1600
+ #, c-format
+ msgid &quot;Option --flush is not supported with %s\n&quot;
+ msgstr &quot;Option --flush non support&#233;e avec %s\n&quot;
+ 
+-#: driver.c:1604
++#: driver.c:1606
+ #, c-format
+ msgid &quot;Option --all is not supported with %s\n&quot;
+ msgstr &quot;Option --all non support&#233;e avec %s\n&quot;
+ 
+-#: driver.c:1613
++#: driver.c:1615
+ #, c-format
+ msgid &quot;Option --limit is not supported with %s\n&quot;
+ msgstr &quot;Option --limit non support&#233;e avec %s\n&quot;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000031.html">[fetchmail-svn] r5038 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000033.html">[fetchmail-svn] r5040 - in branches/BRANCH_6-3: . po
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#32">[ date ]</a>
+              <a href="thread.html#32">[ thread ]</a>
+              <a href="subject.html#32">[ subject ]</a>
+              <a href="author.html#32">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

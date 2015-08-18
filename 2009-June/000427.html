@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5363 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-June/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5363%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090630085848.7020B21F158%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000426.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5363 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5363%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090630085848.7020B21F158%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5363 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Tue Jun 30 10:58:48 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000426.html">[fetchmail-svn] r5362 - branches/BRANCH_6-3
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#427">[ date ]</a>
+              <a href="thread.html#427">[ thread ]</a>
+              <a href="subject.html#427">[ subject ]</a>
+              <a href="author.html#427">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-06-30 03:58:48 -0500 (Tue, 30 Jun 2009)
+New Revision: 5363
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/imap.c
+Log:
+Preliminary Yahoo/Zimbra IMAP ID (&quot;guid&quot; &quot;1&quot;) support. Not ready for prime-time.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-06-26 08:18:54 UTC (rev 5362)
++++ branches/BRANCH_6-3/NEWS	2009-06-30 08:58:48 UTC (rev 5363)
+@@ -111,6 +111,11 @@
+ * fetchmail only requests IPv6 addresses via name service if at least one is
+   configured on the local host, likewise for IPv4.  (AI_ADDRCONFIG flag to
+   getaddrinfo()) Extended version of Redhat's patch.
++* If the server name contains &quot;yahoo.com&quot;, offers the &quot;ID&quot; capability, and we're
++  polling via IMAP, send an ID (&quot;guid&quot; &quot;1&quot;) transaction first, ignoring its
++  result. This appears needed to be able to log into Yahoo's Zimbra servers, but
++  there are open issues (such as being only able to download one message and
++  server certificate mismatches).
+ 
+ # CHANGES TO CONTRIB
+ * Fix bashism in contrib/fetchsetup. Fixes Debian Bug#530081.
+
+Modified: branches/BRANCH_6-3/imap.c
+===================================================================
+--- branches/BRANCH_6-3/imap.c	2009-06-26 08:18:54 UTC (rev 5362)
++++ branches/BRANCH_6-3/imap.c	2009-06-30 08:58:48 UTC (rev 5363)
+@@ -478,6 +478,15 @@
+      */
+     ok = PS_AUTHFAIL;
+ 
++    /* Yahoo hack - we'll just try ID if it was offered by the server,
++     * and IGNORE errors. */
++    {
++	char *tmp = strstr(capabilities, &quot; ID&quot;);
++	if (tmp &amp;&amp; !isalnum(tmp[3]) &amp;&amp; strstr(ctl-&gt;server.via ? ctl-&gt;server.via : ctl-&gt;server.pollname, &quot;yahoo.com&quot;)) {
++		(void)gen_transact(sock, &quot;ID (\&quot;guid\&quot; \&quot;1\&quot;)&quot;);
++	}
++    }
++
+     if ((ctl-&gt;server.authenticate == A_ANY 
+          || ctl-&gt;server.authenticate == A_EXTERNAL)
+ 	&amp;&amp; strstr(capabilities, &quot;AUTH=EXTERNAL&quot;))
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000426.html">[fetchmail-svn] r5362 - branches/BRANCH_6-3
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#427">[ date ]</a>
+              <a href="thread.html#427">[ thread ]</a>
+              <a href="subject.html#427">[ subject ]</a>
+              <a href="author.html#427">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

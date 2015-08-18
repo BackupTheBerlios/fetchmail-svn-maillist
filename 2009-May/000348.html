@@ -1,0 +1,439 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5315 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-May/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5315%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090525051526.33AED21EF5D%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000346.html">
+   <LINK REL="Next"  HREF="000351.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5315 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5315%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090525051526.33AED21EF5D%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5315 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Mon May 25 07:15:25 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000346.html">[fetchmail-svn] r5314 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000351.html">[fetchmail-svn] r5316 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#348">[ date ]</a>
+              <a href="thread.html#348">[ thread ]</a>
+              <a href="subject.html#348">[ subject ]</a>
+              <a href="author.html#348">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: root
+Date: 2009-05-25 00:15:25 -0500 (Mon, 25 May 2009)
+New Revision: 5315
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/TODO.txt
+   branches/BRANCH_6-3/conf.c
+   branches/BRANCH_6-3/driver.c
+   branches/BRANCH_6-3/fetchmail.c
+   branches/BRANCH_6-3/fetchmail.h
+   branches/BRANCH_6-3/fetchmail.man
+   branches/BRANCH_6-3/fetchmailconf.py
+   branches/BRANCH_6-3/options.c
+   branches/BRANCH_6-3/rcfile_l.l
+   branches/BRANCH_6-3/rcfile_y.y
+Log:
+Treat permanent delivery errors as temporary (configurable).
+
+Fetchmail no longer drops permanently undelivered messages by default,
+to match historic documentation.  It does this by adding a new
+&quot;softbounce&quot; option, see below.
+Fixes Debian Bug#471283, demotes Debian Bug#494418 to wishlist.
+
+There is a new &quot;softbounce&quot; global option that prevents the deletion of
+messages that have not been forwarded.  It defaults to &quot;true&quot; for
+fetchmail 6.3.X in order to match historic documentation.  This may
+change its default in the next major release.
+
+NOTE: untested.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-05-24 14:45:06 UTC (rev 5314)
++++ branches/BRANCH_6-3/NEWS	2009-05-25 05:15:25 UTC (rev 5315)
+@@ -43,11 +43,22 @@
+   based systems.
+ * The maintainer may migrate fetchmail to C++ with STL or C#, and impose further
+   requirements (dependencies), such as Boost or other class libraries.
++* The softbounce option default will change to &quot;false&quot; in the next release.
+ 
+ --------------------------------------------------------------------------------
+ 
+ fetchmail 6.3.10 (not yet released):
+ 
++# INCOMPATIBLE BUGFIXES AND CHANGES
++* Fetchmail no longer drops permanently undelivered messages by default, to
++  match historic documentation.  It does this by adding a new &quot;softbounce&quot;
++  option, see below.
++  Fixes Debian Bug#471283, demotes Debian Bug#494418 to wishlist.
++* There is a new &quot;softbounce&quot; global option that prevents the deletion of
++  messages that have not been forwarded. It defaults to &quot;true&quot; for fetchmail
++  6.3.X in order to match historic documentation. This may change its default
++  in the next major release.
++
+ # BUGFIXES
+ * Fix misuse of canonical autoconf target as _TARGET when it should have been
+   _HOST. Report and patch courtesy of Diego E. &quot;Flameeyes&quot; Petten&#242;.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2009-05-24 14:45:06 UTC (rev 5314)
++++ branches/BRANCH_6-3/TODO.txt	2009-05-25 05:15:25 UTC (rev 5315)
+@@ -14,9 +14,8 @@
+   <A HREF="https://bugs.launchpad.net/ubuntu/+source/fetchmail/+bug/151333">https://bugs.launchpad.net/ubuntu/+source/fetchmail/+bug/151333</A>
+ 
+ soon - SHOULD:
+-- <A HREF="https://bugzilla.novell.com/show_bug.cgi?id=246829">https://bugzilla.novell.com/show_bug.cgi?id=246829</A> - fetchmail lost some mail
+-  (5XX error code in contradiction with manual?)
+-  also <A HREF="http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=471283">http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=471283</A>
++- <A HREF="https://bugzilla.novell.com/show_bug.cgi?id=246829">https://bugzilla.novell.com/show_bug.cgi?id=246829</A> - recycle part of
++  patch (STARTTLS required; 5XX error code in contradiction with manual?)
+ - allow \Deleted without \Seen, rf. 
+   <A HREF="http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=466299">http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=466299</A>
+ - document IMAP4 ACL requirements
+@@ -31,7 +30,7 @@
+ - Debian Bug#449179, smbutil.c:90: unicodeToString: Assertion `len+1 &lt; sizeof
+   buf' failed, from Stepan Golosunov &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">stepan at golosunov.pp.ru</A>&gt;
+ - Fix TOCTOU race around prc_filecheck*
+-- Get rid of peeking in socket.c? MSG_PEEK seems non-portable and racey.
++- Get rid of peeking in socket.c? MSG_PEEK seems non-portable.
+ 
+ soon - MAY:
+ - <A HREF="http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=471176">http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=471176</A>
+
+Modified: branches/BRANCH_6-3/conf.c
+===================================================================
+--- branches/BRANCH_6-3/conf.c	2009-05-24 14:45:06 UTC (rev 5314)
++++ branches/BRANCH_6-3/conf.c	2009-05-25 05:15:25 UTC (rev 5315)
+@@ -200,6 +200,7 @@
+     stringdump(&quot;postmaster&quot;, runp-&gt;postmaster);
+     booldump(&quot;bouncemail&quot;, runp-&gt;bouncemail);
+     booldump(&quot;spambounce&quot;, runp-&gt;spambounce);
++    booldump(&quot;softbounce&quot;, runp-&gt;softbounce);
+     stringdump(&quot;properties&quot;, runp-&gt;properties);
+     booldump(&quot;invisible&quot;, runp-&gt;invisible);
+     booldump(&quot;showdots&quot;, runp-&gt;showdots);
+
+Modified: branches/BRANCH_6-3/driver.c
+===================================================================
+--- branches/BRANCH_6-3/driver.c	2009-05-24 14:45:06 UTC (rev 5314)
++++ branches/BRANCH_6-3/driver.c	2009-05-25 05:15:25 UTC (rev 5315)
+@@ -765,16 +765,17 @@
+ 
+ flagthemail:
+ 	/*
+-	 * At this point in flow of control, either
+-	 * we've bombed on a protocol error or had
+-	 * delivery refused by the SMTP server
+-	 * (unlikely -- I've never seen it) or we've
+-	 * seen `accepted for delivery' and the
+-	 * message is shipped.  It's safe to mark the
+-	 * message seen and delete it on the server
+-	 * now.
++	 * At this point in flow of control,
++	 * either we've bombed on a protocol error
++	 * or had delivery refused by the SMTP server
++	 * or we've seen `accepted for delivery' and the message is shipped.
++	 * It's safe to mark the message seen and delete it on the server now.
+ 	 */
+ 
++	/* in softbounce mode, suppress deletion and marking as seen */
++	if (suppress_forward)
++	    suppress_delete = suppress_delete || run.softbounce;
++
+ 	/* maybe we delete this message now? */
+ 	if (retained)
+ 	{
+
+Modified: branches/BRANCH_6-3/fetchmail.c
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.c	2009-05-24 14:45:06 UTC (rev 5314)
++++ branches/BRANCH_6-3/fetchmail.c	2009-05-25 05:15:25 UTC (rev 5315)
+@@ -987,6 +987,7 @@
+     char *p;
+ 
+     run.bouncemail = TRUE;
++    run.softbounce = TRUE;	/* treat permanent errors as temporary */
+     run.spambounce = FALSE;	/* don't bounce back to innocent bystanders */
+ 
+     memset(&amp;def_opts, '\0', sizeof(struct query));
+@@ -1112,6 +1113,8 @@
+ 	run.postmaster = cmd_run.postmaster;
+     if (cmd_run.bouncemail)
+ 	run.bouncemail = cmd_run.bouncemail;
++    if (cmd_run.softbounce)
++	run.softbounce = cmd_run.softbounce;
+ 
+     /* check and daemon options are not compatible */
+     if (check_only &amp;&amp; run.poll_interval)
+@@ -1536,6 +1539,11 @@
+     else if (outlevel &gt;= O_VERBOSE)
+ 	printf(GT_(&quot;Fetchmail will direct error mail to the sender.\n&quot;));
+ 
++    if (!runp-&gt;softbounce)
++	printf(GT_(&quot;Fetchmail will treat permanent errors as permanent (drop messsages).\n&quot;));
++    else if (outlevel &gt;= O_VERBOSE)
++	printf(GT_(&quot;Fetchmail will treat permanent errors as temporary (keep messages).\n&quot;));
++
+     for (ctl = querylist; ctl; ctl = ctl-&gt;next)
+     {
+ 	if (!ctl-&gt;active || (implicit &amp;&amp; ctl-&gt;server.skip))
+
+Modified: branches/BRANCH_6-3/fetchmail.h
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.h	2009-05-24 14:45:06 UTC (rev 5314)
++++ branches/BRANCH_6-3/fetchmail.h	2009-05-25 05:15:25 UTC (rev 5315)
+@@ -180,6 +180,7 @@
+     int		poll_interval;	/** poll interval in seconds (daemon mode, 0 == off) */
+     flag	bouncemail;
+     flag	spambounce;
++    flag	softbounce;
+     flag	use_syslog;
+     flag	invisible;
+     flag	showdots;
+
+Modified: branches/BRANCH_6-3/fetchmail.man
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.man	2009-05-24 14:45:06 UTC (rev 5314)
++++ branches/BRANCH_6-3/fetchmail.man	2009-05-25 05:15:25 UTC (rev 5315)
+@@ -159,6 +159,20 @@
+ and the mailserver are echoed to stdout.  Overrides \-\-silent.
+ Doubling this option (\-v \-v) causes extra diagnostic information
+ to be printed.
++.TP
++.B \-\-nosoftbounce
++(since v6.3.10, Keyword: set no softbounce, since v6.3.10)
++.br
++Hard bounce mode. All permanent delivery errors cause messages to be
++deleted from the upstream server, see &quot;no softbounce&quot; below.
++.TP
++.B \-\-softbounce
++(since v6.3.10, Keyword: set softbounce, since v6.3.10)
++.br
++Soft bounce mode. All permanent delivery errors cause messages to be
++left on the upstream server if the protocol supports that. Default to
++match historic fetchmail documentation, to be changed to hard bounce
++mode in the next fetchmail release.
+ .SS Disposal Options
+ .TP
+ .B \-a | \-\-all | (since v6.3.3) \-\-fetchall
+@@ -1573,6 +1587,14 @@
+ is sent with false sender address and thus this option hurts innocent
+ bystanders.
+ T}
++set no softbounce	\&amp;	\&amp;	T{
++Delete permanently undeliverable mail. It is recommended to use this
++option if the configuration has been thoroughly tested.
++T}
++set    spambounce	\&amp;	\&amp;	T{
++Keep permanently undeliverable mail as though a temporary error had
++occurred (default).
++T}
+ set logfile  	\-L	\&amp;	T{
+ Name of a file to append error and status messages to.
+ T}
+
+Modified: branches/BRANCH_6-3/fetchmailconf.py
+===================================================================
+--- branches/BRANCH_6-3/fetchmailconf.py	2009-05-24 14:45:06 UTC (rev 5314)
++++ branches/BRANCH_6-3/fetchmailconf.py	2009-05-25 05:15:25 UTC (rev 5315)
+@@ -5,7 +5,7 @@
+ # Matthias Andree &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">matthias.andree at gmx.de</A>&gt;
+ # Requires Python with Tkinter, and the following OS-dependent services:
+ #	posix, posixpath, socket
+-version = &quot;1.54 $Revision$&quot;
++version = &quot;1.55 $Revision$&quot;
+ 
+ from Tkinter import *
+ from Dialog import *
+@@ -22,6 +22,7 @@
+ 	self.postmaster = None		# No last-resort address, initially
+ 	self.bouncemail = TRUE		# Bounce errors to users
+ 	self.spambounce = FALSE		# Bounce spam errors
++	self.softbounce = TRUE		# Treat permanent error as temporary
+ 	self.properties = None		# No exiguous properties
+ 	self.invisible = FALSE		# Suppress Received line &amp; spoof?
+ 	self.syslog = FALSE		# Use syslogd for logging?
+@@ -33,6 +34,7 @@
+ 	    ('postmaster',	'String'),
+ 	    ('bouncemail',	'Boolean'),
+ 	    ('spambounce',	'Boolean'),
++	    ('softbounce',	'Boolean'),
+ 	    ('properties',	'String'),
+ 	    ('syslog',	  'Boolean'),
+ 	    ('invisible',	'Boolean'))
+@@ -55,6 +57,10 @@
+ 	    str = str + (&quot;set spambounce\n&quot;)
+ 	else:
+ 	    str = str + (&quot;set no spambounce\n&quot;)
++	if self.softbounce:
++	    str = str + (&quot;set softbounce\n&quot;)
++	else:
++	    str = str + (&quot;set no softbounce\n&quot;)
+ 	if self.properties != ConfigurationDefaults.properties:
+ 	    str = str + (&quot;set properties \&quot;%s\&quot;\n&quot; % (self.properties,));
+ 	if self.poll_interval &gt; 0:
+@@ -723,6 +729,14 @@
+ 	postmaster (depending on the &quot;Bounces to sender?&quot; option.  Otherwise,
+ 	spam bounces are not sent (the default).
+ 
++Use soft bounces?
++	If this option is on, permanent delivery errors are treated as
++	temporary, i. e. mail is kept on the upstream server. Useful
++	during testing and after configuration changes, and on by
++	default.
++	  If this option is off, permanent delivery errors delete
++	undeliverable mail from the upstream.
++
+ Invisible
+ 	If false (the default) fetchmail generates a Received line into
+ 	each message and generates a HELO from the machine it is running on.
+@@ -818,6 +832,13 @@
+ 		'relief':GROOVE}).pack(side=LEFT, anchor=W)
+ 	    sb.pack(fill=X)
+ 
++	    sb = Frame(gf)
++	    Checkbutton(sb,
++		{'text':'treat permanent errors as temporary?',
++		'variable':self.softbounce,
++		'relief':GROOVE}).pack(side=LEFT, anchor=W)
++	    sb.pack(fill=X)
++
+ 	    sf = Frame(gf)
+ 	    Checkbutton(sf,
+ 		{'text':'Log to syslog?',
+
+Modified: branches/BRANCH_6-3/options.c
+===================================================================
+--- branches/BRANCH_6-3/options.c	2009-05-24 14:45:06 UTC (rev 5314)
++++ branches/BRANCH_6-3/options.c	2009-05-25 05:15:25 UTC (rev 5315)
+@@ -51,7 +51,9 @@
+     LA_FETCHSIZELIMIT,
+     LA_FASTUIDL,
+     LA_LIMITFLUSH,
+-    LA_IDLE
++    LA_IDLE,
++    LA_NOSOFTBOUNCE,
++    LA_SOFTBOUNCE
+ };
+ 
+ /* options still left: CgGhHjJoORTWxXYz */
+@@ -78,6 +80,8 @@
+   {&quot;pidfile&quot;,	required_argument, (int *) 0, LA_PIDFILE },
+   {&quot;postmaster&quot;,required_argument, (int *) 0, LA_POSTMASTER },
+   {&quot;nobounce&quot;,	no_argument,	   (int *) 0, LA_NOBOUNCE },
++  {&quot;nosoftbounce&quot;, no_argument,	   (int *) 0, LA_NOSOFTBOUNCE },
++  {&quot;softbounce&quot;, no_argument,	   (int *) 0, LA_SOFTBOUNCE },
+ 
+   {&quot;protocol&quot;,	required_argument, (int *) 0, 'p' },
+   {&quot;proto&quot;,	required_argument, (int *) 0, 'p' },
+@@ -300,6 +304,12 @@
+ 	case LA_NOBOUNCE:
+ 	    run.bouncemail = FALSE;
+ 	    break;
++	case LA_NOSOFTBOUNCE:
++	    run.softbounce = FALSE;
++	    break;
++	case LA_SOFTBOUNCE:
++	    run.softbounce = TRUE;
++	    break;
+ 	case 'p':
+ 	    /* XXX -- should probably use a table lookup here */
+ 	    if (strcasecmp(optarg,&quot;auto&quot;) == 0)
+@@ -607,6 +617,8 @@
+ 	P(GT_(&quot;      --pidfile     specify alternate PID (lock) file\n&quot;));
+ 	P(GT_(&quot;      --postmaster  specify recipient of last resort\n&quot;));
+ 	P(GT_(&quot;      --nobounce    redirect bounces from user to postmaster.\n&quot;));
++	P(GT_(&quot;      --nosoftbounce fetchmail deletes permanently undeliverable messages.\n&quot;));
++	P(GT_(&quot;      --softbounce  keep permanently undeliverable messages on server (default).\n&quot;));
+ #ifdef CAN_MONITOR
+ 	P(GT_(&quot;  -I, --interface   interface required specification\n&quot;));
+ 	P(GT_(&quot;  -M, --monitor     monitor interface for activity\n&quot;));
+
+Modified: branches/BRANCH_6-3/rcfile_l.l
+===================================================================
+--- branches/BRANCH_6-3/rcfile_l.l	2009-05-24 14:45:06 UTC (rev 5314)
++++ branches/BRANCH_6-3/rcfile_l.l	2009-05-25 05:15:25 UTC (rev 5315)
+@@ -18,6 +18,7 @@
+ #else
+ #define SETSTATE(n)	BEGIN(n)
+ #endif /* LEXDEBUG */
++
+ %}
+ 
+ /* this doesn't work with Linux lex, see the INSTALL file */
+@@ -77,6 +78,7 @@
+ postmaster	{ return POSTMASTER; }
+ bouncemail	{ return BOUNCEMAIL; }
+ spambounce	{ return SPAMBOUNCE; }
++softbounce	{ return SOFTBOUNCE; }
+ warnings	{ return WARNINGS; }
+ tracepolls	{ return TRACEPOLLS; }
+ 
+
+Modified: branches/BRANCH_6-3/rcfile_y.y
+===================================================================
+--- branches/BRANCH_6-3/rcfile_y.y	2009-05-24 14:45:06 UTC (rev 5314)
++++ branches/BRANCH_6-3/rcfile_y.y	2009-05-25 05:15:25 UTC (rev 5315)
+@@ -69,7 +69,7 @@
+ %token IS HERE THERE TO MAP WILDCARD
+ %token BATCHLIMIT FETCHLIMIT FETCHSIZELIMIT FASTUIDL EXPUNGE PROPERTIES
+ %token SET LOGFILE DAEMON SYSLOG IDFILE PIDFILE INVISIBLE POSTMASTER BOUNCEMAIL
+-%token SPAMBOUNCE SHOWDOTS
++%token SPAMBOUNCE SOFTBOUNCE SHOWDOTS
+ %token &lt;proto&gt; PROTO AUTHTYPE
+ %token &lt;sval&gt;  STRING
+ %token &lt;number&gt; NUMBER
+@@ -102,6 +102,8 @@
+ 		| SET NO BOUNCEMAIL		{run.bouncemail = FALSE;}
+ 		| SET SPAMBOUNCE		{run.spambounce = TRUE;}
+ 		| SET NO SPAMBOUNCE		{run.spambounce = FALSE;}
++		| SET SOFTBOUNCE		{run.softbounce = TRUE;}
++		| SET NO SOFTBOUNCE		{run.softbounce = FALSE;}
+ 		| SET PROPERTIES optmap STRING	{run.properties =xstrdup($4);}
+ 		| SET SYSLOG			{run.use_syslog = TRUE;}
+ 		| SET NO SYSLOG			{run.use_syslog = FALSE;}
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000346.html">[fetchmail-svn] r5314 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000351.html">[fetchmail-svn] r5316 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#348">[ date ]</a>
+              <a href="thread.html#348">[ thread ]</a>
+              <a href="subject.html#348">[ subject ]</a>
+              <a href="author.html#348">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

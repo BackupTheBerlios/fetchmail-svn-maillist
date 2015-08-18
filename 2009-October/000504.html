@@ -1,0 +1,1030 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5446 - in branches/BRANCH_6-3/dist-tools: . shipper
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-October/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5446%20-%20in%20branches/BRANCH_6-3/dist-tools%3A%20.%20shipper&In-Reply-To=%3C20091030022323.DFB8321F096%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000503.html">
+   <LINK REL="Next"  HREF="000505.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5446 - in branches/BRANCH_6-3/dist-tools: . shipper</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5446%20-%20in%20branches/BRANCH_6-3/dist-tools%3A%20.%20shipper&In-Reply-To=%3C20091030022323.DFB8321F096%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5446 - in branches/BRANCH_6-3/dist-tools: . shipper">svn at mknod.org
+       </A><BR>
+    <I>Fri Oct 30 03:23:23 CET 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000503.html">[fetchmail-svn] r5445 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000505.html">[fetchmail-svn] r5447 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#504">[ date ]</a>
+              <a href="thread.html#504">[ thread ]</a>
+              <a href="subject.html#504">[ subject ]</a>
+              <a href="author.html#504">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-10-29 21:23:23 -0500 (Thu, 29 Oct 2009)
+New Revision: 5446
+
+Removed:
+   branches/BRANCH_6-3/dist-tools/growthplot
+   branches/BRANCH_6-3/dist-tools/indexgen.sh
+   branches/BRANCH_6-3/dist-tools/listsize
+   branches/BRANCH_6-3/dist-tools/timeplot
+   branches/BRANCH_6-3/dist-tools/timeseries
+   branches/BRANCH_6-3/dist-tools/upload
+   branches/BRANCH_6-3/dist-tools/uploadfaq
+Modified:
+   branches/BRANCH_6-3/dist-tools/getstats.py
+   branches/BRANCH_6-3/dist-tools/makerelease
+   branches/BRANCH_6-3/dist-tools/shipper/buildrpms
+Log:
+Clean up dist-tools, remove or update.
+
+Modified: branches/BRANCH_6-3/dist-tools/getstats.py
+===================================================================
+--- branches/BRANCH_6-3/dist-tools/getstats.py	2009-10-28 16:24:23 UTC (rev 5445)
++++ branches/BRANCH_6-3/dist-tools/getstats.py	2009-10-30 02:23:23 UTC (rev 5446)
+@@ -7,21 +7,22 @@
+ # Get version and date
+ date = commands.getoutput(&quot;LC_TIME=C date -u&quot;)
+ pid = os.getpid()
+-# this is a fast variant using the base of the current working directory
+-# (ignores uncommitted modifications)
+-if os.system(&quot;svn export -q -rBASE . /tmp/getstats.%d&quot; % pid):
++if True:
++    # this is a fast variant using the base of the current working directory
++    # (ignores uncommitted modifications)
++    cmd = &quot;svn export -q -rBASE . /tmp/getstats.%d&quot; % pid
++else:
++    #  this is a slower variant that may export the whole tree across
++    #  the net
++    cmd = &quot;svn export -rCOMMITTED . /tmp/getstats.%d&quot; % pid
++
++if os.system(cmd):
+     print &quot;SVN FAILED&quot;
+     os.exit(1)
+-# this is a slower variant that may export the whole tree across the net
+-#os.system(&quot;svn export -rCOMMITTED . /tmp/getstats.%d&quot; % pid)
++
+ ln = commands.getoutput(&quot;cat /tmp/getstats.%d/*.[chly] 2&gt;/dev/null | wc -l&quot; % pid)
+ os.system(&quot;rm -rf /tmp/getstats.%d&quot; % pid)
+-vers = commands.getoutput(&quot;sed -n -e '/AC_INIT/s/AC_INIT(\[.*\],\[\\(.*\\)\])/\\1/p' &lt;configure.ac&quot;)
++vers = commands.getoutput(&quot;sed -n -e '/AC_INIT/s/AC_INIT(\\[.\\+\\],\\[\\(.*\\)\\],.*)/\\1/p' &lt;configure.ac&quot;)
+ print &quot;fetchmail-&quot; + vers + &quot; (&quot; + date + &quot;), &quot; + string.strip(ln) + &quot; lines:&quot;
+ 
+-# Use local listsize command to grab list statistics
+-#friends = commands.getoutput(&quot;listsize friends&quot;).strip()
+-#announce = commands.getoutput(&quot;listsize announce&quot;).strip()
+-#print &quot;There are %s people on fetchmail-friends and %s on fetchmail-announce.&quot;% (friends, announce)
+-
+-# getstats.py
++# end of getstats.py
+
+Deleted: branches/BRANCH_6-3/dist-tools/growthplot
+===================================================================
+--- branches/BRANCH_6-3/dist-tools/growthplot	2009-10-28 16:24:23 UTC (rev 5445)
++++ branches/BRANCH_6-3/dist-tools/growthplot	2009-10-30 02:23:23 UTC (rev 5446)
+@@ -1,114 +0,0 @@
+-#!/bin/sh
+-#
+-# growthplot -- plot the fetchmail project's growth as a function of time
+-#
+-
+-PATH=&quot;$PATH:.:./dist-tools&quot;; export PATH
+-
+-tmp=/tmp/fetchmail-growthplot.$$
+-mkdir $tmp
+-
+-# Get data from the NEWS file
+-timeseries &gt;$tmp/growthplot$$
+-grep &quot;^[0-9]&quot; $tmp/growthplot$$ &gt;$tmp/growthnumbers$$
+-grep &quot;^[0-9.]*.[05].0	&quot; $tmp/growthplot$$ &gt;$tmp/growthmajors$$
+-sed '/^4.2.9/,$d' &lt;$tmp/growthnumbers$$ &gt;$tmp/growthannounce$$
+-
+-# gnuplot line styles.  These occasionally change (like beteween 3.5 and 3.7);
+-# use &quot;echo 'set terminal png; test' | gnuplot | display -&quot; to check.
+-blue_boxes=3
+-green_crosses=2
+-cyan_diamonds=37	# Once purple triangles, but we can't do that anymore
+-brown_triangles=23
+-
+-cat &gt;$tmp/growthimage$$ &lt;&lt;EOF
+-set title &quot;Fetchmail project growth history&quot;
+-set xlabel 'Days since baseline'
+-set ylabel 'Participants'
+-set y2label 'Lines of code'
+-set ytics nomirror
+-set y2tics
+-set tics out
+-set autoscale y
+-set y2range [5000:50000]
+-set key bottom right box
+-set terminal png
+-
+-EOF
+-
+-# OK, now write the event labels
+-(
+-	count=0
+-	lastday=0
+-        breakheight=510
+-	while read version legend
+-	do
+-		if [ &quot;$version&quot; = '%' ]
+-		then
+-			echo &quot;# Associate $lastday to '$legend'&quot;
+-			count=$((count+1))
+-		        lastday=$(($lastday-5))
+-			endy=$((breakheight+50+count*50))
+-			if ((endy&gt;lasttotal))
+-			then
+-			    # Label over curve hanging right, arrow down
+-			    arrowhead=$((lasttotal+50))
+-			    echo &quot;set label '$legend' at $lastday-10, $endy+15&quot;
+-			else
+-			    # Label under curve hanging left, arrow up
+-			    arrowhead=$((lasttotal-5))
+-			    strlen=`python -c &quot;print len('$legend')&quot;`
+-			    lablen=$((strlen*22))
+-			    echo &quot;set label '$legend' at $lastday-$lablen+10, $endy-15&quot;
+-			fi
+-			echo set arrow \
+-				from $lastday, $endy \
+-				to $lastday, $arrowhead \
+-				head
+-		else
+-			set -- $legend
+-			size=$1 
+-			friends=$2
+-			announce=$3
+-			total=$4
+-			days=$5 
+-			date=$6
+-			lastday=$days
+-			lasttotal=$total
+-		fi
+-	done
+-) &lt;$tmp/growthplot$$ &gt;&gt;$tmp/growthimage$$ 
+-
+-# OK, now write the major-release labels
+-(
+-	while read version size friends announce total days date
+-	do
+-	    echo &quot;set arrow from $days, $total - 55 to $days, $total - 15 head&quot;
+-	    echo &quot;set label '$version' at $days - 5, $total - 65&quot;
+-	done
+-) &lt;$tmp/growthmajors$$ &gt;&gt;$tmp/growthimage$$ 
+-
+-cat &gt;&gt;$tmp/growthimage$$ &lt;&lt;EOF
+-plot [] [0:] '$tmp/growthnumbers$$' using 6:5 \
+-		title &quot;Both lists&quot; with points $blue_boxes, \
+-     '$tmp/growthannounce$$' using 6:4 \
+-		title &quot;fetchmail-announce&quot; with points $cyan_diamonds, \
+-     '$tmp/growthannounce$$' using 6:3 \
+-		title &quot;fetchmail-friends&quot; with points $green_crosses, \
+-     '$tmp/growthnumbers$$' using 6:2 axes x1y2 \
+-		title &quot;Lines of code&quot; with points $brown_triangles
+-EOF
+-
+-gnuplot $tmp/growthimage$$ &gt;growth.png
+-
+-rm -f $tmp/growth*
+-rmdir $tmp
+-
+-# growthplot ends here
+-
+-
+-
+-
+-
+-
+-
+
+Deleted: branches/BRANCH_6-3/dist-tools/indexgen.sh
+===================================================================
+--- branches/BRANCH_6-3/dist-tools/indexgen.sh	2009-10-28 16:24:23 UTC (rev 5445)
++++ branches/BRANCH_6-3/dist-tools/indexgen.sh	2009-10-30 02:23:23 UTC (rev 5446)
+@@ -1,389 +0,0 @@
+-#!/bin/sh
+-#
+-# indexgen.sh -- generate current version of fetchmail home page.
+-#
+-echo &quot;This script is hopelessly out of date. Abort.&quot; &gt;&amp;2
+-exit 1
+-
+-goldvers=&quot;6.2.0&quot;
+-goldname=&quot;6.2.0&quot;
+-version=`sed -n &lt;Makefile.in &quot;/VERSION *= */s/VERSION *= *\([^ 	]*\)/\1/p&quot;`
+-date=`date &quot;+%d %b %Y&quot;`
+-
+-set -- `timeseries | grep -v &quot;[%#]&quot; | head -1`
+-subscribers=$4
+-make fetchmail
+-set -- `ls -ks fetchmail`
+-fetchmailsize=$1
+-set -- `(cd /lib; ls libc-*)`
+-glibc=`echo $1 | sed 's/libc-\(.*\)\.so/\1/'`
+-glibc=&quot;glibc-$glibc&quot;
+-
+-rm -f index.html
+-
+-# Compute MD5 checksums for security audit
+-rm -f checksums
+-for file in fetchmail-$version.tar.gz fetchmail-$version-1.*.rpm
+-do 
+-    md5sum $file &gt;&gt;checksums
+-done
+-
+-if [ $version != $goldvers ]
+-then
+-    for file in fetchmail-$goldvers.tar.gz fetchmail-$goldvers-1.*.rpm 
+-    do
+-	md5sum $file | sed -e &quot;s: .*/:  :&quot; &gt;&gt;checksums
+-    done
+-fi
+-
+-# Cryptographically sign checksums 
+-gpg --clearsign checksums
+-mv checksums.asc checksums
+-
+-cat &gt;index.html &lt;&lt;EOF
+-&lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
+-&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot;
+-    &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</A>&quot;&gt;
+-&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot;&gt;
+-&lt;head&gt;
+-&lt;link rev=&quot;made&quot; href=&quot;mailto:<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">esr at snark.thyrsus.com</A>&quot; /&gt;
+-&lt;link rel=&quot;stylesheet&quot; href=&quot;/~esr/sitestyle.css&quot; type=&quot;text/css&quot;/&gt;
+-&lt;meta name=&quot;description&quot; content=&quot;Home page of the fetchmail project&quot; /&gt;
+-&lt;meta name=&quot;keywords&quot; content=&quot;&quot; /&gt;
+-&lt;meta name=&quot;MSSmartTagsPreventParsing&quot; content=&quot;TRUE&quot; /&gt;
+-&lt;title&gt;The fetchmail home page&lt;/title&gt;
+-&lt;/head&gt;
+-&lt;body&gt;
+-
+-&lt;div id=&quot;Header&quot;&gt;
+-&lt;table width=&quot;100%&quot; cellpadding=&quot;0&quot; summary=&quot;Canned page header&quot;&gt;
+-&lt;tr&gt;
+-&lt;td&gt;The fetchmail home page&lt;/td&gt;
+-&lt;td align=&quot;right&quot;&gt;$date&lt;/td&gt;
+-&lt;/tr&gt;
+-&lt;/table&gt;
+-&lt;/div&gt;
+-
+-&lt;div id=&quot;Menu&quot;&gt;
+-	&lt;hr/&gt;
+-	&lt;a href=&quot;/~esr&quot; title=&quot;My home page&quot;&gt;Home Page&lt;/a&gt;&lt;br /&gt;
+-	&lt;a href=&quot;/~esr/sitemap.html&quot; title=&quot;Map of the site&quot;&gt;Site Map&lt;/a&gt;&lt;br /&gt;
+-	&lt;a href=&quot;/~esr/software.html&quot; title=&quot;Software I maintain&quot;&gt;Software&lt;/a&gt;&lt;br /&gt;
+-	&lt;a href=&quot;/~esr/projects.html&quot; title=&quot;My projects&quot;&gt;Projects&lt;/a&gt;&lt;br /&gt;
+-	&lt;a href=&quot;/~esr/faqs/&quot; title=&quot;My FAQ documents&quot;&gt;HOWTOs&lt;/a&gt;&lt;br /&gt;
+-	&lt;a href=&quot;/~esr/writings/&quot; title=&quot;Essays and ruminations&quot;&gt;Essays&lt;/a&gt;&lt;br /&gt;
+-	&lt;a href=&quot;/~esr/personal.html&quot; title=&quot;Portrait of the author&quot;&gt;Personal&lt;/a&gt;&lt;br /&gt;
+-	&lt;a href=&quot;<A HREF="http://www.ibiblio.org/esrblog/">http://www.ibiblio.org/esrblog/</A>&quot;&gt;Weblog&lt;/a&gt;&lt;br/&gt;	
+-	&lt;a href=&quot;/~esr/netfreedom/&quot;&gt;Freedom!&lt;/a&gt;&lt;br /&gt;
+-	&lt;a href=&quot;/~esr/guns/&quot;&gt;Firearms!&lt;/a&gt;&lt;br /&gt;
+-	&lt;hr/&gt;
+-&lt;/div&gt;
+-
+-&lt;div id=&quot;Content&quot;&gt;
+-
+-&lt;h1&gt;The fetchmail Home Page&lt;/h1&gt;
+-&lt;/center&gt;
+-
+-&lt;p&gt;&lt;b&gt;Note: if you are a stranded fetchmail.com user, we're sorry but
+-we have nothing to do with that site and cannot help you.  It's just an
+-unfortunate coincidence of names.&lt;/b&gt;&lt;/p&gt;
+-
+-&lt;h1&gt;What fetchmail does:&lt;/h1&gt;
+-
+-&lt;p&gt;Fetchmail is a full-featured, robust, well-documented
+-remote-mail retrieval and forwarding utility intended to be used over
+-on-demand TCP/IP links (such as SLIP or PPP connections). It supports
+-every remote-mail protocol now in use on the Internet: POP2, POP3,
+-RPOP, APOP, KPOP, all flavors of &lt;a
+-href=&quot;<A HREF="http://www.imap.org">http://www.imap.org</A>&quot;&gt;IMAP&lt;/a&gt;, ETRN, and ODMR. It can even
+-support IPv6 and IPSEC.&lt;/p&gt;
+-
+-&lt;p&gt;Fetchmail retrieves mail from remote mail servers and forwards it via
+-SMTP, so it can then be read by normal mail user agents such as &lt;a
+-href=&quot;<A HREF="http://www.mutt.org/">http://www.mutt.org/</A>&quot;&gt;mutt&lt;/a&gt;, elm(1) or BSD Mail.
+-It allows all your system MTA's filtering, forwarding, and aliasing
+-facilities to work just as they would on normal mail.&lt;/p&gt;
+-
+-&lt;p&gt;Fetchmail offers better security than any other Unix remote-mail
+-client.  It supports APOP, KPOP, OTP, Compuserve RPA, Microsoft NTLM,
+-and IMAP RFC1731 encrypted authentication methods including CRAM-MD5
+-to avoid sending passwords en clair. It can be configured to support
+-end-to-end encryption via tunneling with &lt;a
+-href=&quot;<A HREF="http://www.openssh.com/">http://www.openssh.com/</A>&quot;&gt;ssh, the Secure Shell&lt;/a&gt;.&lt;/p&gt;
+-
+-&lt;p&gt;Fetchmail can be used as a POP/IMAP-to-SMTP gateway for an entire DNS
+-domain, collecting mail from a single drop box on an ISP and
+-SMTP-forwarding it based on header addresses. (We don't really
+-recommend this, though, as it may lose important envelope-header
+-information.  ETRN or a UUCP connection is better.)&lt;/p&gt;
+-
+-&lt;p&gt;Fetchmail can be started automatically and silently as a system daemon
+-at boot time.  When running in this mode with a short poll interval,
+-it is pretty hard for anyone to tell that the incoming mail link is
+-not a full-time &quot;push&quot; connection.&lt;/p&gt;
+-
+-&lt;p&gt;Fetchmail is easy to configure.  You can edit its dotfile directly, or
+-use the interactive GUI configurator (fetchmailconf) supplied with the
+-fetchmail distribution.  It is also directly supported in linuxconf
+-versions 1.16r8 and later.&lt;/p&gt;
+-
+-&lt;p&gt;Fetchmail is fast and lightweight.  It packs all its standard
+-features (POP3, IMAP, and ETRN support) in ${fetchmailsize}K of core on a
+-Pentium under Linux.&lt;/p&gt;
+-
+-&lt;p&gt;Fetchmail is &lt;a href=&quot;<A HREF="http://www.opensource.org">http://www.opensource.org</A>&quot;&gt;open-source&lt;/a&gt;
+-software.  The openness of the sources is your strongest possible
+-assurance of quality and reliability.&lt;/p&gt;
+-
+-&lt;h1&gt;Where to find out more about fetchmail:&lt;/h1&gt;
+-
+-&lt;p&gt;See the &lt;a href=&quot;fetchmail-features.html&quot;&gt;Fetchmail Feature List&lt;/a&gt; for more
+-about what fetchmail does.&lt;/p&gt;
+-
+-&lt;p&gt;See the on-line &lt;a href=&quot;fetchmail-man.html&quot;&gt;manual page&lt;/a&gt; for
+-basics.&lt;/p&gt;
+-
+-&lt;p&gt;See the &lt;a href=&quot;fetchmail-FAQ.html&quot;&gt;HTML Fetchmail FAQ&lt;/a&gt; for
+-troubleshooting help.&lt;/p&gt;
+-
+-&lt;p&gt;See the &lt;a href=&quot;design-notes.html&quot;&gt;Fetchmail Design Notes&lt;/a&gt;
+-for discussion of some of the design choices in fetchmail.&lt;/p&gt;
+-
+-&lt;p&gt;See the project's &lt;a href=&quot;todo.html&quot;&gt;To-Do list&lt;/a&gt; for indications
+-of known problems and requested features.&lt;/p&gt;
+-
+-&lt;h1&gt;How to get fetchmail:&lt;/h1&gt;
+-
+-&lt;p&gt;You can get any of the following leading-edge resources here:&lt;/p&gt;
+-&lt;ul&gt;
+-&lt;li&gt; &lt;a href=&quot;fetchmail-$version.tar.gz&quot;&gt;
+-	Gzipped source archive of fetchmail $version&lt;/a&gt;
+-&lt;li&gt; &lt;a href=&quot;fetchmail-$version-1.i386.rpm&quot;&gt;
+-	Intel binary RPM of fetchmail $version (uses $glibc)&lt;/a&gt;
+-&lt;li&gt; &lt;a href=&quot;fetchmail-$version-1.src.rpm&quot;&gt;
+-	Source RPM of fetchmail $version&lt;/a&gt;
+-&lt;/ul&gt;
+-
+-&lt;p&gt;MD5 &lt;a href=&quot;checksums&quot;&gt;checksums&lt;/a&gt; are available for these files; the
+-checksum file is cryptographically signed and can be verified with the
+-command:&lt;/p&gt;
+-
+-&lt;pre&gt;
+-gpg --verify checksums
+-&lt;/pre&gt;
+-
+-EOF
+-
+-if [ $version != $goldvers ]
+-then
+-    cat &gt;&gt;index.html &lt;&lt;EOF
+-
+-&lt;p&gt;Or you can get the last \`gold' version, $goldname:&lt;/p&gt;
+-&lt;ul&gt;
+-&lt;li&gt; &lt;a href=&quot;fetchmail-$goldvers.tar.gz&quot;&gt;
+-	Gzipped source archive of fetchmail $goldname&lt;/a&gt;
+-&lt;li&gt; &lt;a href=&quot;fetchmail-$goldvers-1.i386.rpm&quot;&gt;
+-	Intel binary RPM of fetchmail $goldname (uses glibc)&lt;/a&gt;
+-&lt;li&gt; &lt;a href=&quot;fetchmail-$goldvers-1.alpha.rpm&quot;&gt;
+-	Alpha binary RPM of fetchmail $goldname (uses glibc)&lt;/a&gt;
+-&lt;li&gt; &lt;a href=&quot;fetchmail-$goldvers-1.src.rpm&quot;&gt;
+-	Source RPM of fetchmail $goldname&lt;/a&gt;
+-&lt;/ul&gt;
+-
+-&lt;p&gt;The &lt;a href=&quot;fetchmail-$goldvers.tar.gz.asc&quot;&gt;detached GPG
+-signature&lt;/a&gt; for the binary tarball can be used to check it for
+-correctness, with the command&lt;/p&gt;
+-
+-&lt;pre&gt;
+-gpg --verify fetchmail-$goldvers.tar.gz.asc fetchmail-$goldvers.tar.gz
+-&lt;/pre&gt;
+-
+-&lt;p&gt;For differences between the leading-edge $version and gold $goldname versions,
+-see the distribution &lt;a href=&quot;NEWS&quot;&gt;NEWS&lt;/a&gt; file.&lt;/p&gt;
+-EOF
+-fi
+-
+-cat &gt;&gt;index.html &lt;&lt;EOF
+-&lt;p&gt;(Note that the binary RPMs don't have the POP2, OTP, IPv6, Kerberos,
+-GSSAPI, Compuserve RPA, Microsoft NTLM, or GNU gettext
+-internationalization support compiled in.  To get any of these you
+-will have to build from sources.)&lt;/p&gt;
+-
+-&lt;p&gt;The latest version of fetchmail is also carried in the 
+-&lt;a href=&quot;<A HREF="http://metalab.unc.edu/pub/Linux/system/mail/pop/!INDEX.html">http://metalab.unc.edu/pub/Linux/system/mail/pop/!INDEX.html</A>&quot;&gt;
+-Metalab remote mail tools directory&lt;/a&gt;.&lt;/p&gt;
+-
+-&lt;h1&gt;Getting help with fetchmail:&lt;/h1&gt;
+-
+-&lt;p&gt;There is a fetchmail-friends list for people who want to discuss
+-fixes and improvements in fetchmail and help co-develop it.  It's a
+-MailMan list, which you can sign up for at &lt;a
+-href=&quot;<A HREF="http://lists.ccil.org/mailman/listinfo/fetchmail-friends">http://lists.ccil.org/mailman/listinfo/fetchmail-friends</A>&quot;&gt;
+<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">-fetchmail-friends at ccil.org</A>&lt;/a&gt;.  There is also an announcements-only
+-list, &lt;a
+-href=&quot;<A HREF="http://lists.ccil.org/mailman/listinfo/fetchmail-announce">http://lists.ccil.org/mailman/listinfo/fetchmail-announce</A>&quot;&gt;
+<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">-fetchmail-announce at lists.ccil.org</A>&lt;/a&gt;.&lt;/p&gt;
+-
+-&lt;p&gt;Note: before submitting a question to the list, &lt;strong&gt;please read
+-the &lt;a href=&quot;fetchmail-FAQ.html&quot;&gt;FAQ&lt;/a&gt;&lt;/strong&gt; (especially item &lt;a
+-href=&quot;fetchmail-FAQ.html#G3&quot;&gt;G3&lt;/a&gt; on how to report bugs).  We
+-tend to get the same three newbie questions over and over again.  The
+-FAQ covers them like a blanket.&lt;/p&gt;
+-
+-&lt;p&gt;Fetchmail was written and is maintained by &lt;a
+-href=&quot;../index.html&quot;&gt;Eric S. Raymond&lt;/a&gt;.  There are some designated
+-backup maintainers (&lt;a href=&quot;mailto:<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">rfunk at funknet.net</A>&quot;&gt;Rob Funk&lt;/a&gt;, &lt;a
+-href=&quot;<A HREF="http://www.dallas.net/~fox/">http://www.dallas.net/~fox/</A>&quot;&gt;David DeSimone aka Fuzzy Fox&lt;/a&gt;,
+-&lt;a href=&quot;mailto:<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">imdave at mcs.net</A>&quot;&gt;Dave Bodenstab&lt;/a&gt; and &lt;a 
+-href=&quot;mailto:<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">shetye at bombay.retortsoft.com</A>&quot;&gt;Sunil Shetye&lt;/a&gt;).  Other backup
+-maintainers may be added in the future, in order to ensure continued
+-support should Eric S.  Raymond drop permanently off the net for any
+-reason.&lt;/p&gt;
+-
+-&lt;h1&gt;You can help improve fetchmail:&lt;/h1&gt;
+-
+-&lt;p&gt;I welcome your code contributions.  But even if you don't write code,
+-you can help fetchmail improve.&lt;/p&gt;
+-
+-&lt;p&gt;If you administer a site that runs a post-office server, you may be
+-able help improve fetchmail by lending me a test account on your site.
+-Note that I do not need a shell account for this purpose, just a 
+-maildrop.  Nor am I interested in collecting maildrops per se --
+-what I'm collecting is different &lt;em&gt;kinds of servers&lt;/em&gt;.&lt;/p&gt;
+-
+-&lt;p&gt;Before each release, I run a test harness that sends date-stamped 
+-test mail to each site on my regression-test list, then tries to
+-retrieve it.  Please take a look at my &lt;a href=&quot;testservers.html&quot;&gt;
+-list of test servers&lt;/a&gt;.  If you can lend me an account on a kind
+-of server that is &lt;em&gt;not&lt;/em&gt; already on this list, please do.&lt;/p&gt;
+-
+-&lt;h1&gt;Who uses fetchmail:&lt;/h1&gt;
+-
+-&lt;p&gt;Fetchmail entered full production status with the 2.0.0 version in
+-November 1996 after about five months of evolution from the ancestral
+-&lt;code&gt;popclient&lt;/code&gt; utility. It has since come into extremely wide use
+-in the Internet/Unix/Linux community.  The Red Hat, Debian and
+-Suse Linux distributions and their derivatives all include it.  A
+-customized version is used at Whole Earth 'Lectronic Link. Several
+-large ISPs are known to recommend it to Unix-using SLIP and PPP
+-customers.&lt;/p&gt;
+-
+-&lt;p&gt;Somewhere around a thousand people have participated on the fetchmail
+-beta lists (at time of current release there were $subscribers on the
+-friends and announce lists).  While it's hard to count the users of
+-open-source software, we can estimate based on (a) population figures
+-at the WELL and other known fetchmail sites, (b) the size of the
+-Linux-using ISP customer base, and (c) the volume of fetchmail-related
+-talk on USENET.  These estimates suggest that daily fetchmail users
+-number well into the hundreds of thousands, and possibly over a million.&lt;/p&gt;
+-
+-&lt;h1&gt;The sociology of fetchmail:&lt;/h1&gt;
+-
+-&lt;p&gt;The fetchmail development project was a sociological experiment as well
+-as a technical effort.  I ran it as a test of some theories about why the
+-Linux development model works.&lt;/p&gt;
+-
+-&lt;p&gt;I wrote a paper, &lt;a
+-href=&quot;<A HREF="http://www.catb.org/~esr/writings/cathedral-bazaar/">http://www.catb.org/~esr/writings/cathedral-bazaar/</A>&quot;&gt;The
+-Cathedral And The Bazaar&lt;/a&gt;, about these theories and the project.
+-I developed the line of analysis it suggested in two later essays.
+-These papers became quite popular and (to my continuing astonishment) may
+-have actually helped change the world.  Chase the title link, above,
+-for links to all three papers.&lt;/p&gt;
+-
+-&lt;p&gt;I have done some analysis on the information in the project NEWS file.
+-You can view a &lt;a href=&quot;history.html&quot;&gt;statistical history&lt;/a&gt; showing
+-levels of participation and release frequency over time.&lt;/p&gt;
+-
+-&lt;h1&gt;Recent releases and where fetchmail is going:&lt;/h1&gt;
+-
+-&lt;p&gt;Fetchmail is now sufficiently stable and effective that I'm getting
+-very little pressure to fix things or add features.  Development has
+-slowed way down, release frequency has dropped off, and we're
+-basically in maintainance mode.&lt;/p&gt;
+-
+-&lt;p&gt;Major changes or additions therefore seem unlikely until there are
+-significant changes in or additions to the related protocol RFCs.&lt;/p&gt;
+-
+-&lt;h1&gt;Where you can use fetchmail:&lt;/h1&gt;
+-
+-&lt;p&gt;The fetchmail code was developed under Linux, but has also been
+-extensively tested under 4.4BSD, SunOS, Solaris, AIX, and NEXTSTEP.  It
+-should be readily portable to other Unix variants (it requires only
+-POSIX plus BSD sockets, and uses GNU autoconf).&lt;/p&gt;
+-
+-&lt;p&gt;Fetchmail is supported only for Unix by its official maintainers.
+-However, it is reported to build and run correctly under BeOS,
+-AmigaOS, Rhapsody, and QNX as well.  There is a CygWin port.&lt;/p&gt;
+-
+-&lt;h1&gt;Related resources:&lt;/h1&gt;
+-
+-&lt;p&gt;Jochen Hayek is developing a set of
+-&lt;a href=&quot;<A HREF="http://www.ACM.org/~Jochen_Hayek/JHimap_utils/">http://www.ACM.org/~Jochen_Hayek/JHimap_utils/</A>&quot;&gt;
+-IMAP tools in Python&lt;/a&gt; that read your .fetchmailrc file and are
+-designed to work with fetchmail.   Jochen's tools can report selected
+-header lines, or move incoming messages to named mailboxes based on
+-the contents of headers.&lt;/p&gt;
+-
+-&lt;p&gt;Donncha O Caoihm has written a Perl script called 
+-&lt;a href=&quot;<A HREF="http://cork.linux.ie/projects/install-sendmail/">http://cork.linux.ie/projects/install-sendmail/</A>&quot;&gt;install-sendmail&lt;/a&gt;
+-that assists you in installing sendmail and fetchmail together.&lt;/p&gt;
+-
+-&lt;p&gt;Peter Hawkins has written a script called &lt;a
+-href=&quot;<A HREF="http://linux.cudeso.be/linuxdoc/gotmail.php">http://linux.cudeso.be/linuxdoc/gotmail.php</A>&quot;&gt;gotmail&lt;/a&gt; that
+-can retrieve Hotmail. Another script, &lt;a
+-href=&quot;<A HREF="http://yosucker.sourceforge.net">http://yosucker.sourceforge.net</A>&quot;&gt;yosucker&lt;/a&gt;, can retrieve
+-Yahoo webmail.&lt;/p&gt;
+-
+-&lt;p&gt;There's a program called
+-&lt;<A HREF="http://mailfilter.sourceforge.net/">http://mailfilter.sourceforge.net/</A>'&gt;mailfilter&lt;/a&gt; which can be used
+-to do span filtering, that works particularly well called from fetchmail's
+-&lt;code&gt;preconnect&lt;/code&gt; directive,&lt;/p&gt;
+-
+-&lt;p&gt;A hacker identifying himself simply as \`Steines' has written a
+-filter which rewrites the to-line with a line which only includes
+-receipients for a given domain and renames the old to-line. It also
+-rewrites the domain-part of addresses if the offical domain is
+-different from the local domain. You can find it &lt;a 
+-href=&quot;<A HREF="http://www.steines.com/mailf/">http://www.steines.com/mailf/</A>&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+-
+-&lt;h1&gt;Fetchmail's funniest fan letter:&lt;/h1&gt;
+-
+-&lt;a href=&quot;funny.html&quot;&gt;This letter&lt;/a&gt; still cracks me up whenever I reread it. 
+-
+-&lt;h1&gt;The fetchmail button:&lt;/h1&gt;
+-
+-&lt;p&gt;If you use fetchmail and like it, here's a nifty fetchmail button you
+-can put on your web page:&lt;/p&gt;
+-
+-&lt;center&gt;&lt;img src=&quot;fetchmail.png&quot; alt=&quot;fetchmail logo&quot; /&gt;&lt;/center&gt;
+-
+-&lt;p&gt;Thanks to &lt;a href=&quot;<A HREF="http://www.gl.umbc.edu/~smatus1/">http://www.gl.umbc.edu/~smatus1/</A>&quot;&gt;Steve
+-Matuszek&lt;/a&gt; for the graphic design.  The hand in the button (and the
+-larger top-of-page graphic) was actually derived from a color scan of
+-the fetchmail author's hand.&lt;/p&gt;
+-
+-&lt;h1&gt;Fetchmail mirror sites:&lt;/h1&gt;
+-
+-&lt;p&gt;There is a FTP mirror of the current sources and RPMs in Japan at
+-&lt;a href=&quot;<A HREF="ftp://ftp.win.ne.jp/pub/network/mail/fetchmail">ftp://ftp.win.ne.jp/pub/network/mail/fetchmail</A>&quot;&gt;
+-<A HREF="ftp://ftp.win.ne.jp/pub/network/mail/fetchmail&lt;/a">ftp://ftp.win.ne.jp/pub/network/mail/fetchmail&lt;/a</A>&gt;.
+-
+-&lt;h1&gt;Reviews and Awards&lt;/h1&gt;
+-
+-&lt;p&gt;Fetchmail was DaveCentral's Best Of Linux winner for
+-&lt;a href=&quot;<A HREF="http://linux.davecentral.com/bol_19990630.html">http://linux.davecentral.com/bol_19990630.html</A>&quot;&gt;June 30 1999&lt;/a&gt;.&lt;/p&gt;
+-
+-&lt;p&gt;Fetchmail was a five-star Editor's Pick at Softlandindia.&lt;/p&gt;
+-
+-&lt;/div&gt;
+-
+-&lt;/body&gt;
+-&lt;/html&gt;
+-EOF
+-
+-# The following sets edit modes for GNU EMACS
+-# Local Variables:
+-# mode:html
+-# truncate-lines:t
+-# End:
+
+Deleted: branches/BRANCH_6-3/dist-tools/listsize
+===================================================================
+--- branches/BRANCH_6-3/dist-tools/listsize	2009-10-28 16:24:23 UTC (rev 5445)
++++ branches/BRANCH_6-3/dist-tools/listsize	2009-10-30 02:23:23 UTC (rev 5446)
+@@ -1,36 +0,0 @@
+-#!/bin/sh
+-#
+-# Mine list sizes from MailMan web interfaces
+-#
+-# * Must set environment variable FETCHMAIL_LIST_PASS to list admin password
+-
+-project=&quot;fetchmail&quot;
+-admin=&quot;<A HREF="http://lists.berlios.de/mailman/admin">http://lists.berlios.de/mailman/admin</A>&quot;
+-adminpw=$FETCHMAIL_LIST_PASS
+-
+-list=&quot;$1&quot;
+-if [ ! &quot;$list&quot; ]; then
+-	echo &quot;Usage: $0 list&quot; 1&gt;&amp;2
+-	exit 1
+-fi
+-case &quot;$list&quot; in
+-$project-*)
+-	# already gave us the full name, e.g. fetchmail-announce
+-	;;
+-*)
+-	# only gave us the last part of the name, e.g. announce
+-	list=&quot;$project-$list&quot;
+-	;;
+-esac
+-
+-hexpw=`echo &quot;$adminpw&quot; | od -t x1 -w64 | sed -e 's/^[0-9]*//' -e '/^ *$/d' -e 's/ /%/g'`
+-umask 077
+-tmp=&quot;/tmp/$project-$list.listsize.$$&quot;
+-# First get the login cookie...
+-curl -s -D &quot;$tmp&quot; &quot;$admin/${list}?adminpw=$hexpw&quot; &gt;/dev/null
+-# Second gets the actual stat
+-curl -s -b &quot;$tmp&quot; &quot;$admin/${list}/members&quot; \
+-	| sed -n '/.*&gt;(\([0-9][0-9]*\) members total.*/s//\1/p'
+-rm -f &quot;$tmp&quot;
+-# end
+-
+
+Modified: branches/BRANCH_6-3/dist-tools/makerelease
+===================================================================
+--- branches/BRANCH_6-3/dist-tools/makerelease	2009-10-28 16:24:23 UTC (rev 5445)
++++ branches/BRANCH_6-3/dist-tools/makerelease	2009-10-30 02:23:23 UTC (rev 5446)
+@@ -5,11 +5,10 @@
+ # in RELEASE_NOTES
+ #
+ use POSIX qw(strftime);
+-$timezone = strftime('%z', localtime) || &quot;-0500&quot;;
+ $tmp = $ENV{TMPDIR} || $ENV{TMP} || $ENV{TEMP} || &quot;/tmp&quot;;
+ 
+ $project = &quot;fetchmail&quot;;
+-$svnrepos = &quot;<A HREF="https://decoy.wox.org/svn/$project">https://decoy.wox.org/svn/$project</A>&quot;;
++$svnrepos = &quot;<A HREF="http://mknod.org/svn/$project">http://mknod.org/svn/$project</A>&quot;;
+ $website = &quot;<A HREF="http://developer.berlios.de/projects/$project">http://developer.berlios.de/projects/$project</A>&quot;;
+ $mailfrom = &quot;&lt;$project-devel-owner\@lists.berlios.de&gt; (Fetchmail Development Team)&quot;;
+ 
+@@ -38,7 +37,7 @@
+ 
+ # extract version from source
+ $version=`grep 'AC_INIT' configure.ac`;
+-$version =~ /AC_INIT\([^,]*,\[?([0-9.rc-]+)\]?\)/;
++$version =~ /AC_INIT\([^,]*,\[?([0-9.rc-]+)\]?\,.*\)/;
+ $version = $1;
+ die &quot;cannot determine version&quot; unless defined $1;
+ $tag = &quot;RELEASE_$version&quot;;
+@@ -61,11 +60,13 @@
+     $oldtag = $versions[0];
+ }
+ 
+-$ENV{PATH} .= &quot;:./dist-tools:./dist-tools/shipper:.&quot;;
++$pwd = `pwd`; chomp $pwd;
+ 
++$ENV{PATH} .= &quot;:$pwd/dist-tools:$pwd/dist-tools/shipper&quot;;
++
+ print &quot;Building $version release, tag $tag, previous tag $oldtag\n&quot;;
+ 
+-if (-d autom4te.cache) {
++if (-d &quot;autom4te.cache&quot;) {
+     system(&quot;rm -rf autom4te.cache&quot;)
+ 	and die &quot;Failure in removing autom4te.cache&quot;;
+ }
+@@ -74,22 +75,13 @@
+ 	die(&quot;Failure in regenerating autoconf files\n&quot;);
+ }
+ 
+-if (system(&quot;./configure &amp;&amp; make clean &amp;&amp; make -C po update-po &amp;&amp; make clean&quot;)) {
+-	die(&quot;Failure in translation-file rebuild\n&quot;);
+-}
+-
+ print &quot;### Test-building the software...\n&quot;;
+-if (system(&quot;./configure &amp;&amp; make clean &amp;&amp; make distcheck&quot;)) {
++if (system(&quot;mkdir -p autobuild &amp;&amp; cd autobuild &amp;&amp; ../configure -C --silent &amp;&amp; make -s clean &amp;&amp; make distcheck&quot;)) {
+ 	die(&quot;Compilation failure\n&quot;);
+ }
+ 
+-print &quot;### Building the distribution...\n&quot;;
+-if (system(&quot;make dist $null&quot;)) {
+-	die(&quot;Distribution-build failure\n&quot;);
+-}
+-
+ print &quot;### Building the RPMs...\n&quot;;
+-if (system(&quot;buildrpms $project-${version}.tar.gz $null&quot;)) {
++if (system(&quot;cd autobuild &amp;&amp; cp ../fetchmail.xpm . &amp;&amp; buildrpms $project-${version}.tar.bz2 $null&quot;)) {
+ 	die(&quot;RPM-build failure\n&quot;);
+ }
+ 
+@@ -100,10 +92,10 @@
+ Subject: The $version release of $project is available
+ 
+ The $version release of $project is now available at the usual locations,
+-including &lt;URL:$website&gt;.
++including &lt;$website&gt;.
+ 
+ The source archive is available at:
+-&lt;URL:$website/$project-${version}.tar.gz&gt;
++&lt;$website/$project-${version}.tar.gz&gt;
+ 
+ Here are the release notes:
+ 
+@@ -152,25 +144,12 @@
+ 	    .&quot; -n -D 'diff between $oldver and $version' -m 'text/plain' -e 7bit -f $tmp/$project.DIFFS.$$&quot;
+ 	    .&quot; -o ANNOUNCE.EMAIL&quot;;
+ } else {
+-	rename(&quot;$tmp/$project.PREAMBLE.$$&quot;, &quot;ANNOUNCE.EMAIL&quot;);
++	system(mv, &quot;$tmp/$project.PREAMBLE.$$&quot;, &quot;ANNOUNCE.EMAIL&quot;);
+ }
+-#system(&quot;chown esr ANNOUNCE.EMAIL&quot;);
+-#chmod(0700, &quot;ANNOUNCE.EMAIL&quot;);
+ 
+ #unlink(&quot;$tmp/$project.PREAMBLE.$$&quot;);
+ unlink(&quot;$tmp/$project.DIFFS.$$&quot;);
+ 
+-print &quot;Building index page...\n&quot;;
+-system(&quot;rm -f index.html; indexgen.sh&quot;);
+-
+-if (-r &quot;testsites&quot;) {
+-	print &quot;Building test server list...\n&quot;;
+-	system(&quot;rm -f testservers.html; testservers-gen.sh &gt;testservers.html&quot;);
+-}
+-
+-print &quot;Making activity graph...&quot;;
+-system &quot;growthplot&quot;;
+-
+ print &quot;Done\n&quot;;
+ 
+ # makerelease ends here
+
+Modified: branches/BRANCH_6-3/dist-tools/shipper/buildrpms
+===================================================================
+--- branches/BRANCH_6-3/dist-tools/shipper/buildrpms	2009-10-28 16:24:23 UTC (rev 5445)
++++ branches/BRANCH_6-3/dist-tools/shipper/buildrpms	2009-10-30 02:23:23 UTC (rev 5446)
+@@ -24,6 +24,8 @@
+ echo &quot;%_topdir $TMPDIR&quot; &gt;&quot;$MACROFILE&quot;
+ echo &quot;%_topdir $TMPDIR&quot; &gt;&quot;$MACROFILE&quot;
+ 
++ARCH=--target=$(uname -m)
++
+ #  build RPMs
+ rpmbuild --rcfile &quot;$RCFILE&quot; $ARCH -ta $TARBALL \
+ || rpm --rcfile &quot;$RCFILE&quot; $ARCH -ta $TARBALL
+@@ -31,9 +33,9 @@
+ 
+ if [ $status = '0' ]
+ then
+-    # copy RPMs to this directory
+-    cp &quot;$TMPDIR&quot;/RPMS/*/*.rpm .
+-    cp &quot;$TMPDIR&quot;/SRPMS/*.rpm .
++    # move RPMs to this directory
++    mv &quot;$TMPDIR&quot;/RPMS/*/*.rpm .
++    mv &quot;$TMPDIR&quot;/SRPMS/*.rpm .
+ fi
+ 
+ #  clean up build directory
+
+Deleted: branches/BRANCH_6-3/dist-tools/timeplot
+===================================================================
+--- branches/BRANCH_6-3/dist-tools/timeplot	2009-10-28 16:24:23 UTC (rev 5445)
++++ branches/BRANCH_6-3/dist-tools/timeplot	2009-10-30 02:23:23 UTC (rev 5446)
+@@ -1,40 +0,0 @@
+-#!/bin/sh
+-#
+-# timeplot -- plot data on fetchmail release intervals
+-#
+-# 
+-
+-# Get data from the NEWS file
+-timeseries | awk &gt;/tmp/timeplot$$ '
+-START	{maxdiff = 0;}
+-/^[#%]/	{next;}
+-	{days[count++] = $6;}
+-END	{
+-		for (i = 0; i &lt; count-1; i++)
+-		{
+-			diffs[i] = days[i] - days[i + 1];
+-			if (maxdiff &lt; diffs[i])
+-				maxdiff = diffs[i];
+-		}
+-		for (i = 0; i &lt;= maxdiff; i++)
+-			freq[i] = 0;
+-		for (i = 0; i &lt; count - 1; i++)
+-		{
+-			freq[diffs[i]]++;
+-		}
+-		for (i = 0; i &lt;= maxdiff; i++)
+-			printf(&quot;%d	%d\n&quot;, i, freq[i]);
+-	}
+-'
+-
+-gnuplot &gt;time.png - &lt;&lt;EOF
+-set xlabel &quot;Release interval (days)&quot;
+-set ylabel &quot;Interval frequency&quot;
+-plot '/tmp/timeplot$$' using 1:2 \
+-	title &quot;Release interval frequency&quot;
+-pause 9999
+-EOF
+-
+-rm -f /tmp/time*
+-
+-# timeplot ends here
+
+Deleted: branches/BRANCH_6-3/dist-tools/timeseries
+===================================================================
+--- branches/BRANCH_6-3/dist-tools/timeseries	2009-10-28 16:24:23 UTC (rev 5445)
++++ branches/BRANCH_6-3/dist-tools/timeseries	2009-10-30 02:23:23 UTC (rev 5446)
+@@ -1,101 +0,0 @@
+-#!/usr/bin/perl
+-#
+-# Extract information on the fetchmail project size from the NEWS file
+-#
+-# Note: this only works if you have a news file from 5.1.1 or later --
+-# I didn't patch the code sizes into NEWS until then.
+-#
+-my($release, $date, $jdate);
+-
+-%month_offsets = (
+-	&quot;Jan&quot;,   0,
+-	&quot;Feb&quot;,   31,
+-	&quot;Mar&quot;,   59,
+-	&quot;Apr&quot;,   90,
+-	&quot;May&quot;,   120,
+-	&quot;Jun&quot;,   151,
+-	&quot;Jul&quot;,   181,
+-	&quot;Aug&quot;,   212,
+-	&quot;Sep&quot;,   243,
+-	&quot;Oct&quot;,   273,
+-	&quot;Nov&quot;,   304,
+-	&quot;Dec&quot;,   334,
+-);
+-
+-
+-sub day_offset
+-{
+-    my($datestring) = @_;
+-    my($wday, $month, $day, $time, $zone, $year) = split(' ', $datestring);
+-    my($jdate);
+-
+-    # We don't deal with leap years here because the baseline day is after
+-    # the last leap year (1996) and there's a long time before the next
+-    # one (2004).
+-    $jdate = ($year - 1996) * 365;
+-
+-    $jdate += $month_offsets{$month};
+-
+-    $jdate += ($day - 1);
+-
+-    # Baseline day for the size data was Fri Oct 25 23:02:26 EDT 1996 
+-    $jdate -= 297;
+-
+-    return($jdate);
+-}
+-
+-open(NEWS, &quot;NEWS&quot;);
+-$timestamp = `date`;
+-chop $timestamp;
+-$release = &quot;unknown&quot;;
+-$lines = &quot;unknown&quot;;
+-$date = &quot;unknown&quot;;
+-$jdate = &quot;unknown&quot;;
+-print &lt;&lt;EOF;
+-# Population data from fetchmail NEWS file, as of $timestamp.
+-#
+-# Output other than pass-through % lines is tab-separated fields.
+-# Field 1: release ID
+-# Field 2: count of source lines under version control 
+-# Field 3: count of fetchmail-friends subscribers
+-# Field 4: count of fetchmail-announce subscribers
+-# Field 5: total subscribers to both lists
+-# Field 6: date of release (days since first datum)
+-# Field 7: date of release (RFC822 date format)
+-#
+-EOF
+-while ($_ = &lt;NEWS&gt;)
+-{
+-    my($sum);
+-
+-    if (/^%/) {
+-	print $_;
+-    }
+-    elsif (/^fetchmail-([^ ]*) \(([^)]+)\)(, [0-9]* lines)?:/) {
+-	$release = $1;
+-	$date = $2;
+-	$jdate = &amp;day_offset($date);
+-	if ($3) {
+-	    $lines = substr($3, 2, length($3) - 8);
+-	} else {
+-	    $lines = 'na'
+-	}
+-    }
+-    elsif (/There are ([0-9]*) people on fetchmail-friends and ([0-9]*) on fetchmail-announce/) {
+-	$sum = $1 + $2;
+-	print &quot;${release}\t${lines}\t$1\t$2\t${sum}\t${jdate}\t${date}\n&quot;;
+-	$release = &quot;unknown&quot;;
+-	$date = &quot;unknown&quot;;
+-    }
+-    elsif (/There are ([0-9]*) people on the fetchmail-friends list./) {
+-	print &quot;$release\t${lines}\t$1\t0\t$1\t$jdate\t$date\n&quot;;
+-	$release = &quot;unknown&quot;;
+-	$date = &quot;unknown&quot;;
+-    }
+-}
+-
+-# end
+-
+-
+-
+-
+
+Deleted: branches/BRANCH_6-3/dist-tools/upload
+===================================================================
+--- branches/BRANCH_6-3/dist-tools/upload	2009-10-28 16:24:23 UTC (rev 5445)
++++ branches/BRANCH_6-3/dist-tools/upload	2009-10-30 02:23:23 UTC (rev 5446)
+@@ -1,26 +0,0 @@
+-#!/bin/sh
+-
+-version=`sed -n '/VERSION *= *\(.*\)/s//\1/p' &lt;Makefile`
+-echo &quot;Uploading fetchmail version ${version}&quot;
+-
+-if [ $* ]
+-then
+-    ../upload $*
+-else
+-
+-echo &quot;Beginning web upload...&quot;
+-# First, copy to primary website
+-dest=esr@${WWWHOST}:${WWWDIR}/fetchmail
+-scp fetchmail-${version}.tar.gz.asc $dest
+-#scp funny.html $dest
+-#scp fetchmail.png $dest
+-#scp bighand.png $dest
+-scp growth.png $dest
+-scp timeseries $dest
+-scp growthplot $dest
+-scp checksums $dest
+-# shipper does the rest.
+-rm -f ANNOUNCE.FRESHMEAT
+-shipper
+-
+-
+
+Deleted: branches/BRANCH_6-3/dist-tools/uploadfaq
+===================================================================
+--- branches/BRANCH_6-3/dist-tools/uploadfaq	2009-10-28 16:24:23 UTC (rev 5445)
++++ branches/BRANCH_6-3/dist-tools/uploadfaq	2009-10-30 02:23:23 UTC (rev 5446)
+@@ -1,27 +0,0 @@
+-#!/bin/sh
+-
+-echo &gt;&amp;2 &quot;this script $0 is outdated. Abort.&quot;
+-exit 1
+-
+-version=`sed -n '/VERSION *= *\(.*\)/s//\1/p' &lt;Makefile`
+-echo &quot;Uploading fetchmail version ${version} FAQ&quot;
+-
+-if [ $* ]
+-then
+-    ../upload $*
+-else
+-    lftp &lt;&lt;EOF
+-# First, copy to primary website
+-open ${WWWHOST}
+-cd ${WWWDIR}/fetchmail
+-put fetchmail-FAQ.html
+-close
+-
+-# Next, upload to the ftp site
+-open locke.ccil.org
+-cd ~ftp/pub/esr/fetchmail
+-put FAQ
+-close
+-EOF
+-    echo &quot;fetchmail FAQ uploaded&quot;
+-fi
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000503.html">[fetchmail-svn] r5445 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000505.html">[fetchmail-svn] r5447 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#504">[ date ]</a>
+              <a href="thread.html#504">[ thread ]</a>
+              <a href="subject.html#504">[ subject ]</a>
+              <a href="author.html#504">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

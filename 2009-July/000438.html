@@ -1,0 +1,408 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5377 - branches/BRANCH_MAPI
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-July/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5377%20-%20branches/BRANCH_MAPI&In-Reply-To=%3C20090706185908.1EF9121F32A%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000437.html">
+   <LINK REL="Next"  HREF="000439.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5377 - branches/BRANCH_MAPI</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5377%20-%20branches/BRANCH_MAPI&In-Reply-To=%3C20090706185908.1EF9121F32A%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5377 - branches/BRANCH_MAPI">svn at mknod.org
+       </A><BR>
+    <I>Mon Jul  6 20:59:07 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000437.html">[fetchmail-svn] r5375 - in branches/BRANCH_6-3: . po
+</A></li>
+        <LI>Next message: <A HREF="000439.html">[fetchmail-svn] r5378 - in branches/BRANCH_MAPI: . m4 po
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#438">[ date ]</a>
+              <a href="thread.html#438">[ thread ]</a>
+              <a href="subject.html#438">[ subject ]</a>
+              <a href="author.html#438">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-07-06 13:59:07 -0500 (Mon, 06 Jul 2009)
+New Revision: 5377
+
+Added:
+   branches/BRANCH_MAPI/fetchmail-SA-2007-02.txt
+   branches/BRANCH_MAPI/fetchmail-SA-2008-01.txt
+Log:
+Add missing files so that 'make dist' passes.
+
+Added: branches/BRANCH_MAPI/fetchmail-SA-2007-02.txt
+===================================================================
+--- branches/BRANCH_MAPI/fetchmail-SA-2007-02.txt	                        (rev 0)
++++ branches/BRANCH_MAPI/fetchmail-SA-2007-02.txt	2009-07-06 18:59:07 UTC (rev 5377)
+@@ -0,0 +1,130 @@
++-----BEGIN PGP SIGNED MESSAGE-----
++Hash: SHA1
++
++fetchmail-SA-2007-02: Crash when a local warning message is rejected
++
++Topics:		Crash when a fetchmail-generated warning message is rejected
++
++Author:		Matthias Andree
++Version:	1.1
++Announced:	2007-08-28
++Type:		NULL pointer dereference trigged by outside circumstances
++Impact:		denial of service possible
++Danger:		low
++CVSS V2 vector: (AV:N/AC:M/Au:N/C:N/I:N/A:C/E:?/RL:O/RC:C)
++		
++Credits:	Earl Chew
++CVE Name:	CVE-2007-4565
++URL:		<A HREF="http://www.fetchmail.info/fetchmail-SA-2007-02.txt">http://www.fetchmail.info/fetchmail-SA-2007-02.txt</A>
++Project URL:	<A HREF="http://www.fetchmail.info/">http://www.fetchmail.info/</A>
++
++Affects:	fetchmail release &lt; 6.3.9 exclusively
++
++Not affected:	fetchmail release 6.3.9 and newer
++		fetchmail releases &lt; 4.6.8 exclusively
++
++Corrected:	2007-07-29 fetchmail SVN (rev 5119)
++
++
++0. Release history
++==================
++
++2007-07-29 1.0	first draft for MITRE/CVE (visible in SVN)
++2007-08-28 1.1	reworked, added fix, official release
++
++
++1. Background
++=============
++
++fetchmail is a software package to retrieve mail from remote POP2, POP3,
++IMAP, ETRN or ODMR servers and forward it to local SMTP, LMTP servers or
++message delivery agents.
++
++fetchmail ships with a graphical, Python/Tkinter based configuration
++utility named &quot;fetchmailconf&quot; to help the user create configuration (run
++control) files for fetchmail.
++
++
++2. Problem description and Impact
++=================================
++
++fetchmail will generate warning messages in certain circumstances and 
++send them to the local postmaster or the user starting it. Such warning 
++messages can be generated, for instance, if logging into an upstream 
++server fails repeatedly or if messages beyond the size limit (if 
++configured, default: no limit) are left on the server.
++
++If this warning message is then refused by the SMTP listener that 
++fetchmail is forwarding the message to, fetchmail attempts to 
++dereference a NULL pointer when trying to find out if it should allow a 
++bounce message to be sent.
++
++This causes fetchmail to crash and not collect further messages until it 
++is restarted.
++
++Risk assessment: low. In default configuration, fetchmail will talk 
++through the loopback interface, that means to the SMTP server on the same 
++computer as it is running on. Otherwise, it will commonly be configured 
++to talk to trusted SMTP servers, so a compromise or misconfiguration of 
++a trusted or the same computer is required to exploit this problem - 
++which usually opens up much easier ways of denying service, or worse.
++
++
++3. Solution
++===========
++
++There are two alternatives, either of them by itself is sufficient:
++
++a. Apply the patch found in section B of this announcement to fetchmail 6.3.8,
++   recompile and reinstall it.
++
++b. Install fetchmail 6.3.9 or newer when it becomes available.  The 
++   fetchmail source code is available from 
++   &lt;<A HREF="http://developer.berlios.de/project/showfiles.php?group_id=1824">http://developer.berlios.de/project/showfiles.php?group_id=1824</A>&gt;.
++
++Note there are no workarounds presented here since all known workarounds 
++are more intrusive than the actual solution.
++
++
++A. Copyright, License and Warranty
++==================================
++
++(C) Copyright 2007 by Matthias Andree, &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">matthias.andree at gmx.de</A>&gt;.
++Some rights reserved.
++
++This work is licensed under the Creative Commons
++Attribution-NonCommercial-NoDerivs German License. To view a copy of
++this license, visit <A HREF="http://creativecommons.org/licenses/by-nc-nd/2.0/de/">http://creativecommons.org/licenses/by-nc-nd/2.0/de/</A>
++or send a letter to Creative Commons; 559 Nathan Abbott Way;
++Stanford, California 94305; USA.
++
++THIS WORK IS PROVIDED FREE OF CHARGE AND WITHOUT ANY WARRANTIES.
++Use the information herein at your own risk.
++
++
++
++B. Patch to remedy the problem
++==============================
++
++Index: sink.c
++===================================================================
++- --- sink.c	(revision 5118)
+++++ sink.c	(revision 5119)
++@@ -262,7 +262,7 @@
++     const char *md1 = &quot;MAILER-DAEMON&quot;, *md2 = &quot;MAILER-DAEMON@&quot;;
++ 
++     /* don't bounce in reply to undeliverable bounces */
++- -    if (!msg-&gt;return_path[0] ||
+++    if (!msg || !msg-&gt;return_path[0] ||
++ 	strcmp(msg-&gt;return_path, &quot;&lt;&gt;&quot;) == 0 ||
++ 	strcasecmp(msg-&gt;return_path, md1) == 0 ||
++ 	strncasecmp(msg-&gt;return_path, md2, strlen(md2)) == 0)
++
++END OF fetchmail-SA-2007-02.txt
++-----BEGIN PGP SIGNATURE-----
++Version: GnuPG v1.4.5 (GNU/Linux)
++
++iD8DBQFIV7WXvmGDOQUufZURAr8+AKC7GpAFvCTaHD69n+g39lWtPIheCwCglj/O
++yh3P8bOmEn3a54h4aH2BFLA=
++=NBQZ
++-----END PGP SIGNATURE-----
+
+Added: branches/BRANCH_MAPI/fetchmail-SA-2008-01.txt
+===================================================================
+--- branches/BRANCH_MAPI/fetchmail-SA-2008-01.txt	                        (rev 0)
++++ branches/BRANCH_MAPI/fetchmail-SA-2008-01.txt	2009-07-06 18:59:07 UTC (rev 5377)
+@@ -0,0 +1,195 @@
++-----BEGIN PGP SIGNED MESSAGE-----
++Hash: SHA1
++
++fetchmail-SA-2008-01: Crash on large log messages in verbose mode
++
++Topics:		Crash in large log messages in verbose mode.
++
++Author:		Matthias Andree
++Version:	1.2
++Announced:	2008-06-17
++Type:		Dereferencing garbage pointer triggered by outside circumstances
++Impact:		denial of service possible
++Danger:		low
++CVSS V2 vector: (AV:N/AC:M/Au:N/C:N/I:N/A:C/E:P/RL:O/RC:C)
++
++Credits:	Petr Uzel (fix), Petr Cerny (analysis), Gunter Nau (bug report)
++CVE Name:	CVE-2008-2711
++URL:		<A HREF="http://www.fetchmail.info/fetchmail-SA-2008-01.txt">http://www.fetchmail.info/fetchmail-SA-2008-01.txt</A>
++Project URL:	<A HREF="http://www.fetchmail.info/">http://www.fetchmail.info/</A>
++
++Affects:	fetchmail release before and excluding 6.3.9
++		fetchmail release candidate 6.3.9-rc1
++
++Not affected:	fetchmail release 6.3.9 and newer
++		fetchmail release candidate 6.3.9-rc2 and newer
++		systems without varargs support.
++
++Corrected:	2008-06-24 fetchmail SVN (rev 5205)
++
++References:	&lt;<A HREF="https://bugzilla.novell.com/show_bug.cgi?id=354291">https://bugzilla.novell.com/show_bug.cgi?id=354291</A>&gt;
++		&lt;<A HREF="http://developer.berlios.de/patch/?func=detailpatch&amp;patch_id=2492&amp;group_id=1824">http://developer.berlios.de/patch/?func=detailpatch&amp;patch_id=2492&amp;group_id=1824</A>&gt;
++
++
++0. Release history
++==================
++
++2008-06-13 1.0	first draft for MITRE/CVE (visible in SVN,
++		posted to oss-security)
++2008-06-17 1.0	published on <A HREF="http://www.fetchmail.info/">http://www.fetchmail.info/</A>
++2008-06-17 1.1	Corrected typo in Type: above (trigged -&gt; triggered)
++2008-06-24 1.2  also fixed issue in report_complete (reported by Petr Uzel)
++
++
++1. Background
++=============
++
++fetchmail is a software package to retrieve mail from remote POP2, POP3,
++IMAP, ETRN or ODMR servers and forward it to local SMTP, LMTP servers or
++message delivery agents.
++
++fetchmail ships with a graphical, Python/Tkinter based configuration
++utility named &quot;fetchmailconf&quot; to help the user create configuration (run
++control) files for fetchmail.
++
++
++2. Problem description and Impact
++=================================
++
++Gunter Nau reported fetchmail crashing on some messages; further
++debugging by Petr Uzel and Petr Cerny at Novell/SUSE Czech Republic
++dug up that this happened when fetchmail was trying to print, in -v -v
++verbose level, headers exceeding 2048 bytes. In this situation,
++fetchmail would resize the buffer and fill in further parts of the
++message, but forget to reinitialize its va_list typed source pointer,
++thus reading data from a garbage address found on the stack at
++addresses above the function arguments the caller passed in; usually
++that would be the caller's stack frame.
++
++It is unknown whether code can be injected remotely, but given that
++the segmentation fault is caused by read accesses, the relevant data
++is not under the remote attacker's control and no buffer overrun
++situation is present that would allow altering program /flow/, it is
++deemed rather unlikely that code can be injected.
++
++Note that the required -vv configuration at hand is both non-default
++and also not common in automated (cron job) setups, but usually used
++in manual debugging, so not many systems would be affected by the
++problem. Nonetheless, in vulnerable configurations, it is remotely
++exploitable to effect a denial of service attack.
++
++
++
++3. Solution
++===========
++
++There are two alternatives, either of them by itself is sufficient:
++
++a. Apply the patch found in section B of this announcement to
++   fetchmail 6.3.8, recompile and reinstall it.
++
++b. Install fetchmail 6.3.9 or newer after it will have become available.
++   The fetchmail source code is always available from
++   &lt;<A HREF="http://developer.berlios.de/project/showfiles.php?group_id=1824">http://developer.berlios.de/project/showfiles.php?group_id=1824</A>&gt;.
++
++
++4. Workaround
++=============
++
++Run fetchmail at low verbosity, avoid using two or three -v arguments;
++internal messages are short and do not contain external message
++sources so they do not cause buffer resizing. It is recommended to
++replace the vulnerable code by a fixed version (see previous
++section 3. Solution) as soon as reasonably possible.
++
++
++A. Copyright, License and Warranty
++==================================
++
++(C) Copyright 2008 by Matthias Andree, &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">matthias.andree at gmx.de</A>&gt;.
++Some rights reserved.
++
++This work is licensed under the Creative Commons
++Attribution-NonCommercial-NoDerivs German License. To view a copy of
++this license, visit <A HREF="http://creativecommons.org/licenses/by-nc-nd/2.0/de/">http://creativecommons.org/licenses/by-nc-nd/2.0/de/</A>
++or send a letter to Creative Commons; 559 Nathan Abbott Way;
++Stanford, California 94305; USA.
++
++THIS WORK IS PROVIDED FREE OF CHARGE AND WITHOUT ANY WARRANTIES.
++Use the information herein at your own risk.
++
++
++B. Patch to remedy the problem
++==============================
++
++Note that when taking this from a GnuPG clearsigned file, the lines 
++starting with a &quot;-&quot; character are prefixed by another &quot;- &quot; (dash + 
++blank) combination. Either feed this file through GnuPG to strip them, 
++or strip them manually.
++
++Whitespace differences can usually be ignored by invoking &quot;patch -l&quot;,
++so try this if the patch does not apply.
++
++diff --git a/report.c b/report.c
++index 31d4e48..320e60b 100644
++- --- a/report.c
+++++ b/report.c
++@@ -238,11 +238,17 @@ report_build (FILE *errfp, message, va_alist)
++     rep_ensuresize();
++ 
++ #if defined(VA_START)
++- -    VA_START (args, message);
++     for ( ; ; )
++     {
+++	/*
+++	 * args has to be initialized before every call of vsnprintf(), 
+++	 * because vsnprintf() invokes va_arg macro and thus args is 
+++	 * undefined after the call.
+++	 */
+++	VA_START(args, message);
++ 	n = vsnprintf (partial_message + partial_message_size_used, partial_message_size - partial_message_size_used,
++ 		       message, args);
+++	va_end (args);
++ 
++ 	if (n &gt;= 0
++ 	    &amp;&amp; (unsigned)n &lt; partial_message_size - partial_message_size_used)
++@@ -254,7 +260,6 @@ report_build (FILE *errfp, message, va_alist)
++ 	partial_message_size += 2048;
++ 	partial_message = REALLOC (partial_message, partial_message_size);
++     }
++- -    va_end (args);
++ #else
++     for ( ; ; )
++     {
++@@ -304,12 +309,13 @@ report_complete (FILE *errfp, message, va_alist)
++     rep_ensuresize();
++ 
++ #if defined(VA_START)
++- -    VA_START (args, message);
++     for ( ; ; )
++     {
+++	VA_START(args, message);
++ 	n = vsnprintf (partial_message + partial_message_size_used,
++ 		       partial_message_size - partial_message_size_used,
++ 		       message, args);
+++	va_end(args);
++ 
++ 	/* old glibc versions return -1 for truncation */
++ 	if (n &gt;= 0
++@@ -322,7 +328,6 @@ report_complete (FILE *errfp, message, va_alist)
++ 	partial_message_size += 2048;
++ 	partial_message = REALLOC (partial_message, partial_message_size);
++     }
++- -    va_end (args);
++ #else
++     for ( ; ; )
++     {
++
++END OF fetchmail-SA-2008-01.txt
++-----BEGIN PGP SIGNATURE-----
++Version: GnuPG v1.4.5 (GNU/Linux)
++
++iD8DBQFIYPBuvmGDOQUufZURAuj8AJ9IbN/UMcML6NLKSI0keQzGVGzZSQCg+UCP
++tUVNigLK8Xz40J2Eg7PD8Xs=
++=HAmn
++-----END PGP SIGNATURE-----
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000437.html">[fetchmail-svn] r5375 - in branches/BRANCH_6-3: . po
+</A></li>
+	<LI>Next message: <A HREF="000439.html">[fetchmail-svn] r5378 - in branches/BRANCH_MAPI: . m4 po
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#438">[ date ]</a>
+              <a href="thread.html#438">[ thread ]</a>
+              <a href="subject.html#438">[ subject ]</a>
+              <a href="author.html#438">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

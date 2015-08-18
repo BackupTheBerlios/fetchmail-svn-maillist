@@ -1,0 +1,1016 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5062 - in branches/BRANCH_6-3: . po
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2007-March/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5062%20-%20in%20branches/BRANCH_6-3%3A%20.%20po&In-Reply-To=%3C20070319220653.7300A218062%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000054.html">
+   <LINK REL="Next"  HREF="000056.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5062 - in branches/BRANCH_6-3: . po</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5062%20-%20in%20branches/BRANCH_6-3%3A%20.%20po&In-Reply-To=%3C20070319220653.7300A218062%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5062 - in branches/BRANCH_6-3: . po">svn at mknod.org
+       </A><BR>
+    <I>Mon Mar 19 23:06:53 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000054.html">[fetchmail-svn] r5061 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000056.html">[fetchmail-svn] r5063 - tags
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#55">[ date ]</a>
+              <a href="thread.html#55">[ thread ]</a>
+              <a href="subject.html#55">[ subject ]</a>
+              <a href="author.html#55">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2007-03-19 17:06:51 -0500 (Mon, 19 Mar 2007)
+New Revision: 5062
+
+Modified:
+   branches/BRANCH_6-3/configure.ac
+   branches/BRANCH_6-3/po/ca.po
+   branches/BRANCH_6-3/po/cs.po
+   branches/BRANCH_6-3/po/de.po
+   branches/BRANCH_6-3/po/en_GB.po
+   branches/BRANCH_6-3/po/es.po
+   branches/BRANCH_6-3/po/fr.po
+   branches/BRANCH_6-3/po/ja.po
+   branches/BRANCH_6-3/po/pl.po
+   branches/BRANCH_6-3/po/ru.po
+   branches/BRANCH_6-3/po/sq.po
+   branches/BRANCH_6-3/po/vi.po
+Log:
+Snapshot 6.3.8-rc2.
+
+Modified: branches/BRANCH_6-3/configure.ac
+===================================================================
+--- branches/BRANCH_6-3/configure.ac	2007-03-19 22:04:54 UTC (rev 5061)
++++ branches/BRANCH_6-3/configure.ac	2007-03-19 22:06:51 UTC (rev 5062)
+@@ -8,7 +8,7 @@
+ dnl Process this file with autoconf to produce a configure script.
+ dnl
+ 
+-AC_INIT([fetchmail],[6.3.8-rc1],[<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-users at lists.berlios.de</A>])
++AC_INIT([fetchmail],[6.3.8-rc2],[<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-users at lists.berlios.de</A>])
+ AC_CONFIG_SRCDIR([fetchmail.h])
+ AC_CONFIG_HEADERS([config.h])
+ AC_CONFIG_LIBOBJ_DIR([.])
+
+Modified: branches/BRANCH_6-3/po/ca.po
+===================================================================
+--- branches/BRANCH_6-3/po/ca.po	2007-03-19 22:04:54 UTC (rev 5061)
++++ branches/BRANCH_6-3/po/ca.po	2007-03-19 22:06:51 UTC (rev 5062)
+@@ -6,7 +6,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.3.5-b1\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-03-17 21:43+0100\n&quot;
++&quot;POT-Creation-Date: 2007-03-18 02:13+0100\n&quot;
+ &quot;PO-Revision-Date: 2006-08-31 19:22+0200\n&quot;
+ &quot;Last-Translator: Ernest Adrogu&#233; Calveras &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">eadrogue at gmx.net</A>&gt;\n&quot;
+ &quot;Language-Team: Catalan &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">ca at dodds.net</A>&gt;\n&quot;
+@@ -1777,7 +1777,7 @@
+ msgid &quot;%lu is unseen\n&quot;
+ msgstr &quot;%lu &#233;s no llegit\n&quot;
+ 
+-#: imap.c:897 pop3.c:862
++#: imap.c:897 pop3.c:876
+ #, c-format
+ msgid &quot;%u is first unseen\n&quot;
+ msgstr &quot;%u &#233;s el primer missatge no llegit\n&quot;
+@@ -2332,46 +2332,50 @@
+ msgid &quot;Timestamp syntax error in greeting\n&quot;
+ msgstr &quot;Error de sintaxi en la marca hor&#224;ria de la salutaci&#243;\n&quot;
+ 
+-#: pop3.c:682
++#: pop3.c:672
++msgid &quot;Invalid APOP timestamp.\n&quot;
++msgstr &quot;&quot;
++
++#: pop3.c:696
+ msgid &quot;Undefined protocol request in POP3_auth\n&quot;
+ msgstr &quot;Petici&#243; de protocol indefinida a POP3_auth\n&quot;
+ 
+-#: pop3.c:703
++#: pop3.c:717
+ msgid &quot;lock busy!  Is another session active?\n&quot;
+ msgstr &quot;bloqueig temporal! Hi ha alguna altra sessi&#243; activa?\n&quot;
+ 
+-#: pop3.c:782
++#: pop3.c:796
+ msgid &quot;Cannot handle UIDL response from upstream server.\n&quot;
+ msgstr &quot;No s'ha pogut administrar la resposta UIDL del servidor remot.\n&quot;
+ 
+-#: pop3.c:805
++#: pop3.c:819
+ msgid &quot;Server responded with UID for wrong message.\n&quot;
+ msgstr &quot;El servidor ha respost amb un UID pel missatge equivocat.\n&quot;
+ 
+-#: pop3.c:832 pop3.c:1078
++#: pop3.c:846 pop3.c:1092
+ #, c-format
+ msgid &quot;id=%s (num=%d) was deleted, but is still present!\n&quot;
+ msgstr &quot;id=%s (n&#250;m=%d) s'ha esborrat, per&#242; encara est&#224; present!\n&quot;
+ 
+-#: pop3.c:841 pop3.c:853 pop3.c:1087 pop3.c:1094
++#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
+ #, c-format
+ msgid &quot;%u is unseen\n&quot;
+ msgstr &quot;%u &#233;s no llegit\n&quot;
+ 
+-#: pop3.c:938
++#: pop3.c:952
+ msgid &quot;Messages inserted into list on server. Cannot handle this.\n&quot;
+ msgstr &quot;&quot;
+ &quot;Els missatges estan inserits a la llista del servidor. No es pot continuar.\n&quot;
+ 
+-#: pop3.c:1030
++#: pop3.c:1044
+ msgid &quot;protocol error\n&quot;
+ msgstr &quot;error de protocol\n&quot;
+ 
+-#: pop3.c:1046
++#: pop3.c:1060
+ msgid &quot;protocol error while fetching UIDLs\n&quot;
+ msgstr &quot;error de protocol quan es rebien els UIDLs\n&quot;
+ 
+-#: pop3.c:1416
++#: pop3.c:1430
+ msgid &quot;Option --folder is not supported with POP3\n&quot;
+ msgstr &quot;L'opci&#243; --folder no est&#224; suportada per POP3\n&quot;
+ 
+
+Modified: branches/BRANCH_6-3/po/cs.po
+===================================================================
+--- branches/BRANCH_6-3/po/cs.po	2007-03-19 22:04:54 UTC (rev 5061)
++++ branches/BRANCH_6-3/po/cs.po	2007-03-19 22:06:51 UTC (rev 5062)
+@@ -7,7 +7,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail-6.2.6.alpha1\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-03-17 21:43+0100\n&quot;
++&quot;POT-Creation-Date: 2007-03-18 02:13+0100\n&quot;
+ &quot;PO-Revision-Date: 2005-07-03 03:57+0200\n&quot;
+ &quot;Last-Translator: Miloslav Trmac &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">mitr at volny.cz</A>&gt;\n&quot;
+ &quot;Language-Team: Czech &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">cs at li.org</A>&gt;\n&quot;
+@@ -1757,7 +1757,7 @@
+ msgid &quot;%lu is unseen\n&quot;
+ msgstr &quot;%u nebyla p&#197;&#153;e&#196;&#141;tena\n&quot;
+ 
+-#: imap.c:897 pop3.c:862
++#: imap.c:897 pop3.c:876
+ #, c-format
+ msgid &quot;%u is first unseen\n&quot;
+ msgstr &quot;%u je prvn&#195;&#173; nep&#197;&#153;e&#196;&#141;ten&#195;&#161;\n&quot;
+@@ -2296,45 +2296,49 @@
+ msgid &quot;Timestamp syntax error in greeting\n&quot;
+ msgstr &quot;Syntaktick&#195;&#161; chyba v &#196;&#141;asov&#195;&#169;m &#195;&#186;daji z pozdravu\n&quot;
+ 
+-#: pop3.c:682
++#: pop3.c:672
++msgid &quot;Invalid APOP timestamp.\n&quot;
++msgstr &quot;&quot;
++
++#: pop3.c:696
+ msgid &quot;Undefined protocol request in POP3_auth\n&quot;
+ msgstr &quot;&#197;&#189;&#195;&#161;dost o nedefinovan&#195;&#189; protokol v POP3_auth\n&quot;
+ 
+-#: pop3.c:703
++#: pop3.c:717
+ msgid &quot;lock busy!  Is another session active?\n&quot;
+ msgstr &quot;zam&#196;&#141;eno! Je aktivn&#195;&#173; jin&#195;&#169; sezen&#195;&#173;?\n&quot;
+ 
+-#: pop3.c:782
++#: pop3.c:796
+ msgid &quot;Cannot handle UIDL response from upstream server.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:805
++#: pop3.c:819
+ msgid &quot;Server responded with UID for wrong message.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:832 pop3.c:1078
++#: pop3.c:846 pop3.c:1092
+ #, c-format
+ msgid &quot;id=%s (num=%d) was deleted, but is still present!\n&quot;
+ msgstr &quot;id=%s (num=%d) bylo odstran&#196;&#155;no, ale je st&#195;&#161;le p&#197;&#153;&#195;&#173;tomno!\n&quot;
+ 
+-#: pop3.c:841 pop3.c:853 pop3.c:1087 pop3.c:1094
++#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
+ #, c-format
+ msgid &quot;%u is unseen\n&quot;
+ msgstr &quot;%u nebyla p&#197;&#153;e&#196;&#141;tena\n&quot;
+ 
+-#: pop3.c:938
++#: pop3.c:952
+ msgid &quot;Messages inserted into list on server. Cannot handle this.\n&quot;
+ msgstr &quot;Zpr&#195;&#161;vy vlo&#197;&#190;eny do seznamu na serveru. To neum&#195;&#173;m zpracovat.\n&quot;
+ 
+-#: pop3.c:1030
++#: pop3.c:1044
+ msgid &quot;protocol error\n&quot;
+ msgstr &quot;chyba protokolu\n&quot;
+ 
+-#: pop3.c:1046
++#: pop3.c:1060
+ msgid &quot;protocol error while fetching UIDLs\n&quot;
+ msgstr &quot;chyba protokolu p&#197;&#153;i stahov&#195;&#161;n&#195;&#173; UIDL\n&quot;
+ 
+-#: pop3.c:1416
++#: pop3.c:1430
+ #, fuzzy
+ msgid &quot;Option --folder is not supported with POP3\n&quot;
+ msgstr &quot;P&#197;&#153;ep&#195;&#173;na&#196;&#141; --remote nen&#195;&#173; s POP3 podporov&#195;&#161;n\n&quot;
+
+Modified: branches/BRANCH_6-3/po/de.po
+===================================================================
+--- branches/BRANCH_6-3/po/de.po	2007-03-19 22:04:54 UTC (rev 5061)
++++ branches/BRANCH_6-3/po/de.po	2007-03-19 22:06:51 UTC (rev 5062)
+@@ -8,7 +8,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: de\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-03-17 21:43+0100\n&quot;
++&quot;POT-Creation-Date: 2007-03-18 02:13+0100\n&quot;
+ &quot;PO-Revision-Date: 2006-11-27 04:32+0100\n&quot;
+ &quot;Last-Translator: Matthias Andree &lt;matthias.andree&gt;\n&quot;
+ &quot;Language-Team: Deutsch &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">de at li.org</A>&gt;\n&quot;
+@@ -1783,7 +1783,7 @@
+ msgid &quot;%lu is unseen\n&quot;
+ msgstr &quot;%lu ist ungesehen\n&quot;
+ 
+-#: imap.c:897 pop3.c:862
++#: imap.c:897 pop3.c:876
+ #, c-format
+ msgid &quot;%u is first unseen\n&quot;
+ msgstr &quot;%u ist erste ungesehene\n&quot;
+@@ -2326,45 +2326,49 @@
+ msgid &quot;Timestamp syntax error in greeting\n&quot;
+ msgstr &quot;Zeitstempel-Syntax-Fehler in Begr&#195;&#188;&#195;&#159;ung\n&quot;
+ 
+-#: pop3.c:682
++#: pop3.c:672
++msgid &quot;Invalid APOP timestamp.\n&quot;
++msgstr &quot;Ung&#195;&#188;ltiger APOP-Zeitstempel.\n&quot;
++
++#: pop3.c:696
+ msgid &quot;Undefined protocol request in POP3_auth\n&quot;
+ msgstr &quot;Anfrage nach undefiniertem Protokoll in POP3_auth\n&quot;
+ 
+-#: pop3.c:703
++#: pop3.c:717
+ msgid &quot;lock busy!  Is another session active?\n&quot;
+ msgstr &quot;Lock besch&#195;&#164;ftigt!  Ist eine weitere Sitzung aktiv?\n&quot;
+ 
+-#: pop3.c:782
++#: pop3.c:796
+ msgid &quot;Cannot handle UIDL response from upstream server.\n&quot;
+ msgstr &quot;Kann die UIDL-Antwort des Servers nicht verarbeiten.\n&quot;
+ 
+-#: pop3.c:805
++#: pop3.c:819
+ msgid &quot;Server responded with UID for wrong message.\n&quot;
+ msgstr &quot;Server hat mit UID der falschen Nachricht geantwortet.\n&quot;
+ 
+-#: pop3.c:832 pop3.c:1078
++#: pop3.c:846 pop3.c:1092
+ #, c-format
+ msgid &quot;id=%s (num=%d) was deleted, but is still present!\n&quot;
+ msgstr &quot;id=%s (num=%d) wurde gel&#195;&#182;scht, ist aber immer noch da!\n&quot;
+ 
+-#: pop3.c:841 pop3.c:853 pop3.c:1087 pop3.c:1094
++#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
+ #, c-format
+ msgid &quot;%u is unseen\n&quot;
+ msgstr &quot;%u ist ungesehen\n&quot;
+ 
+-#: pop3.c:938
++#: pop3.c:952
+ msgid &quot;Messages inserted into list on server. Cannot handle this.\n&quot;
+ msgstr &quot;Nachrichten in Liste auf Server eingef&#195;&#188;gt. Kann damit nicht umgehen.\n&quot;
+ 
+-#: pop3.c:1030
++#: pop3.c:1044
+ msgid &quot;protocol error\n&quot;
+ msgstr &quot;Protokollfehler\n&quot;
+ 
+-#: pop3.c:1046
++#: pop3.c:1060
+ msgid &quot;protocol error while fetching UIDLs\n&quot;
+ msgstr &quot;Protokollfehler beim Holen der UIDL\n&quot;
+ 
+-#: pop3.c:1416
++#: pop3.c:1430
+ msgid &quot;Option --folder is not supported with POP3\n&quot;
+ msgstr &quot;Option --folder wird mit POP3 nicht unterst&#195;&#188;tzt\n&quot;
+ 
+
+Modified: branches/BRANCH_6-3/po/en_GB.po
+===================================================================
+--- branches/BRANCH_6-3/po/en_GB.po	2007-03-19 22:04:54 UTC (rev 5061)
++++ branches/BRANCH_6-3/po/en_GB.po	2007-03-19 22:06:51 UTC (rev 5062)
+@@ -7,7 +7,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.3.5\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-03-17 21:43+0100\n&quot;
++&quot;POT-Creation-Date: 2007-03-18 02:13+0100\n&quot;
+ &quot;PO-Revision-Date: 2006-11-02 06:58-0000\n&quot;
+ &quot;Last-Translator: David Lodge &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">dave at cirt.net</A>&gt;\n&quot;
+ &quot;Language-Team: English (British) &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">en_gb at li.org</A>&gt;\n&quot;
+@@ -1716,7 +1716,7 @@
+ msgid &quot;%lu is unseen\n&quot;
+ msgstr &quot;%lu is unseen\n&quot;
+ 
+-#: imap.c:897 pop3.c:862
++#: imap.c:897 pop3.c:876
+ #, c-format
+ msgid &quot;%u is first unseen\n&quot;
+ msgstr &quot;%u is first unseen\n&quot;
+@@ -2244,45 +2244,49 @@
+ msgid &quot;Timestamp syntax error in greeting\n&quot;
+ msgstr &quot;Timestamp syntax error in greeting\n&quot;
+ 
+-#: pop3.c:682
++#: pop3.c:672
++msgid &quot;Invalid APOP timestamp.\n&quot;
++msgstr &quot;Invalid APOP timestamp.\n&quot;
++
++#: pop3.c:696
+ msgid &quot;Undefined protocol request in POP3_auth\n&quot;
+ msgstr &quot;Undefined protocol request in POP3_auth\n&quot;
+ 
+-#: pop3.c:703
++#: pop3.c:717
+ msgid &quot;lock busy!  Is another session active?\n&quot;
+ msgstr &quot;lock busy!  Is another session active?\n&quot;
+ 
+-#: pop3.c:782
++#: pop3.c:796
+ msgid &quot;Cannot handle UIDL response from upstream server.\n&quot;
+ msgstr &quot;Cannot handle UIDL response from upstream server.\n&quot;
+ 
+-#: pop3.c:805
++#: pop3.c:819
+ msgid &quot;Server responded with UID for wrong message.\n&quot;
+ msgstr &quot;Server responded with UID for wrong message.\n&quot;
+ 
+-#: pop3.c:832 pop3.c:1078
++#: pop3.c:846 pop3.c:1092
+ #, c-format
+ msgid &quot;id=%s (num=%d) was deleted, but is still present!\n&quot;
+ msgstr &quot;id=%s (num=%d) was deleted, but is still present!\n&quot;
+ 
+-#: pop3.c:841 pop3.c:853 pop3.c:1087 pop3.c:1094
++#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
+ #, c-format
+ msgid &quot;%u is unseen\n&quot;
+ msgstr &quot;%u is unseen\n&quot;
+ 
+-#: pop3.c:938
++#: pop3.c:952
+ msgid &quot;Messages inserted into list on server. Cannot handle this.\n&quot;
+ msgstr &quot;Messages inserted into list on server. Cannot handle this.\n&quot;
+ 
+-#: pop3.c:1030
++#: pop3.c:1044
+ msgid &quot;protocol error\n&quot;
+ msgstr &quot;protocol error\n&quot;
+ 
+-#: pop3.c:1046
++#: pop3.c:1060
+ msgid &quot;protocol error while fetching UIDLs\n&quot;
+ msgstr &quot;protocol error while fetching UIDLs\n&quot;
+ 
+-#: pop3.c:1416
++#: pop3.c:1430
+ msgid &quot;Option --folder is not supported with POP3\n&quot;
+ msgstr &quot;Option --folder is not supported with POP3\n&quot;
+ 
+
+Modified: branches/BRANCH_6-3/po/es.po
+===================================================================
+--- branches/BRANCH_6-3/po/es.po	2007-03-19 22:04:54 UTC (rev 5061)
++++ branches/BRANCH_6-3/po/es.po	2007-03-19 22:06:51 UTC (rev 5062)
+@@ -11,7 +11,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.3.4-rc1\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-03-17 21:43+0100\n&quot;
++&quot;POT-Creation-Date: 2007-03-18 02:13+0100\n&quot;
+ &quot;PO-Revision-Date: 2006-09-15 11:52+0200\n&quot;
+ &quot;Last-Translator: H&#195;&#169;ctor Garc&#195;&#173;a &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">hector at el-mundo.net</A>&gt;\n&quot;
+ &quot;Language-Team: Spanish &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">es at li.org</A>&gt;\n&quot;
+@@ -1795,7 +1795,7 @@
+ msgid &quot;%lu is unseen\n&quot;
+ msgstr &quot;%lu no fue visto\n&quot;
+ 
+-#: imap.c:897 pop3.c:862
++#: imap.c:897 pop3.c:876
+ #, c-format
+ msgid &quot;%u is first unseen\n&quot;
+ msgstr &quot;%u es el primero que no fue visto\n&quot;
+@@ -2357,46 +2357,50 @@
+ msgid &quot;Timestamp syntax error in greeting\n&quot;
+ msgstr &quot;Error de sintaxis en la estampa de tiempo en el saludo\n&quot;
+ 
+-#: pop3.c:682
++#: pop3.c:672
++msgid &quot;Invalid APOP timestamp.\n&quot;
++msgstr &quot;&quot;
++
++#: pop3.c:696
+ msgid &quot;Undefined protocol request in POP3_auth\n&quot;
+ msgstr &quot;Pedido de protocolo indefinido en POP3_auth\n&quot;
+ 
+-#: pop3.c:703
++#: pop3.c:717
+ msgid &quot;lock busy!  Is another session active?\n&quot;
+ msgstr &quot;&#194;&#161;bloqueo ocupado! &#194;&#191;Hay otra sesi&#195;&#179;n activa?\n&quot;
+ 
+-#: pop3.c:782
++#: pop3.c:796
+ msgid &quot;Cannot handle UIDL response from upstream server.\n&quot;
+ msgstr &quot;No se puede manejar la respuesta UIDL proveniente del servidor.\n&quot;
+ 
+-#: pop3.c:805
++#: pop3.c:819
+ msgid &quot;Server responded with UID for wrong message.\n&quot;
+ msgstr &quot;El servidor devolvi&#195;&#179; el UID de un mensaje incorrecto.\n&quot;
+ 
+-#: pop3.c:832 pop3.c:1078
++#: pop3.c:846 pop3.c:1092
+ #, c-format
+ msgid &quot;id=%s (num=%d) was deleted, but is still present!\n&quot;
+ msgstr &quot;id=%s (num=%d) fue borrado, &#194;&#161;pero a&#195;&#186;n se encuentra presente!\n&quot;
+ 
+-#: pop3.c:841 pop3.c:853 pop3.c:1087 pop3.c:1094
++#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
+ #, c-format
+ msgid &quot;%u is unseen\n&quot;
+ msgstr &quot;%u no fue visto\n&quot;
+ 
+-#: pop3.c:938
++#: pop3.c:952
+ msgid &quot;Messages inserted into list on server. Cannot handle this.\n&quot;
+ msgstr &quot;&quot;
+ &quot;Mensajes insertados en una lista en el servidor. No se puede manejar esto.\n&quot;
+ 
+-#: pop3.c:1030
++#: pop3.c:1044
+ msgid &quot;protocol error\n&quot;
+ msgstr &quot;error de protocolo\n&quot;
+ 
+-#: pop3.c:1046
++#: pop3.c:1060
+ msgid &quot;protocol error while fetching UIDLs\n&quot;
+ msgstr &quot;error de protocolo durante la recepci&#195;&#179;n de UIDLs\n&quot;
+ 
+-#: pop3.c:1416
++#: pop3.c:1430
+ msgid &quot;Option --folder is not supported with POP3\n&quot;
+ msgstr &quot;La opci&#195;&#179;n --folder no est&#195;&#161; soportada con POP3\n&quot;
+ 
+
+Modified: branches/BRANCH_6-3/po/fr.po
+===================================================================
+--- branches/BRANCH_6-3/po/fr.po	2007-03-19 22:04:54 UTC (rev 5061)
++++ branches/BRANCH_6-3/po/fr.po	2007-03-19 22:06:51 UTC (rev 5062)
+@@ -15,7 +15,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.2.9-rc9\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-03-17 21:43+0100\n&quot;
++&quot;POT-Creation-Date: 2007-03-18 02:13+0100\n&quot;
+ &quot;PO-Revision-Date: 2005-12-18 11:50+0100\n&quot;
+ &quot;Last-Translator: Matthias Andree &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">matthias.andree at gmx.de</A>&gt;\n&quot;
+ &quot;Language-Team: French &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">traduc at traduc.org</A>&gt;\n&quot;
+@@ -1801,7 +1801,7 @@
+ msgid &quot;%lu is unseen\n&quot;
+ msgstr &quot;%lu n'est pas vu\n&quot;
+ 
+-#: imap.c:897 pop3.c:862
++#: imap.c:897 pop3.c:876
+ #, c-format
+ msgid &quot;%u is first unseen\n&quot;
+ msgstr &quot;%u est le premier a n'avoir pas &#195;&#169;t&#195;&#169; vu\n&quot;
+@@ -2355,45 +2355,49 @@
+ msgid &quot;Timestamp syntax error in greeting\n&quot;
+ msgstr &quot;Erreur de syntaxe dans l'horodatage du message d'invitation\n&quot;
+ 
+-#: pop3.c:682
++#: pop3.c:672
++msgid &quot;Invalid APOP timestamp.\n&quot;
++msgstr &quot;L'horodatage APOP est invalide.\n&quot;
++
++#: pop3.c:696
+ msgid &quot;Undefined protocol request in POP3_auth\n&quot;
+ msgstr &quot;Requ&#195;&#170;te de protocole ind&#195;&#169;finie dans POP3_auth\n&quot;
+ 
+-#: pop3.c:703
++#: pop3.c:717
+ msgid &quot;lock busy!  Is another session active?\n&quot;
+ msgstr &quot;Fichier verrou en service. Y'a-t-il une autre session active ?\n&quot;
+ 
+-#: pop3.c:782
++#: pop3.c:796
+ msgid &quot;Cannot handle UIDL response from upstream server.\n&quot;
+ msgstr &quot;Ne peux pas manier la r&#195;&#169;ponse UIDL du serveur.\n&quot;
+ 
+-#: pop3.c:805
++#: pop3.c:819
+ msgid &quot;Server responded with UID for wrong message.\n&quot;
+ msgstr &quot;Serveur r&#195;&#169;pondait avec UID d'un faux message.\n&quot;
+ 
+-#: pop3.c:832 pop3.c:1078
++#: pop3.c:846 pop3.c:1092
+ #, c-format
+ msgid &quot;id=%s (num=%d) was deleted, but is still present!\n&quot;
+ msgstr &quot;id=%s (num=%d) a &#195;&#169;t&#195;&#169; effac&#195;&#169;, mais est toujours pr&#195;&#169;sent !\n&quot;
+ 
+-#: pop3.c:841 pop3.c:853 pop3.c:1087 pop3.c:1094
++#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
+ #, c-format
+ msgid &quot;%u is unseen\n&quot;
+ msgstr &quot;%u n'est pas vu\n&quot;
+ 
+-#: pop3.c:938
++#: pop3.c:952
+ msgid &quot;Messages inserted into list on server. Cannot handle this.\n&quot;
+ msgstr &quot;Messages ins&#195;&#169;r&#195;&#169;s dans une liste du serveur. Impossible de g&#195;&#169;rer &#195;&#167;a.\n&quot;
+ 
+-#: pop3.c:1030
++#: pop3.c:1044
+ msgid &quot;protocol error\n&quot;
+ msgstr &quot;erreur de protocole\n&quot;
+ 
+-#: pop3.c:1046
++#: pop3.c:1060
+ msgid &quot;protocol error while fetching UIDLs\n&quot;
+ msgstr &quot;erreur de protocole durant la r&#195;&#169;ception des UIDLs\n&quot;
+ 
+-#: pop3.c:1416
++#: pop3.c:1430
+ msgid &quot;Option --folder is not supported with POP3\n&quot;
+ msgstr &quot;L'option --folder n'est pas support&#195;&#169;e avec POP3\n&quot;
+ 
+
+Modified: branches/BRANCH_6-3/po/ja.po
+===================================================================
+--- branches/BRANCH_6-3/po/ja.po	2007-03-19 22:04:54 UTC (rev 5061)
++++ branches/BRANCH_6-3/po/ja.po	2007-03-19 22:06:51 UTC (rev 5062)
+@@ -8,7 +8,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.3.7-rc1\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-03-17 21:43+0100\n&quot;
++&quot;POT-Creation-Date: 2007-03-18 02:13+0100\n&quot;
+ &quot;PO-Revision-Date: 2007-02-06 00:08+0900\n&quot;
+ &quot;Last-Translator: Takeshi Hamasaki &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">hma at syd.odn.ne.jp</A>&gt;\n&quot;
+ &quot;Language-Team: Japanese &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">translation-team-ja at lists.sourceforge.net</A>&gt;\n&quot;
+@@ -1752,7 +1752,7 @@
+ msgid &quot;%lu is unseen\n&quot;
+ msgstr &quot;%lu &#227;&#129;&#175;&#230;&#156;&#170;&#232;&#170;&#173;&#227;&#129;&#167;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+ 
+-#: imap.c:897 pop3.c:862
++#: imap.c:897 pop3.c:876
+ #, c-format
+ msgid &quot;%u is first unseen\n&quot;
+ msgstr &quot;%u &#227;&#129;&#175;&#230;&#156;&#128;&#229;&#136;&#157;&#227;&#129;&#174;&#230;&#156;&#170;&#232;&#170;&#173;&#227;&#131;&#161;&#227;&#131;&#131;&#227;&#130;&#187;&#227;&#131;&#188;&#227;&#130;&#184;&#227;&#129;&#167;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+@@ -2302,46 +2302,50 @@
+ msgid &quot;Timestamp syntax error in greeting\n&quot;
+ msgstr &quot;greeting &#228;&#184;&#173;&#227;&#129;&#174; timestamp &#227;&#129;&#140;&#228;&#184;&#141;&#230;&#173;&#163;&#227;&#129;&#167;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+ 
+-#: pop3.c:682
++#: pop3.c:672
++msgid &quot;Invalid APOP timestamp.\n&quot;
++msgstr &quot;&quot;
++
++#: pop3.c:696
+ msgid &quot;Undefined protocol request in POP3_auth\n&quot;
+ msgstr &quot;POP3_auth &#228;&#184;&#173;&#227;&#129;&#167;&#229;&#174;&#154;&#231;&#190;&#169;&#227;&#129;&#149;&#227;&#130;&#140;&#227;&#129;&#166;&#227;&#129;&#132;&#227;&#129;&#170;&#227;&#129;&#132;&#227;&#131;&#151;&#227;&#131;&#173;&#227;&#131;&#136;&#227;&#130;&#179;&#227;&#131;&#171;&#227;&#129;&#140;&#232;&#166;&#129;&#230;&#177;&#130;&#227;&#129;&#149;&#227;&#130;&#140;&#227;&#129;&#190;&#227;&#129;&#151;&#227;&#129;&#159;&#227;&#128;&#130;\n&quot;
+ 
+-#: pop3.c:703
++#: pop3.c:717
+ msgid &quot;lock busy!  Is another session active?\n&quot;
+ msgstr &quot;lock busy &#231;&#138;&#182;&#230;&#133;&#139;&#227;&#129;&#167;&#227;&#129;&#153;&#227;&#128;&#130;&#229;&#136;&#165;&#227;&#129;&#174;&#228;&#186;&#164;&#228;&#191;&#161;&#227;&#129;&#140;&#232;&#161;&#140;&#227;&#130;&#143;&#227;&#130;&#140;&#227;&#129;&#166;&#227;&#129;&#132;&#227;&#129;&#170;&#227;&#129;&#132;&#227;&#129;&#139;&#231;&#162;&#186;&#232;&#170;&#141;&#227;&#129;&#151;&#227;&#129;&#166;&#228;&#184;&#139;&#227;&#129;&#149;&#227;&#129;&#132;&#227;&#128;&#130;\n&quot;
+ 
+-#: pop3.c:782
++#: pop3.c:796
+ msgid &quot;Cannot handle UIDL response from upstream server.\n&quot;
+ msgstr &quot;&#228;&#184;&#138;&#230;&#181;&#129;&#227;&#130;&#181;&#227;&#131;&#188;&#227;&#131;&#144;&#227;&#129;&#139;&#227;&#130;&#137;&#227;&#129;&#174; UIDL &#229;&#191;&#156;&#231;&#173;&#148;&#227;&#129;&#171;&#229;&#175;&#190;&#229;&#191;&#156;&#227;&#129;&#167;&#227;&#129;&#141;&#227;&#129;&#190;&#227;&#129;&#155;&#227;&#130;&#147;&#227;&#128;&#130;\n&quot;
+ 
+-#: pop3.c:805
++#: pop3.c:819
+ msgid &quot;Server responded with UID for wrong message.\n&quot;
+ msgstr &quot;&#227;&#130;&#181;&#227;&#131;&#188;&#227;&#131;&#144;&#227;&#129;&#140;&#232;&#170;&#164;&#227;&#129;&#163;&#227;&#129;&#159;&#227;&#131;&#161;&#227;&#131;&#131;&#227;&#130;&#187;&#227;&#131;&#188;&#227;&#130;&#184;&#227;&#129;&#174; UID &#227;&#129;&#171;&#229;&#191;&#156;&#231;&#173;&#148;&#227;&#129;&#151;&#227;&#129;&#190;&#227;&#129;&#151;&#227;&#129;&#159;&#227;&#128;&#130;\n&quot;
+ 
+-#: pop3.c:832 pop3.c:1078
++#: pop3.c:846 pop3.c:1092
+ #, c-format
+ msgid &quot;id=%s (num=%d) was deleted, but is still present!\n&quot;
+ msgstr &quot;id=%s (num=%d) &#227;&#129;&#175;&#229;&#137;&#138;&#233;&#153;&#164;&#227;&#129;&#149;&#227;&#130;&#140;&#227;&#129;&#190;&#227;&#129;&#151;&#227;&#129;&#159;&#227;&#129;&#140;&#227;&#128;&#129;&#227;&#129;&#190;&#227;&#129;&#160;&#229;&#173;&#152;&#229;&#156;&#168;&#227;&#129;&#151;&#227;&#129;&#166;&#227;&#129;&#132;&#227;&#129;&#190;&#227;&#129;&#153;!\n&quot;
+ 
+-#: pop3.c:841 pop3.c:853 pop3.c:1087 pop3.c:1094
++#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
+ #, c-format
+ msgid &quot;%u is unseen\n&quot;
+ msgstr &quot;%u &#227;&#129;&#175;&#230;&#156;&#170;&#232;&#170;&#173;&#227;&#129;&#167;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+ 
+-#: pop3.c:938
++#: pop3.c:952
+ msgid &quot;Messages inserted into list on server. Cannot handle this.\n&quot;
+ msgstr &quot;&quot;
+ &quot;&#227;&#130;&#181;&#227;&#131;&#188;&#227;&#131;&#144;&#227;&#131;&#170;&#227;&#130;&#185;&#227;&#131;&#136;&#227;&#129;&#171;&#227;&#131;&#161;&#227;&#131;&#131;&#227;&#130;&#187;&#227;&#131;&#188;&#227;&#130;&#184;&#227;&#129;&#140;&#230;&#140;&#191;&#229;&#133;&#165;&#227;&#129;&#149;&#227;&#130;&#140;&#227;&#129;&#166;&#227;&#129;&#132;&#227;&#129;&#190;&#227;&#129;&#153;&#227;&#128;&#130;&#229;&#143;&#150;&#227;&#130;&#138;&#230;&#137;&#177;&#227;&#129;&#134;&#227;&#129;&#147;&#227;&#129;&#168;&#227;&#129;&#140;&#227;&#129;&#167;&#227;&#129;&#141;&#227;&#129;&#190;&#227;&#129;&#155;&#227;&#130;&#147;&#227;&#128;&#130;\n&quot;
+ 
+-#: pop3.c:1030
++#: pop3.c:1044
+ msgid &quot;protocol error\n&quot;
+ msgstr &quot;&#227;&#131;&#151;&#227;&#131;&#173;&#227;&#131;&#136;&#227;&#130;&#179;&#227;&#131;&#171;&#227;&#130;&#168;&#227;&#131;&#169;&#227;&#131;&#188;&#227;&#129;&#167;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+ 
+-#: pop3.c:1046
++#: pop3.c:1060
+ msgid &quot;protocol error while fetching UIDLs\n&quot;
+ msgstr &quot;UIDL &#227;&#130;&#146;&#229;&#143;&#150;&#227;&#130;&#138;&#232;&#190;&#188;&#227;&#129;&#191;&#228;&#184;&#173;&#227;&#129;&#171;&#227;&#131;&#151;&#227;&#131;&#173;&#227;&#131;&#136;&#227;&#130;&#179;&#227;&#131;&#171;&#227;&#130;&#168;&#227;&#131;&#169;&#227;&#131;&#188;&#227;&#129;&#140;&#231;&#153;&#186;&#231;&#148;&#159;&#227;&#129;&#151;&#227;&#129;&#190;&#227;&#129;&#151;&#227;&#129;&#159;&#227;&#128;&#130;\n&quot;
+ 
+-#: pop3.c:1416
++#: pop3.c:1430
+ msgid &quot;Option --folder is not supported with POP3\n&quot;
+ msgstr &quot;POP3 &#227;&#129;&#167;&#227;&#129;&#175; --folder &#227;&#130;&#170;&#227;&#131;&#151;&#227;&#130;&#183;&#227;&#131;&#167;&#227;&#131;&#179;&#227;&#129;&#175;&#229;&#136;&#169;&#231;&#148;&#168;&#227;&#129;&#167;&#227;&#129;&#141;&#227;&#129;&#190;&#227;&#129;&#155;&#227;&#130;&#147;&#227;&#128;&#130;\n&quot;
+ 
+
+Modified: branches/BRANCH_6-3/po/pl.po
+===================================================================
+--- branches/BRANCH_6-3/po/pl.po	2007-03-19 22:04:54 UTC (rev 5061)
++++ branches/BRANCH_6-3/po/pl.po	2007-03-19 22:06:51 UTC (rev 5062)
+@@ -8,7 +8,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.3.7-rc1\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-03-17 21:43+0100\n&quot;
++&quot;POT-Creation-Date: 2007-03-18 02:13+0100\n&quot;
+ &quot;PO-Revision-Date: 2007-02-03 11:42+0100\n&quot;
+ &quot;Last-Translator: Jakub Bogusz &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">qboosh at pld-linux.org</A>&gt;\n&quot;
+ &quot;Language-Team: Polish &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">translation-team-pl at lists.sourceforge.net</A>&gt;\n&quot;
+@@ -1784,7 +1784,7 @@
+ msgid &quot;%lu is unseen\n&quot;
+ msgstr &quot;%lu jest nieprzeczytany\n&quot;
+ 
+-#: imap.c:897 pop3.c:862
++#: imap.c:897 pop3.c:876
+ #, c-format
+ msgid &quot;%u is first unseen\n&quot;
+ msgstr &quot;%u jest pierwszym nieprzeczytanym\n&quot;
+@@ -2341,46 +2341,50 @@
+ msgid &quot;Timestamp syntax error in greeting\n&quot;
+ msgstr &quot;B&#179;&#177;d sk&#179;adni znacznika czasu w powitaniu\n&quot;
+ 
+-#: pop3.c:682
++#: pop3.c:672
++msgid &quot;Invalid APOP timestamp.\n&quot;
++msgstr &quot;&quot;
++
++#: pop3.c:696
+ msgid &quot;Undefined protocol request in POP3_auth\n&quot;
+ msgstr &quot;Pro&#182;ba o nieznany protok&#243;&#179; w POP3_auth\n&quot;
+ 
+-#: pop3.c:703
++#: pop3.c:717
+ msgid &quot;lock busy!  Is another session active?\n&quot;
+ msgstr &quot;plik zablokowany! Czy inna sesja nie jest aktywna?\n&quot;
+ 
+-#: pop3.c:782
++#: pop3.c:796
+ msgid &quot;Cannot handle UIDL response from upstream server.\n&quot;
+ msgstr &quot;Nie mo&#191;na obs&#179;u&#191;y&#230; odpowiedzi UIDL od serwera.\n&quot;
+ 
+-#: pop3.c:805
++#: pop3.c:819
+ msgid &quot;Server responded with UID for wrong message.\n&quot;
+ msgstr &quot;Serwer odpowiedzia&#179; z UID-em dla niew&#179;a&#182;ciwego listu.\n&quot;
+ 
+-#: pop3.c:832 pop3.c:1078
++#: pop3.c:846 pop3.c:1092
+ #, c-format
+ msgid &quot;id=%s (num=%d) was deleted, but is still present!\n&quot;
+ msgstr &quot;id=%s (num=%d) zosta&#179; skasowany, ale nadal istnieje!\n&quot;
+ 
+-#: pop3.c:841 pop3.c:853 pop3.c:1087 pop3.c:1094
++#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
+ #, c-format
+ msgid &quot;%u is unseen\n&quot;
+ msgstr &quot;%u jest nieprzeczytany\n&quot;
+ 
+-#: pop3.c:938
++#: pop3.c:952
+ msgid &quot;Messages inserted into list on server. Cannot handle this.\n&quot;
+ msgstr &quot;&quot;
+ &quot;Przesy&#179;ki zosta&#179;y dodane do listy na serwerze. Nie mog&#234; tego obs&#179;u&#191;y&#230;.\n&quot;
+ 
+-#: pop3.c:1030
++#: pop3.c:1044
+ msgid &quot;protocol error\n&quot;
+ msgstr &quot;b&#179;&#177;d protoko&#179;u\n&quot;
+ 
+-#: pop3.c:1046
++#: pop3.c:1060
+ msgid &quot;protocol error while fetching UIDLs\n&quot;
+ msgstr &quot;b&#179;&#177;d protoko&#179;u podczas pobierania UIDL\n&quot;
+ 
+-#: pop3.c:1416
++#: pop3.c:1430
+ msgid &quot;Option --folder is not supported with POP3\n&quot;
+ msgstr &quot;Opcja --folder nie dzia&#179;a z POP3\n&quot;
+ 
+
+Modified: branches/BRANCH_6-3/po/ru.po
+===================================================================
+--- branches/BRANCH_6-3/po/ru.po	2007-03-19 22:04:54 UTC (rev 5061)
++++ branches/BRANCH_6-3/po/ru.po	2007-03-19 22:06:51 UTC (rev 5062)
+@@ -8,7 +8,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.3.6-rc3\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-03-17 21:43+0100\n&quot;
++&quot;POT-Creation-Date: 2007-03-18 02:13+0100\n&quot;
+ &quot;PO-Revision-Date: 2006-11-21 20:59+0200\n&quot;
+ &quot;Last-Translator: Pavel Maryanov &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">acid_jack at ukr.net</A>&gt;\n&quot;
+ &quot;Language-Team: Russian &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">ru at li.org</A>&gt;\n&quot;
+@@ -1772,7 +1772,7 @@
+ msgid &quot;%lu is unseen\n&quot;
+ msgstr &quot;%lu &#208;&#189;&#208;&#181; &#208;&#191;&#209;&#128;&#208;&#190;&#209;&#129;&#208;&#188;&#208;&#190;&#209;&#130;&#209;&#128;&#208;&#181;&#208;&#189;&#208;&#190;\n&quot;
+ 
+-#: imap.c:897 pop3.c:862
++#: imap.c:897 pop3.c:876
+ #, c-format
+ msgid &quot;%u is first unseen\n&quot;
+ msgstr &quot;%u &#208;&#191;&#208;&#181;&#209;&#128;&#208;&#178;&#208;&#190;&#208;&#181; &#208;&#189;&#208;&#181; &#208;&#191;&#209;&#128;&#208;&#190;&#209;&#129;&#208;&#188;&#208;&#190;&#209;&#130;&#209;&#128;&#208;&#181;&#208;&#189;&#208;&#189;&#208;&#190;&#208;&#181;\n&quot;
+@@ -2328,45 +2328,49 @@
+ msgid &quot;Timestamp syntax error in greeting\n&quot;
+ msgstr &quot;&#208;&#146; &#208;&#191;&#209;&#128;&#208;&#184;&#208;&#178;&#208;&#181;&#209;&#130;&#209;&#129;&#209;&#130;&#208;&#178;&#208;&#184;&#208;&#184; &#208;&#190;&#209;&#136;&#208;&#184;&#208;&#177;&#208;&#186;&#208;&#176; &#209;&#129;&#208;&#184;&#208;&#189;&#209;&#130;&#208;&#176;&#208;&#186;&#209;&#129;&#208;&#184;&#209;&#129;&#208;&#176; &#208;&#178;&#209;&#128;&#208;&#181;&#208;&#188;&#208;&#181;&#208;&#189;&#208;&#189;&#208;&#190;&#208;&#185; &#208;&#188;&#208;&#181;&#209;&#130;&#208;&#186;&#208;&#184;\n&quot;
+ 
+-#: pop3.c:682
++#: pop3.c:672
++msgid &quot;Invalid APOP timestamp.\n&quot;
++msgstr &quot;&quot;
++
++#: pop3.c:696
+ msgid &quot;Undefined protocol request in POP3_auth\n&quot;
+ msgstr &quot;&#208;&#157;&#208;&#181;&#208;&#190;&#208;&#191;&#209;&#128;&#208;&#181;&#208;&#180;&#208;&#181;&#208;&#187;&#208;&#181;&#208;&#189;&#208;&#189;&#209;&#139;&#208;&#185; &#208;&#183;&#208;&#176;&#208;&#191;&#209;&#128;&#208;&#190;&#209;&#129; &#208;&#191;&#209;&#128;&#208;&#190;&#209;&#130;&#208;&#190;&#208;&#186;&#208;&#190;&#208;&#187;&#208;&#176; &#208;&#178; POP3_auth\n&quot;
+ 
+-#: pop3.c:703
++#: pop3.c:717
+ msgid &quot;lock busy!  Is another session active?\n&quot;
+ msgstr &quot;&#208;&#177;&#208;&#187;&#208;&#190;&#208;&#186;&#208;&#184;&#209;&#128;&#208;&#190;&#208;&#178;&#208;&#186;&#208;&#176; &#208;&#183;&#208;&#176;&#208;&#189;&#209;&#143;&#209;&#130;&#208;&#190;&#209;&#129;&#209;&#130;&#208;&#184;!  &#208;&#156;&#208;&#190;&#208;&#182;&#208;&#181;&#209;&#130; &#208;&#176;&#208;&#186;&#209;&#130;&#208;&#184;&#208;&#178;&#208;&#181;&#208;&#189; &#208;&#180;&#209;&#128;&#209;&#131;&#208;&#179;&#208;&#190;&#208;&#185; &#209;&#129;&#208;&#181;&#208;&#176;&#208;&#189;&#209;&#129;?\n&quot;
+ 
+-#: pop3.c:782
++#: pop3.c:796
+ msgid &quot;Cannot handle UIDL response from upstream server.\n&quot;
+ msgstr &quot;&#208;&#157;&#208;&#181;&#208;&#178;&#208;&#190;&#208;&#183;&#208;&#188;&#208;&#190;&#208;&#182;&#208;&#189;&#208;&#190; &#208;&#190;&#208;&#177;&#209;&#128;&#208;&#176;&#208;&#177;&#208;&#190;&#209;&#130;&#208;&#176;&#209;&#130;&#209;&#140; UIDL-&#208;&#190;&#209;&#130;&#208;&#178;&#208;&#181;&#209;&#130; upstream-&#209;&#129;&#208;&#181;&#209;&#128;&#208;&#178;&#208;&#181;&#209;&#128;&#208;&#176;.\n&quot;
+ 
+-#: pop3.c:805
++#: pop3.c:819
+ msgid &quot;Server responded with UID for wrong message.\n&quot;
+ msgstr &quot;&#208;&#161;&#208;&#181;&#209;&#128;&#208;&#178;&#208;&#181;&#209;&#128; &#208;&#178;&#208;&#190;&#208;&#183;&#208;&#178;&#209;&#128;&#208;&#176;&#209;&#130;&#208;&#184;&#208;&#187; &#208;&#190;&#209;&#130;&#208;&#178;&#208;&#181;&#209;&#130; &#209;&#129; UID &#208;&#180;&#208;&#187;&#209;&#143; &#208;&#189;&#208;&#181;&#208;&#178;&#208;&#181;&#209;&#128;&#208;&#189;&#208;&#190;&#208;&#179;&#208;&#190; &#209;&#129;&#208;&#190;&#208;&#190;&#208;&#177;&#209;&#137;&#208;&#181;&#208;&#189;&#208;&#184;&#209;&#143;.\n&quot;
+ 
+-#: pop3.c:832 pop3.c:1078
++#: pop3.c:846 pop3.c:1092
+ #, c-format
+ msgid &quot;id=%s (num=%d) was deleted, but is still present!\n&quot;
+ msgstr &quot;id=%s (&#208;&#189;&#208;&#190;&#208;&#188;&#208;&#181;&#209;&#128;=%d) &#208;&#177;&#209;&#139;&#208;&#187;&#208;&#190; &#209;&#131;&#208;&#180;&#208;&#176;&#208;&#187;&#208;&#181;&#208;&#189;&#208;&#190;, &#208;&#189;&#208;&#190; &#208;&#178;&#209;&#129;&#208;&#181; &#208;&#181;&#209;&#137;&#208;&#181; &#208;&#191;&#209;&#128;&#208;&#184;&#209;&#129;&#209;&#131;&#209;&#130;&#209;&#129;&#209;&#130;&#208;&#178;&#209;&#131;&#208;&#181;&#209;&#130;!\n&quot;
+ 
+-#: pop3.c:841 pop3.c:853 pop3.c:1087 pop3.c:1094
++#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
+ #, c-format
+ msgid &quot;%u is unseen\n&quot;
+ msgstr &quot;%u &#208;&#189;&#208;&#181; &#208;&#191;&#209;&#128;&#208;&#190;&#209;&#129;&#208;&#188;&#208;&#190;&#209;&#130;&#209;&#128;&#208;&#181;&#208;&#189;&#208;&#190;\n&quot;
+ 
+-#: pop3.c:938
++#: pop3.c:952
+ msgid &quot;Messages inserted into list on server. Cannot handle this.\n&quot;
+ msgstr &quot;&#208;&#161;&#208;&#190;&#208;&#190;&#208;&#177;&#209;&#137;&#208;&#181;&#208;&#189;&#208;&#184;&#209;&#143; &#208;&#180;&#208;&#190;&#208;&#177;&#208;&#176;&#208;&#178;&#208;&#187;&#208;&#181;&#208;&#189;&#209;&#139; &#208;&#178; &#209;&#129;&#208;&#191;&#208;&#184;&#209;&#129;&#208;&#190;&#208;&#186; &#208;&#189;&#208;&#176; &#209;&#129;&#208;&#181;&#209;&#128;&#208;&#178;&#208;&#181;&#209;&#128;&#208;&#181;. &#208;&#158;&#208;&#177;&#209;&#128;&#208;&#176;&#208;&#177;&#208;&#190;&#209;&#130;&#208;&#186;&#208;&#176; &#208;&#189;&#208;&#181;&#208;&#178;&#208;&#190;&#208;&#183;&#208;&#188;&#208;&#190;&#208;&#182;&#208;&#189;&#208;&#176;.\n&quot;
+ 
+-#: pop3.c:1030
++#: pop3.c:1044
+ msgid &quot;protocol error\n&quot;
+ msgstr &quot;&#208;&#190;&#209;&#136;&#208;&#184;&#208;&#177;&#208;&#186;&#208;&#176; &#208;&#191;&#209;&#128;&#208;&#190;&#209;&#130;&#208;&#190;&#208;&#186;&#208;&#190;&#208;&#187;&#208;&#176;\n&quot;
+ 
+-#: pop3.c:1046
++#: pop3.c:1060
+ msgid &quot;protocol error while fetching UIDLs\n&quot;
+ msgstr &quot;&#208;&#190;&#209;&#136;&#208;&#184;&#208;&#177;&#208;&#186;&#208;&#176; &#208;&#191;&#209;&#128;&#208;&#190;&#209;&#130;&#208;&#190;&#208;&#186;&#208;&#190;&#208;&#187;&#208;&#176; &#208;&#191;&#209;&#128;&#208;&#184; &#208;&#178;&#209;&#139;&#208;&#177;&#208;&#190;&#209;&#128;&#208;&#186;&#208;&#181; UIDL'&#208;&#190;&#208;&#178;\n&quot;
+ 
+-#: pop3.c:1416
++#: pop3.c:1430
+ msgid &quot;Option --folder is not supported with POP3\n&quot;
+ msgstr &quot;&#208;&#158;&#208;&#191;&#209;&#134;&#208;&#184;&#209;&#143; --folder &#208;&#189;&#208;&#181; &#208;&#191;&#208;&#190;&#208;&#180;&#208;&#180;&#208;&#181;&#209;&#128;&#208;&#182;&#208;&#184;&#208;&#178;&#208;&#176;&#208;&#181;&#209;&#130;&#209;&#129;&#209;&#143; &#209;&#129; POP3\n&quot;
+ 
+
+Modified: branches/BRANCH_6-3/po/sq.po
+===================================================================
+--- branches/BRANCH_6-3/po/sq.po	2007-03-19 22:04:54 UTC (rev 5061)
++++ branches/BRANCH_6-3/po/sq.po	2007-03-19 22:06:51 UTC (rev 5062)
+@@ -7,7 +7,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.2.9-rc9\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-03-17 21:43+0100\n&quot;
++&quot;POT-Creation-Date: 2007-03-18 02:13+0100\n&quot;
+ &quot;PO-Revision-Date: 2005-11-18 22:25+0200\n&quot;
+ &quot;Last-Translator: Besnik Bleta &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">besnik at spymac.com</A>&gt;\n&quot;
+ &quot;Language-Team: Albanian &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">translation-team-sq at lists.sourceforge.net</A>&gt;\n&quot;
+@@ -1784,7 +1784,7 @@
+ msgid &quot;%lu is unseen\n&quot;
+ msgstr &quot;%u &#235;sht&#235; i pav&#235;rejtur\n&quot;
+ 
+-#: imap.c:897 pop3.c:862
++#: imap.c:897 pop3.c:876
+ #, c-format
+ msgid &quot;%u is first unseen\n&quot;
+ msgstr &quot;%u &#235;sht&#235; i pari i pav&#235;rejtur\n&quot;
+@@ -2323,46 +2323,50 @@
+ msgid &quot;Timestamp syntax error in greeting\n&quot;
+ msgstr &quot;Gabim sintakse vule kohore n&#235; p&#235;rsh&#235;ndetje\n&quot;
+ 
+-#: pop3.c:682
++#: pop3.c:672
++msgid &quot;Invalid APOP timestamp.\n&quot;
++msgstr &quot;&quot;
++
++#: pop3.c:696
+ msgid &quot;Undefined protocol request in POP3_auth\n&quot;
+ msgstr &quot;K&#235;rkes&#235; protokolli e pap&#235;rcaktuar n&#235; POP3_auth\n&quot;
+ 
+-#: pop3.c:703
++#: pop3.c:717
+ msgid &quot;lock busy!  Is another session active?\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:782
++#: pop3.c:796
+ msgid &quot;Cannot handle UIDL response from upstream server.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:805
++#: pop3.c:819
+ msgid &quot;Server responded with UID for wrong message.\n&quot;
+ msgstr &quot;Sh&#235;rbyesi u p&#235;rgjigj me UID p&#235;r mesazh t&#235; gabuar.\n&quot;
+ 
+-#: pop3.c:832 pop3.c:1078
++#: pop3.c:846 pop3.c:1092
+ #, fuzzy, c-format
+ msgid &quot;id=%s (num=%d) was deleted, but is still present!\n&quot;
+ msgstr &quot;id=%s (num=%d) qe fshir&#235;, por &#235;sht&#235; ende i pranish&#235;m!\n&quot;
+ 
+-#: pop3.c:841 pop3.c:853 pop3.c:1087 pop3.c:1094
++#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
+ #, c-format
+ msgid &quot;%u is unseen\n&quot;
+ msgstr &quot;%u &#235;sht&#235; i pav&#235;rejtur\n&quot;
+ 
+-#: pop3.c:938
++#: pop3.c:952
+ msgid &quot;Messages inserted into list on server. Cannot handle this.\n&quot;
+ msgstr &quot;&quot;
+ &quot;Mesazhe t&#235; futur n&#235; nj&#235; list&#235; te sh&#235;rbyesi. Nuk mund ta b&#235;j dot k&#235;t&#235;.\n&quot;
+ 
+-#: pop3.c:1030
++#: pop3.c:1044
+ msgid &quot;protocol error\n&quot;
+ msgstr &quot;gabim protokolli\n&quot;
+ 
+-#: pop3.c:1046
++#: pop3.c:1060
+ msgid &quot;protocol error while fetching UIDLs\n&quot;
+ msgstr &quot;gabim protokolli gjat&#235; sjelljes s&#235; UIDL-ve\n&quot;
+ 
+-#: pop3.c:1416
++#: pop3.c:1430
+ msgid &quot;Option --folder is not supported with POP3\n&quot;
+ msgstr &quot;Mund&#235;sia --dosje nuk mbulohet me POP3\n&quot;
+ 
+
+Modified: branches/BRANCH_6-3/po/vi.po
+===================================================================
+--- branches/BRANCH_6-3/po/vi.po	2007-03-19 22:04:54 UTC (rev 5061)
++++ branches/BRANCH_6-3/po/vi.po	2007-03-19 22:06:51 UTC (rev 5062)
+@@ -6,7 +6,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.3.6-rc4\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-03-17 21:43+0100\n&quot;
++&quot;POT-Creation-Date: 2007-03-18 02:13+0100\n&quot;
+ &quot;PO-Revision-Date: 2006-12-01 22:01+1030\n&quot;
+ &quot;Last-Translator: Clytie Siddall &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">clytie at riverland.net.au</A>&gt;\n&quot;
+ &quot;Language-Team: Vietnamese &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">vi-VN at googlegroups.com</A>&gt;\n&quot;
+@@ -1744,7 +1744,7 @@
+ msgid &quot;%lu is unseen\n&quot;
+ msgstr &quot;%lu ch&#198;&#176;a xem\n&quot;
+ 
+-#: imap.c:897 pop3.c:862
++#: imap.c:897 pop3.c:876
+ #, c-format
+ msgid &quot;%u is first unseen\n&quot;
+ msgstr &quot;%u l&#195;&#160; th&#198;&#176; &#196;&#145;&#225;&#186;&#167;u ch&#198;&#176;a xem\n&quot;
+@@ -2305,48 +2305,52 @@
+ msgid &quot;Timestamp syntax error in greeting\n&quot;
+ msgstr &quot;G&#225;&#186;&#183;p l&#225;&#187;&#151;i c&#195;&#186; ph&#195;&#161;p nh&#195;&#163;n th&#225;&#187;&#157;i gian trong l&#225;&#187;&#157;i ch&#195;&#160;o m&#225;&#187;&#171;ng\n&quot;
+ 
+-#: pop3.c:682
++#: pop3.c:672
++msgid &quot;Invalid APOP timestamp.\n&quot;
++msgstr &quot;&quot;
++
++#: pop3.c:696
+ msgid &quot;Undefined protocol request in POP3_auth\n&quot;
+ msgstr &quot;&quot;
+ &quot;G&#225;&#186;&#183;p y&#195;&#170;u c&#225;&#186;&#167;u giao th&#225;&#187;&#169;c kh&#195;&#180;ng &#196;&#145;&#198;&#176;&#225;&#187;&#163;c x&#195;&#161;c &#196;&#145;&#225;&#187;&#139;nh trong &#194;&#171; POP3_auth &#194;&#187; (x&#195;&#161;c th&#225;&#187;&#177;c)\n&quot;
+ 
+-#: pop3.c:703
++#: pop3.c:717
+ msgid &quot;lock busy!  Is another session active?\n&quot;
+ msgstr &quot;kho&#195;&#161; b&#225;&#186;&#173;n ! C&#195;&#179; phi&#195;&#170;n ch&#225;&#186;&#161;y kh&#195;&#161;c ho&#225;&#186;&#161;t &#196;&#145;&#225;&#187;&#153;ng kh&#195;&#180;ng?\n&quot;
+ 
+-#: pop3.c:782
++#: pop3.c:796
+ msgid &quot;Cannot handle UIDL response from upstream server.\n&quot;
+ msgstr &quot;Kh&#195;&#180;ng th&#225;&#187;&#131; x&#225;&#187;&#173; l&#195;&#189; &#196;&#145;&#195;&#161;p &#225;&#187;&#169;ng UIDL t&#225;&#187;&#171; m&#195;&#161;y ph&#225;&#187;&#165;c v&#225;&#187;&#165; ngu&#225;&#187;&#147;n.\n&quot;
+ 
+-#: pop3.c:805
++#: pop3.c:819
+ msgid &quot;Server responded with UID for wrong message.\n&quot;
+ msgstr &quot;M&#195;&#161;y ph&#225;&#187;&#165;c v&#225;&#187;&#165; &#196;&#145;&#195;&#163; &#196;&#145;&#195;&#161;p &#225;&#187;&#169;ng UID cho th&#198;&#176; kh&#195;&#180;ng &#196;&#145;&#195;&#186;ng.\n&quot;
+ 
+-#: pop3.c:832 pop3.c:1078
++#: pop3.c:846 pop3.c:1092
+ #, c-format
+ msgid &quot;id=%s (num=%d) was deleted, but is still present!\n&quot;
+ msgstr &quot;id=%s (s&#225;&#187;&#145;=%d) &#196;&#145;&#195;&#163; &#196;&#145;&#198;&#176;&#225;&#187;&#163;c xo&#195;&#161; b&#225;&#187;&#143;, nh&#198;&#176;ng c&#195;&#178;n c&#195;&#179;.\n&quot;
+ 
+-#: pop3.c:841 pop3.c:853 pop3.c:1087 pop3.c:1094
++#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
+ #, c-format
+ msgid &quot;%u is unseen\n&quot;
+ msgstr &quot;%u ch&#198;&#176;a xem\n&quot;
+ 
+-#: pop3.c:938
++#: pop3.c:952
+ msgid &quot;Messages inserted into list on server. Cannot handle this.\n&quot;
+ msgstr &quot;&quot;
+ &quot;G&#225;&#186;&#183;p th&#198;&#176; &#196;&#145;&#198;&#176;&#225;&#187;&#163;c ch&#195;&#168;n v&#195;&#160;o danh s&#195;&#161;ch tr&#195;&#170;n m&#195;&#161;y ph&#225;&#187;&#165;c v&#225;&#187;&#165;. Kh&#195;&#180;ng th&#225;&#187;&#131; x&#225;&#187;&#173; l&#195;&#189; tr&#198;&#176;&#225;&#187;&#157;ng h&#225;&#187;&#163;p &quot;
+ &quot;n&#195;&#160;y.\n&quot;
+ 
+-#: pop3.c:1030
++#: pop3.c:1044
+ msgid &quot;protocol error\n&quot;
+ msgstr &quot;l&#225;&#187;&#151;i giao th&#225;&#187;&#169;c\n&quot;
+ 
+-#: pop3.c:1046
++#: pop3.c:1060
+ msgid &quot;protocol error while fetching UIDLs\n&quot;
+ msgstr &quot;g&#225;&#186;&#183;p l&#225;&#187;&#151;i giao th&#225;&#187;&#169;c khi l&#225;&#186;&#165;y c&#195;&#161;c UIDL\n&quot;
+ 
+-#: pop3.c:1416
++#: pop3.c:1430
+ msgid &quot;Option --folder is not supported with POP3\n&quot;
+ msgstr &quot;Kh&#195;&#180;ng h&#225;&#187;&#151; tr&#225;&#187;&#163; t&#195;&#185;y ch&#225;&#187;&#141;n &#194;&#171; --folder &#194;&#187; (th&#198;&#176; m&#225;&#187;&#165;c) v&#225;&#187;&#155;i POP3\n&quot;
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000054.html">[fetchmail-svn] r5061 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000056.html">[fetchmail-svn] r5063 - tags
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#55">[ date ]</a>
+              <a href="thread.html#55">[ thread ]</a>
+              <a href="subject.html#55">[ subject ]</a>
+              <a href="author.html#55">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

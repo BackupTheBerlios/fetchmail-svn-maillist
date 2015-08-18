@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5213 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2008-July/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5213%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20080703143542.1D2E06B012F%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000201.html">
+   <LINK REL="Next"  HREF="000203.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5213 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5213%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20080703143542.1D2E06B012F%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5213 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Thu Jul  3 16:35:42 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000201.html">[fetchmail-svn] r5212 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000203.html">[fetchmail-svn] r5214 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#202">[ date ]</a>
+              <a href="thread.html#202">[ thread ]</a>
+              <a href="subject.html#202">[ subject ]</a>
+              <a href="author.html#202">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2008-07-03 09:35:41 -0500 (Thu, 03 Jul 2008)
+New Revision: 5213
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/uid.c
+Log:
+Only print &quot;Deleting fetchids file&quot; if there actually is one.
+Fixes Debian Bug#374514, reported by Dan Jacobson.
+
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2008-07-03 14:33:53 UTC (rev 5212)
++++ branches/BRANCH_6-3/NEWS	2008-07-03 14:35:41 UTC (rev 5213)
+@@ -85,6 +85,8 @@
+   TOCTOU race persists.
+ * fetchmailconf quotes mailbox (folder) names when writing the configuration.
+   Fixes BerliOS Bug #13207 (reported + fix suggested by Terry Brown).
++* Only print &quot;Deleting fetchids file&quot; if there actually is one.
++  Fixes Debian Bug#374514, reported by Dan Jacobson.
+ 
+ # CHANGES:
+ * autoconf 2.60 is now required to build fetchmail; it uses
+
+Modified: branches/BRANCH_6-3/uid.c
+===================================================================
+--- branches/BRANCH_6-3/uid.c	2008-07-03 14:33:53 UTC (rev 5212)
++++ branches/BRANCH_6-3/uid.c	2008-07-03 14:35:41 UTC (rev 5213)
+@@ -612,8 +612,10 @@
+     /* either nuke the file or write updated last-seen IDs */
+     if (!idcount &amp;&amp; !scratchlist)
+     {
+-	if (outlevel &gt;= O_DEBUG)
+-	    report(stdout, GT_(&quot;Deleting fetchids file.\n&quot;));
++	if (outlevel &gt;= O_DEBUG) {
++	    if (access(idfile, F_OK) == 0)
++		    report(stdout, GT_(&quot;Deleting fetchids file.\n&quot;));
++	}
+ 	if (unlink(idfile) &amp;&amp; errno != ENOENT)
+ 	    report(stderr, GT_(&quot;Error deleting %s: %s\n&quot;), idfile, strerror(errno));
+     } else {
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000201.html">[fetchmail-svn] r5212 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000203.html">[fetchmail-svn] r5214 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#202">[ date ]</a>
+              <a href="thread.html#202">[ thread ]</a>
+              <a href="subject.html#202">[ subject ]</a>
+              <a href="author.html#202">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,728 @@
+From svn at mknod.org  Thu Mar  6 10:15:56 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu,  6 Mar 2008 03:15:56 -0600 (CST)
+Subject: [fetchmail-svn] r5164 - branches/BRANCH_6-3
+Message-ID: <20080306091556.E61736B0133@mknod.org>
+
+Author: m-a
+Date: 2008-03-06 03:15:56 -0600 (Thu, 06 Mar 2008)
+New Revision: 5164
+
+Modified:
+   branches/BRANCH_6-3/fetchmail.c
+Log:
+Bump copyright date.
+
+Modified: branches/BRANCH_6-3/fetchmail.c
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.c	2008-02-25 23:54:19 UTC (rev 5163)
++++ branches/BRANCH_6-3/fetchmail.c	2008-03-06 09:15:56 UTC (rev 5164)
+@@ -136,8 +136,8 @@
+ static void printcopyright(FILE *fp) {
+ 	fprintf(fp, GT_("Copyright (C) 2002, 2003 Eric S. Raymond\n"
+ 		   "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham Wilson\n"
+-		   "Copyright (C) 2005-2006 Sunil Shetye\n"
+-		   "Copyright (C) 2005-2007 Matthias Andree\n"
++		   "Copyright (C) 2005 - 2006 Sunil Shetye\n"
++		   "Copyright (C) 2005 - 2008 Matthias Andree\n"
+ 		   ));
+ 	fprintf(fp, GT_("Fetchmail comes with ABSOLUTELY NO WARRANTY. This is free software, and you\n"
+ 		   "are welcome to redistribute it under certain conditions. For details,\n"
+
+
+
+From svn at mknod.org  Fri Mar  7 14:16:59 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Fri,  7 Mar 2008 07:16:59 -0600 (CST)
+Subject: [fetchmail-svn] r5165 - branches/BRANCH_6-3
+Message-ID: <20080307131659.666E86B0060@mknod.org>
+
+Author: m-a
+Date: 2008-03-07 07:16:58 -0600 (Fri, 07 Mar 2008)
+New Revision: 5165
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/conf.c
+   branches/BRANCH_6-3/driver.c
+   branches/BRANCH_6-3/fetchmail.c
+   branches/BRANCH_6-3/fetchmail.h
+   branches/BRANCH_6-3/fetchmail.man
+   branches/BRANCH_6-3/fetchmailconf.py
+   branches/BRANCH_6-3/imap.c
+   branches/BRANCH_6-3/options.c
+   branches/BRANCH_6-3/pop3.c
+   branches/BRANCH_6-3/rcfile_l.l
+   branches/BRANCH_6-3/rcfile_y.y
+Log:
+Merge Daniel Richard G.'s --sslcommonname option.
+Exception from no-features policy on 6.3.X is made to keep people away from
+doing more dangerous things in order to get rid of CommonName mismatch
+warnings.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2008-03-06 09:15:56 UTC (rev 5164)
++++ branches/BRANCH_6-3/NEWS	2008-03-07 13:16:58 UTC (rev 5165)
+@@ -102,6 +102,9 @@
+ * In KAME/getnameinfo.c it's best to use the correct argument to inet_ntoa.
+   (Peter O'Gorman)
+ * In verbose mode, log if --check mode is enabled.
++* Add sslcommonname option (rcfile and commandline) as a way to work around
++  misconfigured upstream SSL servers that use the wrong certificate name. It
++  specifies which CommonName fetchmail expects and logs.
+ 
+ # DOCUMENTATION:
+ * Add fetchmail-SA-2007-02.txt
+
+Modified: branches/BRANCH_6-3/conf.c
+===================================================================
+--- branches/BRANCH_6-3/conf.c	2008-03-06 09:15:56 UTC (rev 5164)
++++ branches/BRANCH_6-3/conf.c	2008-03-07 13:16:58 UTC (rev 5165)
+@@ -376,6 +376,7 @@
+ 	stringdump("sslproto", ctl->sslproto);
+ 	booldump("sslcertck", ctl->sslcertck);
+ 	stringdump("sslcertpath", ctl->sslcertpath);
++	stringdump("sslcommonname", ctl->sslcommonname);
+ 	stringdump("sslfingerprint", ctl->sslfingerprint);
+ #endif /* SSL_ENABLE */
+ 	numdump("expunge", ctl->expunge);
+
+Modified: branches/BRANCH_6-3/driver.c
+===================================================================
+--- branches/BRANCH_6-3/driver.c	2008-03-06 09:15:56 UTC (rev 5164)
++++ branches/BRANCH_6-3/driver.c	2008-03-07 13:16:58 UTC (rev 5165)
+@@ -1088,10 +1088,12 @@
+ 	set_timeout(mytimeout);
+ 
+ 	/* perform initial SSL handshake on open connection */
+-	/* Note:  We pass the realhost name over for certificate
+-		verification.  We may want to make this configurable */
+-	if (ctl->use_ssl && SSLOpen(mailserver_socket,ctl->sslcert,ctl->sslkey,ctl->sslproto,ctl->sslcertck,
+-	    ctl->sslcertpath,ctl->sslfingerprint,realhost,ctl->server.pollname,&ctl->remotename) == -1) 
++	if (ctl->use_ssl &&
++		SSLOpen(mailserver_socket, ctl->sslcert, ctl->sslkey,
++		    ctl->sslproto, ctl->sslcertck, ctl->sslcertpath,
++		    ctl->sslfingerprint, ctl->sslcommonname ?
++		    ctl->sslcommonname : realhost, ctl->server.pollname,
++		    &ctl->remotename) == -1)
+ 	{
+ 	    report(stderr, GT_("SSL connection failed.\n"));
+ 	    err = PS_SOCKET;
+
+Modified: branches/BRANCH_6-3/fetchmail.c
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.c	2008-03-06 09:15:56 UTC (rev 5164)
++++ branches/BRANCH_6-3/fetchmail.c	2008-03-07 13:16:58 UTC (rev 5165)
+@@ -966,6 +966,7 @@
+     FLAG_MERGE(sslproto);
+     FLAG_MERGE(sslcertck);
+     FLAG_MERGE(sslcertpath);
++    FLAG_MERGE(sslcommonname);
+     FLAG_MERGE(sslfingerprint);
+ #endif
+     FLAG_MERGE(expunge);
+@@ -1637,6 +1638,8 @@
+ 	    if (ctl->sslcertpath != NULL)
+ 		printf(GT_("  SSL trusted certificate directory: %s\n"), ctl->sslcertpath);
+ 	}
++	if (ctl->sslcommonname != NULL)
++		printf(GT_("  SSL server CommonName: %s\n"), ctl->sslcommonname);
+ 	if (ctl->sslfingerprint != NULL)
+ 		printf(GT_("  SSL key fingerprint (checked against the server key): %s\n"), ctl->sslfingerprint);
+ #endif
+
+Modified: branches/BRANCH_6-3/fetchmail.h
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.h	2008-03-06 09:15:56 UTC (rev 5164)
++++ branches/BRANCH_6-3/fetchmail.h	2008-03-07 13:16:58 UTC (rev 5165)
+@@ -355,6 +355,7 @@
+ 				  use ssl23 for SSL and opportunistic tls1 for non-SSL connections. */
+     char *sslcertpath;		/* Trusted certificate directory for checking the server cert */
+     flag sslcertck;		/* Strictly check the server cert. */
++    char *sslcommonname;	/* CommonName to expect from server */
+     char *sslfingerprint;	/* Fingerprint to check against */
+     char *properties;		/* passthrough properties for extensions */
+ 
+
+Modified: branches/BRANCH_6-3/fetchmail.man
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.man	2008-03-06 09:15:56 UTC (rev 5164)
++++ branches/BRANCH_6-3/fetchmail.man	2008-03-07 13:16:58 UTC (rev 5165)
+@@ -439,6 +439,18 @@
+ to use the \fBc_rehash\fR tool (which comes with OpenSSL in the tools/
+ subdirectory).
+ .TP
++.B \-\-sslcommonname <common name>
++(Keyword: sslcommonname)
++Use of this option is discouraged. Before using it, contact your
++upstream and ask for a proper SSL certificate to be used. If the
++upstream is clueless, this option can be used to specify the name
++(CommonName) that fetchmail expects on the server certificate.  A
++correctly configured server will have this set to the hostname by which
++it is reached, and by default fetchmail will expect as much. Use this
++option when the CommonName is set to some other value, to avoid the
++"Server CommonName mismatch" warning, and only if the upstream can't be
++made to use proper certificates.
++.TP
+ .B \-\-sslfingerprint <fingerprint>
+ (Keyword: sslfingerprint)
+ Specify the fingerprint of the server key (an MD5 hash of the key) in
+
+Modified: branches/BRANCH_6-3/fetchmailconf.py
+===================================================================
+--- branches/BRANCH_6-3/fetchmailconf.py	2008-03-06 09:15:56 UTC (rev 5164)
++++ branches/BRANCH_6-3/fetchmailconf.py	2008-03-07 13:16:58 UTC (rev 5165)
+@@ -5,7 +5,7 @@
+ # Matthias Andree <matthias.andree at gmx.de>
+ # Requires Python with Tkinter, and the following OS-dependent services:
+ #	posix, posixpath, socket
+-version = "1.53 $Revision$"
++version = "1.54 $Revision$"
+ 
+ from Tkinter import *
+ from Dialog import *
+@@ -258,6 +258,7 @@
+ 	self.sslproto = None	# Force SSL?
+ 	self.sslcertck = 0	# Enable strict SSL cert checking
+ 	self.sslcertpath = None	# Path to trusted certificates
++	self.sslcommonname = None	# SSL CommonName to expect
+ 	self.sslfingerprint = None	# SSL key fingerprint to check
+ 	self.properties = None	# Extension properties
+ 	User.typemap = (
+@@ -297,6 +298,7 @@
+ 	    ('sslcert',     'String'),
+ 	    ('sslcertck',   'Boolean'),
+ 	    ('sslcertpath', 'String'),
++	    ('sslcommonname', 'String'),
+ 	    ('sslfingerprint', 'String'),
+ 	    ('properties',  'String'))
+ 
+@@ -371,6 +373,8 @@
+ 	    res = res +  flag2str(self.sslcertck, 'sslcertck')
+ 	if self.sslcertpath and self.sslcertpath != UserDefaults.sslcertpath:
+ 	    res = res + " sslcertpath " + `self.sslcertpath`
++	if self.sslcommonname and self.sslcommonname != UserDefaults.sslcommonname:
++	    res = res + " sslcommonname " + `self.sslcommonname`
+ 	if self.sslfingerprint and self.sslfingerprint != UserDefaults.sslfingerprint:
+ 	    res = res + " sslfingerprint " + `self.sslfingerprint`
+ 	if self.expunge != UserDefaults.expunge:
+@@ -1000,8 +1004,10 @@
+ supporting Secure Sockets Layer. The sslkey and sslcert options
+ declare key and certificate files for use with SSL.
+ The sslcertck option enables strict checking of SSL server
+-certificates (and sslcertpath gives trusted certificate
+-directory). With sslfingerprint, you can specify a finger-
++certificates (and sslcertpath gives the trusted certificate
++directory). The sslcommonname option helps if the server is
++misconfigured and returning "Server CommonName mismatch"
++warnings. With sslfingerprint, you can specify a finger-
+ print the server's key is checked against.
+ """}
+ 
+@@ -1641,6 +1647,8 @@
+ 			variable=self.sslcertck).pack(side=TOP, fill=X)
+ 	    LabeledEntry(sslwin, 'SSL trusted certificate directory:',
+ 			 self.sslcertpath, '14').pack(side=TOP, fill=X)
++	    LabeledEntry(sslwin, 'SSL CommonName:',
++			 self.sslcommonname, '14').pack(side=TOP, fill=X)
+ 	    LabeledEntry(sslwin, 'SSL key fingerprint:',
+ 			 self.sslfingerprint, '14').pack(side=TOP, fill=X)
+ 	    sslwin.pack(fill=X, anchor=N)
+@@ -1942,7 +1950,7 @@
+     optional = ('interface', 'monitor',
+ 		'esmtpname', 'esmtppassword',
+ 		'ssl', 'sslkey', 'sslcert', 'sslproto', 'sslcertck',
+-		'sslcertpath', 'sslfingerprint', 'showdots')
++		'sslcertpath', 'sslcommonname', 'sslfingerprint', 'showdots')
+     class_sig = setdiff(toclass.__dict__.keys(), optional)
+     class_sig.sort()
+     dict_keys = setdiff(fromdict.keys(), optional)
+
+Modified: branches/BRANCH_6-3/imap.c
+===================================================================
+--- branches/BRANCH_6-3/imap.c	2008-03-06 09:15:56 UTC (rev 5164)
++++ branches/BRANCH_6-3/imap.c	2008-03-07 13:16:58 UTC (rev 5165)
+@@ -381,7 +381,6 @@
+     int ok = 0;
+ #ifdef SSL_ENABLE
+     int got_tls = 0;
+-    char *realhost;
+ #endif
+     (void)greeting;
+ 
+@@ -407,9 +406,15 @@
+     }
+ 
+ #ifdef SSL_ENABLE
+-    realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;
++    if (maybe_tls(ctl)) {
++	char *commonname;
+ 
+-    if (maybe_tls(ctl)) {
++	commonname = ctl->server.pollname;
++	if (ctl->server.via)
++	    commonname = ctl->server.via;
++	if (ctl->sslcommonname)
++	    commonname = ctl->sslcommonname;
++
+ 	if (strstr(capabilities, "STARTTLS"))
+ 	{
+ 	    /* Use "tls1" rather than ctl->sslproto because tls1 is the only
+@@ -418,7 +423,7 @@
+ 	     * (see below). */
+ 	    if (gen_transact(sock, "STARTTLS") == PS_SUCCESS
+ 		    && SSLOpen(sock, ctl->sslcert, ctl->sslkey, "tls1", ctl->sslcertck,
+-			ctl->sslcertpath, ctl->sslfingerprint, realhost,
++			ctl->sslcertpath, ctl->sslfingerprint, commonname,
+ 			ctl->server.pollname, &ctl->remotename) != -1)
+ 	    {
+ 		/*
+@@ -438,7 +443,7 @@
+ 		capa_probe(sock, ctl);
+ 		if (outlevel >= O_VERBOSE)
+ 		{
+-		    report(stdout, GT_("%s: upgrade to TLS succeeded.\n"), realhost);
++		    report(stdout, GT_("%s: upgrade to TLS succeeded.\n"), commonname);
+ 		}
+ 	    }
+ 	}
+@@ -447,11 +452,11 @@
+ 	    if (must_tls(ctl)) {
+ 		/* Config required TLS but we couldn't guarantee it, so we must
+ 		 * stop. */
+-		report(stderr, GT_("%s: upgrade to TLS failed.\n"), realhost);
++		report(stderr, GT_("%s: upgrade to TLS failed.\n"), commonname);
+ 		return PS_SOCKET;
+ 	    } else {
+ 		if (outlevel >= O_VERBOSE) {
+-		    report(stdout, GT_("%s: opportunistic upgrade to TLS failed, trying to continue\n"), realhost);
++		    report(stdout, GT_("%s: opportunistic upgrade to TLS failed, trying to continue\n"), commonname);
+ 		}
+ 		/* We don't know whether the connection is in a working state, so
+ 		 * test by issuing a NOOP. */
+
+Modified: branches/BRANCH_6-3/options.c
+===================================================================
+--- branches/BRANCH_6-3/options.c	2008-03-06 09:15:56 UTC (rev 5164)
++++ branches/BRANCH_6-3/options.c	2008-03-07 13:16:58 UTC (rev 5165)
+@@ -46,6 +46,7 @@
+     LA_SSLPROTO,
+     LA_SSLCERTCK,
+     LA_SSLCERTPATH,
++    LA_SSLCOMMONNAME,
+     LA_SSLFINGERPRINT,
+     LA_FETCHSIZELIMIT,
+     LA_FASTUIDL,
+@@ -125,6 +126,7 @@
+   {"sslproto",	 required_argument, (int *) 0, LA_SSLPROTO },
+   {"sslcertck", no_argument,	   (int *) 0, LA_SSLCERTCK },
+   {"sslcertpath",   required_argument, (int *) 0, LA_SSLCERTPATH },
++  {"sslcommonname",    required_argument, (int *) 0, LA_SSLCOMMONNAME },
+   {"sslfingerprint",   required_argument, (int *) 0, LA_SSLFINGERPRINT },
+ #endif
+ 
+@@ -539,6 +541,10 @@
+ 	    ctl->sslcertpath = prependdir(optarg, currentwd);
+ 	    break;
+ 
++	case LA_SSLCOMMONNAME:
++	    ctl->sslcommonname = xstrdup(optarg);
++	    break;
++
+ 	case LA_SSLFINGERPRINT:
+ 	    ctl->sslfingerprint = xstrdup(optarg);
+ 	    break;
+@@ -611,6 +617,7 @@
+ 	P(GT_("      --sslcert     ssl client certificate\n"));
+ 	P(GT_("      --sslcertck   do strict server certificate check (recommended)\n"));
+ 	P(GT_("      --sslcertpath path to ssl certificates\n"));
++	P(GT_("      --sslcommonname  expect this CommonName from server (discouraged)\n"));
+ 	P(GT_("      --sslfingerprint fingerprint that must match that of the server's cert.\n"));
+ 	P(GT_("      --sslproto    force ssl protocol (SSL2/SSL3/TLS1)\n"));
+ #endif
+
+Modified: branches/BRANCH_6-3/pop3.c
+===================================================================
+--- branches/BRANCH_6-3/pop3.c	2008-03-06 09:15:56 UTC (rev 5164)
++++ branches/BRANCH_6-3/pop3.c	2008-03-07 13:16:58 UTC (rev 5165)
+@@ -307,7 +307,6 @@
+     char *challenge;
+ #endif /* OPIE_ENABLE */
+ #ifdef SSL_ENABLE
+-    char *realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;
+     flag connection_may_have_tls_errors = FALSE;
+     flag got_tls = FALSE;
+ #endif /* SSL_ENABLE */
+@@ -476,6 +475,14 @@
+ 
+ #ifdef SSL_ENABLE
+ 	if (maybe_tls(ctl)) {
++	    char *commonname;
++
++	    commonname = ctl->server.pollname;
++	    if (ctl->server.via)
++		commonname = ctl->server.via;
++	    if (ctl->sslcommonname)
++		commonname = ctl->sslcommonname;
++
+ 	   if (has_stls)
+ 	   {
+ 	       /* Use "tls1" rather than ctl->sslproto because tls1 is the only
+@@ -484,7 +491,7 @@
+ 		* (see below). */
+ 	       if (gen_transact(sock, "STLS") == PS_SUCCESS
+ 		       && SSLOpen(sock, ctl->sslcert, ctl->sslkey, "tls1", ctl->sslcertck,
+-			   ctl->sslcertpath, ctl->sslfingerprint, realhost,
++			   ctl->sslcertpath, ctl->sslfingerprint, commonname,
+ 			   ctl->server.pollname, &ctl->remotename) != -1)
+ 	       {
+ 		   /*
+@@ -508,7 +515,7 @@
+ 		   }
+ 		   if (outlevel >= O_VERBOSE)
+ 		   {
+-		       report(stdout, GT_("%s: upgrade to TLS succeeded.\n"), realhost);
++		       report(stdout, GT_("%s: upgrade to TLS succeeded.\n"), commonname);
+ 		   }
+ 	       }
+ 	   }
+@@ -517,7 +524,7 @@
+ 	       if (must_tls(ctl)) {
+ 		   /* Config required TLS but we couldn't guarantee it, so we must
+ 		    * stop. */
+-		   report(stderr, GT_("%s: upgrade to TLS failed.\n"), realhost);
++		   report(stderr, GT_("%s: upgrade to TLS failed.\n"), commonname);
+ 		   return PS_SOCKET;
+ 	       } else {
+ 		   /* We don't know whether the connection is usable, and there's
+@@ -528,7 +535,7 @@
+ 		   connection_may_have_tls_errors = TRUE;
+ 		   if (outlevel >= O_VERBOSE)
+ 		   {
+-		       report(stdout, GT_("%s: opportunistic upgrade to TLS failed, trying to continue.\n"), realhost);
++		       report(stdout, GT_("%s: opportunistic upgrade to TLS failed, trying to continue.\n"), commonname);
+ 		   }
+ 	       }
+ 	   }
+
+Modified: branches/BRANCH_6-3/rcfile_l.l
+===================================================================
+--- branches/BRANCH_6-3/rcfile_l.l	2008-03-06 09:15:56 UTC (rev 5164)
++++ branches/BRANCH_6-3/rcfile_l.l	2008-03-07 13:16:58 UTC (rev 5165)
+@@ -187,6 +187,7 @@
+ sslproto	{ return SSLPROTO; }
+ sslcertck	{ return SSLCERTCK; }
+ sslcertpath	{ return SSLCERTPATH; }
++sslcommonname	{ return SSLCOMMONNAME; }
+ sslfingerprint	{ return SSLFINGERPRINT; }
+ checkalias	{ return CHECKALIAS; }
+ 
+
+Modified: branches/BRANCH_6-3/rcfile_y.y
+===================================================================
+--- branches/BRANCH_6-3/rcfile_y.y	2008-03-06 09:15:56 UTC (rev 5164)
++++ branches/BRANCH_6-3/rcfile_y.y	2008-03-07 13:16:58 UTC (rev 5165)
+@@ -76,7 +76,7 @@
+ %token NO KEEP FLUSH LIMITFLUSH FETCHALL REWRITE FORCECR STRIPCR PASS8BITS 
+ %token DROPSTATUS DROPDELIVERED
+ %token DNS SERVICE PORT UIDL INTERVAL MIMEDECODE IDLE CHECKALIAS 
+-%token SSL SSLKEY SSLCERT SSLPROTO SSLCERTCK SSLCERTPATH SSLFINGERPRINT
++%token SSL SSLKEY SSLCERT SSLPROTO SSLCERTCK SSLCERTPATH SSLCOMMONNAME SSLFINGERPRINT
+ %token PRINCIPAL ESMTPNAME ESMTPPASSWORD
+ %token TRACEPOLLS
+ 
+@@ -338,6 +338,7 @@
+ 		| SSLPROTO STRING	{current.sslproto = xstrdup($2);}
+ 		| SSLCERTCK             {current.sslcertck = FLAG_TRUE;}
+ 		| SSLCERTPATH STRING    {current.sslcertpath = prependdir($2, rcfiledir);}
++		| SSLCOMMONNAME STRING  {current.sslcommonname = xstrdup($2);}
+ 		| SSLFINGERPRINT STRING {current.sslfingerprint = xstrdup($2);}
+ 
+ 		| NO KEEP		{current.keep        = FLAG_FALSE;}
+
+
+
+From svn at mknod.org  Fri Mar  7 16:08:32 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Fri,  7 Mar 2008 09:08:32 -0600 (CST)
+Subject: [fetchmail-svn] r5166 - branches/BRANCH_6-3
+Message-ID: <20080307150832.037426B0060@mknod.org>
+
+Author: m-a
+Date: 2008-03-07 09:08:31 -0600 (Fri, 07 Mar 2008)
+New Revision: 5166
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+Log:
+Credit Daniel Richard G.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2008-03-07 13:16:58 UTC (rev 5165)
++++ branches/BRANCH_6-3/NEWS	2008-03-07 15:08:31 UTC (rev 5166)
+@@ -104,7 +104,7 @@
+ * In verbose mode, log if --check mode is enabled.
+ * Add sslcommonname option (rcfile and commandline) as a way to work around
+   misconfigured upstream SSL servers that use the wrong certificate name. It
+-  specifies which CommonName fetchmail expects and logs.
++  specifies which CommonName fetchmail expects and logs. (Daniel Richard G.)
+ 
+ # DOCUMENTATION:
+ * Add fetchmail-SA-2007-02.txt
+
+
+
+From svn at mknod.org  Sat Mar  8 11:19:03 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Sat,  8 Mar 2008 04:19:03 -0600 (CST)
+Subject: [fetchmail-svn] r5167 - trunk
+Message-ID: <20080308101903.E6B3B6B0135@mknod.org>
+
+Author: m-a
+Date: 2008-03-08 04:19:03 -0600 (Sat, 08 Mar 2008)
+New Revision: 5167
+
+Modified:
+   trunk/README.svn
+   trunk/configure.ac
+Log:
+Place warnings that trunk is currently unmaintained.
+
+Modified: trunk/README.svn
+===================================================================
+--- trunk/README.svn	2008-03-07 15:08:31 UTC (rev 5166)
++++ trunk/README.svn	2008-03-08 10:19:03 UTC (rev 5167)
+@@ -1,3 +1,9 @@
++
++
++WARNING: the trunk is currently unmaintained, use branches/BRANCH_6-3 instead.
++========
++
++
+ In order to be able to build from the subversion repository (working
+ directory), some files need to be (re-)generated.
+ 
+
+Modified: trunk/configure.ac
+===================================================================
+--- trunk/configure.ac	2008-03-07 15:08:31 UTC (rev 5166)
++++ trunk/configure.ac	2008-03-08 10:19:03 UTC (rev 5167)
+@@ -10,6 +10,13 @@
+ AC_CONFIG_HEADERS([config.h])
+ AC_CONFIG_LIBOBJ_DIR([.])
+ 
++AC_MSG_NOTICE([])
++AC_MSG_WARN([!!!  This trunk is currently not maintained,  !!!])
++AC_MSG_WARN([!!!  please use branches/BRANCH_6-3 instead.  !!!])
++AC_MSG_NOTICE([])
++AC_MSG_NOTICE([continuing in 10 seconds])
++sleep 10 || :
++
+ AC_CANONICAL_TARGET
+ 
+ dnl we may need a newer automake version - the oldest tested is 1.7
+@@ -762,6 +769,10 @@
+ dnl ----------------------------------------------------------------'
+ 
+ AC_CONFIG_FILES([Makefile m4/Makefile po/Makefile.in genlsm.sh])
++AC_CONFIG_COMMANDS([warntrunk],[
++		    AC_MSG_WARN([!!!  This trunk is currently not maintained,  !!!])
++		    AC_MSG_WARN([!!!  please use branches/BRANCH_6-3 instead.  !!!])
++])
+ AC_OUTPUT
+ 
+ dnl Local Variables:
+
+
+
+From svn at mknod.org  Sat Mar  8 11:22:04 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Sat,  8 Mar 2008 04:22:04 -0600 (CST)
+Subject: [fetchmail-svn] r5168 - branches/BRANCH_6-3
+Message-ID: <20080308102204.14D7B6B0135@mknod.org>
+
+Author: m-a
+Date: 2008-03-08 04:22:03 -0600 (Sat, 08 Mar 2008)
+New Revision: 5168
+
+Modified:
+   branches/BRANCH_6-3/fetchmail.man
+Log:
+Revise --sslcommonname wording after hint from Daniel Richard G. that upstream
+is usually considered an adjective, rather than a noun.
+
+Modified: branches/BRANCH_6-3/fetchmail.man
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.man	2008-03-08 10:19:03 UTC (rev 5167)
++++ branches/BRANCH_6-3/fetchmail.man	2008-03-08 10:22:03 UTC (rev 5168)
+@@ -441,15 +441,15 @@
+ .TP
+ .B \-\-sslcommonname <common name>
+ (Keyword: sslcommonname)
+-Use of this option is discouraged. Before using it, contact your
+-upstream and ask for a proper SSL certificate to be used. If the
+-upstream is clueless, this option can be used to specify the name
+-(CommonName) that fetchmail expects on the server certificate.  A
+-correctly configured server will have this set to the hostname by which
+-it is reached, and by default fetchmail will expect as much. Use this
+-option when the CommonName is set to some other value, to avoid the
+-"Server CommonName mismatch" warning, and only if the upstream can't be
+-made to use proper certificates.
++Use of this option is discouraged. Before using it, contact the
++administrator of your upstream server and ask for a proper SSL
++certificate to be used. If that cannot be attained, this option can be
++used to specify the name (CommonName) that fetchmail expects on the
++server certificate.  A correctly configured server will have this set to
++the hostname by which it is reached, and by default fetchmail will
++expect as much. Use this option when the CommonName is set to some other
++value, to avoid the "Server CommonName mismatch" warning, and only if
++the upstream server can't be made to use proper certificates.
+ .TP
+ .B \-\-sslfingerprint <fingerprint>
+ (Keyword: sslfingerprint)
+
+
+
+From svn at mknod.org  Mon Mar 17 13:16:12 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Mon, 17 Mar 2008 07:16:12 -0500 (CDT)
+Subject: [fetchmail-svn] r5169 - branches/BRANCH_6-3
+Message-ID: <20080317121612.D154F6B0126@mknod.org>
+
+Author: m-a
+Date: 2008-03-17 07:16:12 -0500 (Mon, 17 Mar 2008)
+New Revision: 5169
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Escalate Novell bug #246829.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2008-03-08 10:22:03 UTC (rev 5168)
++++ branches/BRANCH_6-3/TODO.txt	2008-03-17 12:16:12 UTC (rev 5169)
+@@ -6,6 +6,9 @@
+ - publish SA-2007-02 after release
+ 
+ soon - SHOULD:
++- https://bugzilla.novell.com/show_bug.cgi?id=246829 - fetchmail lost some mail
++  (5XX error code in contradiction with manual?)
++  also http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=471283
+ - allow \Deleted without \Seen, rf. 
+   http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=466299
+ - document IMAP4 ACL requirements
+@@ -23,8 +26,7 @@
+ - Get rid of peeking in socket.c? MSG_PEEK seems non-portable and racey.
+ 
+ soon - MAY:
+-- https://bugzilla.novell.com/show_bug.cgi?id=246829 - fetchmail lost some mail
+-  (5XX error code in contradiction with manual?)
++-
+ 
+ soon - after 6.3.9:
+ - find a solution for the "invalid header" discards message problem
+
+
+
+From svn at mknod.org  Mon Mar 17 13:26:05 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Mon, 17 Mar 2008 07:26:05 -0500 (CDT)
+Subject: [fetchmail-svn] r5170 - branches/BRANCH_6-3
+Message-ID: <20080317122605.258646B0126@mknod.org>
+
+Author: m-a
+Date: 2008-03-17 07:26:05 -0500 (Mon, 17 Mar 2008)
+New Revision: 5170
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Add Debian #471176/#400719
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2008-03-17 12:16:12 UTC (rev 5169)
++++ branches/BRANCH_6-3/TODO.txt	2008-03-17 12:26:05 UTC (rev 5170)
+@@ -26,7 +26,11 @@
+ - Get rid of peeking in socket.c? MSG_PEEK seems non-portable and racey.
+ 
+ soon - MAY:
+--
++- http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=471176
++  => fetchmail: support utf-8 encoding in log file
++  Revisit http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=400719
++  => syslog messages are localised
++  http://lists.debian.org/debian-devel/2006/11/msg01068.html
+ 
+ soon - after 6.3.9:
+ - find a solution for the "invalid header" discards message problem
+
+
+
+From svn at mknod.org  Mon Mar 31 17:00:36 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Mon, 31 Mar 2008 10:00:36 -0500 (CDT)
+Subject: [fetchmail-svn] r5171 - branches/BRANCH_6-3
+Message-ID: <20080331150036.74B0E6B0125@mknod.org>
+
+Author: m-a
+Date: 2008-03-31 10:00:34 -0500 (Mon, 31 Mar 2008)
+New Revision: 5171
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/fetchmail.man
+Log:
+State that --logfile must pre-exist to be effective, after hint from
+N. J. Mann on fetchmail-users.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2008-03-17 12:26:05 UTC (rev 5170)
++++ branches/BRANCH_6-3/NEWS	2008-03-31 15:00:34 UTC (rev 5171)
+@@ -121,7 +121,9 @@
+   that.
+ * Several manual page rcfile examples now include "ssl".
+ * The manual page hints that option arguments beginning with numbers can be
+-  enclosed in parentheses.
++  enclosed in quotes.
++* The manual page now mentions that the --logfile must already exist before
++  fetchmail is run.
+ 
+ # TRANSLATION UPDATES:
+ * Polish (Jakub Bogusz)
+
+Modified: branches/BRANCH_6-3/fetchmail.man
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.man	2008-03-17 12:26:05 UTC (rev 5170)
++++ branches/BRANCH_6-3/fetchmail.man	2008-03-31 15:00:34 UTC (rev 5171)
+@@ -1202,7 +1202,12 @@
+ or
+ .B \-\-logfile <filename>
+ option (keyword: set logfile) is only effective when fetchmail is
+-detached. This option allows you to redirect status messages
++detached. Note that the logfile must exist BEFORE fetchmail is run, you
++can use the
++.BR touch (1)
++command with the filename as its sole argument to create it.
++.br
++This option allows you to redirect status messages
+ into a specified logfile (follow the option with the logfile name).  The
+ logfile is opened for append, so previous messages aren't deleted.  This
+ is primarily useful for debugging configurations. Note that fetchmail
+@@ -2086,7 +2091,8 @@
+ There are some global option statements: 'set logfile'
+ followed by a string sets the same global specified by \-\-logfile.  A
+ command-line \-\-logfile option will override this. Note that \-\-logfile is
+-only effective if fetchmail detaches itself from the terminal.  Also,
++only effective if fetchmail detaches itself from the terminal and the
++logfile already exists before fetchmail is run.  Also,
+ \&'set daemon' sets the poll interval as \-\-daemon does.  This can be
+ overridden by a command-line \-\-daemon option; in particular \-\-daemon\~0
+ can be used to force foreground operation. The 'set postmaster'
+
+
+

@@ -1,0 +1,264 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5205 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2008-June/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5205%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20080624130652.D570B6B0122%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000194.html">
+   <LINK REL="Next"  HREF="000196.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5205 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5205%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20080624130652.D570B6B0122%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5205 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Tue Jun 24 15:06:52 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000194.html">[fetchmail-svn] r5204 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000196.html">[fetchmail-svn] r5207 - tags
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#195">[ date ]</a>
+              <a href="thread.html#195">[ thread ]</a>
+              <a href="subject.html#195">[ subject ]</a>
+              <a href="author.html#195">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2008-06-24 08:06:51 -0500 (Tue, 24 Jun 2008)
+New Revision: 5205
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/configure.ac
+   branches/BRANCH_6-3/fetchmail-SA-2008-01.txt
+   branches/BRANCH_6-3/report.c
+Log:
+Fix one more CVE-2008-2711 va_start() messup. Found by Petr Uzel.
+Bump release to -rc2.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2008-06-24 09:44:57 UTC (rev 5204)
++++ branches/BRANCH_6-3/NEWS	2008-06-24 13:06:51 UTC (rev 5205)
+@@ -61,6 +61,8 @@
+   random memory location (it calls va_arg() too often without
+   resetting it with va_start()). Based on a patch (BerliOS patch #2492)
+   by Petr Uzel, fixes Novell Bug #354291.
++  Note 6.3.9-rc1 did not completely fix this issue, so it was redrawn a few 
++  hours after its release.
+   See also fetchmail-SA-2008-01.txt.
+ * When expunging, mark the right messages as seen to avoid message loss in &quot;keep
+   flush&quot; configurations.  Workaround for previous versions: &quot;expunge 0&quot;.
+
+Modified: branches/BRANCH_6-3/configure.ac
+===================================================================
+--- branches/BRANCH_6-3/configure.ac	2008-06-24 09:44:57 UTC (rev 5204)
++++ branches/BRANCH_6-3/configure.ac	2008-06-24 13:06:51 UTC (rev 5205)
+@@ -8,7 +8,7 @@
+ dnl Process this file with autoconf to produce a configure script.
+ dnl
+ 
+-AC_INIT([fetchmail],[6.3.9-rc1],[<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-users at lists.berlios.de</A>])
++AC_INIT([fetchmail],[6.3.9-rc2],[<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-users at lists.berlios.de</A>])
+ AC_CONFIG_SRCDIR([fetchmail.h])
+ AC_CONFIG_HEADERS([config.h])
+ AC_CONFIG_LIBOBJ_DIR([.])
+@@ -61,6 +61,9 @@
+ 	sys/itimer.h fcntl.h sys/fcntl.h memory.h sys/wait.h \
+ 	arpa/inet.h arpa/nameser.h netinet/in.h net/socket.h netdb.h \
+ 	sys/select.h sys/socket.h sys/time.h langinfo.h])
++if test _$ac_cv_header_stdarg_h != _yes ; then
++AC_MSG_WARN([stdarg.h is not defined. Unsupported configuration, proceed at your own risk.])
++fi
+ AC_CHECK_TYPE(u_int32_t,,
+ 	AC_DEFINE(u_int32_t,unsigned int,
+ 		[Define to unsigned int if &lt;sys/types.h&gt; does not define.]),
+
+Modified: branches/BRANCH_6-3/fetchmail-SA-2008-01.txt
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-SA-2008-01.txt	2008-06-24 09:44:57 UTC (rev 5204)
++++ branches/BRANCH_6-3/fetchmail-SA-2008-01.txt	2008-06-24 13:06:51 UTC (rev 5205)
+@@ -6,7 +6,7 @@
+ Topics:		Crash in large log messages in verbose mode.
+ 
+ Author:		Matthias Andree
+-Version:	1.1
++Version:	1.2
+ Announced:	2008-06-17
+ Type:		Dereferencing garbage pointer triggered by outside circumstances
+ Impact:		denial of service possible
+@@ -18,12 +18,14 @@
+ URL:		<A HREF="http://www.fetchmail.info/fetchmail-SA-2008-01.txt">http://www.fetchmail.info/fetchmail-SA-2008-01.txt</A>
+ Project URL:	<A HREF="http://www.fetchmail.info/">http://www.fetchmail.info/</A>
+ 
+-Affects:	fetchmail release &lt; 6.3.9 exclusively
++Affects:	fetchmail release before and excluding 6.3.9
++		fetchmail release candidate 6.3.9-rc1
+ 
+ Not affected:	fetchmail release 6.3.9 and newer
+-		systems without varargs (stdargs.h) support.
++		fetchmail release candidate 6.3.9-rc2 and newer
++		systems without varargs support.
+ 
+-Corrected:	2008-06-13 fetchmail SVN (rev 5193)
++Corrected:	2008-06-24 fetchmail SVN (rev 5205)
+ 
+ References:	&lt;<A HREF="https://bugzilla.novell.com/show_bug.cgi?id=354291">https://bugzilla.novell.com/show_bug.cgi?id=354291</A>&gt;
+ 		&lt;<A HREF="http://developer.berlios.de/patch/?func=detailpatch&amp;patch_id=2492&amp;group_id=1824">http://developer.berlios.de/patch/?func=detailpatch&amp;patch_id=2492&amp;group_id=1824</A>&gt;
+@@ -36,6 +38,7 @@
+ 		posted to oss-security)
+ 2008-06-17 1.0	published on <A HREF="http://www.fetchmail.info/">http://www.fetchmail.info/</A>
+ 2008-06-17 1.1	Corrected typo in Type: above (trigged -&gt; triggered)
++2008-06-24 1.2  also fixed issue in report_complete (reported by Petr Uzel)
+ 
+ 
+ 1. Background
+@@ -116,31 +119,38 @@
+ Use the information herein at your own risk.
+ 
+ 
+-
+ B. Patch to remedy the problem
+ ==============================
+ 
++Note that when taking this from a GnuPG clearsigned file, the lines 
++starting with a &quot;-&quot; character are prefixed by another &quot;- &quot; (dash + 
++blank) combination. Either feed this file through GnuPG to strip them, 
++or strip them manually.
++
++Whitespace differences can usually be ignored by invoking &quot;patch -l&quot;,
++so try this if the patch does not apply.
++
+ diff --git a/report.c b/report.c
+-index 31d4e48..2a731ac 100644
++index 31d4e48..320e60b 100644
+ - --- a/report.c
+ +++ b/report.c
+ @@ -238,11 +238,17 @@ report_build (FILE *errfp, message, va_alist)
+      rep_ensuresize();
+-
++ 
+  #if defined(VA_START)
+ - -    VA_START (args, message);
+      for ( ; ; )
+      {
+ +	/*
+-+	 * args has to be initialized before every call of vsnprintf(),
+-+	 * because vsnprintf() invokes va_arg macro and thus args is
+++	 * args has to be initialized before every call of vsnprintf(), 
+++	 * because vsnprintf() invokes va_arg macro and thus args is 
+ +	 * undefined after the call.
+ +	 */
+ +	VA_START(args, message);
+  	n = vsnprintf (partial_message + partial_message_size_used, partial_message_size - partial_message_size_used,
+  		       message, args);
+ +	va_end (args);
+-
++ 
+  	if (n &gt;= 0
+  	    &amp;&amp; (unsigned)n &lt; partial_message_size - partial_message_size_used)
+ @@ -254,7 +260,6 @@ report_build (FILE *errfp, message, va_alist)
+@@ -151,12 +161,35 @@
+  #else
+      for ( ; ; )
+      {
++@@ -304,12 +309,13 @@ report_complete (FILE *errfp, message, va_alist)
++     rep_ensuresize();
++ 
++ #if defined(VA_START)
++- -    VA_START (args, message);
++     for ( ; ; )
++     {
+++	VA_START(args, message);
++ 	n = vsnprintf (partial_message + partial_message_size_used,
++ 		       partial_message_size - partial_message_size_used,
++ 		       message, args);
+++	va_end(args);
++ 
++ 	/* old glibc versions return -1 for truncation */
++ 	if (n &gt;= 0
++@@ -322,7 +328,6 @@ report_complete (FILE *errfp, message, va_alist)
++ 	partial_message_size += 2048;
++ 	partial_message = REALLOC (partial_message, partial_message_size);
++     }
++- -    va_end (args);
++ #else
++     for ( ; ; )
++     {
+ 
+ END OF fetchmail-SA-2008-01.txt
+ -----BEGIN PGP SIGNATURE-----
+ Version: GnuPG v1.4.5 (GNU/Linux)
+ 
+-iD8DBQFIV7e+vmGDOQUufZURAiAUAKCG1pBXEdVJPUr4WeIZXAr01jshkwCgvfb8
+-6qqG2gZonX24W58gBEQ7Pjw=
+-=vwYl
++iD8DBQFIYPBuvmGDOQUufZURAuj8AJ9IbN/UMcML6NLKSI0keQzGVGzZSQCg+UCP
++tUVNigLK8Xz40J2Eg7PD8Xs=
++=HAmn
+ -----END PGP SIGNATURE-----
+
+Modified: branches/BRANCH_6-3/report.c
+===================================================================
+--- branches/BRANCH_6-3/report.c	2008-06-24 09:44:57 UTC (rev 5204)
++++ branches/BRANCH_6-3/report.c	2008-06-24 13:06:51 UTC (rev 5205)
+@@ -309,12 +309,13 @@
+     rep_ensuresize();
+ 
+ #if defined(VA_START)
+-    VA_START (args, message);
+     for ( ; ; )
+     {
++	VA_START(args, message);
+ 	n = vsnprintf (partial_message + partial_message_size_used,
+ 		       partial_message_size - partial_message_size_used,
+ 		       message, args);
++	va_end(args);
+ 
+ 	/* old glibc versions return -1 for truncation */
+ 	if (n &gt;= 0
+@@ -327,7 +328,6 @@
+ 	partial_message_size += 2048;
+ 	partial_message = REALLOC (partial_message, partial_message_size);
+     }
+-    va_end (args);
+ #else
+     for ( ; ; )
+     {
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000194.html">[fetchmail-svn] r5204 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000196.html">[fetchmail-svn] r5207 - tags
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#195">[ date ]</a>
+              <a href="thread.html#195">[ thread ]</a>
+              <a href="subject.html#195">[ subject ]</a>
+              <a href="author.html#195">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

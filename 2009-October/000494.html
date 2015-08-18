@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5436 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-October/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5436%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20091005191718.1335E21F08D%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000495.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5436 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5436%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20091005191718.1335E21F08D%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5436 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Mon Oct  5 21:17:17 CEST 2009</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000495.html">[fetchmail-svn] r5437 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#494">[ date ]</a>
+              <a href="thread.html#494">[ thread ]</a>
+              <a href="subject.html#494">[ subject ]</a>
+              <a href="author.html#494">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-10-05 14:17:15 -0500 (Mon, 05 Oct 2009)
+New Revision: 5436
+
+Modified:
+   branches/BRANCH_6-3/Makefile.am
+   branches/BRANCH_6-3/configure.ac
+Log:
+Work around screwed Solaris /bin/sh and go for XPG shells.
+
+Modified: branches/BRANCH_6-3/Makefile.am
+===================================================================
+--- branches/BRANCH_6-3/Makefile.am	2009-09-23 23:19:38 UTC (rev 5435)
++++ branches/BRANCH_6-3/Makefile.am	2009-10-05 19:17:15 UTC (rev 5436)
+@@ -47,7 +47,7 @@
+ check_PROGRAMS=
+ 
+ TESTS=			t.smoke t.validate-xhtml
+-TESTS_ENVIRONMENT=	srcdir=&quot;$(srcdir)&quot; LC_ALL=C TZ=UTC SHELL=&quot;$(SHELL)&quot;
++TESTS_ENVIRONMENT=	srcdir=&quot;$(srcdir)&quot; LC_ALL=C TZ=UTC SHELL=&quot;$(SHELL)&quot; $(SHELL)
+ 
+ if NEED_TRIO
+ noinst_LIBRARIES+=	libtrio.a
+@@ -116,8 +116,6 @@
+ mxget_SOURCES=	mxget.c
+ mxget_CFLAGS=	-DSTANDALONE -DHAVE_CONFIG_H -I$(builddir)
+ 
+-# For some losing Unix makes.
+-SHELL = /bin/sh
+ @SET_MAKE@
+ 
+ fetchmail.spec: Makefile.in specgen.sh
+
+Modified: branches/BRANCH_6-3/configure.ac
+===================================================================
+--- branches/BRANCH_6-3/configure.ac	2009-09-23 23:19:38 UTC (rev 5435)
++++ branches/BRANCH_6-3/configure.ac	2009-10-05 19:17:15 UTC (rev 5436)
+@@ -46,6 +46,24 @@
+ dnl need not use this macro.  It is implemented as
+ dnl `AC_SEARCH_LIBS([strerror], [cposix])'
+ 
++dnl check for b0rked Solaris (and other shells) and find one that works
++AC_MSG_CHECKING(for a working shell...)
++for i in /usr/xpg6/bin/sh /usr/xpg4/bin/sh /usr/ccs/bin/sh /bin/sh /usr/bin/sh /bin/ksh /bin/bash /usr/local/bin/bash ; do
++    $i -c 'if ! false ; then echo $(echo ok) ; fi' &gt;config.$$ 2&gt;/dev/null
++    j=`cat config.$$`
++    rm -f config.$$
++    if test &quot;x$j&quot; = &quot;xok&quot; ; then
++        SHELL=$i
++        AC_SUBST(SHELL)
++        break
++    fi
++done
++AC_MSG_RESULT($SHELL)
++if test &quot;x$SHELL&quot; = &quot;x&quot; ; then
++    AC_MSG_ERROR(no SUS compliant shell found - on Solaris, install SUNWxcu4)
++fi
++
++
+ AC_HEADER_STDC
+ AC_HEADER_TIME
+ AC_TYPE_SIZE_T
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000495.html">[fetchmail-svn] r5437 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#494">[ date ]</a>
+              <a href="thread.html#494">[ thread ]</a>
+              <a href="subject.html#494">[ subject ]</a>
+              <a href="author.html#494">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

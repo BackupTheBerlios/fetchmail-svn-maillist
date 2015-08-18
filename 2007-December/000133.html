@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5143 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2007-December/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5143%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20071226140322.420E36B0CD8%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000132.html">
+   <LINK REL="Next"  HREF="000134.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5143 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5143%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20071226140322.420E36B0CD8%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5143 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Wed Dec 26 15:03:22 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000132.html">[fetchmail-svn] r5142 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000134.html">[fetchmail-svn] r5144 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#133">[ date ]</a>
+              <a href="thread.html#133">[ thread ]</a>
+              <a href="subject.html#133">[ subject ]</a>
+              <a href="author.html#133">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2007-12-26 08:03:22 -0600 (Wed, 26 Dec 2007)
+New Revision: 5143
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Rearrange according to importance.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2007-12-09 11:00:35 UTC (rev 5142)
++++ branches/BRANCH_6-3/TODO.txt	2007-12-26 14:03:22 UTC (rev 5143)
+@@ -1,26 +1,33 @@
+-soon:
+-- BerliOS Bug #11576, thread on fetchmail users &quot;Invalid SSL certificate&quot; by
+-  Philip Susi, SSL negotiation does not use ERR_error_string(3ssl) to report
+-  errors in a readable way, we just report socket errors with no good reason.
+-- find a solution for the &quot;invalid header&quot; discards message problem
+-  (escape headers and stuff reminder into body)
+-- <A HREF="https://bugzilla.novell.com/show_bug.cgi?id=246829">https://bugzilla.novell.com/show_bug.cgi?id=246829</A> - fetchmail lost some mail
+-  (5XX error code in contradiction with manual?)
+-- <A HREF="http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=432618">http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=432618</A>
+-  * write a table of combinations of TLS/SSL options
+-- add To: header to warning mails (authfail for instance)
+-- add Message-ID: header and other SHOULD headers to warning mails?
++soon - MUST:
+ - BerliOS Bug #11797, imap_mark_seen doesn't consider expunged messages
+ - BerliOS Bug #10972, Fetchmail refetches big messages repeatedly (SMTP listener
+   issue)
+ - report multiline SMTP errors properly (sample in private mail from 
+   Earl Chew, 2007-07-30T02:28)
+ - publish SA-2007-02 after release
+-- Debian Bug#449179, smbutil.c:90: unicodeToString: Assertion `len+1 &lt; sizeof
+-  buf' failed, from Stepan Golosunov &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">stepan at golosunov.pp.ru</A>&gt;
+ - Peter O'Gorman 2007-10-31 fetchmail-6.3.8 portability patches [-devel list]
+ - Debian Bug #452907 .fetchmailrc not permitted to be a symlink
+   (restriction not mentioned in manpage, also affects .idfile)
++
++soon - SHOULD:
++- BerliOS Bug #11576, thread on fetchmail users &quot;Invalid SSL certificate&quot; by
++  Philip Susi, SSL negotiation does not use ERR_error_string(3ssl) to report
++  errors in a readable way, we just report socket errors with no good reason.
++- <A HREF="http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=432618">http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=432618</A>
++  * write a table of combinations of TLS/SSL options
++- add To: header to warning mails (authfail for instance)
++- Debian Bug#449179, smbutil.c:90: unicodeToString: Assertion `len+1 &lt; sizeof
++  buf' failed, from Stepan Golosunov &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">stepan at golosunov.pp.ru</A>&gt;
++
++soon - MAY:
++- <A HREF="https://bugzilla.novell.com/show_bug.cgi?id=246829">https://bugzilla.novell.com/show_bug.cgi?id=246829</A> - fetchmail lost some mail
++  (5XX error code in contradiction with manual?)
++
++soon - after 6.3.9:
++- find a solution for the &quot;invalid header&quot; discards message problem
++  (escape headers and stuff reminder into body)
++- add Message-ID: header and other SHOULD headers to warning mails?
++
+ questionable:
+ - Convert POP3 UIDs to X-UIDL?
+ - fetch IMAP message in one go (fetchmail-devel by Adam Simpkins
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000132.html">[fetchmail-svn] r5142 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000134.html">[fetchmail-svn] r5144 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#133">[ date ]</a>
+              <a href="thread.html#133">[ thread ]</a>
+              <a href="subject.html#133">[ subject ]</a>
+              <a href="author.html#133">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

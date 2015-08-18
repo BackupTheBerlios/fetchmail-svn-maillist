@@ -1,0 +1,527 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5211 - in branches/BRANCH_6-3: . po
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2008-June/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5211%20-%20in%20branches/BRANCH_6-3%3A%20.%20po&In-Reply-To=%3C20080630134612.562056B0122%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000199.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5211 - in branches/BRANCH_6-3: . po</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5211%20-%20in%20branches/BRANCH_6-3%3A%20.%20po&In-Reply-To=%3C20080630134612.562056B0122%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5211 - in branches/BRANCH_6-3: . po">svn at mknod.org
+       </A><BR>
+    <I>Mon Jun 30 15:46:12 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000199.html">[fetchmail-svn] r5210 - in branches/BRANCH_6-3: . contrib
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#200">[ date ]</a>
+              <a href="thread.html#200">[ thread ]</a>
+              <a href="subject.html#200">[ subject ]</a>
+              <a href="author.html#200">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2008-06-30 08:46:09 -0500 (Mon, 30 Jun 2008)
+New Revision: 5211
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/TODO.txt
+   branches/BRANCH_6-3/fetchmail.man
+   branches/BRANCH_6-3/po/ca.po
+   branches/BRANCH_6-3/po/cs.po
+   branches/BRANCH_6-3/po/da.po
+   branches/BRANCH_6-3/po/de.po
+   branches/BRANCH_6-3/po/el.po
+   branches/BRANCH_6-3/po/en_GB.po
+   branches/BRANCH_6-3/po/es.po
+   branches/BRANCH_6-3/po/fr.po
+   branches/BRANCH_6-3/po/gl.po
+   branches/BRANCH_6-3/po/ja.po
+   branches/BRANCH_6-3/po/pl.po
+   branches/BRANCH_6-3/po/pt_BR.po
+   branches/BRANCH_6-3/po/ru.po
+   branches/BRANCH_6-3/po/sk.po
+   branches/BRANCH_6-3/po/sq.po
+   branches/BRANCH_6-3/po/tr.po
+   branches/BRANCH_6-3/po/vi.po
+   branches/BRANCH_6-3/rcfile_y.y
+Log:
+Documentation and program output now /consistently/ claim that the
+rcfile must not have more than 0700 (u=rwx,g=,o=) permissions, but
+fetchmail will still silently accept additional g=x permissions for
+compatibility with previous 6.2.X and 6.3.X versions.
+Inconsistency (program 0710, manpage 0600) reported by Petr Uzel.
+
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2008-06-28 22:52:07 UTC (rev 5210)
++++ branches/BRANCH_6-3/NEWS	2008-06-30 13:46:09 UTC (rev 5211)
+@@ -137,6 +137,11 @@
+   fetchmail is run.
+ * The FAQ now recommends (#I9) not to use Google Mail for their disregard to the
+   protocols they claim to support.
++* Documentation and program output now /consistently/ claim that the rcfile must
++  not have more than 0700 (u=rwx,g=,o=) permissions, but fetchmail will still
++  silently accept additional g=x permissions for compatibility with previous
++  6.2.X and 6.3.X versions.
++  Inconsistency (program 0710, manpage 0600) reported by Petr Uzel.
+ 
+ # TRANSLATION UPDATES:
+ * Polish (Jakub Bogusz)
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2008-06-28 22:52:07 UTC (rev 5210)
++++ branches/BRANCH_6-3/TODO.txt	2008-06-30 13:46:09 UTC (rev 5211)
+@@ -54,6 +54,8 @@
+   &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">simpkins at cisco.com</A>&gt; around Nov 2nd)?
+ 
+ 6.4:
++- revisit maximum allowed rcfile permissions, fix inconsistency
++  (silently allowing g+x).
+ - make UID code more efficient, parsing is O(n^2), should be no worse
+   than O(n log n).
+ - help systematic debugging
+
+Modified: branches/BRANCH_6-3/fetchmail.man
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.man	2008-06-28 22:52:07 UTC (rev 5210)
++++ branches/BRANCH_6-3/fetchmail.man	2008-06-30 13:46:09 UTC (rev 5211)
+@@ -794,7 +794,7 @@
+ run control file.  The pathname argument must be either &quot;-&quot; (a single
+ dash, meaning to read the configuration from standard input) or a
+ filename.  Unless the \-\-version option is also on, a named file
+-argument must have permissions no more open than 0600 (u=rw,g=,o=) or
++argument must have permissions no more open than 0700 (u=rwx,g=,o=) or
+ else be /dev/null.
+ .TP
+ .B \-i &lt;pathname&gt; | \-\-idfile &lt;pathname&gt;
+@@ -1467,7 +1467,7 @@
+ arguments in this file, the command-line arguments take precedence.
+ .PP
+ To protect the security of your passwords,
+-your \fI~/.fetchmailrc\fR may not normally have more than 0600 (u=rw,g=,o=) permissions;
++your \fI~/.fetchmailrc\fR may not normally have more than 0700 (u=rwx,g=,o=) permissions;
+ .I fetchmail
+ will complain and exit otherwise (this check is suppressed when
+ \-\-version is on).
+
+Modified: branches/BRANCH_6-3/po/ca.po
+===================================================================
+--- branches/BRANCH_6-3/po/ca.po	2008-06-28 22:52:07 UTC (rev 5210)
++++ branches/BRANCH_6-3/po/ca.po	2008-06-30 13:46:09 UTC (rev 5211)
+@@ -6,7 +6,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.3.5-b1\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2008-06-17 15:06+0200\n&quot;
++&quot;POT-Creation-Date: 2008-06-30 15:43+0200\n&quot;
+ &quot;PO-Revision-Date: 2006-08-31 19:22+0200\n&quot;
+ &quot;Last-Translator: Ernest Adrogu&#233; Calveras &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">eadrogue at gmx.net</A>&gt;\n&quot;
+ &quot;Language-Team: Catalan &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">ca at dodds.net</A>&gt;\n&quot;
+@@ -2432,8 +2432,8 @@
+ 
+ #: rcfile_y.y:431
+ #, c-format
+-msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
+-msgstr &quot;El fitxer %s no pot tenir permisos m&#233;s que -rwx--x--- (0710).\n&quot;
++msgid &quot;File %s must have no more than -rwx------ (0700) permissions.\n&quot;
++msgstr &quot;El fitxer %s no pot tenir permisos m&#233;s que -rwx------ (0700).\n&quot;
+ 
+ #: rcfile_y.y:443
+ #, c-format
+
+Modified: branches/BRANCH_6-3/po/cs.po
+===================================================================
+--- branches/BRANCH_6-3/po/cs.po	2008-06-28 22:52:07 UTC (rev 5210)
++++ branches/BRANCH_6-3/po/cs.po	2008-06-30 13:46:09 UTC (rev 5211)
+@@ -7,7 +7,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail-6.2.6.alpha1\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2008-06-17 15:06+0200\n&quot;
++&quot;POT-Creation-Date: 2008-06-30 15:43+0200\n&quot;
+ &quot;PO-Revision-Date: 2005-07-03 03:57+0200\n&quot;
+ &quot;Last-Translator: Miloslav Trmac &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">mitr at volny.cz</A>&gt;\n&quot;
+ &quot;Language-Team: Czech &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">cs at li.org</A>&gt;\n&quot;
+@@ -2395,8 +2395,8 @@
+ 
+ #: rcfile_y.y:431
+ #, c-format
+-msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
+-msgstr &quot;Soubor %s nesm&#195;&#173; m&#195;&#173;t opr&#195;&#161;vn&#196;&#155;n&#195;&#173; v&#195;&#173;ce ne&#197;&#190; -rwx--x--- (0710).\n&quot;
++msgid &quot;File %s must have no more than -rwx------ (0700) permissions.\n&quot;
++msgstr &quot;Soubor %s nesm&#195;&#173; m&#195;&#173;t opr&#195;&#161;vn&#196;&#155;n&#195;&#173; v&#195;&#173;ce ne&#197;&#190; -rwx------ (0700).\n&quot;
+ 
+ #: rcfile_y.y:443
+ #, c-format
+
+Modified: branches/BRANCH_6-3/po/da.po
+===================================================================
+--- branches/BRANCH_6-3/po/da.po	2008-06-28 22:52:07 UTC (rev 5210)
++++ branches/BRANCH_6-3/po/da.po	2008-06-30 13:46:09 UTC (rev 5211)
+@@ -2253,8 +2253,8 @@
+ 
+ #: rcfile_y.y:428
+ #, c-format
+-msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
+-msgstr &quot;Filen %s m&#229; ikke flere tilladelser end -rwx--x--- (0710).\n&quot;
++msgid &quot;File %s must have no more than -rwx------ (0700) permissions.\n&quot;
++msgstr &quot;Filen %s m&#229; ikke flere tilladelser end -rwx------ (0700).\n&quot;
+ 
+ #: rcfile_y.y:440
+ #, c-format
+
+Modified: branches/BRANCH_6-3/po/de.po
+===================================================================
+--- branches/BRANCH_6-3/po/de.po	2008-06-28 22:52:07 UTC (rev 5210)
++++ branches/BRANCH_6-3/po/de.po	2008-06-30 13:46:09 UTC (rev 5211)
+@@ -8,7 +8,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: de\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2008-06-17 15:06+0200\n&quot;
++&quot;POT-Creation-Date: 2008-06-30 15:43+0200\n&quot;
+ &quot;PO-Revision-Date: 2006-11-27 04:32+0100\n&quot;
+ &quot;Last-Translator: Matthias Andree &lt;matthias.andree&gt;\n&quot;
+ &quot;Language-Team: Deutsch &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">de at li.org</A>&gt;\n&quot;
+@@ -2426,8 +2426,8 @@
+ 
+ #: rcfile_y.y:431
+ #, c-format
+-msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
+-msgstr &quot;Datei %s darf nicht mehr Zugriffrechte haben als -rwx--x-- (0710).\n&quot;
++msgid &quot;File %s must have no more than -rwx------ (0700) permissions.\n&quot;
++msgstr &quot;Datei %s darf nicht mehr Zugriffrechte haben als -rwx----- (0700).\n&quot;
+ 
+ #: rcfile_y.y:443
+ #, c-format
+
+Modified: branches/BRANCH_6-3/po/el.po
+===================================================================
+--- branches/BRANCH_6-3/po/el.po	2008-06-28 22:52:07 UTC (rev 5210)
++++ branches/BRANCH_6-3/po/el.po	2008-06-30 13:46:09 UTC (rev 5211)
+@@ -2291,8 +2291,8 @@
+ 
+ #: rcfile_y.y:428
+ #, c-format
+-msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
+-msgstr &quot;&#212;&#239; &#225;&#241;&#247;&#229;&#223;&#239; %s &#228;&#229; &#240;&#241;&#221;&#240;&#229;&#233; &#237;&#225; &#221;&#247;&#229;&#233; &#240;&#220;&#237;&#249; &#225;&#240;&#252; -rwx--x--- (0710) &#220;&#228;&#229;&#233;&#229;&#242;.\n&quot;
++msgid &quot;File %s must have no more than -rwx------ (0700) permissions.\n&quot;
++msgstr &quot;&#212;&#239; &#225;&#241;&#247;&#229;&#223;&#239; %s &#228;&#229; &#240;&#241;&#221;&#240;&#229;&#233; &#237;&#225; &#221;&#247;&#229;&#233; &#240;&#220;&#237;&#249; &#225;&#240;&#252; -rwx------ (0700) &#220;&#228;&#229;&#233;&#229;&#242;.\n&quot;
+ 
+ #: rcfile_y.y:440
+ #, c-format
+
+Modified: branches/BRANCH_6-3/po/en_GB.po
+===================================================================
+--- branches/BRANCH_6-3/po/en_GB.po	2008-06-28 22:52:07 UTC (rev 5210)
++++ branches/BRANCH_6-3/po/en_GB.po	2008-06-30 13:46:09 UTC (rev 5211)
+@@ -7,7 +7,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.3.5\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2008-06-17 15:06+0200\n&quot;
++&quot;POT-Creation-Date: 2008-06-30 15:43+0200\n&quot;
+ &quot;PO-Revision-Date: 2006-11-02 06:58-0000\n&quot;
+ &quot;Last-Translator: David Lodge &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">dave at cirt.net</A>&gt;\n&quot;
+ &quot;Language-Team: English (British) &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">en_gb at li.org</A>&gt;\n&quot;
+@@ -2344,8 +2344,8 @@
+ 
+ #: rcfile_y.y:431
+ #, c-format
+-msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
+-msgstr &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
++msgid &quot;File %s must have no more than -rwx------ (0700) permissions.\n&quot;
++msgstr &quot;File %s must have no more than -rwx------ (0700) permissions.\n&quot;
+ 
+ #: rcfile_y.y:443
+ #, c-format
+
+Modified: branches/BRANCH_6-3/po/es.po
+===================================================================
+--- branches/BRANCH_6-3/po/es.po	2008-06-28 22:52:07 UTC (rev 5210)
++++ branches/BRANCH_6-3/po/es.po	2008-06-30 13:46:09 UTC (rev 5211)
+@@ -20,7 +20,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.3.4-rc1\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2008-06-17 15:06+0200\n&quot;
++&quot;POT-Creation-Date: 2008-06-30 15:43+0200\n&quot;
+ &quot;PO-Revision-Date: 2007-05-02 00:05+0200\n&quot;
+ &quot;Last-Translator: H&#195;&#169;ctor Garc&#195;&#173;a &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">hector at el-mundo.net</A>&gt;\n&quot;
+ &quot;Language-Team: Spanish &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">es at li.org</A>&gt;\n&quot;
+@@ -2508,8 +2508,8 @@
+ 
+ #: rcfile_y.y:431
+ #, c-format
+-msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
+-msgstr &quot;El archivo %s no debe tener mas que los permisos -rwx--x--- (0710).\n&quot;
++msgid &quot;File %s must have no more than -rwx------ (0700) permissions.\n&quot;
++msgstr &quot;El archivo %s no debe tener mas que los permisos -rwx------ (0700).\n&quot;
+ 
+ #: rcfile_y.y:443
+ #, c-format
+
+Modified: branches/BRANCH_6-3/po/fr.po
+===================================================================
+--- branches/BRANCH_6-3/po/fr.po	2008-06-28 22:52:07 UTC (rev 5210)
++++ branches/BRANCH_6-3/po/fr.po	2008-06-30 13:46:09 UTC (rev 5211)
+@@ -15,7 +15,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.2.9-rc9\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2008-06-17 15:06+0200\n&quot;
++&quot;POT-Creation-Date: 2008-06-30 15:43+0200\n&quot;
+ &quot;PO-Revision-Date: 2005-12-18 11:50+0100\n&quot;
+ &quot;Last-Translator: Matthias Andree &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">matthias.andree at gmx.de</A>&gt;\n&quot;
+ &quot;Language-Team: French &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">traduc at traduc.org</A>&gt;\n&quot;
+@@ -2456,8 +2456,8 @@
+ 
+ #: rcfile_y.y:431
+ #, c-format
+-msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
+-msgstr &quot;Le fichier %s doit avoir au moins les permissions -rwx--x--- (0710)\n&quot;
++msgid &quot;File %s must have no more than -rwx------ (0700) permissions.\n&quot;
++msgstr &quot;Le fichier %s doit avoir au moins les permissions -rwx------ (0700)\n&quot;
+ 
+ #: rcfile_y.y:443
+ #, c-format
+
+Modified: branches/BRANCH_6-3/po/gl.po
+===================================================================
+--- branches/BRANCH_6-3/po/gl.po	2008-06-28 22:52:07 UTC (rev 5210)
++++ branches/BRANCH_6-3/po/gl.po	2008-06-30 13:46:09 UTC (rev 5211)
+@@ -2310,7 +2310,7 @@
+ 
+ #: rcfile_y.y:428
+ #, c-format
+-msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
++msgid &quot;File %s must have no more than -rwx------ (0700) permissions.\n&quot;
+ msgstr &quot;&quot;
+ 
+ #: rcfile_y.y:440
+
+Modified: branches/BRANCH_6-3/po/ja.po
+===================================================================
+--- branches/BRANCH_6-3/po/ja.po	2008-06-28 22:52:07 UTC (rev 5210)
++++ branches/BRANCH_6-3/po/ja.po	2008-06-30 13:46:09 UTC (rev 5211)
+@@ -8,7 +8,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.3.8\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2008-06-17 15:06+0200\n&quot;
++&quot;POT-Creation-Date: 2008-06-30 15:43+0200\n&quot;
+ &quot;PO-Revision-Date: 2007-04-28 20:54+0900\n&quot;
+ &quot;Last-Translator: Takeshi Hamasaki &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">hma at syd.odn.ne.jp</A>&gt;\n&quot;
+ &quot;Language-Team: Japanese &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">translation-team-ja at lists.sourceforge.net</A>&gt;\n&quot;
+@@ -2407,8 +2407,8 @@
+ 
+ #: rcfile_y.y:431
+ #, c-format
+-msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
+-msgstr &quot;%s &#227;&#129;&#175; -rwx--x--- (0710) &#228;&#187;&#165;&#229;&#164;&#150;&#227;&#129;&#174;&#227;&#131;&#145;&#227;&#131;&#188;&#227;&#131;&#159;&#227;&#131;&#131;&#227;&#130;&#183;&#227;&#131;&#167;&#227;&#131;&#179;&#227;&#129;&#167;&#227;&#129;&#130;&#227;&#129;&#163;&#227;&#129;&#166;&#227;&#129;&#175;&#227;&#129;&#132;&#227;&#129;&#145;&#227;&#129;&#190;&#227;&#129;&#155;&#227;&#130;&#147;&#227;&#128;&#130;\n&quot;
++msgid &quot;File %s must have no more than -rwx------ (0700) permissions.\n&quot;
++msgstr &quot;%s &#227;&#129;&#175; -rwx------ (0700) &#228;&#187;&#165;&#229;&#164;&#150;&#227;&#129;&#174;&#227;&#131;&#145;&#227;&#131;&#188;&#227;&#131;&#159;&#227;&#131;&#131;&#227;&#130;&#183;&#227;&#131;&#167;&#227;&#131;&#179;&#227;&#129;&#167;&#227;&#129;&#130;&#227;&#129;&#163;&#227;&#129;&#166;&#227;&#129;&#175;&#227;&#129;&#132;&#227;&#129;&#145;&#227;&#129;&#190;&#227;&#129;&#155;&#227;&#130;&#147;&#227;&#128;&#130;\n&quot;
+ 
+ #: rcfile_y.y:443
+ #, c-format
+
+Modified: branches/BRANCH_6-3/po/pl.po
+===================================================================
+--- branches/BRANCH_6-3/po/pl.po	2008-06-28 22:52:07 UTC (rev 5210)
++++ branches/BRANCH_6-3/po/pl.po	2008-06-30 13:46:09 UTC (rev 5211)
+@@ -8,7 +8,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.3.8\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2008-06-17 15:06+0200\n&quot;
++&quot;POT-Creation-Date: 2008-06-30 15:43+0200\n&quot;
+ &quot;PO-Revision-Date: 2007-04-27 17:28+0200\n&quot;
+ &quot;Last-Translator: Jakub Bogusz &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">qboosh at pld-linux.org</A>&gt;\n&quot;
+ &quot;Language-Team: Polish &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">translation-team-pl at lists.sourceforge.net</A>&gt;\n&quot;
+@@ -2442,8 +2442,8 @@
+ 
+ #: rcfile_y.y:431
+ #, c-format
+-msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
+-msgstr &quot;Plik %s nie mo&#191;e mie&#230; uprawnie&#241; wi&#234;kszych ni&#191; -rwx--x--- (0710).\n&quot;
++msgid &quot;File %s must have no more than -rwx------ (0700) permissions.\n&quot;
++msgstr &quot;Plik %s nie mo&#191;e mie&#230; uprawnie&#241; wi&#234;kszych ni&#191; -rwx------ (0700).\n&quot;
+ 
+ #: rcfile_y.y:443
+ #, c-format
+
+Modified: branches/BRANCH_6-3/po/pt_BR.po
+===================================================================
+--- branches/BRANCH_6-3/po/pt_BR.po	2008-06-28 22:52:07 UTC (rev 5210)
++++ branches/BRANCH_6-3/po/pt_BR.po	2008-06-30 13:46:09 UTC (rev 5211)
+@@ -2315,7 +2315,7 @@
+ 
+ #: rcfile_y.y:428
+ #, c-format
+-msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
++msgid &quot;File %s must have no more than -rwx------ (0700) permissions.\n&quot;
+ msgstr &quot;&quot;
+ 
+ #: rcfile_y.y:440
+
+Modified: branches/BRANCH_6-3/po/ru.po
+===================================================================
+--- branches/BRANCH_6-3/po/ru.po	2008-06-28 22:52:07 UTC (rev 5210)
++++ branches/BRANCH_6-3/po/ru.po	2008-06-30 13:46:09 UTC (rev 5211)
+@@ -8,7 +8,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail-6.3.8-rc2\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2008-06-17 15:06+0200\n&quot;
++&quot;POT-Creation-Date: 2008-06-30 15:43+0200\n&quot;
+ &quot;PO-Revision-Date: 2007-03-27 00:47+0300\n&quot;
+ &quot;Last-Translator: Pavel Maryanov &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">acid_jack at ukr.net</A>&gt;\n&quot;
+ &quot;Language-Team: Russian &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">ru at li.org</A>&gt;\n&quot;
+@@ -2426,8 +2426,8 @@
+ 
+ #: rcfile_y.y:431
+ #, c-format
+-msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
+-msgstr &quot;&#208;&#164;&#208;&#176;&#208;&#185;&#208;&#187; %s &#208;&#180;&#208;&#190;&#208;&#187;&#208;&#182;&#208;&#181;&#208;&#189; &#208;&#184;&#208;&#188;&#208;&#181;&#209;&#130;&#209;&#140; &#209;&#128;&#208;&#176;&#208;&#183;&#209;&#128;&#208;&#181;&#209;&#136;&#208;&#181;&#208;&#189;&#208;&#184;&#209;&#143; -rwx--x--- (0710), &#208;&#189;&#208;&#190; &#208;&#189;&#208;&#181; &#208;&#177;&#208;&#190;&#208;&#187;&#208;&#181;&#208;&#181; &#209;&#130;&#208;&#190;&#208;&#179;&#208;&#190;.\n&quot;
++msgid &quot;File %s must have no more than -rwx------ (0700) permissions.\n&quot;
++msgstr &quot;&#208;&#164;&#208;&#176;&#208;&#185;&#208;&#187; %s &#208;&#180;&#208;&#190;&#208;&#187;&#208;&#182;&#208;&#181;&#208;&#189; &#208;&#184;&#208;&#188;&#208;&#181;&#209;&#130;&#209;&#140; &#209;&#128;&#208;&#176;&#208;&#183;&#209;&#128;&#208;&#181;&#209;&#136;&#208;&#181;&#208;&#189;&#208;&#184;&#209;&#143; -rwx------ (0700), &#208;&#189;&#208;&#190; &#208;&#189;&#208;&#181; &#208;&#177;&#208;&#190;&#208;&#187;&#208;&#181;&#208;&#181; &#209;&#130;&#208;&#190;&#208;&#179;&#208;&#190;.\n&quot;
+ 
+ #: rcfile_y.y:443
+ #, c-format
+
+Modified: branches/BRANCH_6-3/po/sk.po
+===================================================================
+--- branches/BRANCH_6-3/po/sk.po	2008-06-28 22:52:07 UTC (rev 5210)
++++ branches/BRANCH_6-3/po/sk.po	2008-06-30 13:46:09 UTC (rev 5211)
+@@ -2262,7 +2262,7 @@
+ 
+ #: rcfile_y.y:428
+ #, c-format
+-msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
++msgid &quot;File %s must have no more than -rwx------ (0700) permissions.\n&quot;
+ msgstr &quot;&quot;
+ 
+ #: rcfile_y.y:440
+
+Modified: branches/BRANCH_6-3/po/sq.po
+===================================================================
+--- branches/BRANCH_6-3/po/sq.po	2008-06-28 22:52:07 UTC (rev 5210)
++++ branches/BRANCH_6-3/po/sq.po	2008-06-30 13:46:09 UTC (rev 5211)
+@@ -7,7 +7,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.2.9-rc9\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2008-06-17 15:06+0200\n&quot;
++&quot;POT-Creation-Date: 2008-06-30 15:43+0200\n&quot;
+ &quot;PO-Revision-Date: 2005-11-18 22:25+0200\n&quot;
+ &quot;Last-Translator: Besnik Bleta &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">besnik at spymac.com</A>&gt;\n&quot;
+ &quot;Language-Team: Albanian &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">translation-team-sq at lists.sourceforge.net</A>&gt;\n&quot;
+@@ -2423,8 +2423,8 @@
+ 
+ #: rcfile_y.y:431
+ #, c-format
+-msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
+-msgstr &quot;Kartela %s duhet t&#235; ket&#235; jo m&#235; shum&#235; se lejet -rwx--x--- (0710).\n&quot;
++msgid &quot;File %s must have no more than -rwx------ (0700) permissions.\n&quot;
++msgstr &quot;Kartela %s duhet t&#235; ket&#235; jo m&#235; shum&#235; se lejet -rwx------ (0700).\n&quot;
+ 
+ #: rcfile_y.y:443
+ #, c-format
+
+Modified: branches/BRANCH_6-3/po/tr.po
+===================================================================
+--- branches/BRANCH_6-3/po/tr.po	2008-06-28 22:52:07 UTC (rev 5210)
++++ branches/BRANCH_6-3/po/tr.po	2008-06-30 13:46:09 UTC (rev 5211)
+@@ -2338,8 +2338,8 @@
+ 
+ #: rcfile_y.y:428
+ #, c-format
+-msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
+-msgstr &quot;Dosyan&#253;n (%s) izinleri -rwx--x--- (0710)'den &#231;ok olmamal&#253;.\n&quot;
++msgid &quot;File %s must have no more than -rwx------ (0700) permissions.\n&quot;
++msgstr &quot;Dosyan&#253;n (%s) izinleri -rwx------ (0700)'den &#231;ok olmamal&#253;.\n&quot;
+ 
+ #: rcfile_y.y:440
+ #, c-format
+
+Modified: branches/BRANCH_6-3/po/vi.po
+===================================================================
+--- branches/BRANCH_6-3/po/vi.po	2008-06-28 22:52:07 UTC (rev 5210)
++++ branches/BRANCH_6-3/po/vi.po	2008-06-30 13:46:09 UTC (rev 5211)
+@@ -6,7 +6,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.3.8\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2008-06-17 15:06+0200\n&quot;
++&quot;POT-Creation-Date: 2008-06-30 15:43+0200\n&quot;
+ &quot;PO-Revision-Date: 2007-05-28 21:48+0930\n&quot;
+ &quot;Last-Translator: Clytie Siddall &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">clytie at riverland.net.au</A>&gt;\n&quot;
+ &quot;Language-Team: Vietnamese &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">vi-VN at googlegroups.com</A>&gt;\n&quot;
+@@ -2409,9 +2409,9 @@
+ 
+ #: rcfile_y.y:431
+ #, c-format
+-msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
++msgid &quot;File %s must have no more than -rwx------ (0700) permissions.\n&quot;
+ msgstr &quot;&quot;
+-&quot;Kh&#195;&#180;ng cho ph&#195;&#169;p t&#225;&#186;&#173;p tin %s c&#195;&#179; quy&#225;&#187;&#129;n h&#225;&#186;&#161;n l&#225;&#187;&#155;n h&#198;&#161;n &#194;&#171; -rws--x--- &#194;&#187; (0710).\n&quot;
++&quot;Kh&#195;&#180;ng cho ph&#195;&#169;p t&#225;&#186;&#173;p tin %s c&#195;&#179; quy&#225;&#187;&#129;n h&#225;&#186;&#161;n l&#225;&#187;&#155;n h&#198;&#161;n &#194;&#171; -rwx------ &#194;&#187; (0700).\n&quot;
+ 
+ #: rcfile_y.y:443
+ #, c-format
+
+Modified: branches/BRANCH_6-3/rcfile_y.y
+===================================================================
+--- branches/BRANCH_6-3/rcfile_y.y	2008-06-28 22:52:07 UTC (rev 5210)
++++ branches/BRANCH_6-3/rcfile_y.y	2008-06-30 13:46:09 UTC (rev 5211)
+@@ -428,7 +428,7 @@
+ #endif /* __CYGWIN__ */
+     if (statbuf.st_mode &amp; (S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH | S_IXOTH))
+     {
+-	fprintf(stderr, GT_(&quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;), 
++	fprintf(stderr, GT_(&quot;File %s must have no more than -rwx------ (0700) permissions.\n&quot;), 
+ 		pathname);
+ 	return(PS_IOERR);
+     }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000199.html">[fetchmail-svn] r5210 - in branches/BRANCH_6-3: . contrib
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#200">[ date ]</a>
+              <a href="thread.html#200">[ thread ]</a>
+              <a href="subject.html#200">[ subject ]</a>
+              <a href="author.html#200">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

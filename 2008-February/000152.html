@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5162 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2008-February/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5162%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20080223153855.4CC606B00AC%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000151.html">
+   <LINK REL="Next"  HREF="000153.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5162 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5162%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20080223153855.4CC606B00AC%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5162 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Sat Feb 23 16:38:55 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000151.html">[fetchmail-svn] r5161 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000153.html">[fetchmail-svn] r5163 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#152">[ date ]</a>
+              <a href="thread.html#152">[ thread ]</a>
+              <a href="subject.html#152">[ subject ]</a>
+              <a href="author.html#152">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2008-02-23 09:38:54 -0600 (Sat, 23 Feb 2008)
+New Revision: 5162
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/TODO.txt
+   branches/BRANCH_6-3/fetchmail.man
+Log:
+Revise manual page, fixing Debian bug #467010 (ssl cannot come before user)
+reported by Francesco Potort?\195?\172.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2008-02-23 13:35:06 UTC (rev 5161)
++++ branches/BRANCH_6-3/NEWS	2008-02-23 15:38:54 UTC (rev 5162)
+@@ -109,6 +109,14 @@
+ * The manual page no longer asserts that .fetchids were for exclusive POP3 use, 
+   since it is planned to use the file with IMAP4 later.
+ * Add grammar fixes from Dan Jacobson to fetchmail.man. Debian Bug #461642.
++* The manual page now mentions that user descriptions need to come before user
++  options. Reported by Francensco Pontort&#236;, to fix Debian Bug#467010.
++* The manual page no longer hints that multi-user declarations per server were
++  only useful in daemon mode running as root, to avoid hinting people to doing
++  that.
++* Several manual page rcfile examples now include &quot;ssl&quot;.
++* The manual page hints that option arguments beginning with numbers can be
++  enclosed in parentheses.
+ 
+ # TRANSLATION UPDATES:
+ * Polish (Jakub Bogusz)
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2008-02-23 13:35:06 UTC (rev 5161)
++++ branches/BRANCH_6-3/TODO.txt	2008-02-23 15:38:54 UTC (rev 5162)
+@@ -4,8 +4,6 @@
+ - report multiline SMTP errors properly (sample in private mail from 
+   Earl Chew, 2007-07-30T02:28)
+ - publish SA-2007-02 after release
+-- Debian Bug #467010, mention in manpage that USER... must be before
+-  user options
+ 
+ soon - SHOULD:
+ - allow \Deleted without \Seen, rf. 
+
+Modified: branches/BRANCH_6-3/fetchmail.man
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.man	2008-02-23 13:35:06 UTC (rev 5161)
++++ branches/BRANCH_6-3/fetchmail.man	2008-02-23 15:38:54 UTC (rev 5162)
+@@ -1496,8 +1496,9 @@
+ .PP
+ Each server entry consists of one of the keywords 'poll' or 'skip',
+ followed by a server name, followed by server options, followed by any
+-number of user descriptions.  Note: the most common cause of syntax
+-errors is mixing up user and server options.
++number of user (or username) descriptions, followed by user options.
++Note: the most common cause of syntax errors is mixing up user and
++server options or putting user options before the user descriptions.
+ .PP
+ For backward compatibility, the word 'server' is a synonym for 'poll'.
+ .PP
+@@ -1658,15 +1659,18 @@
+ T}
+ .TE
+ 
+-Here are the legal user options:
++Here are the legal user descriptions and options:
+ 
+ .TS
+ l l l lw34.
+ Keyword  	Opt	Mode	Function
+ _
+ user[name]	\-u	\&amp;	T{
+-Set remote user name
+-(local user name if name followed by 'here')
++This is the user description and must come first after server
++description and after possible server options, and before user options.
++.br
++It sets the remote user name if by itself or followed by 'there', or the
++local user name if followed by 'here'.
+ T}
+ is      	\&amp;	\&amp;	T{
+ Connect local and remote user names
+@@ -1814,7 +1818,8 @@
+ T}
+ .TE
+ .PP
+-Remember that all user options must \fIfollow\fR all server options.
++All user options must begin with a user description (user or username
++option) and \fIfollow\fR all server descriptions and options.
+ .PP
+ In the .fetchmailrc file, the 'envelope' string argument may be
+ preceded by a whitespace-separated number.  This number, if specified,
+@@ -2195,7 +2200,7 @@
+ Example:
+ 
+ .nf
+-  poll pop.provider.net protocol pop3 username &quot;jsmith&quot; password &quot;secret1&quot;
++  poll pop.provider.net protocol pop3 username &quot;jsmith&quot; password &quot;secret1&quot; ssl
+ .fi
+ .PP
+ Or, using some abbreviations:
+@@ -2224,12 +2229,12 @@
+ more (parsing is done only once, at startup time).
+ 
+ .PP
+-If you need to include whitespace in a parameter string, enclose the
+-string in double quotes.  Thus:
++If you need to include whitespace in a parameter string or start the
++latter with a number, enclose the string in double quotes.  Thus:
+ 
+ .nf
+   poll mail.provider.net with proto pop3:
+-        user &quot;jsmith&quot; there has password &quot;u can't krak this&quot;
++        user &quot;jsmith&quot; there has password &quot;4u but u can't krak this&quot;
+                     is jws here and wants mda &quot;/bin/mail&quot;
+ .fi
+ 
+@@ -2247,8 +2252,7 @@
+         user &quot;jjsmith&quot; there has password &quot;secret2&quot;
+ .fi
+ 
+-It's possible to specify more than one user per server (this is only
+-likely to be useful when running fetchmail in daemon mode as root).
++It's possible to specify more than one user per server.
+ The 'user' keyword leads off a user description, and every user specification
+ in a multi-user entry must include it.  Here's an example:
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000151.html">[fetchmail-svn] r5161 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000153.html">[fetchmail-svn] r5163 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#152">[ date ]</a>
+              <a href="thread.html#152">[ thread ]</a>
+              <a href="subject.html#152">[ subject ]</a>
+              <a href="author.html#152">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

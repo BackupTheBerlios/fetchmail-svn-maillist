@@ -1,0 +1,352 @@
+From svn at mknod.org  Sun Jun 10 10:19:54 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Sun, 10 Jun 2007 03:19:54 -0500 (CDT)
+Subject: [fetchmail-svn] r5103 - branches/BRANCH_6-3
+Message-ID: <20070610081954.A2D6721801B@mknod.org>
+
+Author: m-a
+Date: 2007-06-10 03:19:54 -0500 (Sun, 10 Jun 2007)
+New Revision: 5103
+
+Modified:
+   branches/BRANCH_6-3/fetchmail.c
+Log:
+Remove dead USE_TCPIP_FOR_DNS code.
+
+Modified: branches/BRANCH_6-3/fetchmail.c
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.c	2007-05-28 13:36:21 UTC (rev 5102)
++++ branches/BRANCH_6-3/fetchmail.c	2007-06-10 08:19:54 UTC (rev 5103)
+@@ -667,20 +667,6 @@
+ 	    report(stderr, GT_("attempt to re-exec fetchmail failed\n"));
+ 	}
+ 
+-#if defined(HAVE_RES_SEARCH) && defined(USE_TCPIP_FOR_DNS)
+-	/*
+-	 * This was an efficiency hack that backfired.  The theory
+-	 * was that using TCP/IP for DNS queries would get us better
+-	 * reliability and shave off some per-UDP-packet costs.
+-	 * Unfortunately it interacted badly with diald, which effectively 
+-	 * filters out DNS queries over TCP/IP for reasons having to do
+-	 * with some obscure Linux kernel problem involving bootstrapping of
+-	 * dynamically-addressed links.  I don't understand this mess
+-	 * and don't want to, so it's "See ya!" to this hack.
+-	 */
+-	sethostent(TRUE);	/* use TCP/IP for mailserver queries */
+-#endif /* HAVE_RES_SEARCH */
+-
+ #ifdef HAVE_RES_SEARCH
+ 	/* Boldly assume that we also have res_init() if we have
+ 	 * res_search(), and call res_init() to re-read the resolv.conf
+@@ -805,10 +791,6 @@
+ 		}
+ 	    }
+ 
+-#if defined(HAVE_RES_SEARCH) && defined(USE_TCPIP_FOR_DNS)
+-	endhostent();		/* release TCP/IP connection to nameserver */
+-#endif /* HAVE_RES_SEARCH */
+-
+ 	/* close connections cleanly */
+ 	terminate_poll(0);
+ 
+
+
+
+From svn at mknod.org  Sun Jun 10 10:22:16 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Sun, 10 Jun 2007 03:22:16 -0500 (CDT)
+Subject: [fetchmail-svn] r5104 - branches/BRANCH_6-3
+Message-ID: <20070610082216.2504F21801B@mknod.org>
+
+Author: m-a
+Date: 2007-06-10 03:22:15 -0500 (Sun, 10 Jun 2007)
+New Revision: 5104
+
+Modified:
+   branches/BRANCH_6-3/mxget.c
+Log:
+Update copyright, pull in fetchmail.h.
+
+Modified: branches/BRANCH_6-3/mxget.c
+===================================================================
+--- branches/BRANCH_6-3/mxget.c	2007-06-10 08:19:54 UTC (rev 5103)
++++ branches/BRANCH_6-3/mxget.c	2007-06-10 08:22:15 UTC (rev 5104)
+@@ -1,11 +1,13 @@
+ /*
+  * mxget.c -- fetch MX records for given DNS name
+  *
+- * Copyright 1997 by Eric S. Raymond
++ * Copyright (C) 1996, 1997, 1998, 2000, 2002 by Eric S. Raymond
++ * Copyright (C) 2005, 2006, 2007 by Matthias Andree
+  * For license terms, see the file COPYING in this directory.
+  */
+ 
+ #include "config.h"
++#include "fetchmail.h"
+ #include <stdio.h>
+ #ifdef HAVE_RES_SEARCH
+ #include <string.h>
+
+
+
+From svn at mknod.org  Sun Jun 10 10:22:29 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Sun, 10 Jun 2007 03:22:29 -0500 (CDT)
+Subject: [fetchmail-svn] r5105 - branches/BRANCH_6-3
+Message-ID: <20070610082229.A3D2421801B@mknod.org>
+
+Author: m-a
+Date: 2007-06-10 03:22:29 -0500 (Sun, 10 Jun 2007)
+New Revision: 5105
+
+Modified:
+   branches/BRANCH_6-3/COPYING
+Log:
+Spell out Rob Funk's name.
+
+Modified: branches/BRANCH_6-3/COPYING
+===================================================================
+--- branches/BRANCH_6-3/COPYING	2007-06-10 08:22:15 UTC (rev 5104)
++++ branches/BRANCH_6-3/COPYING	2007-06-10 08:22:29 UTC (rev 5105)
+@@ -1,6 +1,6 @@
+ This collective work is Copyright (C) 2002, 2003 by Eric S. Raymond
+ and Copyright (C) 2004 by Matthias Andree, Eric S. Raymond,
+-                          Rob Funk and Graham Wilson
++                          Robert M. Funk and Graham Wilson
+ and Copyright (C) 2005 by Matthias Andree and Sunil Shetye
+ and Copyright (C) 2006 - 2007 by Matthias Andree.
+ 
+
+
+
+From svn at mknod.org  Sun Jun 10 10:51:36 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Sun, 10 Jun 2007 03:51:36 -0500 (CDT)
+Subject: [fetchmail-svn] r5106 - branches/BRANCH_6-3
+Message-ID: <20070610085136.A917221801C@mknod.org>
+
+Author: m-a
+Date: 2007-06-10 03:51:36 -0500 (Sun, 10 Jun 2007)
+New Revision: 5106
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/TODO.txt
+   branches/BRANCH_6-3/configure.ac
+Log:
+Check for dn_skipname() when checking res_search() to resolve ?\194?\181Clibc compile failures.
+This works by disabling the DNS alias detection feature,
+which is however deprecated anyways.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2007-06-10 08:22:29 UTC (rev 5105)
++++ branches/BRANCH_6-3/NEWS	2007-06-10 08:51:36 UTC (rev 5106)
+@@ -44,6 +44,15 @@
+ 
+ fetchmail 6.3.X (not yet released, may become .8.1 or .9):
+ 
++# FIXES:
++* The configure script will additionally check for 'dn_skipname', to fix build
++  failures with ?Clibc. The new check still recognizes the resolver libraries on
++  Ubuntu 7.04, openSUSE 10.2, Solaris 8, NetBSD 3.0 and FreeBSD 6.2.
++  Fixes Gentoo bug #134187.
++  NOTE: this is a bit of a hack, since we twist the HAVE_RES_SEARCH result, but
++  res_search() and dn_skipname() are only used together and scheduled for
++  removal in future versions, so this is probably fine.
++
+ # TRANSLATION UPDATES:
+ * Polish (Jakub Bogusz)
+ * Japanese (Takeshi Hamasaki)
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2007-06-10 08:22:29 UTC (rev 5105)
++++ branches/BRANCH_6-3/TODO.txt	2007-06-10 08:51:36 UTC (rev 5106)
+@@ -2,8 +2,6 @@
+ - mark fetchmail -vvv in the FAQ
+ - find a solution for the "invalid header" discards message problem
+   (escape headers and stuff reminder into body)
+-- use workaround for ?Clibc issue (extend configure.ac check)
+-  https://bugs.gentoo.org/show_bug.cgi?id=134187
+ - https://bugzilla.novell.com/show_bug.cgi?id=247233
+   (same as http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=421446)
+   might be our fallback of setting sslproto to ""? But what triggers it?
+
+Modified: branches/BRANCH_6-3/configure.ac
+===================================================================
+--- branches/BRANCH_6-3/configure.ac	2007-06-10 08:22:29 UTC (rev 5105)
++++ branches/BRANCH_6-3/configure.ac	2007-06-10 08:51:36 UTC (rev 5106)
+@@ -195,10 +195,10 @@
+ #include <resolv.h>
+ #endif
+ extern int res_search();
+-]], [[res_search(0, 0, 0, 0, 0);]])],
++]], [[res_search(0, 0, 0, 0, 0); dn_skipname(0,0);]])],
+     [AC_MSG_RESULT([found])
+      AC_DEFINE(HAVE_RES_SEARCH, [1],
+-	       [Define to 1 if you have the 'res_search' function.])
++	       [Define to 1 if you have the 'res_search' and 'dn_skipname' functions.])
+      break], [AC_MSG_RESULT([not found])])
+      LIBS=$old_LIBS
+ done
+
+
+
+From svn at mknod.org  Sun Jun 10 10:56:26 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Sun, 10 Jun 2007 03:56:26 -0500 (CDT)
+Subject: [fetchmail-svn] r5107 - branches/BRANCH_6-3
+Message-ID: <20070610085626.8684721801C@mknod.org>
+
+Author: m-a
+Date: 2007-06-10 03:56:26 -0500 (Sun, 10 Jun 2007)
+New Revision: 5107
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+   branches/BRANCH_6-3/fetchmail-FAQ.html
+Log:
+Add fetchmail -vvv log request to the list in Section G3 bug reporting.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2007-06-10 08:51:36 UTC (rev 5106)
++++ branches/BRANCH_6-3/TODO.txt	2007-06-10 08:56:26 UTC (rev 5107)
+@@ -1,5 +1,4 @@
+ soon:
+-- mark fetchmail -vvv in the FAQ
+ - find a solution for the "invalid header" discards message problem
+   (escape headers and stuff reminder into body)
+ - https://bugzilla.novell.com/show_bug.cgi?id=247233
+
+Modified: branches/BRANCH_6-3/fetchmail-FAQ.html
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-FAQ.html	2007-06-10 08:51:36 UTC (rev 5106)
++++ branches/BRANCH_6-3/fetchmail-FAQ.html	2007-06-10 08:56:26 UTC (rev 5107)
+@@ -362,6 +362,8 @@
+ 
+ <li>The output of fetchmail -V called with whatever other
+ command-line options you used.</li>
++
++<li><strong>The output of <kbd>fetchmail --nodetach -vvv --nosyslog</kbd> with whatever other command-line options you use routinely.</strong></li>
+ </ol>
+ 
+ <p>If you have FTP access to your remote mail account, and you have
+
+
+
+From svn at mknod.org  Sun Jun 10 10:58:36 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Sun, 10 Jun 2007 03:58:36 -0500 (CDT)
+Subject: [fetchmail-svn] r5108 - branches/BRANCH_6-3
+Message-ID: <20070610085836.AC8A621801C@mknod.org>
+
+Author: m-a
+Date: 2007-06-10 03:58:36 -0500 (Sun, 10 Jun 2007)
+New Revision: 5108
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+Log:
+Correct NetBSD tested version.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2007-06-10 08:56:26 UTC (rev 5107)
++++ branches/BRANCH_6-3/NEWS	2007-06-10 08:58:36 UTC (rev 5108)
+@@ -47,7 +47,7 @@
+ # FIXES:
+ * The configure script will additionally check for 'dn_skipname', to fix build
+   failures with ?Clibc. The new check still recognizes the resolver libraries on
+-  Ubuntu 7.04, openSUSE 10.2, Solaris 8, NetBSD 3.0 and FreeBSD 6.2.
++  Ubuntu 7.04, openSUSE 10.2, Solaris 8, NetBSD 4.0_BETA2 and FreeBSD 6.2.
+   Fixes Gentoo bug #134187.
+   NOTE: this is a bit of a hack, since we twist the HAVE_RES_SEARCH result, but
+   res_search() and dn_skipname() are only used together and scheduled for
+
+
+
+From svn at mknod.org  Mon Jun 11 00:55:36 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Sun, 10 Jun 2007 17:55:36 -0500 (CDT)
+Subject: [fetchmail-svn] r5109 - branches/BRANCH_6-3
+Message-ID: <20070610225536.A7751218035@mknod.org>
+
+Author: m-a
+Date: 2007-06-10 17:55:36 -0500 (Sun, 10 Jun 2007)
+New Revision: 5109
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/TODO.txt
+   branches/BRANCH_6-3/pop3.c
+Log:
+No longer complain about invalid sslproto "" when POP3 CAPA probe fails.
+Fixes Debian Bug#421446 (Holger Leskien), Novell Bug #247233 (Jon Nelson).
+Thanks to Matthias Strau?\195?\159 for a configuration to reproduce the issue.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2007-06-10 08:58:36 UTC (rev 5108)
++++ branches/BRANCH_6-3/NEWS	2007-06-10 22:55:36 UTC (rev 5109)
+@@ -42,7 +42,7 @@
+ 
+ --------------------------------------------------------------------------------
+ 
+-fetchmail 6.3.X (not yet released, may become .8.1 or .9):
++fetchmail 6.3.9 (not yet released):
+ 
+ # FIXES:
+ * The configure script will additionally check for 'dn_skipname', to fix build
+@@ -52,6 +52,9 @@
+   NOTE: this is a bit of a hack, since we twist the HAVE_RES_SEARCH result, but
+   res_search() and dn_skipname() are only used together and scheduled for
+   removal in future versions, so this is probably fine.
++* No longer complain about invalid sslproto "" when POP3 CAPA probe fails.
++  Fixes Debian Bug#421446 (Holger Leskien), Novell Bug #247233 (Jon Nelson).
++  Thanks to Matthias Strau? for a configuration to reproduce the issue.
+ 
+ # TRANSLATION UPDATES:
+ * Polish (Jakub Bogusz)
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2007-06-10 08:58:36 UTC (rev 5108)
++++ branches/BRANCH_6-3/TODO.txt	2007-06-10 22:55:36 UTC (rev 5109)
+@@ -1,9 +1,6 @@
+ soon:
+ - find a solution for the "invalid header" discards message problem
+   (escape headers and stuff reminder into body)
+-- https://bugzilla.novell.com/show_bug.cgi?id=247233
+-  (same as http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=421446)
+-  might be our fallback of setting sslproto to ""? But what triggers it?
+ 
+ 6.4:
+ - make the SSL default v3 (rather than v23).
+
+Modified: branches/BRANCH_6-3/pop3.c
+===================================================================
+--- branches/BRANCH_6-3/pop3.c	2007-06-10 08:58:36 UTC (rev 5108)
++++ branches/BRANCH_6-3/pop3.c	2007-06-10 22:55:36 UTC (rev 5109)
+@@ -449,7 +449,7 @@
+ 			report(stderr, GT_("TLS is mandatory for this session, but server refused CAPA command.\n"));
+ 			report(stderr, GT_("The CAPA command is however necessary for TLS.\n"));
+ 			return ok;
+-		    } else {
++		    } else if (maybe_tls(ctl)) {
+ 			/* defeat opportunistic STLS */
+ 			xfree(ctl->sslproto);
+ 			ctl->sslproto = xstrdup("");
+@@ -526,7 +526,7 @@
+ 		   }
+ 	       }
+ 	   }
+-	}
++	} /* maybe_tls() */
+ #endif /* SSL_ENABLE */
+ 
+ 	/*
+
+
+

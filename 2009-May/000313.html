@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5300 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-May/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5300%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090517084923.7BED621F080%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000310.html">
+   <LINK REL="Next"  HREF="000314.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5300 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5300%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090517084923.7BED621F080%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5300 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Sun May 17 10:49:23 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000310.html">[fetchmail-svn] r5299 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000314.html">[fetchmail-svn] r5300 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#313">[ date ]</a>
+              <a href="thread.html#313">[ thread ]</a>
+              <a href="subject.html#313">[ subject ]</a>
+              <a href="author.html#313">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-05-17 03:49:23 -0500 (Sun, 17 May 2009)
+New Revision: 5300
+
+Modified:
+   branches/BRANCH_6-3/fetchmail.man
+Log:
+Fix one \- escape in manpage (multidrop).
+
+Modified: branches/BRANCH_6-3/fetchmail.man
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.man	2009-05-09 18:47:15 UTC (rev 5299)
++++ branches/BRANCH_6-3/fetchmail.man	2009-05-17 08:49:23 UTC (rev 5300)
+@@ -2370,7 +2370,7 @@
+ A related problem is that when you blind-copy a mail message, the Bcc
+ information is carried \fIonly\fP as envelope address (it's removed from
+ the headers by the sending mail server, so fetchmail can see it only if
+-there is an X-\Envelope\-To header).  Thus, blind-copying to someone who
++there is an X\-Envelope\-To header).  Thus, blind-copying to someone who
+ gets mail over a fetchmail multidrop link will fail unless the the
+ mailserver host routinely writes X\-Envelope\-To or an equivalent header
+ into messages in your maildrop.
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000310.html">[fetchmail-svn] r5299 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000314.html">[fetchmail-svn] r5300 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#313">[ date ]</a>
+              <a href="thread.html#313">[ thread ]</a>
+              <a href="subject.html#313">[ subject ]</a>
+              <a href="author.html#313">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,4131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5155 - in branches/BRANCH_6-3: . po
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2008-January/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5155%20-%20in%20branches/BRANCH_6-3%3A%20.%20po&In-Reply-To=%3C20080131091555.0A4256B02D8%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000144.html">
+   <LINK REL="Next"  HREF="000146.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5155 - in branches/BRANCH_6-3: . po</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5155%20-%20in%20branches/BRANCH_6-3%3A%20.%20po&In-Reply-To=%3C20080131091555.0A4256B02D8%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5155 - in branches/BRANCH_6-3: . po">svn at mknod.org
+       </A><BR>
+    <I>Thu Jan 31 10:15:55 CET 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000144.html">[fetchmail-svn] r5154 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000146.html">[fetchmail-svn] r5156 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#145">[ date ]</a>
+              <a href="thread.html#145">[ thread ]</a>
+              <a href="subject.html#145">[ subject ]</a>
+              <a href="author.html#145">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2008-01-31 03:15:53 -0600 (Thu, 31 Jan 2008)
+New Revision: 5155
+
+Modified:
+   branches/BRANCH_6-3/po/ca.po
+   branches/BRANCH_6-3/po/cs.po
+   branches/BRANCH_6-3/po/de.po
+   branches/BRANCH_6-3/po/en_GB.po
+   branches/BRANCH_6-3/po/es.po
+   branches/BRANCH_6-3/po/fr.po
+   branches/BRANCH_6-3/po/ja.po
+   branches/BRANCH_6-3/po/pl.po
+   branches/BRANCH_6-3/po/ru.po
+   branches/BRANCH_6-3/po/sq.po
+   branches/BRANCH_6-3/po/vi.po
+   branches/BRANCH_6-3/socket.c
+Log:
+Drop dead code under FORCE_STUFFING condition.
+
+Modified: branches/BRANCH_6-3/po/ca.po
+===================================================================
+--- branches/BRANCH_6-3/po/ca.po	2008-01-29 13:19:58 UTC (rev 5154)
++++ branches/BRANCH_6-3/po/ca.po	2008-01-31 09:15:53 UTC (rev 5155)
+@@ -6,7 +6,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.3.5-b1\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-06-27 11:18+0200\n&quot;
++&quot;POT-Creation-Date: 2008-01-31 10:14+0100\n&quot;
+ &quot;PO-Revision-Date: 2006-08-31 19:22+0200\n&quot;
+ &quot;Last-Translator: Ernest Adrogu&#233; Calveras &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">eadrogue at gmx.net</A>&gt;\n&quot;
+ &quot;Language-Team: Catalan &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">ca at dodds.net</A>&gt;\n&quot;
+@@ -1703,12 +1703,12 @@
+ msgid &quot;will idle after poll\n&quot;
+ msgstr &quot;es far&#224; una pausa despr&#233;s de l'obtenci&#243;\n&quot;
+ 
+-#: imap.c:441 pop3.c:505
++#: imap.c:441 pop3.c:511
+ #, fuzzy, c-format
+ msgid &quot;%s: upgrade to TLS succeeded.\n&quot;
+ msgstr &quot;%s: actualitzaci&#243; oportunista a TLS.\n&quot;
+ 
+-#: imap.c:450 pop3.c:514
++#: imap.c:450 pop3.c:520
+ #, fuzzy, c-format
+ msgid &quot;%s: upgrade to TLS failed.\n&quot;
+ msgstr &quot;%s: actualitzaci&#243; oportunista a TLS.\n&quot;
+@@ -1722,7 +1722,7 @@
+ msgid &quot;Required OTP capability not compiled into fetchmail\n&quot;
+ msgstr &quot;Es requereix capacitat per OTP no compilada en el fetchmail\n&quot;
+ 
+-#: imap.c:587 pop3.c:380
++#: imap.c:587 pop3.c:386
+ msgid &quot;Required NTLM capability not compiled into fetchmail\n&quot;
+ msgstr &quot;Es requereix capacitat per NTLM no compilada en el fetchmail\n&quot;
+ 
+@@ -1777,7 +1777,7 @@
+ msgid &quot;%lu is unseen\n&quot;
+ msgstr &quot;%lu &#233;s no llegit\n&quot;
+ 
+-#: imap.c:897 pop3.c:876
++#: imap.c:897 pop3.c:882
+ #, c-format
+ msgid &quot;%u is first unseen\n&quot;
+ msgstr &quot;%u &#233;s el primer missatge no llegit\n&quot;
+@@ -1983,7 +1983,7 @@
+ msgid &quot;Could not decode OTP challenge\n&quot;
+ msgstr &quot;No s'ha pogut desxifrar la codificaci&#243; OTP\n&quot;
+ 
+-#: opie.c:64 pop3.c:597
++#: opie.c:64 pop3.c:603
+ msgid &quot;Secret pass phrase: &quot;
+ msgstr &quot;Contrasenya secreta: &quot;
+ 
+@@ -2298,7 +2298,7 @@
+ &quot;      --showdots    mostra punts de progressi&#243; &#224;dhuc als fitxers de &quot;
+ &quot;registre\n&quot;
+ 
+-#: pop3.c:350
++#: pop3.c:356
+ msgid &quot;&quot;
+ &quot;Warning: \&quot;Maillennium POP3/PROXY server\&quot; found, using RETR command instead &quot;
+ &quot;of TOP.\n&quot;
+@@ -2306,76 +2306,76 @@
+ &quot;Atenci&#243;: s'ha detectat un \&quot;Maillennium POP3/PROXY server\&quot;, s'usa RETR en &quot;
+ &quot;lloc de TOP.\n&quot;
+ 
+-#: pop3.c:449
++#: pop3.c:455
+ msgid &quot;TLS is mandatory for this session, but server refused CAPA command.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:450
++#: pop3.c:456
+ msgid &quot;The CAPA command is however necessary for TLS.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:525
++#: pop3.c:531
+ #, fuzzy, c-format
+ msgid &quot;%s: opportunistic upgrade to TLS failed, trying to continue.\n&quot;
+ msgstr &quot;%s: actualitzaci&#243; oportunista a TLS.\n&quot;
+ 
+-#: pop3.c:633
++#: pop3.c:639
+ msgid &quot;We've run out of allowed authenticators and cannot continue.\n&quot;
+ msgstr &quot;&quot;
+ 
+ # timestamp: marca hor&#224;ria
+-#: pop3.c:647
++#: pop3.c:653
+ msgid &quot;Required APOP timestamp not found in greeting\n&quot;
+ msgstr &quot;No s'ha trobat la marca hor&#224;ria APOP requerida a la salutaci&#243;\n&quot;
+ 
+-#: pop3.c:656
++#: pop3.c:662
+ msgid &quot;Timestamp syntax error in greeting\n&quot;
+ msgstr &quot;Error de sintaxi en la marca hor&#224;ria de la salutaci&#243;\n&quot;
+ 
+-#: pop3.c:672
++#: pop3.c:678
+ msgid &quot;Invalid APOP timestamp.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:696
++#: pop3.c:702
+ msgid &quot;Undefined protocol request in POP3_auth\n&quot;
+ msgstr &quot;Petici&#243; de protocol indefinida a POP3_auth\n&quot;
+ 
+-#: pop3.c:717
++#: pop3.c:723
+ msgid &quot;lock busy!  Is another session active?\n&quot;
+ msgstr &quot;bloqueig temporal! Hi ha alguna altra sessi&#243; activa?\n&quot;
+ 
+-#: pop3.c:796
++#: pop3.c:802
+ msgid &quot;Cannot handle UIDL response from upstream server.\n&quot;
+ msgstr &quot;No s'ha pogut administrar la resposta UIDL del servidor remot.\n&quot;
+ 
+-#: pop3.c:819
++#: pop3.c:825
+ msgid &quot;Server responded with UID for wrong message.\n&quot;
+ msgstr &quot;El servidor ha respost amb un UID pel missatge equivocat.\n&quot;
+ 
+-#: pop3.c:846 pop3.c:1092
++#: pop3.c:852 pop3.c:1098
+ #, c-format
+ msgid &quot;id=%s (num=%d) was deleted, but is still present!\n&quot;
+ msgstr &quot;id=%s (n&#250;m=%d) s'ha esborrat, per&#242; encara est&#224; present!\n&quot;
+ 
+-#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
++#: pop3.c:861 pop3.c:873 pop3.c:1107 pop3.c:1114
+ #, c-format
+ msgid &quot;%u is unseen\n&quot;
+ msgstr &quot;%u &#233;s no llegit\n&quot;
+ 
+-#: pop3.c:952
++#: pop3.c:958
+ msgid &quot;Messages inserted into list on server. Cannot handle this.\n&quot;
+ msgstr &quot;&quot;
+ &quot;Els missatges estan inserits a la llista del servidor. No es pot continuar.\n&quot;
+ 
+-#: pop3.c:1044
++#: pop3.c:1050
+ msgid &quot;protocol error\n&quot;
+ msgstr &quot;error de protocol\n&quot;
+ 
+-#: pop3.c:1060
++#: pop3.c:1066
+ msgid &quot;protocol error while fetching UIDLs\n&quot;
+ msgstr &quot;error de protocol quan es rebien els UIDLs\n&quot;
+ 
+-#: pop3.c:1430
++#: pop3.c:1436
+ msgid &quot;Option --folder is not supported with POP3\n&quot;
+ msgstr &quot;L'opci&#243; --folder no est&#224; suportada per POP3\n&quot;
+ 
+@@ -2411,17 +2411,17 @@
+ msgid &quot;end of input&quot;
+ msgstr &quot;final de l'entrada&quot;
+ 
+-#: rcfile_y.y:419
++#: rcfile_y.y:420
+ #, c-format
+ msgid &quot;File %s must be a regular file.\n&quot;
+ msgstr &quot;El fitxer %s ha de ser un fitxer ordinari.\n&quot;
+ 
+-#: rcfile_y.y:429
++#: rcfile_y.y:430
+ #, c-format
+ msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
+ msgstr &quot;El fitxer %s no pot tenir permisos m&#233;s que -rwx--x--- (0710).\n&quot;
+ 
+-#: rcfile_y.y:441
++#: rcfile_y.y:442
+ #, c-format
+ msgid &quot;File %s must be owned by you.\n&quot;
+ msgstr &quot;El fitxer %s ha de ser propietat vostra.\n&quot;
+@@ -2854,118 +2854,118 @@
+ msgid &quot;connected.\n&quot;
+ msgstr &quot;connectat.\n&quot;
+ 
+-#: socket.c:660
++#: socket.c:611
+ #, c-format
+ msgid &quot;Issuer Organization: %s\n&quot;
+ msgstr &quot;Organitzaci&#243; emissora: %s\n&quot;
+ 
+-#: socket.c:662
++#: socket.c:613
+ msgid &quot;Warning: Issuer Organization Name too long (possibly truncated).\n&quot;
+ msgstr &quot;&quot;
+ &quot;Atenci&#243;: El nom de l'organitzaci&#243; emissora &#233;s massa llarg (pot estar &quot;
+ &quot;truncat).\n&quot;
+ 
+-#: socket.c:664
++#: socket.c:615
+ msgid &quot;Unknown Organization\n&quot;
+ msgstr &quot;Organitzaci&#243; desconeguda\n&quot;
+ 
+-#: socket.c:666
++#: socket.c:617
+ #, c-format
+ msgid &quot;Issuer CommonName: %s\n&quot;
+ msgstr &quot;Nom com&#250; de l'emissor: %s\n&quot;
+ 
+-#: socket.c:668
++#: socket.c:619
+ msgid &quot;Warning: Issuer CommonName too long (possibly truncated).\n&quot;
+ msgstr &quot;&quot;
+ &quot;Atenci&#243;: El nom com&#250; de l'emissor &#233;s massa llarg (pot estar truncat).\n&quot;
+ 
+-#: socket.c:670
++#: socket.c:621
+ msgid &quot;Unknown Issuer CommonName\n&quot;
+ msgstr &quot;Nom com&#250; de l'emissor desconegut\n&quot;
+ 
+-#: socket.c:674
++#: socket.c:625
+ #, c-format
+ msgid &quot;Server CommonName: %s\n&quot;
+ msgstr &quot;Nom com&#250; del servidor: %s\n&quot;
+ 
+-#: socket.c:678
++#: socket.c:629
+ msgid &quot;Bad certificate: Subject CommonName too long!\n&quot;
+ msgstr &quot;Certificat incorrecte: El component CommonName &#233;s massa llarg!\n&quot;
+ 
+-#: socket.c:724
++#: socket.c:675
+ #, c-format
+ msgid &quot;Server CommonName mismatch: %s != %s\n&quot;
+ msgstr &quot;El nom com&#250; del servidor no encaixa: %s != %s\n&quot;
+ 
+-#: socket.c:730
++#: socket.c:681
+ msgid &quot;Server name not set, could not verify certificate!\n&quot;
+ msgstr &quot;&quot;
+ &quot;El nom del servidor no est&#224; definit, no es pot verificar el certificat!\n&quot;
+ 
+-#: socket.c:735
++#: socket.c:686
+ msgid &quot;Unknown Server CommonName\n&quot;
+ msgstr &quot;Nom com&#250; del servidor desconegut\n&quot;
+ 
+-#: socket.c:737
++#: socket.c:688
+ msgid &quot;Server name not specified in certificate!\n&quot;
+ msgstr &quot;El certificat no especifica el nom del servidor!\n&quot;
+ 
+-#: socket.c:749
++#: socket.c:700
+ msgid &quot;EVP_md5() failed!\n&quot;
+ msgstr &quot;EVP_md5() ha fallat!\n&quot;
+ 
+-#: socket.c:753
++#: socket.c:704
+ msgid &quot;Out of memory!\n&quot;
+ msgstr &quot;Mem&#242;ria exhaurida!\n&quot;
+ 
+ # digest text
+-#: socket.c:761
++#: socket.c:712
+ msgid &quot;Digest text buffer too small!\n&quot;
+ msgstr &quot;El buffer del sumari de text &#233;s massa petit!\n&quot;
+ 
+-#: socket.c:767
++#: socket.c:718
+ #, c-format
+ msgid &quot;%s key fingerprint: %s\n&quot;
+ msgstr &quot;Empremta de la clau de %s: %s\n&quot;
+ 
+-#: socket.c:771
++#: socket.c:722
+ #, c-format
+ msgid &quot;%s fingerprints match.\n&quot;
+ msgstr &quot;Les empremtes digitals de %s encaixen.\n&quot;
+ 
+-#: socket.c:773
++#: socket.c:724
+ #, c-format
+ msgid &quot;%s fingerprints do not match!\n&quot;
+ msgstr &quot;Les empremtes digitals de %s no encaixen!\n&quot;
+ 
+-#: socket.c:782
++#: socket.c:733
+ #, c-format
+ msgid &quot;Server certificate verification error: %s\n&quot;
+ msgstr &quot;Error en verificar el certificat del servidor: %s\n&quot;
+ 
+-#: socket.c:788
++#: socket.c:739
+ #, c-format
+ msgid &quot;unknown issuer (first %d characters): %s\n&quot;
+ msgstr &quot;emissor desconegut (primers %d car&#224;cters): %s\n&quot;
+ 
+-#: socket.c:875
++#: socket.c:826
+ msgid &quot;File descriptor out of range for SSL&quot;
+ msgstr &quot;Descriptor del fitxer fora d'abast per SSL&quot;
+ 
+-#: socket.c:891
++#: socket.c:842
+ #, c-format
+ msgid &quot;Invalid SSL protocol '%s' specified, using default (SSLv23).\n&quot;
+ msgstr &quot;El protocol SSL especificat `%s' no &#233;s v&#224;lid, s'usa SSLv23.\n&quot;
+ 
+-#: socket.c:964
++#: socket.c:916
+ msgid &quot;Certificate/fingerprint verification was somehow skipped!\n&quot;
+ msgstr &quot;La verificaci&#243; del certificat o de l'empremta s'ha om&#232;s!\n&quot;
+ 
+-#: socket.c:1042
++#: socket.c:994
+ msgid &quot;Cygwin socket read retry\n&quot;
+ msgstr &quot;Es torna a intentar llegir el socket Cygwin\n&quot;
+ 
+-#: socket.c:1045
++#: socket.c:997
+ msgid &quot;Cygwin socket read retry failed!\n&quot;
+ msgstr &quot;El reintent de llegir el socket Cygwin ha fallat!\n&quot;
+ 
+@@ -3097,30 +3097,30 @@
+ msgid &quot;discarding new UID list\n&quot;
+ msgstr &quot;descartant la llista nova d'UIDs\n&quot;
+ 
+-#: uid.c:616
++#: uid.c:617
+ msgid &quot;Deleting fetchids file.\n&quot;
+ msgstr &quot;Esborrant el fitxer d'identificadors.\n&quot;
+ 
+-#: uid.c:618
++#: uid.c:620
+ #, c-format
+ msgid &quot;Error deleting %s: %s\n&quot;
+ msgstr &quot;Error en eliminar %s: %s\n&quot;
+ 
+-#: uid.c:624
++#: uid.c:626
+ msgid &quot;Writing fetchids file.\n&quot;
+ msgstr &quot;Escrivint el fitxer d'identificadors.\n&quot;
+ 
+-#: uid.c:643
++#: uid.c:645
+ #, c-format
+ msgid &quot;Error writing to fetchids file %s, old file left in place.\n&quot;
+ msgstr &quot;Error en escriure el fitxer d'ids %s, es mant&#233; l'antic.\n&quot;
+ 
+-#: uid.c:647
++#: uid.c:649
+ #, c-format
+ msgid &quot;Cannot rename fetchids file %s to %s: %s\n&quot;
+ msgstr &quot;No s'ha pogut reanomenar el fitxer d'ids %s a %s: %s\n&quot;
+ 
+-#: uid.c:651
++#: uid.c:653
+ #, c-format
+ msgid &quot;Cannot open fetchids file %s for writing: %s\n&quot;
+ msgstr &quot;No s'ha pogut obrir el fitxer d'ids %s per escriure-hi: %s\n&quot;
+
+Modified: branches/BRANCH_6-3/po/cs.po
+===================================================================
+--- branches/BRANCH_6-3/po/cs.po	2008-01-29 13:19:58 UTC (rev 5154)
++++ branches/BRANCH_6-3/po/cs.po	2008-01-31 09:15:53 UTC (rev 5155)
+@@ -7,7 +7,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail-6.2.6.alpha1\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-06-27 11:18+0200\n&quot;
++&quot;POT-Creation-Date: 2008-01-31 10:14+0100\n&quot;
+ &quot;PO-Revision-Date: 2005-07-03 03:57+0200\n&quot;
+ &quot;Last-Translator: Miloslav Trmac &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">mitr at volny.cz</A>&gt;\n&quot;
+ &quot;Language-Team: Czech &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">cs at li.org</A>&gt;\n&quot;
+@@ -1677,12 +1677,12 @@
+ msgid &quot;will idle after poll\n&quot;
+ msgstr &quot;po stahov&#195;&#161;n&#195;&#173; budu ne&#196;&#141;inn&#195;&#189;\n&quot;
+ 
+-#: imap.c:441 pop3.c:505
++#: imap.c:441 pop3.c:511
+ #, c-format
+ msgid &quot;%s: upgrade to TLS succeeded.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: imap.c:450 pop3.c:514
++#: imap.c:450 pop3.c:520
+ #, c-format
+ msgid &quot;%s: upgrade to TLS failed.\n&quot;
+ msgstr &quot;&quot;
+@@ -1696,7 +1696,7 @@
+ msgid &quot;Required OTP capability not compiled into fetchmail\n&quot;
+ msgstr &quot;Fetchmail byl p&#197;&#153;elo&#197;&#190;en bez podpory pro po&#197;&#190;adovanou schopnost OTP\n&quot;
+ 
+-#: imap.c:587 pop3.c:380
++#: imap.c:587 pop3.c:386
+ msgid &quot;Required NTLM capability not compiled into fetchmail\n&quot;
+ msgstr &quot;Fetchmail byl p&#197;&#153;elo&#197;&#190;en bez podpory pro po&#197;&#190;adovanou schopnost NTLM\n&quot;
+ 
+@@ -1757,7 +1757,7 @@
+ msgid &quot;%lu is unseen\n&quot;
+ msgstr &quot;%u nebyla p&#197;&#153;e&#196;&#141;tena\n&quot;
+ 
+-#: imap.c:897 pop3.c:876
++#: imap.c:897 pop3.c:882
+ #, c-format
+ msgid &quot;%u is first unseen\n&quot;
+ msgstr &quot;%u je prvn&#195;&#173; nep&#197;&#153;e&#196;&#141;ten&#195;&#161;\n&quot;
+@@ -1959,7 +1959,7 @@
+ msgid &quot;Could not decode OTP challenge\n&quot;
+ msgstr &quot;Nemohu dek&#195;&#179;dovat v&#195;&#189;zvu OTP\n&quot;
+ 
+-#: opie.c:64 pop3.c:597
++#: opie.c:64 pop3.c:603
+ msgid &quot;Secret pass phrase: &quot;
+ msgstr &quot;Tajn&#195;&#169; heslo: &quot;
+ 
+@@ -2265,80 +2265,80 @@
+ msgstr &quot;&quot;
+ &quot;      --showdots    zobrazovat te&#196;&#141;ky pr&#197;&#175;b&#196;&#155;hu i v souborech se z&#195;&#161;znamy\n&quot;
+ 
+-#: pop3.c:350
++#: pop3.c:356
+ msgid &quot;&quot;
+ &quot;Warning: \&quot;Maillennium POP3/PROXY server\&quot; found, using RETR command instead &quot;
+ &quot;of TOP.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:449
++#: pop3.c:455
+ msgid &quot;TLS is mandatory for this session, but server refused CAPA command.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:450
++#: pop3.c:456
+ msgid &quot;The CAPA command is however necessary for TLS.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:525
++#: pop3.c:531
+ #, c-format
+ msgid &quot;%s: opportunistic upgrade to TLS failed, trying to continue.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:633
++#: pop3.c:639
+ msgid &quot;We've run out of allowed authenticators and cannot continue.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:647
++#: pop3.c:653
+ msgid &quot;Required APOP timestamp not found in greeting\n&quot;
+ msgstr &quot;Po&#197;&#190;adovan&#195;&#189; &#196;&#141;asov&#195;&#189; &#195;&#186;daj APOP nebyl v pozdravu nalezen\n&quot;
+ 
+-#: pop3.c:656
++#: pop3.c:662
+ msgid &quot;Timestamp syntax error in greeting\n&quot;
+ msgstr &quot;Syntaktick&#195;&#161; chyba v &#196;&#141;asov&#195;&#169;m &#195;&#186;daji z pozdravu\n&quot;
+ 
+-#: pop3.c:672
++#: pop3.c:678
+ msgid &quot;Invalid APOP timestamp.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:696
++#: pop3.c:702
+ msgid &quot;Undefined protocol request in POP3_auth\n&quot;
+ msgstr &quot;&#197;&#189;&#195;&#161;dost o nedefinovan&#195;&#189; protokol v POP3_auth\n&quot;
+ 
+-#: pop3.c:717
++#: pop3.c:723
+ msgid &quot;lock busy!  Is another session active?\n&quot;
+ msgstr &quot;zam&#196;&#141;eno! Je aktivn&#195;&#173; jin&#195;&#169; sezen&#195;&#173;?\n&quot;
+ 
+-#: pop3.c:796
++#: pop3.c:802
+ msgid &quot;Cannot handle UIDL response from upstream server.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:819
++#: pop3.c:825
+ msgid &quot;Server responded with UID for wrong message.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:846 pop3.c:1092
++#: pop3.c:852 pop3.c:1098
+ #, c-format
+ msgid &quot;id=%s (num=%d) was deleted, but is still present!\n&quot;
+ msgstr &quot;id=%s (num=%d) bylo odstran&#196;&#155;no, ale je st&#195;&#161;le p&#197;&#153;&#195;&#173;tomno!\n&quot;
+ 
+-#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
++#: pop3.c:861 pop3.c:873 pop3.c:1107 pop3.c:1114
+ #, c-format
+ msgid &quot;%u is unseen\n&quot;
+ msgstr &quot;%u nebyla p&#197;&#153;e&#196;&#141;tena\n&quot;
+ 
+-#: pop3.c:952
++#: pop3.c:958
+ msgid &quot;Messages inserted into list on server. Cannot handle this.\n&quot;
+ msgstr &quot;Zpr&#195;&#161;vy vlo&#197;&#190;eny do seznamu na serveru. To neum&#195;&#173;m zpracovat.\n&quot;
+ 
+-#: pop3.c:1044
++#: pop3.c:1050
+ msgid &quot;protocol error\n&quot;
+ msgstr &quot;chyba protokolu\n&quot;
+ 
+-#: pop3.c:1060
++#: pop3.c:1066
+ msgid &quot;protocol error while fetching UIDLs\n&quot;
+ msgstr &quot;chyba protokolu p&#197;&#153;i stahov&#195;&#161;n&#195;&#173; UIDL\n&quot;
+ 
+-#: pop3.c:1430
++#: pop3.c:1436
+ #, fuzzy
+ msgid &quot;Option --folder is not supported with POP3\n&quot;
+ msgstr &quot;P&#197;&#153;ep&#195;&#173;na&#196;&#141; --remote nen&#195;&#173; s POP3 podporov&#195;&#161;n\n&quot;
+@@ -2374,17 +2374,17 @@
+ msgid &quot;end of input&quot;
+ msgstr &quot;konec vstupu&quot;
+ 
+-#: rcfile_y.y:419
++#: rcfile_y.y:420
+ #, c-format
+ msgid &quot;File %s must be a regular file.\n&quot;
+ msgstr &quot;Soubor %s mus&#195;&#173; b&#195;&#189;t oby&#196;&#141;ejn&#195;&#189; soubor.\n&quot;
+ 
+-#: rcfile_y.y:429
++#: rcfile_y.y:430
+ #, c-format
+ msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
+ msgstr &quot;Soubor %s nesm&#195;&#173; m&#195;&#173;t opr&#195;&#161;vn&#196;&#155;n&#195;&#173; v&#195;&#173;ce ne&#197;&#190; -rwx--x--- (0710).\n&quot;
+ 
+-#: rcfile_y.y:441
++#: rcfile_y.y:442
+ #, c-format
+ msgid &quot;File %s must be owned by you.\n&quot;
+ msgstr &quot;Mus&#195;&#173;te vlastnit soubor %s.\n&quot;
+@@ -2815,113 +2815,113 @@
+ msgid &quot;connected.\n&quot;
+ msgstr &quot;Spojen&#195;&#173; SSL selhalo.\n&quot;
+ 
+-#: socket.c:660
++#: socket.c:611
+ #, c-format
+ msgid &quot;Issuer Organization: %s\n&quot;
+ msgstr &quot;Organizace vydavatele: %s\n&quot;
+ 
+-#: socket.c:662
++#: socket.c:613
+ msgid &quot;Warning: Issuer Organization Name too long (possibly truncated).\n&quot;
+ msgstr &quot;Varov&#195;&#161;n&#195;&#173;: N&#195;&#161;zev organizace vydavatele p&#197;&#153;&#195;&#173;li&#197;&#161; dlouh&#195;&#189; (mo&#197;&#190;n&#195;&#161; zkr&#195;&#161;cen).\n&quot;
+ 
+-#: socket.c:664
++#: socket.c:615
+ msgid &quot;Unknown Organization\n&quot;
+ msgstr &quot;Nezn&#195;&#161;m&#195;&#161; organizace\n&quot;
+ 
+-#: socket.c:666
++#: socket.c:617
+ #, c-format
+ msgid &quot;Issuer CommonName: %s\n&quot;
+ msgstr &quot;Jm&#195;&#169;no vydavatele: %s\n&quot;
+ 
+-#: socket.c:668
++#: socket.c:619
+ msgid &quot;Warning: Issuer CommonName too long (possibly truncated).\n&quot;
+ msgstr &quot;Varov&#195;&#161;n&#195;&#173;: Jm&#195;&#169;no vydavatele p&#197;&#153;&#195;&#173;li&#197;&#161; dlouh&#195;&#169; (mo&#197;&#190;n&#195;&#161; zkr&#195;&#161;ceno).\n&quot;
+ 
+-#: socket.c:670
++#: socket.c:621
+ msgid &quot;Unknown Issuer CommonName\n&quot;
+ msgstr &quot;Nezn&#195;&#161;m&#195;&#169; jm&#195;&#169;no vydavatele\n&quot;
+ 
+-#: socket.c:674
++#: socket.c:625
+ #, c-format
+ msgid &quot;Server CommonName: %s\n&quot;
+ msgstr &quot;Jm&#195;&#169;no serveru: %s\n&quot;
+ 
+-#: socket.c:678
++#: socket.c:629
+ msgid &quot;Bad certificate: Subject CommonName too long!\n&quot;
+ msgstr &quot;&#197;&#160;patn&#195;&#189; certifik&#195;&#161;t: Jm&#195;&#169;no p&#197;&#153;edm&#196;&#155;tu p&#197;&#153;&#195;&#173;li&#197;&#161; dlouh&#195;&#169;!\n&quot;
+ 
+-#: socket.c:724
++#: socket.c:675
+ #, c-format
+ msgid &quot;Server CommonName mismatch: %s != %s\n&quot;
+ msgstr &quot;Jm&#195;&#169;no serveru neodpov&#195;&#173;d&#195;&#161;: %s != %s\n&quot;
+ 
+-#: socket.c:730
++#: socket.c:681
+ msgid &quot;Server name not set, could not verify certificate!\n&quot;
+ msgstr &quot;Jm&#195;&#169;no serveru nenastaveno, nemohu ov&#196;&#155;&#197;&#153;it certifik&#195;&#161;t!\n&quot;
+ 
+-#: socket.c:735
++#: socket.c:686
+ msgid &quot;Unknown Server CommonName\n&quot;
+ msgstr &quot;Nezn&#195;&#161;m&#195;&#169; jm&#195;&#169;no serveru\n&quot;
+ 
+-#: socket.c:737
++#: socket.c:688
+ msgid &quot;Server name not specified in certificate!\n&quot;
+ msgstr &quot;Jm&#195;&#169;no serveru nen&#195;&#173; v certifik&#195;&#161;tu zad&#195;&#161;no!\n&quot;
+ 
+-#: socket.c:749
++#: socket.c:700
+ msgid &quot;EVP_md5() failed!\n&quot;
+ msgstr &quot;EVP_md5() selhalo!\n&quot;
+ 
+-#: socket.c:753
++#: socket.c:704
+ msgid &quot;Out of memory!\n&quot;
+ msgstr &quot;Nedostatek pam&#196;&#155;ti!\n&quot;
+ 
+-#: socket.c:761
++#: socket.c:712
+ msgid &quot;Digest text buffer too small!\n&quot;
+ msgstr &quot;Vyrovn&#195;&#161;vac&#195;&#173; pam&#196;&#155;&#197;&#165; textu digestu p&#197;&#153;&#195;&#173;li&#197;&#161; mal&#195;&#161;!\n&quot;
+ 
+-#: socket.c:767
++#: socket.c:718
+ #, c-format
+ msgid &quot;%s key fingerprint: %s\n&quot;
+ msgstr &quot;otisk kl&#195;&#173;&#196;&#141;e %s: %s\n&quot;
+ 
+-#: socket.c:771
++#: socket.c:722
+ #, c-format
+ msgid &quot;%s fingerprints match.\n&quot;
+ msgstr &quot;otisky %s odpov&#195;&#173;daj&#195;&#173;.\n&quot;
+ 
+-#: socket.c:773
++#: socket.c:724
+ #, c-format
+ msgid &quot;%s fingerprints do not match!\n&quot;
+ msgstr &quot;otisky %s neodpov&#195;&#173;daj&#195;&#173;.\n&quot;
+ 
+-#: socket.c:782
++#: socket.c:733
+ #, c-format
+ msgid &quot;Server certificate verification error: %s\n&quot;
+ msgstr &quot;Chyba ov&#196;&#155;&#197;&#153;ov&#195;&#161;n&#195;&#173; certifik&#195;&#161;tu serveru: %s\n&quot;
+ 
+-#: socket.c:788
++#: socket.c:739
+ #, c-format
+ msgid &quot;unknown issuer (first %d characters): %s\n&quot;
+ msgstr &quot;nezn&#195;&#161;m&#195;&#189; vydavatel (prvn&#195;&#173;ch %d znak&#197;&#175;): %s\n&quot;
+ 
+-#: socket.c:875
++#: socket.c:826
+ msgid &quot;File descriptor out of range for SSL&quot;
+ msgstr &quot;Deskriptor souboru mimo rozsah pro SSL&quot;
+ 
+-#: socket.c:891
++#: socket.c:842
+ #, c-format
+ msgid &quot;Invalid SSL protocol '%s' specified, using default (SSLv23).\n&quot;
+ msgstr &quot;Zad&#195;&#161;n neplatn&#195;&#189; protokol SSL `%s', pou&#197;&#190;&#195;&#173;v&#195;&#161;m implicitn&#195;&#173; (SSLv23).\n&quot;
+ 
+-#: socket.c:964
++#: socket.c:916
+ msgid &quot;Certificate/fingerprint verification was somehow skipped!\n&quot;
+ msgstr &quot;Ov&#196;&#155;&#197;&#153;en&#195;&#173; certifik&#195;&#161;tu/otisku bylo n&#196;&#155;jak p&#197;&#153;esko&#196;&#141;eno!\n&quot;
+ 
+-#: socket.c:1042
++#: socket.c:994
+ msgid &quot;Cygwin socket read retry\n&quot;
+ msgstr &quot;Dal&#197;&#161;&#195;&#173; pokus &#196;&#141;ten&#195;&#173; ze socektu Cygwin\n&quot;
+ 
+-#: socket.c:1045
++#: socket.c:997
+ msgid &quot;Cygwin socket read retry failed!\n&quot;
+ msgstr &quot;Dal&#197;&#161;&#195;&#173; pokus &#196;&#141;ten&#195;&#173; ze socektu Cygwin selhal!\n&quot;
+ 
+@@ -3051,31 +3051,31 @@
+ msgid &quot;discarding new UID list\n&quot;
+ msgstr &quot;zahazuji nov&#195;&#189; seznam UID\n&quot;
+ 
+-#: uid.c:616
++#: uid.c:617
+ msgid &quot;Deleting fetchids file.\n&quot;
+ msgstr &quot;Odstra&#197;&#136;uji soubor fetchids.\n&quot;
+ 
+-#: uid.c:618
++#: uid.c:620
+ #, c-format
+ msgid &quot;Error deleting %s: %s\n&quot;
+ msgstr &quot;Chyba p&#197;&#153;i odstra&#197;&#136;ov&#195;&#161;n&#195;&#173; %s. %s\n&quot;
+ 
+-#: uid.c:624
++#: uid.c:626
+ msgid &quot;Writing fetchids file.\n&quot;
+ msgstr &quot;Zapisuji soubor fetchids.\n&quot;
+ 
+-#: uid.c:643
++#: uid.c:645
+ #, c-format
+ msgid &quot;Error writing to fetchids file %s, old file left in place.\n&quot;
+ msgstr &quot;&quot;
+ &quot;Chyba p&#197;&#153;i z&#195;&#161;pisu do souboru fetchids %s, star&#195;&#189; soubor ponech&#195;&#161;n na m&#195;&#173;st&#196;&#155;.\n&quot;
+ 
+-#: uid.c:647
++#: uid.c:649
+ #, c-format
+ msgid &quot;Cannot rename fetchids file %s to %s: %s\n&quot;
+ msgstr &quot;Nemohu p&#197;&#153;ejmenovat soubor fetchids %s na %s: %s\n&quot;
+ 
+-#: uid.c:651
++#: uid.c:653
+ #, c-format
+ msgid &quot;Cannot open fetchids file %s for writing: %s\n&quot;
+ msgstr &quot;Nemohu otev&#197;&#153;&#195;&#173;t soubor fetchids %s pro z&#195;&#161;pis: %s\n&quot;
+
+Modified: branches/BRANCH_6-3/po/de.po
+===================================================================
+--- branches/BRANCH_6-3/po/de.po	2008-01-29 13:19:58 UTC (rev 5154)
++++ branches/BRANCH_6-3/po/de.po	2008-01-31 09:15:53 UTC (rev 5155)
+@@ -8,7 +8,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: de\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-06-27 11:18+0200\n&quot;
++&quot;POT-Creation-Date: 2008-01-31 10:14+0100\n&quot;
+ &quot;PO-Revision-Date: 2006-11-27 04:32+0100\n&quot;
+ &quot;Last-Translator: Matthias Andree &lt;matthias.andree&gt;\n&quot;
+ &quot;Language-Team: Deutsch &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">de at li.org</A>&gt;\n&quot;
+@@ -1708,12 +1708,12 @@
+ msgid &quot;will idle after poll\n&quot;
+ msgstr &quot;werde nach Abfrage unt&#195;&#164;tig sein\n&quot;
+ 
+-#: imap.c:441 pop3.c:505
++#: imap.c:441 pop3.c:511
+ #, c-format
+ msgid &quot;%s: upgrade to TLS succeeded.\n&quot;
+ msgstr &quot;%s: Upgrade auf TLS erfolgreich.\n&quot;
+ 
+-#: imap.c:450 pop3.c:514
++#: imap.c:450 pop3.c:520
+ #, c-format
+ msgid &quot;%s: upgrade to TLS failed.\n&quot;
+ msgstr &quot;%s: Upgrade auf TLS fehlgeschlagen.\n&quot;
+@@ -1728,7 +1728,7 @@
+ msgid &quot;Required OTP capability not compiled into fetchmail\n&quot;
+ msgstr &quot;Ben&#195;&#182;tigte OTP-F&#195;&#164;higkeit nicht in fetchmail einkompiliert\n&quot;
+ 
+-#: imap.c:587 pop3.c:380
++#: imap.c:587 pop3.c:386
+ msgid &quot;Required NTLM capability not compiled into fetchmail\n&quot;
+ msgstr &quot;Ben&#195;&#182;tigte NTLM-F&#195;&#164;higkeit nicht in fetchmail einkompiliert\n&quot;
+ 
+@@ -1783,7 +1783,7 @@
+ msgid &quot;%lu is unseen\n&quot;
+ msgstr &quot;%lu ist ungesehen\n&quot;
+ 
+-#: imap.c:897 pop3.c:876
++#: imap.c:897 pop3.c:882
+ #, c-format
+ msgid &quot;%u is first unseen\n&quot;
+ msgstr &quot;%u ist erste ungesehene\n&quot;
+@@ -1985,7 +1985,7 @@
+ msgid &quot;Could not decode OTP challenge\n&quot;
+ msgstr &quot;Konnte OTP-Herausforderung nicht dekodieren\n&quot;
+ 
+-#: opie.c:64 pop3.c:597
++#: opie.c:64 pop3.c:603
+ msgid &quot;Secret pass phrase: &quot;
+ msgstr &quot;Geheime Passphrase: &quot;
+ 
+@@ -2288,7 +2288,7 @@
+ msgid &quot;      --showdots    show progress dots even in logfiles\n&quot;
+ msgstr &quot;      --showdots    Fortschrittspunkte auch in Log-Dateien zeigen\n&quot;
+ 
+-#: pop3.c:350
++#: pop3.c:356
+ msgid &quot;&quot;
+ &quot;Warning: \&quot;Maillennium POP3/PROXY server\&quot; found, using RETR command instead &quot;
+ &quot;of TOP.\n&quot;
+@@ -2296,79 +2296,79 @@
+ &quot;Warnung: &#226;&#128;&#158;Maillennium POP3/PROXY-Server&#226;&#128;&#157; gefunden, benutze RETR-Befehl statt &quot;
+ &quot;TOP.\n&quot;
+ 
+-#: pop3.c:449
++#: pop3.c:455
+ msgid &quot;TLS is mandatory for this session, but server refused CAPA command.\n&quot;
+ msgstr &quot;&quot;
+ &quot;TLS ist f&#195;&#188;r diese Sitzung n&#195;&#182;tig, aber der Server hat den CAPA-Befehl &quot;
+ &quot;abgelehnt.\n&quot;
+ 
+-#: pop3.c:450
++#: pop3.c:456
+ msgid &quot;The CAPA command is however necessary for TLS.\n&quot;
+ msgstr &quot;Der CAPA-Befehl ist allerdings f&#195;&#188;r TLS erforderlich.\n&quot;
+ 
+-#: pop3.c:525
++#: pop3.c:531
+ #, c-format
+ msgid &quot;%s: opportunistic upgrade to TLS failed, trying to continue.\n&quot;
+ msgstr &quot;&quot;
+ &quot;%s: opportunistisches Upgrade auf TLS fehlgeschlagen, versuche Fortsetzung.\n&quot;
+ 
+-#: pop3.c:633
++#: pop3.c:639
+ msgid &quot;We've run out of allowed authenticators and cannot continue.\n&quot;
+ msgstr &quot;&quot;
+ &quot;Keine weiteren Authentifizierungsverfahren verf&#195;&#188;gbar, Fortsetzung nicht &quot;
+ &quot;m&#195;&#182;glich.\n&quot;
+ 
+-#: pop3.c:647
++#: pop3.c:653
+ msgid &quot;Required APOP timestamp not found in greeting\n&quot;
+ msgstr &quot;Erforderlicher APOP-Zeitstempel nicht in Begr&#195;&#188;&#195;&#159;ung gefunden\n&quot;
+ 
+-#: pop3.c:656
++#: pop3.c:662
+ msgid &quot;Timestamp syntax error in greeting\n&quot;
+ msgstr &quot;Zeitstempel-Syntax-Fehler in Begr&#195;&#188;&#195;&#159;ung\n&quot;
+ 
+-#: pop3.c:672
++#: pop3.c:678
+ msgid &quot;Invalid APOP timestamp.\n&quot;
+ msgstr &quot;Ung&#195;&#188;ltiger APOP-Zeitstempel.\n&quot;
+ 
+-#: pop3.c:696
++#: pop3.c:702
+ msgid &quot;Undefined protocol request in POP3_auth\n&quot;
+ msgstr &quot;Anfrage nach undefiniertem Protokoll in POP3_auth\n&quot;
+ 
+-#: pop3.c:717
++#: pop3.c:723
+ msgid &quot;lock busy!  Is another session active?\n&quot;
+ msgstr &quot;Lock besch&#195;&#164;ftigt!  Ist eine weitere Sitzung aktiv?\n&quot;
+ 
+-#: pop3.c:796
++#: pop3.c:802
+ msgid &quot;Cannot handle UIDL response from upstream server.\n&quot;
+ msgstr &quot;Kann die UIDL-Antwort des Servers nicht verarbeiten.\n&quot;
+ 
+-#: pop3.c:819
++#: pop3.c:825
+ msgid &quot;Server responded with UID for wrong message.\n&quot;
+ msgstr &quot;Server hat mit UID der falschen Nachricht geantwortet.\n&quot;
+ 
+-#: pop3.c:846 pop3.c:1092
++#: pop3.c:852 pop3.c:1098
+ #, c-format
+ msgid &quot;id=%s (num=%d) was deleted, but is still present!\n&quot;
+ msgstr &quot;id=%s (num=%d) wurde gel&#195;&#182;scht, ist aber immer noch da!\n&quot;
+ 
+-#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
++#: pop3.c:861 pop3.c:873 pop3.c:1107 pop3.c:1114
+ #, c-format
+ msgid &quot;%u is unseen\n&quot;
+ msgstr &quot;%u ist ungesehen\n&quot;
+ 
+-#: pop3.c:952
++#: pop3.c:958
+ msgid &quot;Messages inserted into list on server. Cannot handle this.\n&quot;
+ msgstr &quot;Nachrichten in Liste auf Server eingef&#195;&#188;gt. Kann damit nicht umgehen.\n&quot;
+ 
+-#: pop3.c:1044
++#: pop3.c:1050
+ msgid &quot;protocol error\n&quot;
+ msgstr &quot;Protokollfehler\n&quot;
+ 
+-#: pop3.c:1060
++#: pop3.c:1066
+ msgid &quot;protocol error while fetching UIDLs\n&quot;
+ msgstr &quot;Protokollfehler beim Holen der UIDL\n&quot;
+ 
+-#: pop3.c:1430
++#: pop3.c:1436
+ msgid &quot;Option --folder is not supported with POP3\n&quot;
+ msgstr &quot;Option --folder wird mit POP3 nicht unterst&#195;&#188;tzt\n&quot;
+ 
+@@ -2404,17 +2404,17 @@
+ msgid &quot;end of input&quot;
+ msgstr &quot;Ende der Eingabe&quot;
+ 
+-#: rcfile_y.y:419
++#: rcfile_y.y:420
+ #, c-format
+ msgid &quot;File %s must be a regular file.\n&quot;
+ msgstr &quot;Datei %s muss eine regul&#195;&#164;re Datei sein.\n&quot;
+ 
+-#: rcfile_y.y:429
++#: rcfile_y.y:430
+ #, c-format
+ msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
+ msgstr &quot;Datei %s darf nicht mehr Zugriffrechte haben als -rwx--x-- (0710).\n&quot;
+ 
+-#: rcfile_y.y:441
++#: rcfile_y.y:442
+ #, c-format
+ msgid &quot;File %s must be owned by you.\n&quot;
+ msgstr &quot;Datei %s muss Ihnen geh&#195;&#182;ren.\n&quot;
+@@ -2844,117 +2844,117 @@
+ msgid &quot;connected.\n&quot;
+ msgstr &quot;verbunden.\n&quot;
+ 
+-#: socket.c:660
++#: socket.c:611
+ #, c-format
+ msgid &quot;Issuer Organization: %s\n&quot;
+ msgstr &quot;Herausgeber-Organisation: %s\n&quot;
+ 
+-#: socket.c:662
++#: socket.c:613
+ msgid &quot;Warning: Issuer Organization Name too long (possibly truncated).\n&quot;
+ msgstr &quot;&quot;
+ &quot;Warnung: Herausgeber-Organisations-Name zu lang (m&#195;&#182;glicherweise &quot;
+ &quot;beschnitten).\n&quot;
+ 
+-#: socket.c:664
++#: socket.c:615
+ msgid &quot;Unknown Organization\n&quot;
+ msgstr &quot;Unbekannte Organisation\n&quot;
+ 
+-#: socket.c:666
++#: socket.c:617
+ #, c-format
+ msgid &quot;Issuer CommonName: %s\n&quot;
+ msgstr &quot;Herausgeber-CommonName: %s\n&quot;
+ 
+-#: socket.c:668
++#: socket.c:619
+ msgid &quot;Warning: Issuer CommonName too long (possibly truncated).\n&quot;
+ msgstr &quot;&quot;
+ &quot;Warnung: Herausgeber-CommonName zu lang (m&#195;&#182;glicherweise beschnitten).\n&quot;
+ 
+-#: socket.c:670
++#: socket.c:621
+ msgid &quot;Unknown Issuer CommonName\n&quot;
+ msgstr &quot;Unbekannter Herausgeber-CommonName\n&quot;
+ 
+-#: socket.c:674
++#: socket.c:625
+ #, c-format
+ msgid &quot;Server CommonName: %s\n&quot;
+ msgstr &quot;Server-CommonName: %s\n&quot;
+ 
+-#: socket.c:678
++#: socket.c:629
+ msgid &quot;Bad certificate: Subject CommonName too long!\n&quot;
+ msgstr &quot;Ung&#195;&#188;ltiges Zertifikat: Server-CommonName zu lang!\n&quot;
+ 
+-#: socket.c:724
++#: socket.c:675
+ #, c-format
+ msgid &quot;Server CommonName mismatch: %s != %s\n&quot;
+ msgstr &quot;Server-CommonName stimmt nicht &#195;&#188;berein: %s != %s\n&quot;
+ 
+-#: socket.c:730
++#: socket.c:681
+ msgid &quot;Server name not set, could not verify certificate!\n&quot;
+ msgstr &quot;Server-Name nicht gesetzt, konnte Zertifikat nicht verifizieren!\n&quot;
+ 
+-#: socket.c:735
++#: socket.c:686
+ msgid &quot;Unknown Server CommonName\n&quot;
+ msgstr &quot;Unbekannter Server-CommonName\n&quot;
+ 
+-#: socket.c:737
++#: socket.c:688
+ msgid &quot;Server name not specified in certificate!\n&quot;
+ msgstr &quot;Server-Name nicht in Zertifikat spezifiziert!\n&quot;
+ 
+-#: socket.c:749
++#: socket.c:700
+ msgid &quot;EVP_md5() failed!\n&quot;
+ msgstr &quot;EVP_md5() fehlgeschlagen!\n&quot;
+ 
+-#: socket.c:753
++#: socket.c:704
+ msgid &quot;Out of memory!\n&quot;
+ msgstr &quot;Kein Speicher mehr frei!\n&quot;
+ 
+-#: socket.c:761
++#: socket.c:712
+ msgid &quot;Digest text buffer too small!\n&quot;
+ msgstr &quot;Textpuffer f&#195;&#188;r Digest zu klein!\n&quot;
+ 
+-#: socket.c:767
++#: socket.c:718
+ #, c-format
+ msgid &quot;%s key fingerprint: %s\n&quot;
+ msgstr &quot;%s-Schl&#195;&#188;ssel-Fingerabdruck: %s\n&quot;
+ 
+-#: socket.c:771
++#: socket.c:722
+ #, c-format
+ msgid &quot;%s fingerprints match.\n&quot;
+ msgstr &quot;%s-Fingerabdr&#195;&#188;cke stimmen &#195;&#188;berein.\n&quot;
+ 
+-#: socket.c:773
++#: socket.c:724
+ #, c-format
+ msgid &quot;%s fingerprints do not match!\n&quot;
+ msgstr &quot;%s-Fingerabdr&#195;&#188;cke stimmen nicht &#195;&#188;berein!\n&quot;
+ 
+-#: socket.c:782
++#: socket.c:733
+ #, c-format
+ msgid &quot;Server certificate verification error: %s\n&quot;
+ msgstr &quot;Fehler bei Server-Zertifikat-&#195;&#156;berpr&#195;&#188;fung: %s\n&quot;
+ 
+-#: socket.c:788
++#: socket.c:739
+ #, c-format
+ msgid &quot;unknown issuer (first %d characters): %s\n&quot;
+ msgstr &quot;unbekannter Herausgeber (erste %d Zeichen): %s\n&quot;
+ 
+-#: socket.c:875
++#: socket.c:826
+ msgid &quot;File descriptor out of range for SSL&quot;
+ msgstr &quot;Datei-Deskriptor au&#195;&#159;erhalb des Bereichs f&#195;&#188;r SSL&quot;
+ 
+-#: socket.c:891
++#: socket.c:842
+ #, c-format
+ msgid &quot;Invalid SSL protocol '%s' specified, using default (SSLv23).\n&quot;
+ msgstr &quot;&quot;
+ &quot;Ung&#195;&#188;ltiges SSL-Protokoll &#226;&#128;&#158;%s&#226;&#128;&#156; angegeben, benutze Voreinstellung (SSLv23).\n&quot;
+ 
+-#: socket.c:964
++#: socket.c:916
+ msgid &quot;Certificate/fingerprint verification was somehow skipped!\n&quot;
+ msgstr &quot;Zertifikat-/Fingerabdruck-&#195;&#156;berpr&#195;&#188;fung wurde irgendwie &#195;&#188;bersprungen!\n&quot;
+ 
+-#: socket.c:1042
++#: socket.c:994
+ msgid &quot;Cygwin socket read retry\n&quot;
+ msgstr &quot;Cygwin-Socket-Lese-Wiederholung\n&quot;
+ 
+-#: socket.c:1045
++#: socket.c:997
+ msgid &quot;Cygwin socket read retry failed!\n&quot;
+ msgstr &quot;Cygwin-Socket-Lese-Wiederholung fehlgeschlagen!\n&quot;
+ 
+@@ -3084,30 +3084,30 @@
+ msgid &quot;discarding new UID list\n&quot;
+ msgstr &quot;verwerfe neue UID-Liste\n&quot;
+ 
+-#: uid.c:616
++#: uid.c:617
+ msgid &quot;Deleting fetchids file.\n&quot;
+ msgstr &quot;Datei fetchids wird gel&#195;&#182;scht.\n&quot;
+ 
+-#: uid.c:618
++#: uid.c:620
+ #, c-format
+ msgid &quot;Error deleting %s: %s\n&quot;
+ msgstr &quot;Fehler beim L&#195;&#182;schen von %s: %s\n&quot;
+ 
+-#: uid.c:624
++#: uid.c:626
+ msgid &quot;Writing fetchids file.\n&quot;
+ msgstr &quot;Datei fetchids wird geschrieben.\n&quot;
+ 
+-#: uid.c:643
++#: uid.c:645
+ #, c-format
+ msgid &quot;Error writing to fetchids file %s, old file left in place.\n&quot;
+ msgstr &quot;Fehler beim Schreiben in die UID-Datei %s, alte Datei belassen.\n&quot;
+ 
+-#: uid.c:647
++#: uid.c:649
+ #, c-format
+ msgid &quot;Cannot rename fetchids file %s to %s: %s\n&quot;
+ msgstr &quot;Kann UID-Datei %s nicht in %s umbennen: %s\n&quot;
+ 
+-#: uid.c:651
++#: uid.c:653
+ #, c-format
+ msgid &quot;Cannot open fetchids file %s for writing: %s\n&quot;
+ msgstr &quot;Kann UID-Datei %s nicht zum Schreiben &#195;&#182;ffnen: %s\n&quot;
+
+Modified: branches/BRANCH_6-3/po/en_GB.po
+===================================================================
+--- branches/BRANCH_6-3/po/en_GB.po	2008-01-29 13:19:58 UTC (rev 5154)
++++ branches/BRANCH_6-3/po/en_GB.po	2008-01-31 09:15:53 UTC (rev 5155)
+@@ -7,7 +7,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.3.5\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-06-27 11:18+0200\n&quot;
++&quot;POT-Creation-Date: 2008-01-31 10:14+0100\n&quot;
+ &quot;PO-Revision-Date: 2006-11-02 06:58-0000\n&quot;
+ &quot;Last-Translator: David Lodge &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">dave at cirt.net</A>&gt;\n&quot;
+ &quot;Language-Team: English (British) &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">en_gb at li.org</A>&gt;\n&quot;
+@@ -1642,12 +1642,12 @@
+ msgid &quot;will idle after poll\n&quot;
+ msgstr &quot;will idle after poll\n&quot;
+ 
+-#: imap.c:441 pop3.c:505
++#: imap.c:441 pop3.c:511
+ #, c-format
+ msgid &quot;%s: upgrade to TLS succeeded.\n&quot;
+ msgstr &quot;%s: upgrade to TLS succeeded.\n&quot;
+ 
+-#: imap.c:450 pop3.c:514
++#: imap.c:450 pop3.c:520
+ #, c-format
+ msgid &quot;%s: upgrade to TLS failed.\n&quot;
+ msgstr &quot;%s: upgrade to TLS failed.\n&quot;
+@@ -1661,7 +1661,7 @@
+ msgid &quot;Required OTP capability not compiled into fetchmail\n&quot;
+ msgstr &quot;Required OTP capability not compiled into fetchmail\n&quot;
+ 
+-#: imap.c:587 pop3.c:380
++#: imap.c:587 pop3.c:386
+ msgid &quot;Required NTLM capability not compiled into fetchmail\n&quot;
+ msgstr &quot;Required NTLM capability not compiled into fetchmail\n&quot;
+ 
+@@ -1716,7 +1716,7 @@
+ msgid &quot;%lu is unseen\n&quot;
+ msgstr &quot;%lu is unseen\n&quot;
+ 
+-#: imap.c:897 pop3.c:876
++#: imap.c:897 pop3.c:882
+ #, c-format
+ msgid &quot;%u is first unseen\n&quot;
+ msgstr &quot;%u is first unseen\n&quot;
+@@ -1917,7 +1917,7 @@
+ msgid &quot;Could not decode OTP challenge\n&quot;
+ msgstr &quot;Could not decode OTP challenge\n&quot;
+ 
+-#: opie.c:64 pop3.c:597
++#: opie.c:64 pop3.c:603
+ msgid &quot;Secret pass phrase: &quot;
+ msgstr &quot;Secret pass phrase: &quot;
+ 
+@@ -2211,7 +2211,7 @@
+ msgid &quot;      --showdots    show progress dots even in logfiles\n&quot;
+ msgstr &quot;      --showdots    show progress dots even in logfiles\n&quot;
+ 
+-#: pop3.c:350
++#: pop3.c:356
+ msgid &quot;&quot;
+ &quot;Warning: \&quot;Maillennium POP3/PROXY server\&quot; found, using RETR command instead &quot;
+ &quot;of TOP.\n&quot;
+@@ -2219,74 +2219,74 @@
+ &quot;Warning: \&quot;Maillennium POP3/PROXY server\&quot; found, using RETR command instead &quot;
+ &quot;of TOP.\n&quot;
+ 
+-#: pop3.c:449
++#: pop3.c:455
+ msgid &quot;TLS is mandatory for this session, but server refused CAPA command.\n&quot;
+ msgstr &quot;TLS is mandatory for this session, but server refused CAPA command.\n&quot;
+ 
+-#: pop3.c:450
++#: pop3.c:456
+ msgid &quot;The CAPA command is however necessary for TLS.\n&quot;
+ msgstr &quot;The CAPA command is however necessary for TLS.\n&quot;
+ 
+-#: pop3.c:525
++#: pop3.c:531
+ #, c-format
+ msgid &quot;%s: opportunistic upgrade to TLS failed, trying to continue.\n&quot;
+ msgstr &quot;%s: opportunistic upgrade to TLS failed, trying to continue.\n&quot;
+ 
+-#: pop3.c:633
++#: pop3.c:639
+ msgid &quot;We've run out of allowed authenticators and cannot continue.\n&quot;
+ msgstr &quot;We've run out of allowed authenticators and cannot continue.\n&quot;
+ 
+-#: pop3.c:647
++#: pop3.c:653
+ msgid &quot;Required APOP timestamp not found in greeting\n&quot;
+ msgstr &quot;Required APOP timestamp not found in greeting\n&quot;
+ 
+-#: pop3.c:656
++#: pop3.c:662
+ msgid &quot;Timestamp syntax error in greeting\n&quot;
+ msgstr &quot;Timestamp syntax error in greeting\n&quot;
+ 
+-#: pop3.c:672
++#: pop3.c:678
+ msgid &quot;Invalid APOP timestamp.\n&quot;
+ msgstr &quot;Invalid APOP timestamp.\n&quot;
+ 
+-#: pop3.c:696
++#: pop3.c:702
+ msgid &quot;Undefined protocol request in POP3_auth\n&quot;
+ msgstr &quot;Undefined protocol request in POP3_auth\n&quot;
+ 
+-#: pop3.c:717
++#: pop3.c:723
+ msgid &quot;lock busy!  Is another session active?\n&quot;
+ msgstr &quot;lock busy!  Is another session active?\n&quot;
+ 
+-#: pop3.c:796
++#: pop3.c:802
+ msgid &quot;Cannot handle UIDL response from upstream server.\n&quot;
+ msgstr &quot;Cannot handle UIDL response from upstream server.\n&quot;
+ 
+-#: pop3.c:819
++#: pop3.c:825
+ msgid &quot;Server responded with UID for wrong message.\n&quot;
+ msgstr &quot;Server responded with UID for wrong message.\n&quot;
+ 
+-#: pop3.c:846 pop3.c:1092
++#: pop3.c:852 pop3.c:1098
+ #, c-format
+ msgid &quot;id=%s (num=%d) was deleted, but is still present!\n&quot;
+ msgstr &quot;id=%s (num=%d) was deleted, but is still present!\n&quot;
+ 
+-#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
++#: pop3.c:861 pop3.c:873 pop3.c:1107 pop3.c:1114
+ #, c-format
+ msgid &quot;%u is unseen\n&quot;
+ msgstr &quot;%u is unseen\n&quot;
+ 
+-#: pop3.c:952
++#: pop3.c:958
+ msgid &quot;Messages inserted into list on server. Cannot handle this.\n&quot;
+ msgstr &quot;Messages inserted into list on server. Cannot handle this.\n&quot;
+ 
+-#: pop3.c:1044
++#: pop3.c:1050
+ msgid &quot;protocol error\n&quot;
+ msgstr &quot;protocol error\n&quot;
+ 
+-#: pop3.c:1060
++#: pop3.c:1066
+ msgid &quot;protocol error while fetching UIDLs\n&quot;
+ msgstr &quot;protocol error while fetching UIDLs\n&quot;
+ 
+-#: pop3.c:1430
++#: pop3.c:1436
+ msgid &quot;Option --folder is not supported with POP3\n&quot;
+ msgstr &quot;Option --folder is not supported with POP3\n&quot;
+ 
+@@ -2322,17 +2322,17 @@
+ msgid &quot;end of input&quot;
+ msgstr &quot;end of input&quot;
+ 
+-#: rcfile_y.y:419
++#: rcfile_y.y:420
+ #, c-format
+ msgid &quot;File %s must be a regular file.\n&quot;
+ msgstr &quot;File %s must be a regular file.\n&quot;
+ 
+-#: rcfile_y.y:429
++#: rcfile_y.y:430
+ #, c-format
+ msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
+ msgstr &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
+ 
+-#: rcfile_y.y:441
++#: rcfile_y.y:442
+ #, c-format
+ msgid &quot;File %s must be owned by you.\n&quot;
+ msgstr &quot;File %s must be owned by you.\n&quot;
+@@ -2762,113 +2762,113 @@
+ msgid &quot;connected.\n&quot;
+ msgstr &quot;connected.\n&quot;
+ 
+-#: socket.c:660
++#: socket.c:611
+ #, c-format
+ msgid &quot;Issuer Organization: %s\n&quot;
+ msgstr &quot;Issuer Organisation: %s\n&quot;
+ 
+-#: socket.c:662
++#: socket.c:613
+ msgid &quot;Warning: Issuer Organization Name too long (possibly truncated).\n&quot;
+ msgstr &quot;Warning: Issuer Organsation Name too long (possibly truncated).\n&quot;
+ 
+-#: socket.c:664
++#: socket.c:615
+ msgid &quot;Unknown Organization\n&quot;
+ msgstr &quot;Unknown Organisation\n&quot;
+ 
+-#: socket.c:666
++#: socket.c:617
+ #, c-format
+ msgid &quot;Issuer CommonName: %s\n&quot;
+ msgstr &quot;Issuer CommonName: %s\n&quot;
+ 
+-#: socket.c:668
++#: socket.c:619
+ msgid &quot;Warning: Issuer CommonName too long (possibly truncated).\n&quot;
+ msgstr &quot;Warning: Issuer CommonName too long (possibly truncated).\n&quot;
+ 
+-#: socket.c:670
++#: socket.c:621
+ msgid &quot;Unknown Issuer CommonName\n&quot;
+ msgstr &quot;Unknown Issuer CommonName\n&quot;
+ 
+-#: socket.c:674
++#: socket.c:625
+ #, c-format
+ msgid &quot;Server CommonName: %s\n&quot;
+ msgstr &quot;Server CommonName: %s\n&quot;
+ 
+-#: socket.c:678
++#: socket.c:629
+ msgid &quot;Bad certificate: Subject CommonName too long!\n&quot;
+ msgstr &quot;Bad certificate: Subject CommonName too long!\n&quot;
+ 
+-#: socket.c:724
++#: socket.c:675
+ #, c-format
+ msgid &quot;Server CommonName mismatch: %s != %s\n&quot;
+ msgstr &quot;Server CommonName mismatch: %s != %s\n&quot;
+ 
+-#: socket.c:730
++#: socket.c:681
+ msgid &quot;Server name not set, could not verify certificate!\n&quot;
+ msgstr &quot;Server name not set, could not verify certificate!\n&quot;
+ 
+-#: socket.c:735
++#: socket.c:686
+ msgid &quot;Unknown Server CommonName\n&quot;
+ msgstr &quot;Unknown Server CommonName\n&quot;
+ 
+-#: socket.c:737
++#: socket.c:688
+ msgid &quot;Server name not specified in certificate!\n&quot;
+ msgstr &quot;Server name not specified in certificate!\n&quot;
+ 
+-#: socket.c:749
++#: socket.c:700
+ msgid &quot;EVP_md5() failed!\n&quot;
+ msgstr &quot;EVP_md5() failed!\n&quot;
+ 
+-#: socket.c:753
++#: socket.c:704
+ msgid &quot;Out of memory!\n&quot;
+ msgstr &quot;Out of memory!\n&quot;
+ 
+-#: socket.c:761
++#: socket.c:712
+ msgid &quot;Digest text buffer too small!\n&quot;
+ msgstr &quot;Digest text buffer too small!\n&quot;
+ 
+-#: socket.c:767
++#: socket.c:718
+ #, c-format
+ msgid &quot;%s key fingerprint: %s\n&quot;
+ msgstr &quot;%s key fingerprint: %s\n&quot;
+ 
+-#: socket.c:771
++#: socket.c:722
+ #, c-format
+ msgid &quot;%s fingerprints match.\n&quot;
+ msgstr &quot;%s fingerprints match.\n&quot;
+ 
+-#: socket.c:773
++#: socket.c:724
+ #, c-format
+ msgid &quot;%s fingerprints do not match!\n&quot;
+ msgstr &quot;%s fingerprints do not match!\n&quot;
+ 
+-#: socket.c:782
++#: socket.c:733
+ #, c-format
+ msgid &quot;Server certificate verification error: %s\n&quot;
+ msgstr &quot;Server certificate verification error: %s\n&quot;
+ 
+-#: socket.c:788
++#: socket.c:739
+ #, c-format
+ msgid &quot;unknown issuer (first %d characters): %s\n&quot;
+ msgstr &quot;unknown issuer (first %d characters): %s\n&quot;
+ 
+-#: socket.c:875
++#: socket.c:826
+ msgid &quot;File descriptor out of range for SSL&quot;
+ msgstr &quot;File descriptor out of range for SSL&quot;
+ 
+-#: socket.c:891
++#: socket.c:842
+ #, c-format
+ msgid &quot;Invalid SSL protocol '%s' specified, using default (SSLv23).\n&quot;
+ msgstr &quot;Invalid SSL protocol '%s' specified, using default (SSLv23).\n&quot;
+ 
+-#: socket.c:964
++#: socket.c:916
+ msgid &quot;Certificate/fingerprint verification was somehow skipped!\n&quot;
+ msgstr &quot;Certificate/fingerprint verification was somehow skipped!\n&quot;
+ 
+-#: socket.c:1042
++#: socket.c:994
+ msgid &quot;Cygwin socket read retry\n&quot;
+ msgstr &quot;Cygwin socket read retry\n&quot;
+ 
+-#: socket.c:1045
++#: socket.c:997
+ msgid &quot;Cygwin socket read retry failed!\n&quot;
+ msgstr &quot;Cygwin socket read retry failed!\n&quot;
+ 
+@@ -2997,30 +2997,30 @@
+ msgid &quot;discarding new UID list\n&quot;
+ msgstr &quot;discarding new UID list\n&quot;
+ 
+-#: uid.c:616
++#: uid.c:617
+ msgid &quot;Deleting fetchids file.\n&quot;
+ msgstr &quot;Deleting fetchids file.\n&quot;
+ 
+-#: uid.c:618
++#: uid.c:620
+ #, c-format
+ msgid &quot;Error deleting %s: %s\n&quot;
+ msgstr &quot;Error deleting %s: %s\n&quot;
+ 
+-#: uid.c:624
++#: uid.c:626
+ msgid &quot;Writing fetchids file.\n&quot;
+ msgstr &quot;Writing fetchids file.\n&quot;
+ 
+-#: uid.c:643
++#: uid.c:645
+ #, c-format
+ msgid &quot;Error writing to fetchids file %s, old file left in place.\n&quot;
+ msgstr &quot;Error writing to fetchids file %s, old file left in place.\n&quot;
+ 
+-#: uid.c:647
++#: uid.c:649
+ #, c-format
+ msgid &quot;Cannot rename fetchids file %s to %s: %s\n&quot;
+ msgstr &quot;Cannot rename fetchids file %s to %s: %s\n&quot;
+ 
+-#: uid.c:651
++#: uid.c:653
+ #, c-format
+ msgid &quot;Cannot open fetchids file %s for writing: %s\n&quot;
+ msgstr &quot;Cannot open fetchids file %s for writing: %s\n&quot;
+
+Modified: branches/BRANCH_6-3/po/es.po
+===================================================================
+--- branches/BRANCH_6-3/po/es.po	2008-01-29 13:19:58 UTC (rev 5154)
++++ branches/BRANCH_6-3/po/es.po	2008-01-31 09:15:53 UTC (rev 5155)
+@@ -20,7 +20,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.3.4-rc1\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-06-27 11:18+0200\n&quot;
++&quot;POT-Creation-Date: 2008-01-31 10:14+0100\n&quot;
+ &quot;PO-Revision-Date: 2007-05-02 00:05+0200\n&quot;
+ &quot;Last-Translator: H&#195;&#169;ctor Garc&#195;&#173;a &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">hector at el-mundo.net</A>&gt;\n&quot;
+ &quot;Language-Team: Spanish &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">es at li.org</A>&gt;\n&quot;
+@@ -1765,12 +1765,12 @@
+ msgid &quot;will idle after poll\n&quot;
+ msgstr &quot;descansar&#195;&#161; despu&#195;&#169;s de consultar\n&quot;
+ 
+-#: imap.c:441 pop3.c:505
++#: imap.c:441 pop3.c:511
+ #, c-format
+ msgid &quot;%s: upgrade to TLS succeeded.\n&quot;
+ msgstr &quot;%s: la actualizaci&#195;&#179;n a TLS tuvo &#195;&#169;xito.\n&quot;
+ 
+-#: imap.c:450 pop3.c:514
++#: imap.c:450 pop3.c:520
+ #, c-format
+ msgid &quot;%s: upgrade to TLS failed.\n&quot;
+ msgstr &quot;%s: fall&#195;&#179; la actualizaci&#195;&#179;n a TLS.\n&quot;
+@@ -1784,7 +1784,7 @@
+ msgid &quot;Required OTP capability not compiled into fetchmail\n&quot;
+ msgstr &quot;La capacidad OTP requerida no fue compilada en fetchmail\n&quot;
+ 
+-#: imap.c:587 pop3.c:380
++#: imap.c:587 pop3.c:386
+ msgid &quot;Required NTLM capability not compiled into fetchmail\n&quot;
+ msgstr &quot;La capacidad NTLM requerida no fue compilada en fetchmail\n&quot;
+ 
+@@ -1839,7 +1839,7 @@
+ msgid &quot;%lu is unseen\n&quot;
+ msgstr &quot;%lu no se ha visto\n&quot;
+ 
+-#: imap.c:897 pop3.c:876
++#: imap.c:897 pop3.c:882
+ #, c-format
+ msgid &quot;%u is first unseen\n&quot;
+ msgstr &quot;%u es el primero que no fue visto\n&quot;
+@@ -2041,7 +2041,7 @@
+ msgid &quot;Could not decode OTP challenge\n&quot;
+ msgstr &quot;No fue posible decodificar el desaf&#195;&#173;o OTP\n&quot;
+ 
+-#: opie.c:64 pop3.c:597
++#: opie.c:64 pop3.c:603
+ msgid &quot;Secret pass phrase: &quot;
+ msgstr &quot;Frase de contrase&#195;&#177;a secreta: &quot;
+ 
+@@ -2370,7 +2370,7 @@
+ &quot;      --showdots    mostrar puntos de progreso incluso en los archivos de &quot;
+ &quot;registro\n&quot;
+ 
+-#: pop3.c:350
++#: pop3.c:356
+ msgid &quot;&quot;
+ &quot;Warning: \&quot;Maillennium POP3/PROXY server\&quot; found, using RETR command instead &quot;
+ &quot;of TOP.\n&quot;
+@@ -2378,79 +2378,79 @@
+ &quot;Aviso: se ha encontrado &#194;&#171;Maillennium POP3/PROXY server&#194;&#187;, se utilizar&#195;&#161; la &quot;
+ &quot;orden RETR en lugar de TOP.\n&quot;
+ 
+-#: pop3.c:449
++#: pop3.c:455
+ msgid &quot;TLS is mandatory for this session, but server refused CAPA command.\n&quot;
+ msgstr &quot;&quot;
+ &quot;Se debe utilizar TLS en esta sesi&#195;&#179;n pero el servidor rechaz&#195;&#179; la orden CAPA.\n&quot;
+ 
+-#: pop3.c:450
++#: pop3.c:456
+ msgid &quot;The CAPA command is however necessary for TLS.\n&quot;
+ msgstr &quot;La orden CAPA se necesita, sin embargo, para utilizar TLS.\n&quot;
+ 
+-#: pop3.c:525
++#: pop3.c:531
+ #, c-format
+ msgid &quot;%s: opportunistic upgrade to TLS failed, trying to continue.\n&quot;
+ msgstr &quot;&quot;
+ &quot;%s: fall&#195;&#179; la actualizaci&#195;&#179;n oportunista a TLS, se intentar&#195;&#161; continuar.\n&quot;
+ 
+-#: pop3.c:633
++#: pop3.c:639
+ msgid &quot;We've run out of allowed authenticators and cannot continue.\n&quot;
+ msgstr &quot;&quot;
+ &quot;No se pueden utilizar otros mecanismos de autenticaci&#195;&#179;n y no se puede &quot;
+ &quot;continuar.\n&quot;
+ 
+-#: pop3.c:647
++#: pop3.c:653
+ msgid &quot;Required APOP timestamp not found in greeting\n&quot;
+ msgstr &quot;Marca de tiempo APOP requerida no encontrada en el saludo\n&quot;
+ 
+-#: pop3.c:656
++#: pop3.c:662
+ msgid &quot;Timestamp syntax error in greeting\n&quot;
+ msgstr &quot;Error de sintaxis en la marca de tiempo en el saludo\n&quot;
+ 
+-#: pop3.c:672
++#: pop3.c:678
+ msgid &quot;Invalid APOP timestamp.\n&quot;
+ msgstr &quot;Marca de tiempo APOP inv&#195;&#161;lida.\n&quot;
+ 
+-#: pop3.c:696
++#: pop3.c:702
+ msgid &quot;Undefined protocol request in POP3_auth\n&quot;
+ msgstr &quot;Solicitud de protocolo indefinido en POP3_auth\n&quot;
+ 
+-#: pop3.c:717
++#: pop3.c:723
+ msgid &quot;lock busy!  Is another session active?\n&quot;
+ msgstr &quot;&#194;&#161;bloqueo ocupado! &#194;&#191;Hay otra sesi&#195;&#179;n activa?\n&quot;
+ 
+-#: pop3.c:796
++#: pop3.c:802
+ msgid &quot;Cannot handle UIDL response from upstream server.\n&quot;
+ msgstr &quot;No se puede manejar la respuesta UIDL proveniente del servidor.\n&quot;
+ 
+-#: pop3.c:819
++#: pop3.c:825
+ msgid &quot;Server responded with UID for wrong message.\n&quot;
+ msgstr &quot;El servidor devolvi&#195;&#179; el UID de un mensaje incorrecto.\n&quot;
+ 
+-#: pop3.c:846 pop3.c:1092
++#: pop3.c:852 pop3.c:1098
+ #, c-format
+ msgid &quot;id=%s (num=%d) was deleted, but is still present!\n&quot;
+ msgstr &quot;id=%s (num=%d) fue borrado, &#194;&#161;pero a&#195;&#186;n se encuentra presente!\n&quot;
+ 
+-#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
++#: pop3.c:861 pop3.c:873 pop3.c:1107 pop3.c:1114
+ #, c-format
+ msgid &quot;%u is unseen\n&quot;
+ msgstr &quot;%u no se ha visto\n&quot;
+ 
+-#: pop3.c:952
++#: pop3.c:958
+ msgid &quot;Messages inserted into list on server. Cannot handle this.\n&quot;
+ msgstr &quot;&quot;
+ &quot;Mensajes insertados en una lista en el servidor. No se puede manejar esto.\n&quot;
+ 
+-#: pop3.c:1044
++#: pop3.c:1050
+ msgid &quot;protocol error\n&quot;
+ msgstr &quot;error de protocolo\n&quot;
+ 
+-#: pop3.c:1060
++#: pop3.c:1066
+ msgid &quot;protocol error while fetching UIDLs\n&quot;
+ msgstr &quot;error de protocolo durante la recepci&#195;&#179;n de UIDLs\n&quot;
+ 
+-#: pop3.c:1430
++#: pop3.c:1436
+ msgid &quot;Option --folder is not supported with POP3\n&quot;
+ msgstr &quot;La opci&#195;&#179;n --folder no est&#195;&#161; soportada con POP3\n&quot;
+ 
+@@ -2486,17 +2486,17 @@
+ msgid &quot;end of input&quot;
+ msgstr &quot;fin de entradas&quot;
+ 
+-#: rcfile_y.y:419
++#: rcfile_y.y:420
+ #, c-format
+ msgid &quot;File %s must be a regular file.\n&quot;
+ msgstr &quot;El archivo %s debe ser de tipo normal.\n&quot;
+ 
+-#: rcfile_y.y:429
++#: rcfile_y.y:430
+ #, c-format
+ msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
+ msgstr &quot;El archivo %s no debe tener mas que los permisos -rwx--x--- (0710).\n&quot;
+ 
+-#: rcfile_y.y:441
++#: rcfile_y.y:442
+ #, c-format
+ msgid &quot;File %s must be owned by you.\n&quot;
+ msgstr &quot;Vd. debe ser el propietario del archivo &#194;&#171;%s&#194;&#187;.\n&quot;
+@@ -2928,121 +2928,121 @@
+ msgid &quot;connected.\n&quot;
+ msgstr &quot;conectado.\n&quot;
+ 
+-#: socket.c:660
++#: socket.c:611
+ #, c-format
+ msgid &quot;Issuer Organization: %s\n&quot;
+ msgstr &quot;Organizaci&#195;&#179;n emisora: %s\n&quot;
+ 
+-#: socket.c:662
++#: socket.c:613
+ msgid &quot;Warning: Issuer Organization Name too long (possibly truncated).\n&quot;
+ msgstr &quot;&quot;
+ &quot;Aviso: el Nombre de la Organizaci&#195;&#179;n emisora es muy largo (posiblemente &quot;
+ &quot;truncado).\n&quot;
+ 
+-#: socket.c:664
++#: socket.c:615
+ msgid &quot;Unknown Organization\n&quot;
+ msgstr &quot;Organizaci&#195;&#179;n Desconocida\n&quot;
+ 
+-#: socket.c:666
++#: socket.c:617
+ #, c-format
+ msgid &quot;Issuer CommonName: %s\n&quot;
+ msgstr &quot;&#194;&#171;CommonName&#194;&#187; del emisor: %s\n&quot;
+ 
+-#: socket.c:668
++#: socket.c:619
+ msgid &quot;Warning: Issuer CommonName too long (possibly truncated).\n&quot;
+ msgstr &quot;&quot;
+ &quot;Aviso: el &#194;&#171;CommonName&#194;&#187; del emisor es muy largo (posiblemente truncado).\n&quot;
+ 
+-#: socket.c:670
++#: socket.c:621
+ msgid &quot;Unknown Issuer CommonName\n&quot;
+ msgstr &quot;&#194;&#171;CommonName&#194;&#187; del emisor desconocido\n&quot;
+ 
+-#: socket.c:674
++#: socket.c:625
+ #, c-format
+ msgid &quot;Server CommonName: %s\n&quot;
+ msgstr &quot;&#194;&#171;CommonName&#194;&#187; del servidor: %s\n&quot;
+ 
+-#: socket.c:678
++#: socket.c:629
+ msgid &quot;Bad certificate: Subject CommonName too long!\n&quot;
+ msgstr &quot;Certificado inv&#195;&#161;lido: el &#194;&#171;CommonName&#194;&#187; del sujeto es muy largo!\n&quot;
+ 
+-#: socket.c:724
++#: socket.c:675
+ #, c-format
+ msgid &quot;Server CommonName mismatch: %s != %s\n&quot;
+ msgstr &quot;El &#194;&#171;CommonName&#194;&#187; del servidor no coincide: %s != %s\n&quot;
+ 
+-#: socket.c:730
++#: socket.c:681
+ msgid &quot;Server name not set, could not verify certificate!\n&quot;
+ msgstr &quot;&quot;
+ &quot;No se configur&#195;&#179; el nombre de servidor, &#194;&#161;no fue posible verificar el &quot;
+ &quot;certificado!\n&quot;
+ 
+-#: socket.c:735
++#: socket.c:686
+ msgid &quot;Unknown Server CommonName\n&quot;
+ msgstr &quot;&#194;&#171;CommonName&#194;&#187; del servidor desconocido\n&quot;
+ 
+-#: socket.c:737
++#: socket.c:688
+ msgid &quot;Server name not specified in certificate!\n&quot;
+ msgstr &quot;&#194;&#161;No se especifica el nombre del servidor en el certificado!\n&quot;
+ 
+-#: socket.c:749
++#: socket.c:700
+ msgid &quot;EVP_md5() failed!\n&quot;
+ msgstr &quot;EVP_md5() fall&#195;&#179;\n&quot;
+ 
+-#: socket.c:753
++#: socket.c:704
+ msgid &quot;Out of memory!\n&quot;
+ msgstr &quot;&#194;&#161;No hay memoria!\n&quot;
+ 
+-#: socket.c:761
++#: socket.c:712
+ msgid &quot;Digest text buffer too small!\n&quot;
+ msgstr &quot;&#194;&#161;El espacio para el resumen de texto es muy chico!\n&quot;
+ 
+-#: socket.c:767
++#: socket.c:718
+ #, c-format
+ msgid &quot;%s key fingerprint: %s\n&quot;
+ msgstr &quot;Huella digital de la clave %s: %s\n&quot;
+ 
+-#: socket.c:771
++#: socket.c:722
+ #, c-format
+ msgid &quot;%s fingerprints match.\n&quot;
+ msgstr &quot;Las huellas digitales de %s coinciden.\n&quot;
+ 
+-#: socket.c:773
++#: socket.c:724
+ #, c-format
+ msgid &quot;%s fingerprints do not match!\n&quot;
+ msgstr &quot;&#194;&#161;Las huellas digitales de %s no coinciden!\n&quot;
+ 
+-#: socket.c:782
++#: socket.c:733
+ #, c-format
+ msgid &quot;Server certificate verification error: %s\n&quot;
+ msgstr &quot;Fall&#195;&#179; la verificaci&#195;&#179;n del certificado del servidor: %s\n&quot;
+ 
+-#: socket.c:788
++#: socket.c:739
+ #, c-format
+ msgid &quot;unknown issuer (first %d characters): %s\n&quot;
+ msgstr &quot;Emisor desconocido (primeros %d caracteres): %s\n&quot;
+ 
+-#: socket.c:875
++#: socket.c:826
+ msgid &quot;File descriptor out of range for SSL&quot;
+ msgstr &quot;Descriptor de archivo fuera de rango para SSL&quot;
+ 
+-#: socket.c:891
++#: socket.c:842
+ #, c-format
+ msgid &quot;Invalid SSL protocol '%s' specified, using default (SSLv23).\n&quot;
+ msgstr &quot;&quot;
+ &quot;El protocolo SSL &#194;&#171;%s&#194;&#187; especificado es inv&#195;&#161;lido, usando el valor por omisi&#195;&#179;n &quot;
+ &quot;(SSLv23).\n&quot;
+ 
+-#: socket.c:964
++#: socket.c:916
+ msgid &quot;Certificate/fingerprint verification was somehow skipped!\n&quot;
+ msgstr &quot;&quot;
+ &quot;&#194;&#161;La verificaci&#195;&#179;n de certificado/huella digital fue de alg&#195;&#186;n modo saltada!\n&quot;
+ 
+-#: socket.c:1042
++#: socket.c:994
+ msgid &quot;Cygwin socket read retry\n&quot;
+ msgstr &quot;Reintento de lectura del socket cygwin\n&quot;
+ 
+-#: socket.c:1045
++#: socket.c:997
+ msgid &quot;Cygwin socket read retry failed!\n&quot;
+ msgstr &quot;&#194;&#161;Fall&#195;&#179; el reintento de lectura del socket cygwin\n&quot;
+ 
+@@ -3175,32 +3175,32 @@
+ msgid &quot;discarding new UID list\n&quot;
+ msgstr &quot;descartando la nueva lista de UID\n&quot;
+ 
+-#: uid.c:616
++#: uid.c:617
+ msgid &quot;Deleting fetchids file.\n&quot;
+ msgstr &quot;Borrando el archivo fetchids.\n&quot;
+ 
+-#: uid.c:618
++#: uid.c:620
+ #, c-format
+ msgid &quot;Error deleting %s: %s\n&quot;
+ msgstr &quot;Error borrando %s: %s\n&quot;
+ 
+-#: uid.c:624
++#: uid.c:626
+ msgid &quot;Writing fetchids file.\n&quot;
+ msgstr &quot;Escribiendo el archivo fetchids.\n&quot;
+ 
+-#: uid.c:643
++#: uid.c:645
+ #, c-format
+ msgid &quot;Error writing to fetchids file %s, old file left in place.\n&quot;
+ msgstr &quot;&quot;
+ &quot;Error escribiendo al archivo fetchids %s. Se dej&#195;&#179; el archivo original &quot;
+ &quot;intacto.\n&quot;
+ 
+-#: uid.c:647
++#: uid.c:649
+ #, c-format
+ msgid &quot;Cannot rename fetchids file %s to %s: %s\n&quot;
+ msgstr &quot;No se puede renombrar el archivo fetchids %s a %s: %s\n&quot;
+ 
+-#: uid.c:651
++#: uid.c:653
+ #, c-format
+ msgid &quot;Cannot open fetchids file %s for writing: %s\n&quot;
+ msgstr &quot;No se puede abrir el archivo fetchids %s para escritura: %s\n&quot;
+
+Modified: branches/BRANCH_6-3/po/fr.po
+===================================================================
+--- branches/BRANCH_6-3/po/fr.po	2008-01-29 13:19:58 UTC (rev 5154)
++++ branches/BRANCH_6-3/po/fr.po	2008-01-31 09:15:53 UTC (rev 5155)
+@@ -15,7 +15,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.2.9-rc9\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-06-27 11:18+0200\n&quot;
++&quot;POT-Creation-Date: 2008-01-31 10:14+0100\n&quot;
+ &quot;PO-Revision-Date: 2005-12-18 11:50+0100\n&quot;
+ &quot;Last-Translator: Matthias Andree &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">matthias.andree at gmx.de</A>&gt;\n&quot;
+ &quot;Language-Team: French &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">traduc at traduc.org</A>&gt;\n&quot;
+@@ -1726,12 +1726,12 @@
+ msgid &quot;will idle after poll\n&quot;
+ msgstr &quot;attendra apr&#195;&#168;s la r&#195;&#169;ception\n&quot;
+ 
+-#: imap.c:441 pop3.c:505
++#: imap.c:441 pop3.c:511
+ #, c-format
+ msgid &quot;%s: upgrade to TLS succeeded.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: imap.c:450 pop3.c:514
++#: imap.c:450 pop3.c:520
+ #, c-format
+ msgid &quot;%s: upgrade to TLS failed.\n&quot;
+ msgstr &quot;&quot;
+@@ -1745,7 +1745,7 @@
+ msgid &quot;Required OTP capability not compiled into fetchmail\n&quot;
+ msgstr &quot;La fonctionnalit&#195;&#169; OTP requise n'est pas support&#195;&#169;e par fetchmail\n&quot;
+ 
+-#: imap.c:587 pop3.c:380
++#: imap.c:587 pop3.c:386
+ msgid &quot;Required NTLM capability not compiled into fetchmail\n&quot;
+ msgstr &quot;La fonctionnalit&#195;&#169; NTLM requise n'est pas support&#195;&#169;e par fetchmail.\n&quot;
+ 
+@@ -1801,7 +1801,7 @@
+ msgid &quot;%lu is unseen\n&quot;
+ msgstr &quot;%lu n'est pas vu\n&quot;
+ 
+-#: imap.c:897 pop3.c:876
++#: imap.c:897 pop3.c:882
+ #, c-format
+ msgid &quot;%u is first unseen\n&quot;
+ msgstr &quot;%u est le premier a n'avoir pas &#195;&#169;t&#195;&#169; vu\n&quot;
+@@ -2004,7 +2004,7 @@
+ msgid &quot;Could not decode OTP challenge\n&quot;
+ msgstr &quot;Impossible de d&#195;&#169;coder le challenge OTP\n&quot;
+ 
+-#: opie.c:64 pop3.c:597
++#: opie.c:64 pop3.c:603
+ msgid &quot;Secret pass phrase: &quot;
+ msgstr &quot;Phrase de passe secr&#195;&#168;te : &quot;
+ 
+@@ -2322,7 +2322,7 @@
+ msgstr &quot;&quot;
+ &quot;      --showdots    affiche des points de progression, m&#195;&#170;me dans le journal\n&quot;
+ 
+-#: pop3.c:350
++#: pop3.c:356
+ msgid &quot;&quot;
+ &quot;Warning: \&quot;Maillennium POP3/PROXY server\&quot; found, using RETR command instead &quot;
+ &quot;of TOP.\n&quot;
+@@ -2330,74 +2330,74 @@
+ &quot;Avertissement: trouv&#195;&#169; &#194;&#171;Maillennium POP3/PROXY server&#194;&#187;, la commande RETR est &quot;
+ &quot;utilis&#195;&#169; au lieu de TOP.\n&quot;
+ 
+-#: pop3.c:449
++#: pop3.c:455
+ msgid &quot;TLS is mandatory for this session, but server refused CAPA command.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:450
++#: pop3.c:456
+ msgid &quot;The CAPA command is however necessary for TLS.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:525
++#: pop3.c:531
+ #, c-format
+ msgid &quot;%s: opportunistic upgrade to TLS failed, trying to continue.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:633
++#: pop3.c:639
+ msgid &quot;We've run out of allowed authenticators and cannot continue.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:647
++#: pop3.c:653
+ msgid &quot;Required APOP timestamp not found in greeting\n&quot;
+ msgstr &quot;L'horodatage APOP requis est absent du message d'invitation\n&quot;
+ 
+-#: pop3.c:656
++#: pop3.c:662
+ msgid &quot;Timestamp syntax error in greeting\n&quot;
+ msgstr &quot;Erreur de syntaxe dans l'horodatage du message d'invitation\n&quot;
+ 
+-#: pop3.c:672
++#: pop3.c:678
+ msgid &quot;Invalid APOP timestamp.\n&quot;
+ msgstr &quot;L'horodatage APOP est invalide.\n&quot;
+ 
+-#: pop3.c:696
++#: pop3.c:702
+ msgid &quot;Undefined protocol request in POP3_auth\n&quot;
+ msgstr &quot;Requ&#195;&#170;te de protocole ind&#195;&#169;finie dans POP3_auth\n&quot;
+ 
+-#: pop3.c:717
++#: pop3.c:723
+ msgid &quot;lock busy!  Is another session active?\n&quot;
+ msgstr &quot;Fichier verrou en service. Y'a-t-il une autre session active ?\n&quot;
+ 
+-#: pop3.c:796
++#: pop3.c:802
+ msgid &quot;Cannot handle UIDL response from upstream server.\n&quot;
+ msgstr &quot;Ne peux pas manier la r&#195;&#169;ponse UIDL du serveur.\n&quot;
+ 
+-#: pop3.c:819
++#: pop3.c:825
+ msgid &quot;Server responded with UID for wrong message.\n&quot;
+ msgstr &quot;Serveur r&#195;&#169;pondait avec UID d'un faux message.\n&quot;
+ 
+-#: pop3.c:846 pop3.c:1092
++#: pop3.c:852 pop3.c:1098
+ #, c-format
+ msgid &quot;id=%s (num=%d) was deleted, but is still present!\n&quot;
+ msgstr &quot;id=%s (num=%d) a &#195;&#169;t&#195;&#169; effac&#195;&#169;, mais est toujours pr&#195;&#169;sent !\n&quot;
+ 
+-#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
++#: pop3.c:861 pop3.c:873 pop3.c:1107 pop3.c:1114
+ #, c-format
+ msgid &quot;%u is unseen\n&quot;
+ msgstr &quot;%u n'est pas vu\n&quot;
+ 
+-#: pop3.c:952
++#: pop3.c:958
+ msgid &quot;Messages inserted into list on server. Cannot handle this.\n&quot;
+ msgstr &quot;Messages ins&#195;&#169;r&#195;&#169;s dans une liste du serveur. Impossible de g&#195;&#169;rer &#195;&#167;a.\n&quot;
+ 
+-#: pop3.c:1044
++#: pop3.c:1050
+ msgid &quot;protocol error\n&quot;
+ msgstr &quot;erreur de protocole\n&quot;
+ 
+-#: pop3.c:1060
++#: pop3.c:1066
+ msgid &quot;protocol error while fetching UIDLs\n&quot;
+ msgstr &quot;erreur de protocole durant la r&#195;&#169;ception des UIDLs\n&quot;
+ 
+-#: pop3.c:1430
++#: pop3.c:1436
+ msgid &quot;Option --folder is not supported with POP3\n&quot;
+ msgstr &quot;L'option --folder n'est pas support&#195;&#169;e avec POP3\n&quot;
+ 
+@@ -2434,17 +2434,17 @@
+ msgid &quot;end of input&quot;
+ msgstr &quot;fin de l'entr&#195;&#169;e&quot;
+ 
+-#: rcfile_y.y:419
++#: rcfile_y.y:420
+ #, c-format
+ msgid &quot;File %s must be a regular file.\n&quot;
+ msgstr &quot;Le fichier %s doit etre un fichier normal.\n&quot;
+ 
+-#: rcfile_y.y:429
++#: rcfile_y.y:430
+ #, c-format
+ msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
+ msgstr &quot;Le fichier %s doit avoir au moins les permissions -rwx--x--- (0710)\n&quot;
+ 
+-#: rcfile_y.y:441
++#: rcfile_y.y:442
+ #, c-format
+ msgid &quot;File %s must be owned by you.\n&quot;
+ msgstr &quot;Le fichier %s doit vous appartenir.\n&quot;
+@@ -2876,119 +2876,119 @@
+ msgid &quot;connected.\n&quot;
+ msgstr &quot;connect&#195;&#169;.\n&quot;
+ 
+-#: socket.c:660
++#: socket.c:611
+ #, c-format
+ msgid &quot;Issuer Organization: %s\n&quot;
+ msgstr &quot;Organisation de l'exp&#195;&#169;diteur: %s\n&quot;
+ 
+-#: socket.c:662
++#: socket.c:613
+ msgid &quot;Warning: Issuer Organization Name too long (possibly truncated).\n&quot;
+ msgstr &quot;&quot;
+ &quot;Avertissement: le nom de l'organisation de l'exp&#195;&#169;diteur est tros long (et &quot;
+ &quot;peut etre tronqu&#195;&#169;).\n&quot;
+ 
+-#: socket.c:664
++#: socket.c:615
+ msgid &quot;Unknown Organization\n&quot;
+ msgstr &quot;Organisation inconnue\n&quot;
+ 
+-#: socket.c:666
++#: socket.c:617
+ #, c-format
+ msgid &quot;Issuer CommonName: %s\n&quot;
+ msgstr &quot;Nom commun de l'&#195;&#169;metteur : %s\n&quot;
+ 
+-#: socket.c:668
++#: socket.c:619
+ msgid &quot;Warning: Issuer CommonName too long (possibly truncated).\n&quot;
+ msgstr &quot;&quot;
+ &quot;Avertissement: le nom de l'exp&#195;&#169;diteur est tros long (et peut etre tronqu&#195;&#169;).\n&quot;
+ 
+-#: socket.c:670
++#: socket.c:621
+ msgid &quot;Unknown Issuer CommonName\n&quot;
+ msgstr &quot;Nom commun de l'exp&#195;&#169;diteur inconnu\n&quot;
+ 
+-#: socket.c:674
++#: socket.c:625
+ #, c-format
+ msgid &quot;Server CommonName: %s\n&quot;
+ msgstr &quot;Nom commun du serveur: %s\n&quot;
+ 
+-#: socket.c:678
++#: socket.c:629
+ msgid &quot;Bad certificate: Subject CommonName too long!\n&quot;
+ msgstr &quot;Certificat erroni: Sujet nom commun trop long!\n&quot;
+ 
+-#: socket.c:724
++#: socket.c:675
+ #, c-format
+ msgid &quot;Server CommonName mismatch: %s != %s\n&quot;
+ msgstr &quot;Pas de concordance du nom commun du serveur: %s != %s\n&quot;
+ 
+-#: socket.c:730
++#: socket.c:681
+ msgid &quot;Server name not set, could not verify certificate!\n&quot;
+ msgstr &quot;&quot;
+ &quot;Le nom du serveur n'est pas sp&#195;&#169;cifi&#195;&#169;, impossible de v&#195;&#169;rifier le certificat!\n&quot;
+ 
+-#: socket.c:735
++#: socket.c:686
+ msgid &quot;Unknown Server CommonName\n&quot;
+ msgstr &quot;Nom commun du serveur inconnu\n&quot;
+ 
+-#: socket.c:737
++#: socket.c:688
+ msgid &quot;Server name not specified in certificate!\n&quot;
+ msgstr &quot;Le nom du serveur n'est pas pr&#195;&#169;sent dans le certificat!\n&quot;
+ 
+-#: socket.c:749
++#: socket.c:700
+ msgid &quot;EVP_md5() failed!\n&quot;
+ msgstr &quot;&#195;&#169;chec de EVP_md5()\n&quot;
+ 
+-#: socket.c:753
++#: socket.c:704
+ msgid &quot;Out of memory!\n&quot;
+ msgstr &quot;Plus de m&#195;&#169;moire!\n&quot;
+ 
+-#: socket.c:761
++#: socket.c:712
+ msgid &quot;Digest text buffer too small!\n&quot;
+ msgstr &quot;Le tampon r&#195;&#169;sum&#195;&#169; est trop court!\n&quot;
+ 
+-#: socket.c:767
++#: socket.c:718
+ #, c-format
+ msgid &quot;%s key fingerprint: %s\n&quot;
+ msgstr &quot;signature de la cl&#195;&#169; %s&#194;&#160;: %s\n&quot;
+ 
+-#: socket.c:771
++#: socket.c:722
+ #, c-format
+ msgid &quot;%s fingerprints match.\n&quot;
+ msgstr &quot;La signature %s correspond.\n&quot;
+ 
+-#: socket.c:773
++#: socket.c:724
+ #, c-format
+ msgid &quot;%s fingerprints do not match!\n&quot;
+ msgstr &quot;La signature %s ne correspond pas!\n&quot;
+ 
+-#: socket.c:782
++#: socket.c:733
+ #, c-format
+ msgid &quot;Server certificate verification error: %s\n&quot;
+ msgstr &quot;Erreur de v&#195;&#169;rification du certificat du serveur : %s\n&quot;
+ 
+-#: socket.c:788
++#: socket.c:739
+ #, c-format
+ msgid &quot;unknown issuer (first %d characters): %s\n&quot;
+ msgstr &quot;exp&#195;&#169;diteur inconnu (%d premiers caract&#195;&#168;res) : %s\n&quot;
+ 
+-#: socket.c:875
++#: socket.c:826
+ msgid &quot;File descriptor out of range for SSL&quot;
+ msgstr &quot;Descripteur de fichier inaccessible pour SSL&quot;
+ 
+-#: socket.c:891
++#: socket.c:842
+ #, c-format
+ msgid &quot;Invalid SSL protocol '%s' specified, using default (SSLv23).\n&quot;
+ msgstr &quot;&quot;
+ &quot;Le protocole SSL &#194;&#171;%s&#194;&#187; sp&#195;&#169;cifi&#195;&#169; est invalide, le protocole par d&#195;&#169;faut &quot;
+ &quot;(SSLv23) est utilis&#195;&#169;.\n&quot;
+ 
+-#: socket.c:964
++#: socket.c:916
+ msgid &quot;Certificate/fingerprint verification was somehow skipped!\n&quot;
+ msgstr &quot;La v&#195;&#169;rification du certificat ou de la signature n'a pas &#195;&#169;t&#195;&#169; faite!\n&quot;
+ 
+-#: socket.c:1042
++#: socket.c:994
+ msgid &quot;Cygwin socket read retry\n&quot;
+ msgstr &quot;Nouvel essai de lecture sur la socket Cygwin\n&quot;
+ 
+-#: socket.c:1045
++#: socket.c:997
+ msgid &quot;Cygwin socket read retry failed!\n&quot;
+ msgstr &quot;Le nouvel essai de lecture sur la socket Cygwin a &#195;&#169;chou&#195;&#169;!\n&quot;
+ 
+@@ -3117,31 +3117,31 @@
+ msgid &quot;discarding new UID list\n&quot;
+ msgstr &quot;&#195;&#169;limination la nouvelle liste d'UIDs\n&quot;
+ 
+-#: uid.c:616
++#: uid.c:617
+ msgid &quot;Deleting fetchids file.\n&quot;
+ msgstr &quot;Effacement du fichier fetchids.\n&quot;
+ 
+-#: uid.c:618
++#: uid.c:620
+ #, c-format
+ msgid &quot;Error deleting %s: %s\n&quot;
+ msgstr &quot;Erreur d'effacement de %s : %s\n&quot;
+ 
+-#: uid.c:624
++#: uid.c:626
+ msgid &quot;Writing fetchids file.\n&quot;
+ msgstr &quot;Ecriture du fichier fetchids.\n&quot;
+ 
+-#: uid.c:643
++#: uid.c:645
+ #, c-format
+ msgid &quot;Error writing to fetchids file %s, old file left in place.\n&quot;
+ msgstr &quot;&quot;
+ &quot;Erreur d'&#195;&#169;criture du fichier fetchids %s, vieux fichier laiss&#195;&#169;en place.\n&quot;
+ 
+-#: uid.c:647
++#: uid.c:649
+ #, c-format
+ msgid &quot;Cannot rename fetchids file %s to %s: %s\n&quot;
+ msgstr &quot;Impossible de renommer %s &#195;&#160; %s : %s\n&quot;
+ 
+-#: uid.c:651
++#: uid.c:653
+ #, c-format
+ msgid &quot;Cannot open fetchids file %s for writing: %s\n&quot;
+ msgstr &quot;Impossible d'ouvrir le fichier fetchids %s pour l'&#195;&#169;criture : %s\n&quot;
+
+Modified: branches/BRANCH_6-3/po/ja.po
+===================================================================
+--- branches/BRANCH_6-3/po/ja.po	2008-01-29 13:19:58 UTC (rev 5154)
++++ branches/BRANCH_6-3/po/ja.po	2008-01-31 09:15:53 UTC (rev 5155)
+@@ -8,7 +8,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.3.8\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-06-27 11:18+0200\n&quot;
++&quot;POT-Creation-Date: 2008-01-31 10:14+0100\n&quot;
+ &quot;PO-Revision-Date: 2007-04-28 20:54+0900\n&quot;
+ &quot;Last-Translator: Takeshi Hamasaki &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">hma at syd.odn.ne.jp</A>&gt;\n&quot;
+ &quot;Language-Team: Japanese &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">translation-team-ja at lists.sourceforge.net</A>&gt;\n&quot;
+@@ -1682,12 +1682,12 @@
+ msgid &quot;will idle after poll\n&quot;
+ msgstr &quot;&#230;&#142;&#165;&#231;&#182;&#154;&#227;&#129;&#174;&#229;&#190;&#140;&#227;&#128;&#129;&#228;&#188;&#145;&#230;&#173;&#162;&#227;&#129;&#151;&#227;&#129;&#190;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+ 
+-#: imap.c:441 pop3.c:505
++#: imap.c:441 pop3.c:511
+ #, c-format
+ msgid &quot;%s: upgrade to TLS succeeded.\n&quot;
+ msgstr &quot;%s: TLS &#227;&#129;&#184;&#227;&#129;&#174;&#227;&#130;&#162;&#227;&#131;&#131;&#227;&#131;&#151;&#227;&#130;&#176;&#227;&#131;&#172;&#227;&#131;&#188;&#227;&#131;&#137;&#227;&#129;&#171;&#230;&#136;&#144;&#229;&#138;&#159;&#227;&#128;&#130;\n&quot;
+ 
+-#: imap.c:450 pop3.c:514
++#: imap.c:450 pop3.c:520
+ #, c-format
+ msgid &quot;%s: upgrade to TLS failed.\n&quot;
+ msgstr &quot;%s: TLS &#227;&#129;&#184;&#227;&#129;&#174;&#227;&#130;&#162;&#227;&#131;&#131;&#227;&#131;&#151;&#227;&#130;&#176;&#227;&#131;&#172;&#227;&#131;&#188;&#227;&#131;&#137;&#227;&#129;&#171;&#229;&#164;&#177;&#230;&#149;&#151;&#227;&#128;&#130;\n&quot;
+@@ -1702,7 +1702,7 @@
+ msgstr &quot;&quot;
+ &quot;OTP &#227;&#129;&#140;&#232;&#166;&#129;&#230;&#177;&#130;&#227;&#129;&#149;&#227;&#130;&#140;&#227;&#129;&#190;&#227;&#129;&#151;&#227;&#129;&#159;&#227;&#129;&#140;&#227;&#128;&#129;fetchmail &#227;&#129;&#140; OTP &#229;&#175;&#190;&#229;&#191;&#156;&#227;&#129;&#167;&#227;&#130;&#179;&#227;&#131;&#179;&#227;&#131;&#145;&#227;&#130;&#164;&#227;&#131;&#171;&#227;&#129;&#149;&#227;&#130;&#140;&#227;&#129;&#166;&#227;&#129;&#132;&#227;&#129;&#190;&#227;&#129;&#155;&#227;&#130;&#147;&#227;&#128;&#130;\n&quot;
+ 
+-#: imap.c:587 pop3.c:380
++#: imap.c:587 pop3.c:386
+ msgid &quot;Required NTLM capability not compiled into fetchmail\n&quot;
+ msgstr &quot;&#232;&#166;&#129;&#230;&#177;&#130;&#227;&#129;&#149;&#227;&#130;&#140;&#227;&#129;&#159; NTLM &#229;&#135;&#166;&#231;&#144;&#134;&#232;&#131;&#189;&#229;&#138;&#155;&#227;&#129;&#175; fetchmail &#227;&#129;&#171;&#231;&#181;&#132;&#227;&#129;&#191;&#232;&#190;&#188;&#227;&#129;&#190;&#227;&#130;&#140;&#227;&#129;&#166;&#227;&#129;&#132;&#227;&#129;&#190;&#227;&#129;&#155;&#227;&#130;&#147;&#227;&#128;&#130;\n&quot;
+ 
+@@ -1754,7 +1754,7 @@
+ msgid &quot;%lu is unseen\n&quot;
+ msgstr &quot;%lu &#227;&#129;&#175;&#230;&#156;&#170;&#232;&#170;&#173;&#227;&#129;&#167;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+ 
+-#: imap.c:897 pop3.c:876
++#: imap.c:897 pop3.c:882
+ #, c-format
+ msgid &quot;%u is first unseen\n&quot;
+ msgstr &quot;%u &#227;&#129;&#175;&#230;&#156;&#128;&#229;&#136;&#157;&#227;&#129;&#174;&#230;&#156;&#170;&#232;&#170;&#173;&#227;&#131;&#161;&#227;&#131;&#131;&#227;&#130;&#187;&#227;&#131;&#188;&#227;&#130;&#184;&#227;&#129;&#167;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+@@ -1959,7 +1959,7 @@
+ msgid &quot;Could not decode OTP challenge\n&quot;
+ msgstr &quot;OTP challenge &#227;&#129;&#174;&#227;&#131;&#135;&#227;&#130;&#179;&#227;&#131;&#188;&#227;&#131;&#137;&#227;&#129;&#140;&#229;&#135;&#186;&#230;&#157;&#165;&#227;&#129;&#190;&#227;&#129;&#155;&#227;&#130;&#147;&#227;&#129;&#167;&#227;&#129;&#151;&#227;&#129;&#159;&#227;&#128;&#130;\n&quot;
+ 
+-#: opie.c:64 pop3.c:597
++#: opie.c:64 pop3.c:603
+ msgid &quot;Secret pass phrase: &quot;
+ msgstr &quot;Secret pass phrase: &quot;
+ 
+@@ -2268,7 +2268,7 @@
+ msgid &quot;      --showdots    show progress dots even in logfiles\n&quot;
+ msgstr &quot;      --showdots    &#227;&#131;&#173;&#227;&#130;&#176;&#227;&#131;&#149;&#227;&#130;&#161;&#227;&#130;&#164;&#227;&#131;&#171;&#227;&#129;&#171;&#227;&#130;&#130;&#233;&#128;&#178;&#232;&#161;&#140;&#231;&#138;&#182;&#230;&#179;&#129;&#227;&#130;&#146;&#231;&#164;&#186;&#227;&#129;&#153; . &#227;&#130;&#146;&#230;&#155;&#184;&#227;&#129;&#141;&#232;&#190;&#188;&#227;&#129;&#191;&#227;&#129;&#190;&#227;&#129;&#153;\n&quot;
+ 
+-#: pop3.c:350
++#: pop3.c:356
+ msgid &quot;&quot;
+ &quot;Warning: \&quot;Maillennium POP3/PROXY server\&quot; found, using RETR command instead &quot;
+ &quot;of TOP.\n&quot;
+@@ -2276,78 +2276,78 @@
+ &quot;&#232;&#173;&#166;&#229;&#145;&#138;: Maillennium POP3/&#227;&#131;&#151;&#227;&#131;&#173;&#227;&#130;&#175;&#227;&#130;&#183;&#227;&#130;&#181;&#227;&#131;&#188;&#227;&#131;&#144;&#227;&#129;&#167;&#227;&#129;&#153;&#227;&#128;&#130;TOP &#227;&#129;&#174;&#228;&#187;&#163;&#227;&#130;&#143;&#227;&#130;&#138;&#227;&#129;&#171; RETR &#227;&#130;&#179;&#227;&#131;&#158;&#227;&#131;&#179;&#227;&#131;&#137;&#227;&#130;&#146;&#228;&#189;&#191;&#231;&#148;&#168;&quot;
+ &quot;&#227;&#129;&#151;&#227;&#129;&#190;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+ 
+-#: pop3.c:449
++#: pop3.c:455
+ msgid &quot;TLS is mandatory for this session, but server refused CAPA command.\n&quot;
+ msgstr &quot;&quot;
+ &quot;&#227;&#129;&#147;&#227;&#129;&#174;&#227;&#130;&#187;&#227;&#131;&#131;&#227;&#130;&#183;&#227;&#131;&#167;&#227;&#131;&#179;&#227;&#129;&#171;&#227;&#129;&#175; TLS &#227;&#129;&#140;&#229;&#191;&#133;&#232;&#166;&#129;&#227;&#129;&#167;&#227;&#129;&#153;&#227;&#129;&#140;&#227;&#128;&#129;&#227;&#130;&#181;&#227;&#131;&#188;&#227;&#131;&#144;&#227;&#129;&#140; CAPA &#227;&#130;&#179;&#227;&#131;&#158;&#227;&#131;&#179;&#227;&#131;&#137;&#227;&#130;&#146;&#230;&#139;&#146;&#229;&#144;&#166;&#227;&#129;&#151;&#227;&#129;&#190;&#227;&#129;&#151;&#227;&#129;&#159;&#227;&#128;&#130;\n&quot;
+ 
+-#: pop3.c:450
++#: pop3.c:456
+ msgid &quot;The CAPA command is however necessary for TLS.\n&quot;
+ msgstr &quot;CAPA &#227;&#130;&#179;&#227;&#131;&#158;&#227;&#131;&#179;&#227;&#131;&#137;&#227;&#129;&#175; TLS &#227;&#129;&#167;&#227;&#129;&#175;&#229;&#191;&#133;&#233;&#160;&#136;&#227;&#129;&#167;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+ 
+-#: pop3.c:525
++#: pop3.c:531
+ #, c-format
+ msgid &quot;%s: opportunistic upgrade to TLS failed, trying to continue.\n&quot;
+ msgstr &quot;%s: TLS &#227;&#129;&#184;&#227;&#129;&#174;&#233;&#129;&#169;&#229;&#144;&#136;&#231;&#154;&#132;&#227;&#130;&#162;&#227;&#131;&#131;&#227;&#131;&#151;&#227;&#130;&#176;&#227;&#131;&#172;&#227;&#131;&#188;&#227;&#131;&#137;&#227;&#129;&#171;&#229;&#164;&#177;&#230;&#149;&#151;&#227;&#128;&#129;&#231;&#182;&#153;&#231;&#182;&#154;&#229;&#143;&#175;&#232;&#131;&#189;&#227;&#129;&#139;&#232;&#169;&#166;&#227;&#129;&#151;&#227;&#129;&#166;&#227;&#129;&#132;&#227;&#129;&#190;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+ 
+-#: pop3.c:633
++#: pop3.c:639
+ msgid &quot;We've run out of allowed authenticators and cannot continue.\n&quot;
+ msgstr &quot;&quot;
+ &quot;&#228;&#189;&#191;&#231;&#148;&#168;&#227;&#130;&#146;&#232;&#168;&#177;&#229;&#143;&#175;&#227;&#129;&#149;&#227;&#130;&#140;&#227;&#129;&#159;&#227;&#129;&#153;&#227;&#129;&#185;&#227;&#129;&#166;&#227;&#129;&#174;&#232;&#170;&#141;&#232;&#168;&#188;&#230;&#137;&#139;&#230;&#174;&#181;&#227;&#130;&#146;&#232;&#169;&#166;&#227;&#129;&#191;&#227;&#129;&#190;&#227;&#129;&#151;&#227;&#129;&#159;&#227;&#129;&#140;&#227;&#128;&#129;&#227;&#129;&#153;&#227;&#129;&#185;&#227;&#129;&#166;&#229;&#164;&#177;&#230;&#149;&#151;&#227;&#129;&#151;&#227;&#129;&#190;&#227;&#129;&#151;&#227;&#129;&#159;&#227;&#128;&#130;&#229;&#174;&#159;&#232;&#161;&#140;&#227;&#130;&#146;&#231;&#182;&#153;&quot;
+ &quot;&#231;&#182;&#154;&#227;&#129;&#167;&#227;&#129;&#141;&#227;&#129;&#190;&#227;&#129;&#155;&#227;&#130;&#147;&#227;&#128;&#130;\n&quot;
+ 
+-#: pop3.c:647
++#: pop3.c:653
+ msgid &quot;Required APOP timestamp not found in greeting\n&quot;
+ msgstr &quot;greeting &#228;&#184;&#173;&#227;&#129;&#171; APOP &#227;&#130;&#191;&#227;&#130;&#164;&#227;&#131;&#160;&#227;&#130;&#185;&#227;&#130;&#191;&#227;&#131;&#179;&#227;&#131;&#151;&#227;&#129;&#140;&#229;&#173;&#152;&#229;&#156;&#168;&#227;&#129;&#151;&#227;&#129;&#190;&#227;&#129;&#155;&#227;&#130;&#147;&#227;&#128;&#130;\n&quot;
+ 
+-#: pop3.c:656
++#: pop3.c:662
+ msgid &quot;Timestamp syntax error in greeting\n&quot;
+ msgstr &quot;greeting &#228;&#184;&#173;&#227;&#129;&#174; &#227;&#130;&#191;&#227;&#130;&#164;&#227;&#131;&#160;&#227;&#130;&#185;&#227;&#130;&#191;&#227;&#131;&#179;&#227;&#131;&#151;&#227;&#129;&#140;&#228;&#184;&#141;&#230;&#173;&#163;&#227;&#129;&#167;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+ 
+-#: pop3.c:672
++#: pop3.c:678
+ msgid &quot;Invalid APOP timestamp.\n&quot;
+ msgstr &quot;&#231;&#132;&#161;&#229;&#138;&#185;&#227;&#129;&#170; APOP &#227;&#130;&#191;&#227;&#130;&#164;&#227;&#131;&#160;&#227;&#130;&#185;&#227;&#130;&#191;&#227;&#131;&#179;&#227;&#131;&#151;&#227;&#129;&#167;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+ 
+-#: pop3.c:696
++#: pop3.c:702
+ msgid &quot;Undefined protocol request in POP3_auth\n&quot;
+ msgstr &quot;POP3_auth &#228;&#184;&#173;&#227;&#129;&#167;&#229;&#174;&#154;&#231;&#190;&#169;&#227;&#129;&#149;&#227;&#130;&#140;&#227;&#129;&#166;&#227;&#129;&#132;&#227;&#129;&#170;&#227;&#129;&#132;&#227;&#131;&#151;&#227;&#131;&#173;&#227;&#131;&#136;&#227;&#130;&#179;&#227;&#131;&#171;&#227;&#129;&#140;&#232;&#166;&#129;&#230;&#177;&#130;&#227;&#129;&#149;&#227;&#130;&#140;&#227;&#129;&#190;&#227;&#129;&#151;&#227;&#129;&#159;&#227;&#128;&#130;\n&quot;
+ 
+-#: pop3.c:717
++#: pop3.c:723
+ msgid &quot;lock busy!  Is another session active?\n&quot;
+ msgstr &quot;lock busy &#231;&#138;&#182;&#230;&#133;&#139;&#227;&#129;&#167;&#227;&#129;&#153;&#227;&#128;&#130;&#229;&#136;&#165;&#227;&#129;&#174;&#228;&#186;&#164;&#228;&#191;&#161;&#227;&#129;&#140;&#232;&#161;&#140;&#227;&#130;&#143;&#227;&#130;&#140;&#227;&#129;&#166;&#227;&#129;&#132;&#227;&#129;&#170;&#227;&#129;&#132;&#227;&#129;&#139;&#231;&#162;&#186;&#232;&#170;&#141;&#227;&#129;&#151;&#227;&#129;&#166;&#228;&#184;&#139;&#227;&#129;&#149;&#227;&#129;&#132;&#227;&#128;&#130;\n&quot;
+ 
+-#: pop3.c:796
++#: pop3.c:802
+ msgid &quot;Cannot handle UIDL response from upstream server.\n&quot;
+ msgstr &quot;&#228;&#184;&#138;&#230;&#181;&#129;&#227;&#130;&#181;&#227;&#131;&#188;&#227;&#131;&#144;&#227;&#129;&#139;&#227;&#130;&#137;&#227;&#129;&#174; UIDL &#229;&#191;&#156;&#231;&#173;&#148;&#227;&#129;&#171;&#229;&#175;&#190;&#229;&#191;&#156;&#227;&#129;&#167;&#227;&#129;&#141;&#227;&#129;&#190;&#227;&#129;&#155;&#227;&#130;&#147;&#227;&#128;&#130;\n&quot;
+ 
+-#: pop3.c:819
++#: pop3.c:825
+ msgid &quot;Server responded with UID for wrong message.\n&quot;
+ msgstr &quot;&#227;&#130;&#181;&#227;&#131;&#188;&#227;&#131;&#144;&#227;&#129;&#140;&#232;&#170;&#164;&#227;&#129;&#163;&#227;&#129;&#159;&#227;&#131;&#161;&#227;&#131;&#131;&#227;&#130;&#187;&#227;&#131;&#188;&#227;&#130;&#184;&#227;&#129;&#174; UID &#227;&#129;&#171;&#229;&#191;&#156;&#231;&#173;&#148;&#227;&#129;&#151;&#227;&#129;&#190;&#227;&#129;&#151;&#227;&#129;&#159;&#227;&#128;&#130;\n&quot;
+ 
+-#: pop3.c:846 pop3.c:1092
++#: pop3.c:852 pop3.c:1098
+ #, c-format
+ msgid &quot;id=%s (num=%d) was deleted, but is still present!\n&quot;
+ msgstr &quot;id=%s (num=%d) &#227;&#129;&#175;&#229;&#137;&#138;&#233;&#153;&#164;&#227;&#129;&#149;&#227;&#130;&#140;&#227;&#129;&#190;&#227;&#129;&#151;&#227;&#129;&#159;&#227;&#129;&#140;&#227;&#128;&#129;&#227;&#129;&#190;&#227;&#129;&#160;&#229;&#173;&#152;&#229;&#156;&#168;&#227;&#129;&#151;&#227;&#129;&#166;&#227;&#129;&#132;&#227;&#129;&#190;&#227;&#129;&#153;!\n&quot;
+ 
+-#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
++#: pop3.c:861 pop3.c:873 pop3.c:1107 pop3.c:1114
+ #, c-format
+ msgid &quot;%u is unseen\n&quot;
+ msgstr &quot;%u &#227;&#129;&#175;&#230;&#156;&#170;&#232;&#170;&#173;&#227;&#129;&#167;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+ 
+-#: pop3.c:952
++#: pop3.c:958
+ msgid &quot;Messages inserted into list on server. Cannot handle this.\n&quot;
+ msgstr &quot;&quot;
+ &quot;&#227;&#130;&#181;&#227;&#131;&#188;&#227;&#131;&#144;&#227;&#131;&#170;&#227;&#130;&#185;&#227;&#131;&#136;&#227;&#129;&#171;&#227;&#131;&#161;&#227;&#131;&#131;&#227;&#130;&#187;&#227;&#131;&#188;&#227;&#130;&#184;&#227;&#129;&#140;&#230;&#140;&#191;&#229;&#133;&#165;&#227;&#129;&#149;&#227;&#130;&#140;&#227;&#129;&#166;&#227;&#129;&#132;&#227;&#129;&#190;&#227;&#129;&#153;&#227;&#128;&#130;&#229;&#143;&#150;&#227;&#130;&#138;&#230;&#137;&#177;&#227;&#129;&#134;&#227;&#129;&#147;&#227;&#129;&#168;&#227;&#129;&#140;&#227;&#129;&#167;&#227;&#129;&#141;&#227;&#129;&#190;&#227;&#129;&#155;&#227;&#130;&#147;&#227;&#128;&#130;\n&quot;
+ 
+-#: pop3.c:1044
++#: pop3.c:1050
+ msgid &quot;protocol error\n&quot;
+ msgstr &quot;&#227;&#131;&#151;&#227;&#131;&#173;&#227;&#131;&#136;&#227;&#130;&#179;&#227;&#131;&#171;&#227;&#130;&#168;&#227;&#131;&#169;&#227;&#131;&#188;&#227;&#129;&#167;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+ 
+-#: pop3.c:1060
++#: pop3.c:1066
+ msgid &quot;protocol error while fetching UIDLs\n&quot;
+ msgstr &quot;UIDL &#227;&#130;&#146;&#229;&#143;&#150;&#227;&#130;&#138;&#232;&#190;&#188;&#227;&#129;&#191;&#228;&#184;&#173;&#227;&#129;&#171;&#227;&#131;&#151;&#227;&#131;&#173;&#227;&#131;&#136;&#227;&#130;&#179;&#227;&#131;&#171;&#227;&#130;&#168;&#227;&#131;&#169;&#227;&#131;&#188;&#227;&#129;&#140;&#231;&#153;&#186;&#231;&#148;&#159;&#227;&#129;&#151;&#227;&#129;&#190;&#227;&#129;&#151;&#227;&#129;&#159;&#227;&#128;&#130;\n&quot;
+ 
+-#: pop3.c:1430
++#: pop3.c:1436
+ msgid &quot;Option --folder is not supported with POP3\n&quot;
+ msgstr &quot;POP3 &#227;&#129;&#167;&#227;&#129;&#175; --folder &#227;&#130;&#170;&#227;&#131;&#151;&#227;&#130;&#183;&#227;&#131;&#167;&#227;&#131;&#179;&#227;&#129;&#175;&#229;&#136;&#169;&#231;&#148;&#168;&#227;&#129;&#167;&#227;&#129;&#141;&#227;&#129;&#190;&#227;&#129;&#155;&#227;&#130;&#147;&#227;&#128;&#130;\n&quot;
+ 
+@@ -2383,19 +2383,19 @@
+ msgid &quot;end of input&quot;
+ msgstr &quot;&#229;&#133;&#165;&#229;&#138;&#155;&#227;&#129;&#174;&#231;&#181;&#130;&#231;&#171;&#175;&quot;
+ 
+-#: rcfile_y.y:419
++#: rcfile_y.y:420
+ #, c-format
+ msgid &quot;File %s must be a regular file.\n&quot;
+ msgstr &quot;&quot;
+ &quot;%s &#227;&#129;&#175;&#233;&#128;&#154;&#229;&#184;&#184;&#227;&#131;&#149;&#227;&#130;&#161;&#227;&#130;&#164;&#227;&#131;&#171;&#227;&#129;&#167;&#227;&#129;&#130;&#227;&#130;&#139;&#229;&#191;&#133;&#232;&#166;&#129;&#227;&#129;&#140;&#227;&#129;&#130;&#227;&#130;&#138;&#227;&#129;&#190;&#227;&#129;&#153;&#239;&#188;&#136;&#227;&#130;&#183;&#227;&#131;&#179;&#227;&#131;&#156;&#227;&#131;&#170;&#227;&#131;&#131;&#227;&#130;&#175;&#227;&#131;&#170;&#227;&#131;&#179;&#227;&#130;&#175;&#227;&#129;&#167;&#227;&#129;&#130;&#227;&#129;&#163;&#227;&#129;&#166;&#227;&#129;&#175;&#227;&#129;&#132;&#227;&#129;&#145;&#227;&#129;&#190;&#227;&#129;&#155;&quot;
+ &quot;&#227;&#130;&#147;&#239;&#188;&#137;&#227;&#128;&#130;\n&quot;
+ 
+-#: rcfile_y.y:429
++#: rcfile_y.y:430
+ #, c-format
+ msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
+ msgstr &quot;%s &#227;&#129;&#175; -rwx--x--- (0710) &#228;&#187;&#165;&#229;&#164;&#150;&#227;&#129;&#174;&#227;&#131;&#145;&#227;&#131;&#188;&#227;&#131;&#159;&#227;&#131;&#131;&#227;&#130;&#183;&#227;&#131;&#167;&#227;&#131;&#179;&#227;&#129;&#167;&#227;&#129;&#130;&#227;&#129;&#163;&#227;&#129;&#166;&#227;&#129;&#175;&#227;&#129;&#132;&#227;&#129;&#145;&#227;&#129;&#190;&#227;&#129;&#155;&#227;&#130;&#147;&#227;&#128;&#130;\n&quot;
+ 
+-#: rcfile_y.y:441
++#: rcfile_y.y:442
+ #, c-format
+ msgid &quot;File %s must be owned by you.\n&quot;
+ msgstr &quot;%s &#227;&#129;&#174;&#230;&#137;&#128;&#230;&#156;&#137;&#232;&#128;&#133;&#227;&#129;&#175;&#232;&#178;&#180;&#230;&#150;&#185;&#232;&#135;&#170;&#232;&#186;&#171;&#227;&#129;&#167;&#227;&#129;&#130;&#227;&#130;&#139;&#229;&#191;&#133;&#232;&#166;&#129;&#227;&#129;&#140;&#227;&#129;&#130;&#227;&#130;&#138;&#227;&#129;&#190;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+@@ -2830,116 +2830,116 @@
+ msgid &quot;connected.\n&quot;
+ msgstr &quot;&#230;&#142;&#165;&#231;&#182;&#154;&#227;&#129;&#151;&#227;&#129;&#190;&#227;&#129;&#151;&#227;&#129;&#159;&#227;&#128;&#130;\n&quot;
+ 
+-#: socket.c:660
++#: socket.c:611
+ #, c-format
+ msgid &quot;Issuer Organization: %s\n&quot;
+ msgstr &quot;&#231;&#153;&#186;&#232;&#161;&#140;&#229;&#133;&#131;&#227;&#129;&#174;&#231;&#181;&#132;&#231;&#185;&#148;: %s\n&quot;
+ 
+-#: socket.c:662
++#: socket.c:613
+ msgid &quot;Warning: Issuer Organization Name too long (possibly truncated).\n&quot;
+ msgstr &quot;&#232;&#173;&#166;&#229;&#145;&#138; : &#231;&#153;&#186;&#232;&#161;&#140;&#229;&#133;&#131;&#227;&#129;&#174;&#231;&#181;&#132;&#231;&#185;&#148;&#229;&#144;&#141;&#227;&#129;&#140;&#233;&#149;&#183;&#233;&#129;&#142;&#227;&#129;&#142;&#227;&#129;&#190;&#227;&#129;&#153;&#227;&#128;&#130;(&#230;&#141;&#143;&#233;&#128;&#160;&#227;&#129;&#149;&#227;&#130;&#140;&#227;&#129;&#159;&#229;&#143;&#175;&#232;&#131;&#189;&#230;&#128;&#167;&#227;&#129;&#140;&#227;&#129;&#130;&#227;&#130;&#138;&#227;&#129;&#190;&#227;&#129;&#153;)\n&quot;
+ 
+-#: socket.c:664
++#: socket.c:615
+ msgid &quot;Unknown Organization\n&quot;
+ msgstr &quot;&#228;&#184;&#141;&#230;&#152;&#142;&#227;&#129;&#170;&#231;&#181;&#132;&#231;&#185;&#148;&#227;&#129;&#167;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+ 
+-#: socket.c:666
++#: socket.c:617
+ #, c-format
+ msgid &quot;Issuer CommonName: %s\n&quot;
+ msgstr &quot;&#231;&#153;&#186;&#232;&#161;&#140;&#229;&#133;&#131;&#227;&#129;&#174; CommonName: %s\n&quot;
+ 
+-#: socket.c:668
++#: socket.c:619
+ msgid &quot;Warning: Issuer CommonName too long (possibly truncated).\n&quot;
+ msgstr &quot;&quot;
+ &quot;&#232;&#173;&#166;&#229;&#145;&#138; : &#231;&#153;&#186;&#232;&#161;&#140;&#229;&#133;&#131;&#227;&#129;&#174; CommonName &#227;&#129;&#140;&#233;&#149;&#183;&#233;&#129;&#142;&#227;&#129;&#142;&#227;&#129;&#190;&#227;&#129;&#153;&#227;&#128;&#130; (&#230;&#141;&#143;&#233;&#128;&#160;&#227;&#129;&#149;&#227;&#130;&#140;&#227;&#129;&#159;&#229;&#143;&#175;&#232;&#131;&#189;&#230;&#128;&#167;&#227;&#129;&#140;&#227;&#129;&#130;&#227;&#130;&#138;&#227;&#129;&#190;&#227;&#129;&#153;)\n&quot;
+ 
+-#: socket.c:670
++#: socket.c:621
+ msgid &quot;Unknown Issuer CommonName\n&quot;
+ msgstr &quot;&#228;&#184;&#141;&#230;&#152;&#142;&#227;&#129;&#170;&#231;&#153;&#186;&#232;&#161;&#140;&#229;&#133;&#131;&#227;&#129;&#174; CommonName &#227;&#129;&#167;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+ 
+-#: socket.c:674
++#: socket.c:625
+ #, c-format
+ msgid &quot;Server CommonName: %s\n&quot;
+ msgstr &quot;&#227;&#130;&#181;&#227;&#131;&#188;&#227;&#131;&#144;&#227;&#129;&#174; CommonName: %s\n&quot;
+ 
+-#: socket.c:678
++#: socket.c:629
+ msgid &quot;Bad certificate: Subject CommonName too long!\n&quot;
+ msgstr &quot;&#228;&#184;&#141;&#230;&#173;&#163;&#232;&#168;&#188;&#230;&#152;&#142;&#230;&#155;&#184; : Subject CommonName &#227;&#129;&#140;&#233;&#149;&#183;&#233;&#129;&#142;&#227;&#129;&#142;&#227;&#129;&#190;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+ 
+-#: socket.c:724
++#: socket.c:675
+ #, c-format
+ msgid &quot;Server CommonName mismatch: %s != %s\n&quot;
+ msgstr &quot;&#227;&#130;&#181;&#227;&#131;&#188;&#227;&#131;&#144;&#227;&#129;&#174; CommonName &#227;&#129;&#140;&#228;&#184;&#128;&#232;&#135;&#180;&#227;&#129;&#151;&#227;&#129;&#190;&#227;&#129;&#155;&#227;&#130;&#147; : %s != %s\n&quot;
+ 
+-#: socket.c:730
++#: socket.c:681
+ msgid &quot;Server name not set, could not verify certificate!\n&quot;
+ msgstr &quot;&#227;&#130;&#181;&#227;&#131;&#188;&#227;&#131;&#144;&#229;&#144;&#141;&#227;&#129;&#140;&#232;&#168;&#173;&#229;&#174;&#154;&#227;&#129;&#149;&#227;&#130;&#140;&#227;&#129;&#166;&#227;&#129;&#138;&#227;&#130;&#137;&#227;&#129;&#154;&#227;&#128;&#129;&#232;&#168;&#188;&#230;&#152;&#142;&#230;&#155;&#184;&#227;&#130;&#146;&#230;&#164;&#156;&#232;&#168;&#188;&#227;&#129;&#167;&#227;&#129;&#141;&#227;&#129;&#190;&#227;&#129;&#155;&#227;&#130;&#147;&#227;&#128;&#130;\n&quot;
+ 
+-#: socket.c:735
++#: socket.c:686
+ msgid &quot;Unknown Server CommonName\n&quot;
+ msgstr &quot;&#228;&#184;&#141;&#230;&#152;&#142;&#227;&#129;&#170;&#227;&#130;&#181;&#227;&#131;&#188;&#227;&#131;&#144;&#227;&#129;&#174; CommonName &#227;&#129;&#167;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+ 
+-#: socket.c:737
++#: socket.c:688
+ msgid &quot;Server name not specified in certificate!\n&quot;
+ msgstr &quot;&#232;&#168;&#188;&#230;&#152;&#142;&#230;&#155;&#184;&#228;&#184;&#173;&#227;&#129;&#171;&#227;&#130;&#181;&#227;&#131;&#188;&#227;&#131;&#144;&#229;&#144;&#141;&#227;&#129;&#140;&#230;&#140;&#135;&#229;&#174;&#154;&#227;&#129;&#149;&#227;&#130;&#140;&#227;&#129;&#166;&#227;&#129;&#132;&#227;&#129;&#190;&#227;&#129;&#155;&#227;&#130;&#147;&#227;&#128;&#130;\n&quot;
+ 
+-#: socket.c:749
++#: socket.c:700
+ msgid &quot;EVP_md5() failed!\n&quot;
+ msgstr &quot;EVP_md5() &#227;&#129;&#140;&#227;&#129;&#167;&#227;&#129;&#141;&#227;&#129;&#190;&#227;&#129;&#155;&#227;&#130;&#147;&#227;&#129;&#167;&#227;&#129;&#151;&#227;&#129;&#159;&#227;&#128;&#130;\n&quot;
+ 
+-#: socket.c:753
++#: socket.c:704
+ msgid &quot;Out of memory!\n&quot;
+ msgstr &quot;&#227;&#131;&#161;&#227;&#131;&#162;&#227;&#131;&#170;&#228;&#184;&#141;&#232;&#182;&#179;&#227;&#129;&#167;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+ 
+-#: socket.c:761
++#: socket.c:712
+ msgid &quot;Digest text buffer too small!\n&quot;
+ msgstr &quot;&#227;&#131;&#128;&#227;&#130;&#164;&#227;&#130;&#184;&#227;&#130;&#167;&#227;&#130;&#185;&#227;&#131;&#136;&#227;&#131;&#134;&#227;&#130;&#173;&#227;&#130;&#185;&#227;&#131;&#136;&#227;&#131;&#144;&#227;&#131;&#131;&#227;&#131;&#149;&#227;&#130;&#161;&#227;&#129;&#140;&#229;&#176;&#145;&#227;&#129;&#170;&#233;&#129;&#142;&#227;&#129;&#142;&#227;&#129;&#190;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+ 
+-#: socket.c:767
++#: socket.c:718
+ #, c-format
+ msgid &quot;%s key fingerprint: %s\n&quot;
+ msgstr &quot;%s &#227;&#129;&#174; key fingerprint &#227;&#129;&#175;&#230;&#172;&#161;&#227;&#129;&#174;&#233;&#128;&#154;&#227;&#130;&#138;&#227;&#129;&#167;&#227;&#129;&#153;&#227;&#128;&#130;: %s \n&quot;
+ 
+-#: socket.c:771
++#: socket.c:722
+ #, c-format
+ msgid &quot;%s fingerprints match.\n&quot;
+ msgstr &quot;%s &#227;&#129;&#174; fingerprints &#227;&#129;&#140;&#228;&#184;&#128;&#232;&#135;&#180;&#227;&#129;&#151;&#227;&#129;&#190;&#227;&#129;&#151;&#227;&#129;&#159;&#227;&#128;&#130;\n&quot;
+ 
+-#: socket.c:773
++#: socket.c:724
+ #, c-format
+ msgid &quot;%s fingerprints do not match!\n&quot;
+ msgstr &quot;%s &#227;&#129;&#174; fingerprints &#227;&#129;&#140;&#228;&#184;&#128;&#232;&#135;&#180;&#227;&#129;&#151;&#227;&#129;&#190;&#227;&#129;&#155;&#227;&#130;&#147;&#227;&#129;&#167;&#227;&#129;&#151;&#227;&#129;&#159;&#227;&#128;&#130;\n&quot;
+ 
+-#: socket.c:782
++#: socket.c:733
+ #, c-format
+ msgid &quot;Server certificate verification error: %s\n&quot;
+ msgstr &quot;&#227;&#130;&#181;&#227;&#131;&#188;&#227;&#131;&#144;&#232;&#168;&#188;&#230;&#152;&#142;&#230;&#155;&#184;&#230;&#164;&#156;&#232;&#168;&#188;&#227;&#130;&#168;&#227;&#131;&#169;&#227;&#131;&#188;: %s\n&quot;
+ 
+-#: socket.c:788
++#: socket.c:739
+ #, c-format
+ msgid &quot;unknown issuer (first %d characters): %s\n&quot;
+ msgstr &quot;&#228;&#184;&#141;&#230;&#152;&#142;&#227;&#129;&#170;&#231;&#153;&#186;&#232;&#161;&#140;&#232;&#128;&#133; (&#227;&#129;&#175;&#227;&#129;&#152;&#227;&#130;&#129;&#227;&#129;&#174; %d &#230;&#150;&#135;&#229;&#173;&#151;): %s\n&quot;
+ 
+-#: socket.c:875
++#: socket.c:826
+ msgid &quot;File descriptor out of range for SSL&quot;
+ msgstr &quot;&#227;&#131;&#149;&#227;&#130;&#161;&#227;&#130;&#164;&#227;&#131;&#171;&#232;&#173;&#152;&#229;&#136;&#165;&#229;&#173;&#144;&#227;&#129;&#140; SSL &#227;&#129;&#168;&#227;&#129;&#151;&#227;&#129;&#166;&#227;&#129;&#175;&#233;&#149;&#183;&#233;&#129;&#142;&#227;&#129;&#142;&#227;&#129;&#190;&#227;&#129;&#153;&#227;&#128;&#130;&quot;
+ 
+-#: socket.c:891
++#: socket.c:842
+ #, c-format
+ msgid &quot;Invalid SSL protocol '%s' specified, using default (SSLv23).\n&quot;
+ msgstr &quot;&quot;
+ &quot;&#231;&#132;&#161;&#229;&#138;&#185;&#227;&#129;&#170; SSL &#227;&#131;&#151;&#227;&#131;&#173;&#227;&#131;&#136;&#227;&#130;&#179;&#227;&#131;&#171; `%s' &#227;&#129;&#140;&#230;&#140;&#135;&#229;&#174;&#154;&#227;&#129;&#149;&#227;&#130;&#140;&#227;&#129;&#159;&#227;&#129;&#159;&#227;&#130;&#129;&#227;&#128;&#129;&#227;&#131;&#135;&#227;&#131;&#149;&#227;&#130;&#169;&#227;&#131;&#171;&#227;&#131;&#136; (SSLv23)&#227;&#130;&#146;&#229;&#136;&#169;&#231;&#148;&#168;&#227;&#129;&#151;&#227;&#129;&#190;&quot;
+ &quot;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+ 
+-#: socket.c:964
++#: socket.c:916
+ msgid &quot;Certificate/fingerprint verification was somehow skipped!\n&quot;
+ msgstr &quot;&#232;&#168;&#188;&#230;&#152;&#142;&#230;&#155;&#184;/fingerprint &#230;&#164;&#156;&#232;&#168;&#188;&#227;&#129;&#140;&#229;&#185;&#190;&#227;&#129;&#164;&#227;&#129;&#139;&#233;&#163;&#155;&#227;&#129;&#176;&#227;&#129;&#149;&#227;&#130;&#140;&#227;&#129;&#190;&#227;&#129;&#151;&#227;&#129;&#159;&#227;&#128;&#130;\n&quot;
+ 
+-#: socket.c:1042
++#: socket.c:994
+ msgid &quot;Cygwin socket read retry\n&quot;
+ msgstr &quot;Cygwin &#227;&#130;&#189;&#227;&#130;&#177;&#227;&#131;&#131;&#227;&#131;&#136;&#232;&#170;&#173;&#227;&#129;&#191;&#232;&#190;&#188;&#227;&#129;&#191; &#227;&#131;&#170;&#227;&#131;&#136;&#227;&#131;&#169;&#227;&#130;&#164;\n&quot;
+ 
+-#: socket.c:1045
++#: socket.c:997
+ msgid &quot;Cygwin socket read retry failed!\n&quot;
+ msgstr &quot;Cygwin &#227;&#130;&#189;&#227;&#130;&#177;&#227;&#131;&#131;&#227;&#131;&#136;&#232;&#170;&#173;&#227;&#129;&#191;&#232;&#190;&#188;&#227;&#129;&#191; &#227;&#131;&#170;&#227;&#131;&#136;&#227;&#131;&#169;&#227;&#130;&#164; &#227;&#129;&#140;&#229;&#164;&#177;&#230;&#149;&#151;&#227;&#129;&#151;&#227;&#129;&#190;&#227;&#129;&#151;&#227;&#129;&#159;!\n&quot;
+ 
+@@ -3068,32 +3068,32 @@
+ msgid &quot;discarding new UID list\n&quot;
+ msgstr &quot;&#230;&#150;&#176;&#227;&#129;&#151;&#227;&#129;&#132; UID &#227;&#131;&#170;&#227;&#130;&#185;&#227;&#131;&#136;&#227;&#130;&#146;&#231;&#160;&#180;&#230;&#163;&#132;&#227;&#129;&#151;&#227;&#129;&#166;&#227;&#129;&#132;&#227;&#129;&#190;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+ 
+-#: uid.c:616
++#: uid.c:617
+ msgid &quot;Deleting fetchids file.\n&quot;
+ msgstr &quot;fetchids &#227;&#131;&#149;&#227;&#130;&#161;&#227;&#130;&#164;&#227;&#131;&#171;&#227;&#130;&#146;&#229;&#137;&#138;&#233;&#153;&#164;&#227;&#129;&#151;&#227;&#129;&#166;&#227;&#129;&#132;&#227;&#129;&#190;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+ 
+-#: uid.c:618
++#: uid.c:620
+ #, c-format
+ msgid &quot;Error deleting %s: %s\n&quot;
+ msgstr &quot;&#227;&#130;&#168;&#227;&#131;&#169;&#227;&#131;&#188;&#227;&#129;&#167;&#227;&#129;&#153;&#227;&#128;&#130;&#229;&#137;&#138;&#233;&#153;&#164;&#227;&#129;&#151;&#227;&#129;&#166;&#227;&#129;&#132;&#227;&#129;&#190;&#227;&#129;&#153; %s: %s\n&quot;
+ 
+-#: uid.c:624
++#: uid.c:626
+ msgid &quot;Writing fetchids file.\n&quot;
+ msgstr &quot;fetchids &#227;&#131;&#149;&#227;&#130;&#161;&#227;&#130;&#164;&#227;&#131;&#171;&#227;&#130;&#146;&#230;&#155;&#184;&#227;&#129;&#141;&#232;&#190;&#188;&#227;&#129;&#191;&#228;&#184;&#173;&#227;&#129;&#167;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+ 
+-#: uid.c:643
++#: uid.c:645
+ #, c-format
+ msgid &quot;Error writing to fetchids file %s, old file left in place.\n&quot;
+ msgstr &quot;&quot;
+ &quot;fetchids &#227;&#131;&#149;&#227;&#130;&#161;&#227;&#130;&#164;&#227;&#131;&#171; %s &#227;&#129;&#174;&#230;&#155;&#184;&#232;&#190;&#188;&#227;&#129;&#191;&#227;&#129;&#167;&#227;&#130;&#168;&#227;&#131;&#169;&#227;&#131;&#188;&#227;&#129;&#140;&#231;&#153;&#186;&#231;&#148;&#159;&#227;&#129;&#151;&#227;&#129;&#190;&#227;&#129;&#151;&#227;&#129;&#159;&#227;&#128;&#130;&#229;&#143;&#164;&#227;&#129;&#132;&#227;&#131;&#149;&#227;&#130;&#161;&#227;&#130;&#164;&#227;&#131;&#171;&#227;&#129;&#140;&#230;&#174;&#139;&#227;&#129;&#163;&#227;&#129;&#166;&#227;&#129;&#132;&#227;&#129;&#190;&quot;
+ &quot;&#227;&#129;&#153;&#227;&#128;&#130;\n&quot;
+ 
+-#: uid.c:647
++#: uid.c:649
+ #, c-format
+ msgid &quot;Cannot rename fetchids file %s to %s: %s\n&quot;
+ msgstr &quot;fetchids &#227;&#131;&#149;&#227;&#130;&#161;&#227;&#130;&#164;&#227;&#131;&#171;&#227;&#129;&#174;&#229;&#144;&#141;&#229;&#137;&#141;&#227;&#130;&#146;&#229;&#164;&#137;&#230;&#155;&#180;&#227;&#129;&#167;&#227;&#129;&#141;&#227;&#129;&#190;&#227;&#129;&#155;&#227;&#130;&#147;&#227;&#128;&#130;%s &#227;&#129;&#139;&#227;&#130;&#137; %s&#227;&#129;&#184;: %s\n&quot;
+ 
+-#: uid.c:651
++#: uid.c:653
+ #, c-format
+ msgid &quot;Cannot open fetchids file %s for writing: %s\n&quot;
+ msgstr &quot;&quot;
+
+Modified: branches/BRANCH_6-3/po/pl.po
+===================================================================
+--- branches/BRANCH_6-3/po/pl.po	2008-01-29 13:19:58 UTC (rev 5154)
++++ branches/BRANCH_6-3/po/pl.po	2008-01-31 09:15:53 UTC (rev 5155)
+@@ -8,7 +8,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.3.8\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-06-27 11:18+0200\n&quot;
++&quot;POT-Creation-Date: 2008-01-31 10:14+0100\n&quot;
+ &quot;PO-Revision-Date: 2007-04-27 17:28+0200\n&quot;
+ &quot;Last-Translator: Jakub Bogusz &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">qboosh at pld-linux.org</A>&gt;\n&quot;
+ &quot;Language-Team: Polish &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">translation-team-pl at lists.sourceforge.net</A>&gt;\n&quot;
+@@ -1707,12 +1707,12 @@
+ msgid &quot;will idle after poll\n&quot;
+ msgstr &quot;przejdzie w stan bezczynno&#182;ci po odpytaniu\n&quot;
+ 
+-#: imap.c:441 pop3.c:505
++#: imap.c:441 pop3.c:511
+ #, c-format
+ msgid &quot;%s: upgrade to TLS succeeded.\n&quot;
+ msgstr &quot;%s: przej&#182;cie na TLS powiod&#179;o si&#234;.\n&quot;
+ 
+-#: imap.c:450 pop3.c:514
++#: imap.c:450 pop3.c:520
+ #, c-format
+ msgid &quot;%s: upgrade to TLS failed.\n&quot;
+ msgstr &quot;%s: przej&#182;cie na TLS nie powiod&#179;o si&#234;.\n&quot;
+@@ -1726,7 +1726,7 @@
+ msgid &quot;Required OTP capability not compiled into fetchmail\n&quot;
+ msgstr &quot;Wymagana metoda uwierzytelnienia OTP nie wkompilowana w fetchmaila\n&quot;
+ 
+-#: imap.c:587 pop3.c:380
++#: imap.c:587 pop3.c:386
+ msgid &quot;Required NTLM capability not compiled into fetchmail\n&quot;
+ msgstr &quot;Wymagana metoda uwierzytelnienia NTLM nie wkompilowana w fetchmaila\n&quot;
+ 
+@@ -1784,7 +1784,7 @@
+ msgid &quot;%lu is unseen\n&quot;
+ msgstr &quot;%lu jest nieprzeczytany\n&quot;
+ 
+-#: imap.c:897 pop3.c:876
++#: imap.c:897 pop3.c:882
+ #, c-format
+ msgid &quot;%u is first unseen\n&quot;
+ msgstr &quot;%u jest pierwszym nieprzeczytanym\n&quot;
+@@ -1989,7 +1989,7 @@
+ msgid &quot;Could not decode OTP challenge\n&quot;
+ msgstr &quot;Rozkodowanie wyzwania OTP by&#179;o niemo&#191;liwe\n&quot;
+ 
+-#: opie.c:64 pop3.c:597
++#: opie.c:64 pop3.c:603
+ msgid &quot;Secret pass phrase: &quot;
+ msgstr &quot;Tajne has&#179;o: &quot;
+ 
+@@ -2307,7 +2307,7 @@
+ msgstr &quot;&quot;
+ &quot;      --showdots    pokazuje kropki oznaczaj&#177;ce post&#234;p tak&#191;e w logach\n&quot;
+ 
+-#: pop3.c:350
++#: pop3.c:356
+ msgid &quot;&quot;
+ &quot;Warning: \&quot;Maillennium POP3/PROXY server\&quot; found, using RETR command instead &quot;
+ &quot;of TOP.\n&quot;
+@@ -2315,76 +2315,76 @@
+ &quot;Uwaga: Odkryto serwer \&quot;POP3/PROXY Maillennium\&quot;, u&#191;ycie polecenia RETR &quot;
+ &quot;zamiast TOP.\n&quot;
+ 
+-#: pop3.c:449
++#: pop3.c:455
+ msgid &quot;TLS is mandatory for this session, but server refused CAPA command.\n&quot;
+ msgstr &quot;TLS jest wymagany dla tej sesji, ale serwer odrzuci&#179; polecenie CAPA.\n&quot;
+ 
+-#: pop3.c:450
++#: pop3.c:456
+ msgid &quot;The CAPA command is however necessary for TLS.\n&quot;
+ msgstr &quot;Polecenie CAPA jest jednak niezb&#234;dne dla TLS.\n&quot;
+ 
+-#: pop3.c:525
++#: pop3.c:531
+ #, c-format
+ msgid &quot;%s: opportunistic upgrade to TLS failed, trying to continue.\n&quot;
+ msgstr &quot;%s: zgodne przej&#182;cie na TLS nie powiod&#179;o si&#234;, pr&#243;ba kontynuacji.\n&quot;
+ 
+-#: pop3.c:633
++#: pop3.c:639
+ msgid &quot;We've run out of allowed authenticators and cannot continue.\n&quot;
+ msgstr &quot;&quot;
+ &quot;Wyczerpano dozwolone sposoby uwierzytelnienia, nie mo&#191;na kontynuowa&#230;.\n&quot;
+ 
+-#: pop3.c:647
++#: pop3.c:653
+ msgid &quot;Required APOP timestamp not found in greeting\n&quot;
+ msgstr &quot;W powitaniu serwera brakuje wymaganego znacznika czasu APOP\n&quot;
+ 
+-#: pop3.c:656
++#: pop3.c:662
+ msgid &quot;Timestamp syntax error in greeting\n&quot;
+ msgstr &quot;B&#179;&#177;d sk&#179;adni znacznika czasu w powitaniu\n&quot;
+ 
+-#: pop3.c:672
++#: pop3.c:678
+ msgid &quot;Invalid APOP timestamp.\n&quot;
+ msgstr &quot;B&#179;&#234;dny znacznik czasu APOP.\n&quot;
+ 
+-#: pop3.c:696
++#: pop3.c:702
+ msgid &quot;Undefined protocol request in POP3_auth\n&quot;
+ msgstr &quot;Pro&#182;ba o nieznany protok&#243;&#179; w POP3_auth\n&quot;
+ 
+-#: pop3.c:717
++#: pop3.c:723
+ msgid &quot;lock busy!  Is another session active?\n&quot;
+ msgstr &quot;plik zablokowany! Czy inna sesja nie jest aktywna?\n&quot;
+ 
+-#: pop3.c:796
++#: pop3.c:802
+ msgid &quot;Cannot handle UIDL response from upstream server.\n&quot;
+ msgstr &quot;Nie mo&#191;na obs&#179;u&#191;y&#230; odpowiedzi UIDL od serwera.\n&quot;
+ 
+-#: pop3.c:819
++#: pop3.c:825
+ msgid &quot;Server responded with UID for wrong message.\n&quot;
+ msgstr &quot;Serwer odpowiedzia&#179; z UID-em dla niew&#179;a&#182;ciwego listu.\n&quot;
+ 
+-#: pop3.c:846 pop3.c:1092
++#: pop3.c:852 pop3.c:1098
+ #, c-format
+ msgid &quot;id=%s (num=%d) was deleted, but is still present!\n&quot;
+ msgstr &quot;id=%s (num=%d) zosta&#179; skasowany, ale nadal istnieje!\n&quot;
+ 
+-#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
++#: pop3.c:861 pop3.c:873 pop3.c:1107 pop3.c:1114
+ #, c-format
+ msgid &quot;%u is unseen\n&quot;
+ msgstr &quot;%u jest nieprzeczytany\n&quot;
+ 
+-#: pop3.c:952
++#: pop3.c:958
+ msgid &quot;Messages inserted into list on server. Cannot handle this.\n&quot;
+ msgstr &quot;&quot;
+ &quot;Przesy&#179;ki zosta&#179;y dodane do listy na serwerze. Nie mog&#234; tego obs&#179;u&#191;y&#230;.\n&quot;
+ 
+-#: pop3.c:1044
++#: pop3.c:1050
+ msgid &quot;protocol error\n&quot;
+ msgstr &quot;b&#179;&#177;d protoko&#179;u\n&quot;
+ 
+-#: pop3.c:1060
++#: pop3.c:1066
+ msgid &quot;protocol error while fetching UIDLs\n&quot;
+ msgstr &quot;b&#179;&#177;d protoko&#179;u podczas pobierania UIDL\n&quot;
+ 
+-#: pop3.c:1430
++#: pop3.c:1436
+ msgid &quot;Option --folder is not supported with POP3\n&quot;
+ msgstr &quot;Opcja --folder nie dzia&#179;a z POP3\n&quot;
+ 
+@@ -2420,17 +2420,17 @@
+ msgid &quot;end of input&quot;
+ msgstr &quot;koniec wej&#182;cia&quot;
+ 
+-#: rcfile_y.y:419
++#: rcfile_y.y:420
+ #, c-format
+ msgid &quot;File %s must be a regular file.\n&quot;
+ msgstr &quot;Plik %s musi by&#230; zwyk&#179;ym plikiem.\n&quot;
+ 
+-#: rcfile_y.y:429
++#: rcfile_y.y:430
+ #, c-format
+ msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
+ msgstr &quot;Plik %s nie mo&#191;e mie&#230; uprawnie&#241; wi&#234;kszych ni&#191; -rwx--x--- (0710).\n&quot;
+ 
+-#: rcfile_y.y:441
++#: rcfile_y.y:442
+ #, c-format
+ msgid &quot;File %s must be owned by you.\n&quot;
+ msgstr &quot;Plik %s musi by&#230; w&#179;asno&#182;ci&#177; u&#191;ytkownika.\n&quot;
+@@ -2860,113 +2860,113 @@
+ msgid &quot;connected.\n&quot;
+ msgstr &quot;po&#179;&#177;czono.\n&quot;
+ 
+-#: socket.c:660
++#: socket.c:611
+ #, c-format
+ msgid &quot;Issuer Organization: %s\n&quot;
+ msgstr &quot;Organizacja wystawcy: %s\n&quot;
+ 
+-#: socket.c:662
++#: socket.c:613
+ msgid &quot;Warning: Issuer Organization Name too long (possibly truncated).\n&quot;
+ msgstr &quot;Uwaga: nazwa Organizacji wystawcy za d&#179;uga (prawdopodobnie uci&#234;ta).\n&quot;
+ 
+-#: socket.c:664
++#: socket.c:615
+ msgid &quot;Unknown Organization\n&quot;
+ msgstr &quot;Nieznana organizacja\n&quot;
+ 
+-#: socket.c:666
++#: socket.c:617
+ #, c-format
+ msgid &quot;Issuer CommonName: %s\n&quot;
+ msgstr &quot;CommonName wystawcy: %s\n&quot;
+ 
+-#: socket.c:668
++#: socket.c:619
+ msgid &quot;Warning: Issuer CommonName too long (possibly truncated).\n&quot;
+ msgstr &quot;Uwaga: CommonName wystawcy za d&#179;ugie (prawdopodobnie uci&#234;te).\n&quot;
+ 
+-#: socket.c:670
++#: socket.c:621
+ msgid &quot;Unknown Issuer CommonName\n&quot;
+ msgstr &quot;Nieznane CommonName wystawcy\n&quot;
+ 
+-#: socket.c:674
++#: socket.c:625
+ #, c-format
+ msgid &quot;Server CommonName: %s\n&quot;
+ msgstr &quot;CommonName serwera: %s\n&quot;
+ 
+-#: socket.c:678
++#: socket.c:629
+ msgid &quot;Bad certificate: Subject CommonName too long!\n&quot;
+ msgstr &quot;B&#179;&#234;dny certyfikat: za d&#179;ugie CommonName podmiotu!\n&quot;
+ 
+-#: socket.c:724
++#: socket.c:675
+ #, c-format
+ msgid &quot;Server CommonName mismatch: %s != %s\n&quot;
+ msgstr &quot;Niezgodno&#182;&#230; CommonName serwera: %s != %s\n&quot;
+ 
+-#: socket.c:730
++#: socket.c:681
+ msgid &quot;Server name not set, could not verify certificate!\n&quot;
+ msgstr &quot;Nazwa serwera nie ustawiona, nie mo&#191;na sprawdzi&#230; certyfikatu!\n&quot;
+ 
+-#: socket.c:735
++#: socket.c:686
+ msgid &quot;Unknown Server CommonName\n&quot;
+ msgstr &quot;Nieznane CommonName serwera\n&quot;
+ 
+-#: socket.c:737
++#: socket.c:688
+ msgid &quot;Server name not specified in certificate!\n&quot;
+ msgstr &quot;Nazwa serwera nie podana w certyfikacie!\n&quot;
+ 
+-#: socket.c:749
++#: socket.c:700
+ msgid &quot;EVP_md5() failed!\n&quot;
+ msgstr &quot;b&#179;&#177;d EVP_md5()!\n&quot;
+ 
+-#: socket.c:753
++#: socket.c:704
+ msgid &quot;Out of memory!\n&quot;
+ msgstr &quot;Brak pami&#234;ci!\n&quot;
+ 
+-#: socket.c:761
++#: socket.c:712
+ msgid &quot;Digest text buffer too small!\n&quot;
+ msgstr &quot;Bufor skr&#243;tu tekstu za ma&#179;y!\n&quot;
+ 
+-#: socket.c:767
++#: socket.c:718
+ #, c-format
+ msgid &quot;%s key fingerprint: %s\n&quot;
+ msgstr &quot;Odcisk klucza %s: %s\n&quot;
+ 
+-#: socket.c:771
++#: socket.c:722
+ #, c-format
+ msgid &quot;%s fingerprints match.\n&quot;
+ msgstr &quot;%s odcisk&#243;w si&#234; zgadza.\n&quot;
+ 
+-#: socket.c:773
++#: socket.c:724
+ #, c-format
+ msgid &quot;%s fingerprints do not match!\n&quot;
+ msgstr &quot;%s odcisk&#243;w si&#234; nie zgadza!\n&quot;
+ 
+-#: socket.c:782
++#: socket.c:733
+ #, c-format
+ msgid &quot;Server certificate verification error: %s\n&quot;
+ msgstr &quot;B&#179;&#177;d weryfikacji certyfikatu serwera: %s\n&quot;
+ 
+-#: socket.c:788
++#: socket.c:739
+ #, c-format
+ msgid &quot;unknown issuer (first %d characters): %s\n&quot;
+ msgstr &quot;nieznany wystawca (pierwsze %d znak&#243;w): %s\n&quot;
+ 
+-#: socket.c:875
++#: socket.c:826
+ msgid &quot;File descriptor out of range for SSL&quot;
+ msgstr &quot;Deskryptor pliku poza zakresem dla SSL&quot;
+ 
+-#: socket.c:891
++#: socket.c:842
+ #, c-format
+ msgid &quot;Invalid SSL protocol '%s' specified, using default (SSLv23).\n&quot;
+ msgstr &quot;Podano b&#179;&#234;dny protok&#243;&#179; SSL `%s', u&#191;ywam domy&#182;lnego (SSLv23).\n&quot;
+ 
+-#: socket.c:964
++#: socket.c:916
+ msgid &quot;Certificate/fingerprint verification was somehow skipped!\n&quot;
+ msgstr &quot;Weryfikacja certyfikatu/odcisku klucza z jakiego&#182; powodu pomini&#234;ta!\n&quot;
+ 
+-#: socket.c:1042
++#: socket.c:994
+ msgid &quot;Cygwin socket read retry\n&quot;
+ msgstr &quot;Powt&#243;rzenie odczytu z gniazda cygwinowego\n&quot;
+ 
+-#: socket.c:1045
++#: socket.c:997
+ msgid &quot;Cygwin socket read retry failed!\n&quot;
+ msgstr &quot;Powt&#243;rzenie odczytu z gniazda cygwinowego nie powiod&#179;o si&#234;!\n&quot;
+ 
+@@ -3095,32 +3095,32 @@
+ msgid &quot;discarding new UID list\n&quot;
+ msgstr &quot;odrzucam now&#177; list&#234; UID-&#243;w\n&quot;
+ 
+-#: uid.c:616
++#: uid.c:617
+ msgid &quot;Deleting fetchids file.\n&quot;
+ msgstr &quot;Kasuj&#234; plik fetchids.\n&quot;
+ 
+ # XXX
+-#: uid.c:618
++#: uid.c:620
+ #, c-format
+ msgid &quot;Error deleting %s: %s\n&quot;
+ msgstr &quot;B&#179;&#177;d podczas usuwania %s: %s\n&quot;
+ 
+-#: uid.c:624
++#: uid.c:626
+ msgid &quot;Writing fetchids file.\n&quot;
+ msgstr &quot;Zapisuj&#234; plik fetchids.\n&quot;
+ 
+-#: uid.c:643
++#: uid.c:645
+ #, c-format
+ msgid &quot;Error writing to fetchids file %s, old file left in place.\n&quot;
+ msgstr &quot;&quot;
+ &quot;B&#179;&#177;d podczas zapisu pliku fetchids %s, stary plik pozostawiono na miejscu.\n&quot;
+ 
+-#: uid.c:647
++#: uid.c:649
+ #, c-format
+ msgid &quot;Cannot rename fetchids file %s to %s: %s\n&quot;
+ msgstr &quot;Nie mo&#191;na zmieni&#230; nazwy pliku fetchids %s na %s: %s\n&quot;
+ 
+-#: uid.c:651
++#: uid.c:653
+ #, c-format
+ msgid &quot;Cannot open fetchids file %s for writing: %s\n&quot;
+ msgstr &quot;Nie mo&#191;na otworzy&#230; pliku fetchids %s do zapisu: %s\n&quot;
+
+Modified: branches/BRANCH_6-3/po/ru.po
+===================================================================
+--- branches/BRANCH_6-3/po/ru.po	2008-01-29 13:19:58 UTC (rev 5154)
++++ branches/BRANCH_6-3/po/ru.po	2008-01-31 09:15:53 UTC (rev 5155)
+@@ -8,7 +8,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail-6.3.8-rc2\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-06-27 11:18+0200\n&quot;
++&quot;POT-Creation-Date: 2008-01-31 10:14+0100\n&quot;
+ &quot;PO-Revision-Date: 2007-03-27 00:47+0300\n&quot;
+ &quot;Last-Translator: Pavel Maryanov &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">acid_jack at ukr.net</A>&gt;\n&quot;
+ &quot;Language-Team: Russian &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">ru at li.org</A>&gt;\n&quot;
+@@ -1693,12 +1693,12 @@
+ msgid &quot;will idle after poll\n&quot;
+ msgstr &quot;&#208;&#177;&#209;&#131;&#208;&#180;&#208;&#181;&#209;&#130; &#208;&#191;&#209;&#128;&#208;&#184;&#208;&#190;&#209;&#129;&#209;&#130;&#208;&#176;&#208;&#189;&#208;&#190;&#208;&#178;&#208;&#187;&#208;&#181;&#208;&#189; &#208;&#191;&#208;&#190;&#209;&#129;&#208;&#187;&#208;&#181; &#208;&#190;&#208;&#191;&#209;&#128;&#208;&#190;&#209;&#129;&#208;&#176;\n&quot;
+ 
+-#: imap.c:441 pop3.c:505
++#: imap.c:441 pop3.c:511
+ #, c-format
+ msgid &quot;%s: upgrade to TLS succeeded.\n&quot;
+ msgstr &quot;%s: &#208;&#190;&#208;&#177;&#208;&#189;&#208;&#190;&#208;&#178;&#208;&#187;&#208;&#181;&#208;&#189;&#208;&#184;&#208;&#181; &#208;&#180;&#208;&#190; TLS &#208;&#178;&#209;&#139;&#208;&#191;&#208;&#190;&#208;&#187;&#208;&#189;&#208;&#181;&#208;&#189;&#208;&#190; &#209;&#131;&#209;&#129;&#208;&#191;&#208;&#181;&#209;&#136;&#208;&#189;&#208;&#190;.\n&quot;
+ 
+-#: imap.c:450 pop3.c:514
++#: imap.c:450 pop3.c:520
+ #, c-format
+ msgid &quot;%s: upgrade to TLS failed.\n&quot;
+ msgstr &quot;%s: &#209;&#129;&#208;&#177;&#208;&#190;&#208;&#185; &#208;&#190;&#208;&#177;&#208;&#189;&#208;&#190;&#208;&#178;&#208;&#187;&#208;&#181;&#208;&#189;&#208;&#184;&#209;&#143; &#208;&#180;&#208;&#190; TLS.\n&quot;
+@@ -1714,7 +1714,7 @@
+ msgid &quot;Required OTP capability not compiled into fetchmail\n&quot;
+ msgstr &quot;Fetchmail &#209;&#129;&#208;&#186;&#208;&#190;&#208;&#188;&#208;&#191;&#208;&#184;&#208;&#187;&#208;&#184;&#209;&#128;&#208;&#190;&#208;&#178;&#208;&#176;&#208;&#189; &#208;&#177;&#208;&#181;&#208;&#183; &#209;&#130;&#209;&#128;&#208;&#181;&#208;&#177;&#209;&#131;&#208;&#181;&#208;&#188;&#208;&#190;&#208;&#185; &#208;&#191;&#208;&#190;&#208;&#180;&#208;&#180;&#208;&#181;&#209;&#128;&#208;&#182;&#208;&#186;&#208;&#184; OTP\n&quot;
+ 
+-#: imap.c:587 pop3.c:380
++#: imap.c:587 pop3.c:386
+ msgid &quot;Required NTLM capability not compiled into fetchmail\n&quot;
+ msgstr &quot;Fetchmail &#209;&#129;&#208;&#186;&#208;&#190;&#208;&#188;&#208;&#191;&#208;&#184;&#208;&#187;&#208;&#184;&#209;&#128;&#208;&#190;&#208;&#178;&#208;&#176;&#208;&#189; &#208;&#177;&#208;&#181;&#208;&#183; &#209;&#130;&#209;&#128;&#208;&#181;&#208;&#177;&#209;&#131;&#208;&#181;&#208;&#188;&#208;&#190;&#208;&#185; &#208;&#191;&#208;&#190;&#208;&#180;&#208;&#180;&#208;&#181;&#209;&#128;&#208;&#182;&#208;&#186;&#208;&#184; NTLM\n&quot;
+ 
+@@ -1769,7 +1769,7 @@
+ msgid &quot;%lu is unseen\n&quot;
+ msgstr &quot;%lu &#208;&#189;&#208;&#181; &#208;&#191;&#209;&#128;&#208;&#190;&#209;&#129;&#208;&#188;&#208;&#190;&#209;&#130;&#209;&#128;&#208;&#181;&#208;&#189;&#208;&#190;\n&quot;
+ 
+-#: imap.c:897 pop3.c:876
++#: imap.c:897 pop3.c:882
+ #, c-format
+ msgid &quot;%u is first unseen\n&quot;
+ msgstr &quot;%u &#208;&#191;&#208;&#181;&#209;&#128;&#208;&#178;&#208;&#190;&#208;&#181; &#208;&#189;&#208;&#181; &#208;&#191;&#209;&#128;&#208;&#190;&#209;&#129;&#208;&#188;&#208;&#190;&#209;&#130;&#209;&#128;&#208;&#181;&#208;&#189;&#208;&#189;&#208;&#190;&#208;&#181;\n&quot;
+@@ -1973,7 +1973,7 @@
+ msgid &quot;Could not decode OTP challenge\n&quot;
+ msgstr &quot;&#208;&#157;&#208;&#181;&#208;&#178;&#208;&#190;&#208;&#183;&#208;&#188;&#208;&#190;&#208;&#182;&#208;&#189;&#208;&#190; &#208;&#177;&#209;&#139;&#208;&#187;&#208;&#190; &#208;&#180;&#208;&#181;&#208;&#186;&#208;&#190;&#208;&#180;&#208;&#184;&#209;&#128;&#208;&#190;&#208;&#178;&#208;&#176;&#209;&#130;&#209;&#140; &#208;&#183;&#208;&#176;&#208;&#191;&#209;&#128;&#208;&#190;&#209;&#129; OTP\n&quot;
+ 
+-#: opie.c:64 pop3.c:597
++#: opie.c:64 pop3.c:603
+ msgid &quot;Secret pass phrase: &quot;
+ msgstr &quot;&#208;&#161;&#208;&#181;&#208;&#186;&#209;&#128;&#208;&#181;&#209;&#130;&#208;&#189;&#208;&#176;&#209;&#143; &#208;&#184;&#208;&#180;&#208;&#181;&#208;&#189;&#209;&#130;&#208;&#184;&#209;&#132;&#208;&#184;&#208;&#186;&#208;&#176;&#209;&#134;&#208;&#184;&#208;&#190;&#208;&#189;&#208;&#189;&#208;&#176;&#209;&#143; &#209;&#132;&#209;&#128;&#208;&#176;&#208;&#183;&#208;&#176;:&quot;
+ 
+@@ -2290,7 +2290,7 @@
+ msgstr &quot;&quot;
+ &quot;      --showdots    &#208;&#190;&#209;&#130;&#208;&#190;&#208;&#177;&#209;&#128;&#208;&#176;&#208;&#182;&#208;&#181;&#208;&#189;&#208;&#184;&#208;&#181; &#209;&#130;&#208;&#190;&#209;&#135;&#208;&#181;&#209;&#135;&#208;&#189;&#208;&#190;&#208;&#185; &#209;&#129;&#209;&#130;&#209;&#128;&#208;&#190;&#208;&#186;&#208;&#184; &#208;&#191;&#209;&#128;&#208;&#190;&#208;&#179;&#209;&#128;&#208;&#181;&#209;&#129;&#209;&#129;&#208;&#176; &#208;&#180;&#208;&#176;&#208;&#182;&#208;&#181; &#208;&#178; log-&#209;&#132;&#208;&#176;&#208;&#185;&#208;&#187;&#208;&#176;&#209;&#133;\n&quot;
+ 
+-#: pop3.c:350
++#: pop3.c:356
+ msgid &quot;&quot;
+ &quot;Warning: \&quot;Maillennium POP3/PROXY server\&quot; found, using RETR command instead &quot;
+ &quot;of TOP.\n&quot;
+@@ -2298,78 +2298,78 @@
+ &quot;&#208;&#159;&#209;&#128;&#208;&#181;&#208;&#180;&#209;&#131;&#208;&#191;&#209;&#128;&#208;&#181;&#208;&#182;&#208;&#180;&#208;&#181;&#208;&#189;&#208;&#184;&#208;&#181;: &#208;&#189;&#208;&#176;&#208;&#185;&#208;&#180;&#208;&#181;&#208;&#189; POP3/PROXY-&#209;&#129;&#208;&#181;&#209;&#128;&#208;&#178;&#208;&#181;&#209;&#128; Maillennium; &#208;&#178;&#208;&#188;&#208;&#181;&#209;&#129;&#209;&#130;&#208;&#190; TOP &quot;
+ &quot;&#208;&#184;&#209;&#129;&#208;&#191;&#208;&#190;&#208;&#187;&#209;&#140;&#208;&#183;&#209;&#131;&#208;&#181;&#209;&#130;&#209;&#129;&#209;&#143; &#208;&#186;&#208;&#190;&#208;&#188;&#208;&#176;&#208;&#189;&#208;&#180;&#208;&#176; RETR.\n&quot;
+ 
+-#: pop3.c:449
++#: pop3.c:455
+ msgid &quot;TLS is mandatory for this session, but server refused CAPA command.\n&quot;
+ msgstr &quot;&quot;
+ &quot;&#208;&#148;&#208;&#187;&#209;&#143; &#209;&#141;&#209;&#130;&#208;&#190;&#208;&#179;&#208;&#190; &#209;&#129;&#208;&#181;&#208;&#176;&#208;&#189;&#209;&#129;&#208;&#176; &#209;&#130;&#209;&#128;&#208;&#181;&#208;&#177;&#209;&#131;&#208;&#181;&#209;&#130;&#209;&#129;&#209;&#143; &#208;&#184;&#209;&#129;&#208;&#191;&#208;&#190;&#208;&#187;&#209;&#140;&#208;&#183;&#208;&#190;&#208;&#178;&#208;&#176;&#209;&#130;&#209;&#140; TLS, &#208;&#190;&#208;&#180;&#208;&#189;&#208;&#176;&#208;&#186;&#208;&#190; &#209;&#129;&#208;&#181;&#209;&#128;&#208;&#178;&#208;&#181;&#209;&#128; &#208;&#190;&#209;&#130;&#208;&#186;&#208;&#187;&#208;&#190;&#208;&#189;&#208;&#184;&#208;&#187; &#208;&#186;&#208;&#190;&#208;&#188;&#208;&#176;&#208;&#189;&#208;&#180;&#209;&#131; &quot;
+ &quot;CAPA.\n&quot;
+ 
+-#: pop3.c:450
++#: pop3.c:456
+ msgid &quot;The CAPA command is however necessary for TLS.\n&quot;
+ msgstr &quot;&#208;&#154;&#208;&#190;&#208;&#188;&#208;&#176;&#208;&#189;&#208;&#180;&#208;&#176; CAPA &#208;&#189;&#208;&#181;&#208;&#190;&#208;&#177;&#209;&#133;&#208;&#190;&#208;&#180;&#208;&#184;&#208;&#188;&#208;&#176; &#208;&#180;&#208;&#187;&#209;&#143; TLS.\n&quot;
+ 
+-#: pop3.c:525
++#: pop3.c:531
+ #, c-format
+ msgid &quot;%s: opportunistic upgrade to TLS failed, trying to continue.\n&quot;
+ msgstr &quot;&quot;
+ &quot;%s: &#209;&#129;&#208;&#177;&#208;&#190;&#208;&#185; &#208;&#191;&#209;&#128;&#208;&#184;&#208;&#189;&#209;&#131;&#208;&#180;&#208;&#184;&#209;&#130;&#208;&#181;&#208;&#187;&#209;&#140;&#208;&#189;&#208;&#190;&#208;&#179;&#208;&#190; &#208;&#190;&#208;&#177;&#208;&#189;&#208;&#190;&#208;&#178;&#208;&#187;&#208;&#181;&#208;&#189;&#208;&#184;&#209;&#143; &#208;&#180;&#208;&#190; TLS; &#208;&#178;&#209;&#139;&#208;&#191;&#208;&#190;&#208;&#187;&#208;&#189;&#209;&#143;&#208;&#181;&#209;&#130;&#209;&#129;&#209;&#143; &#208;&#191;&#208;&#190;&#208;&#191;&#209;&#139;&#209;&#130;&#208;&#186;&#208;&#176; &#208;&#191;&#209;&#128;&#208;&#190;&#208;&#180;&#208;&#190;&#208;&#187;&#208;&#182;&#208;&#184;&#209;&#130;&#209;&#140; &quot;
+ &quot;&#209;&#128;&#208;&#176;&#208;&#177;&#208;&#190;&#209;&#130;&#209;&#131;.\n&quot;
+ 
+-#: pop3.c:633
++#: pop3.c:639
+ msgid &quot;We've run out of allowed authenticators and cannot continue.\n&quot;
+ msgstr &quot;&#208;&#151;&#208;&#176;&#208;&#186;&#208;&#190;&#208;&#189;&#209;&#135;&#208;&#184;&#208;&#187;&#208;&#184;&#209;&#129;&#209;&#140; &#208;&#180;&#208;&#190;&#208;&#191;&#209;&#131;&#209;&#129;&#209;&#130;&#208;&#184;&#208;&#188;&#209;&#139;&#208;&#181; &#208;&#176;&#209;&#131;&#209;&#130;&#208;&#181;&#208;&#189;&#209;&#130;&#208;&#184;&#209;&#132;&#208;&#184;&#208;&#186;&#208;&#176;&#209;&#130;&#208;&#190;&#209;&#128;&#209;&#139;, &#208;&#191;&#209;&#128;&#208;&#190;&#208;&#180;&#208;&#190;&#208;&#187;&#208;&#182;&#208;&#181;&#208;&#189;&#208;&#184;&#208;&#181; &#208;&#189;&#208;&#181;&#208;&#178;&#208;&#190;&#208;&#183;&#208;&#188;&#208;&#190;&#208;&#182;&#208;&#189;&#208;&#190;.\n&quot;
+ 
+-#: pop3.c:647
++#: pop3.c:653
+ msgid &quot;Required APOP timestamp not found in greeting\n&quot;
+ msgstr &quot;&#208;&#146; &#208;&#191;&#209;&#128;&#208;&#184;&#208;&#178;&#208;&#181;&#209;&#130;&#209;&#129;&#209;&#130;&#208;&#178;&#208;&#184;&#208;&#184; &#208;&#189;&#208;&#181; &#208;&#189;&#208;&#176;&#208;&#185;&#208;&#180;&#208;&#181;&#208;&#189;&#208;&#176; &#209;&#130;&#209;&#128;&#208;&#181;&#208;&#177;&#209;&#131;&#208;&#181;&#208;&#188;&#208;&#176;&#209;&#143; &#208;&#178;&#209;&#128;&#208;&#181;&#208;&#188;&#208;&#181;&#208;&#189;&#208;&#189;&#208;&#176;&#209;&#143; &#208;&#188;&#208;&#181;&#209;&#130;&#208;&#186;&#208;&#176; APOP\n&quot;
+ 
+-#: pop3.c:656
++#: pop3.c:662
+ msgid &quot;Timestamp syntax error in greeting\n&quot;
+ msgstr &quot;&#208;&#146; &#208;&#191;&#209;&#128;&#208;&#184;&#208;&#178;&#208;&#181;&#209;&#130;&#209;&#129;&#209;&#130;&#208;&#178;&#208;&#184;&#208;&#184; &#208;&#190;&#209;&#136;&#208;&#184;&#208;&#177;&#208;&#186;&#208;&#176; &#209;&#129;&#208;&#184;&#208;&#189;&#209;&#130;&#208;&#176;&#208;&#186;&#209;&#129;&#208;&#184;&#209;&#129;&#208;&#176; &#208;&#178;&#209;&#128;&#208;&#181;&#208;&#188;&#208;&#181;&#208;&#189;&#208;&#189;&#208;&#190;&#208;&#185; &#208;&#188;&#208;&#181;&#209;&#130;&#208;&#186;&#208;&#184;\n&quot;
+ 
+-#: pop3.c:672
++#: pop3.c:678
+ msgid &quot;Invalid APOP timestamp.\n&quot;
+ msgstr &quot;&#208;&#157;&#208;&#181;&#208;&#180;&#208;&#190;&#208;&#191;&#209;&#131;&#209;&#129;&#209;&#130;&#208;&#184;&#208;&#188;&#208;&#176;&#209;&#143; &#208;&#178;&#209;&#128;&#208;&#181;&#208;&#188;&#208;&#181;&#208;&#189;&#208;&#189;&#208;&#176;&#209;&#143; &#208;&#188;&#208;&#181;&#209;&#130;&#208;&#186;&#208;&#176; APOP.\n&quot;
+ 
+-#: pop3.c:696
++#: pop3.c:702
+ msgid &quot;Undefined protocol request in POP3_auth\n&quot;
+ msgstr &quot;&#208;&#157;&#208;&#181;&#208;&#190;&#208;&#191;&#209;&#128;&#208;&#181;&#208;&#180;&#208;&#181;&#208;&#187;&#209;&#145;&#208;&#189;&#208;&#189;&#209;&#139;&#208;&#185; &#208;&#183;&#208;&#176;&#208;&#191;&#209;&#128;&#208;&#190;&#209;&#129; &#208;&#191;&#209;&#128;&#208;&#190;&#209;&#130;&#208;&#190;&#208;&#186;&#208;&#190;&#208;&#187;&#208;&#176; &#208;&#178; POP3_auth\n&quot;
+ 
+-#: pop3.c:717
++#: pop3.c:723
+ msgid &quot;lock busy!  Is another session active?\n&quot;
+ msgstr &quot;&#208;&#177;&#208;&#187;&#208;&#190;&#208;&#186;&#208;&#184;&#209;&#128;&#208;&#190;&#208;&#178;&#208;&#186;&#208;&#176; &#208;&#183;&#208;&#176;&#208;&#189;&#209;&#143;&#209;&#130;&#208;&#190;&#209;&#129;&#209;&#130;&#208;&#184;!  &#208;&#156;&#208;&#190;&#208;&#182;&#208;&#181;&#209;&#130; &#208;&#176;&#208;&#186;&#209;&#130;&#208;&#184;&#208;&#178;&#208;&#181;&#208;&#189; &#208;&#180;&#209;&#128;&#209;&#131;&#208;&#179;&#208;&#190;&#208;&#185; &#209;&#129;&#208;&#181;&#208;&#176;&#208;&#189;&#209;&#129;?\n&quot;
+ 
+-#: pop3.c:796
++#: pop3.c:802
+ msgid &quot;Cannot handle UIDL response from upstream server.\n&quot;
+ msgstr &quot;&#208;&#157;&#208;&#181;&#208;&#178;&#208;&#190;&#208;&#183;&#208;&#188;&#208;&#190;&#208;&#182;&#208;&#189;&#208;&#190; &#208;&#190;&#208;&#177;&#209;&#128;&#208;&#176;&#208;&#177;&#208;&#190;&#209;&#130;&#208;&#176;&#209;&#130;&#209;&#140; UIDL-&#208;&#190;&#209;&#130;&#208;&#178;&#208;&#181;&#209;&#130; upstream-&#209;&#129;&#208;&#181;&#209;&#128;&#208;&#178;&#208;&#181;&#209;&#128;&#208;&#176;.\n&quot;
+ 
+-#: pop3.c:819
++#: pop3.c:825
+ msgid &quot;Server responded with UID for wrong message.\n&quot;
+ msgstr &quot;&#208;&#161;&#208;&#181;&#209;&#128;&#208;&#178;&#208;&#181;&#209;&#128; &#208;&#178;&#208;&#190;&#208;&#183;&#208;&#178;&#209;&#128;&#208;&#176;&#209;&#130;&#208;&#184;&#208;&#187; &#208;&#190;&#209;&#130;&#208;&#178;&#208;&#181;&#209;&#130; &#209;&#129; UID &#208;&#180;&#208;&#187;&#209;&#143; &#208;&#189;&#208;&#181;&#208;&#178;&#208;&#181;&#209;&#128;&#208;&#189;&#208;&#190;&#208;&#179;&#208;&#190; &#209;&#129;&#208;&#190;&#208;&#190;&#208;&#177;&#209;&#137;&#208;&#181;&#208;&#189;&#208;&#184;&#209;&#143;.\n&quot;
+ 
+-#: pop3.c:846 pop3.c:1092
++#: pop3.c:852 pop3.c:1098
+ #, c-format
+ msgid &quot;id=%s (num=%d) was deleted, but is still present!\n&quot;
+ msgstr &quot;id=%s (&#208;&#189;&#208;&#190;&#208;&#188;&#208;&#181;&#209;&#128;=%d) &#208;&#177;&#209;&#139;&#208;&#187;&#208;&#190; &#209;&#131;&#208;&#180;&#208;&#176;&#208;&#187;&#208;&#181;&#208;&#189;&#208;&#190;, &#208;&#189;&#208;&#190; &#208;&#178;&#209;&#129;&#208;&#181; &#208;&#181;&#209;&#137;&#208;&#181; &#208;&#191;&#209;&#128;&#208;&#184;&#209;&#129;&#209;&#131;&#209;&#130;&#209;&#129;&#209;&#130;&#208;&#178;&#209;&#131;&#208;&#181;&#209;&#130;!\n&quot;
+ 
+-#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
++#: pop3.c:861 pop3.c:873 pop3.c:1107 pop3.c:1114
+ #, c-format
+ msgid &quot;%u is unseen\n&quot;
+ msgstr &quot;%u &#208;&#189;&#208;&#181; &#208;&#191;&#209;&#128;&#208;&#190;&#209;&#129;&#208;&#188;&#208;&#190;&#209;&#130;&#209;&#128;&#208;&#181;&#208;&#189;&#208;&#190;\n&quot;
+ 
+-#: pop3.c:952
++#: pop3.c:958
+ msgid &quot;Messages inserted into list on server. Cannot handle this.\n&quot;
+ msgstr &quot;&#208;&#161;&#208;&#190;&#208;&#190;&#208;&#177;&#209;&#137;&#208;&#181;&#208;&#189;&#208;&#184;&#209;&#143; &#208;&#180;&#208;&#190;&#208;&#177;&#208;&#176;&#208;&#178;&#208;&#187;&#208;&#181;&#208;&#189;&#209;&#139; &#208;&#178; &#209;&#129;&#208;&#191;&#208;&#184;&#209;&#129;&#208;&#190;&#208;&#186; &#208;&#189;&#208;&#176; &#209;&#129;&#208;&#181;&#209;&#128;&#208;&#178;&#208;&#181;&#209;&#128;&#208;&#181;. &#208;&#158;&#208;&#177;&#209;&#128;&#208;&#176;&#208;&#177;&#208;&#190;&#209;&#130;&#208;&#186;&#208;&#176; &#208;&#189;&#208;&#181;&#208;&#178;&#208;&#190;&#208;&#183;&#208;&#188;&#208;&#190;&#208;&#182;&#208;&#189;&#208;&#176;.\n&quot;
+ 
+-#: pop3.c:1044
++#: pop3.c:1050
+ msgid &quot;protocol error\n&quot;
+ msgstr &quot;&#208;&#190;&#209;&#136;&#208;&#184;&#208;&#177;&#208;&#186;&#208;&#176; &#208;&#191;&#209;&#128;&#208;&#190;&#209;&#130;&#208;&#190;&#208;&#186;&#208;&#190;&#208;&#187;&#208;&#176;\n&quot;
+ 
+-#: pop3.c:1060
++#: pop3.c:1066
+ msgid &quot;protocol error while fetching UIDLs\n&quot;
+ msgstr &quot;&#208;&#190;&#209;&#136;&#208;&#184;&#208;&#177;&#208;&#186;&#208;&#176; &#208;&#191;&#209;&#128;&#208;&#190;&#209;&#130;&#208;&#190;&#208;&#186;&#208;&#190;&#208;&#187;&#208;&#176; &#208;&#191;&#209;&#128;&#208;&#184; &#208;&#178;&#209;&#139;&#208;&#177;&#208;&#190;&#209;&#128;&#208;&#186;&#208;&#181; UIDL'&#208;&#190;&#208;&#178;\n&quot;
+ 
+-#: pop3.c:1430
++#: pop3.c:1436
+ msgid &quot;Option --folder is not supported with POP3\n&quot;
+ msgstr &quot;&#208;&#158;&#208;&#191;&#209;&#134;&#208;&#184;&#209;&#143; --folder &#208;&#189;&#208;&#181; &#208;&#191;&#208;&#190;&#208;&#180;&#208;&#180;&#208;&#181;&#209;&#128;&#208;&#182;&#208;&#184;&#208;&#178;&#208;&#176;&#208;&#181;&#209;&#130;&#209;&#129;&#209;&#143; &#209;&#129; POP3\n&quot;
+ 
+@@ -2404,17 +2404,17 @@
+ msgid &quot;end of input&quot;
+ msgstr &quot;&#208;&#186;&#208;&#190;&#208;&#189;&#208;&#181;&#209;&#134; &#208;&#178;&#208;&#178;&#208;&#190;&#208;&#180;&#208;&#176;&quot;
+ 
+-#: rcfile_y.y:419
++#: rcfile_y.y:420
+ #, c-format
+ msgid &quot;File %s must be a regular file.\n&quot;
+ msgstr &quot;&#208;&#164;&#208;&#176;&#208;&#185;&#208;&#187; %s &#208;&#180;&#208;&#190;&#208;&#187;&#208;&#182;&#208;&#181;&#208;&#189; &#208;&#177;&#209;&#139;&#209;&#130;&#209;&#140; &#208;&#190;&#208;&#177;&#209;&#139;&#209;&#135;&#208;&#189;&#209;&#139;&#208;&#188; &#209;&#132;&#208;&#176;&#208;&#185;&#208;&#187;&#208;&#190;&#208;&#188;.\n&quot;
+ 
+-#: rcfile_y.y:429
++#: rcfile_y.y:430
+ #, c-format
+ msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
+ msgstr &quot;&#208;&#164;&#208;&#176;&#208;&#185;&#208;&#187; %s &#208;&#180;&#208;&#190;&#208;&#187;&#208;&#182;&#208;&#181;&#208;&#189; &#208;&#184;&#208;&#188;&#208;&#181;&#209;&#130;&#209;&#140; &#209;&#128;&#208;&#176;&#208;&#183;&#209;&#128;&#208;&#181;&#209;&#136;&#208;&#181;&#208;&#189;&#208;&#184;&#209;&#143; -rwx--x--- (0710), &#208;&#189;&#208;&#190; &#208;&#189;&#208;&#181; &#208;&#177;&#208;&#190;&#208;&#187;&#208;&#181;&#208;&#181; &#209;&#130;&#208;&#190;&#208;&#179;&#208;&#190;.\n&quot;
+ 
+-#: rcfile_y.y:441
++#: rcfile_y.y:442
+ #, c-format
+ msgid &quot;File %s must be owned by you.\n&quot;
+ msgstr &quot;&#208;&#146;&#208;&#187;&#208;&#176;&#208;&#180;&#208;&#181;&#208;&#187;&#209;&#140;&#209;&#134;&#208;&#181;&#208;&#188; &#209;&#132;&#208;&#176;&#208;&#185;&#208;&#187;&#208;&#176; %s &#208;&#180;&#208;&#190;&#208;&#187;&#208;&#182;&#208;&#189;&#209;&#139; &#208;&#177;&#209;&#139;&#209;&#130;&#209;&#140; &#208;&#178;&#209;&#139;.\n&quot;
+@@ -2845,118 +2845,118 @@
+ msgid &quot;connected.\n&quot;
+ msgstr &quot;&#209;&#129;&#208;&#190;&#208;&#181;&#208;&#180;&#208;&#184;&#208;&#189;&#208;&#181;&#208;&#189;&#208;&#184;&#208;&#181; &#209;&#131;&#209;&#129;&#209;&#130;&#208;&#176;&#208;&#189;&#208;&#190;&#208;&#178;&#208;&#187;&#208;&#181;&#208;&#189;&#208;&#190;.\n&quot;
+ 
+-#: socket.c:660
++#: socket.c:611
+ #, c-format
+ msgid &quot;Issuer Organization: %s\n&quot;
+ msgstr &quot;&#208;&#151;&#208;&#176;&#208;&#191;&#209;&#128;&#208;&#176;&#209;&#136;&#208;&#184;&#208;&#178;&#208;&#176;&#209;&#142;&#209;&#137;&#208;&#176;&#209;&#143; &#208;&#190;&#209;&#128;&#208;&#179;&#208;&#176;&#208;&#189;&#208;&#184;&#208;&#183;&#208;&#176;&#209;&#134;&#208;&#184;&#209;&#143;: %s\n&quot;
+ 
+-#: socket.c:662
++#: socket.c:613
+ msgid &quot;Warning: Issuer Organization Name too long (possibly truncated).\n&quot;
+ msgstr &quot;&quot;
+ &quot;&#208;&#159;&#209;&#128;&#208;&#181;&#208;&#180;&#209;&#131;&#208;&#191;&#209;&#128;&#208;&#181;&#208;&#182;&#208;&#180;&#208;&#181;&#208;&#189;&#208;&#184;&#208;&#181;: &#208;&#184;&#208;&#188;&#209;&#143; &#208;&#183;&#208;&#176;&#208;&#191;&#209;&#128;&#208;&#176;&#209;&#136;&#208;&#184;&#208;&#178;&#208;&#176;&#209;&#142;&#209;&#137;&#208;&#181;&#208;&#185; &#208;&#190;&#209;&#128;&#208;&#179;&#208;&#176;&#208;&#189;&#208;&#184;&#208;&#183;&#208;&#176;&#209;&#134;&#208;&#184;&#208;&#184; &#209;&#129;&#208;&#187;&#208;&#184;&#209;&#136;&#208;&#186;&#208;&#190;&#208;&#188; &#208;&#180;&#208;&#187;&#208;&#184;&#208;&#189;&#208;&#189;&#208;&#190;&#208;&#181; (&#208;&#178;&#208;&#190;&#208;&#183;&#208;&#188;&#208;&#190;&#208;&#182;&#208;&#189;&#208;&#190; &quot;
+ &quot;&#209;&#131;&#208;&#186;&#208;&#190;&#209;&#128;&#208;&#190;&#209;&#135;&#208;&#181;&#208;&#189;&#208;&#190;).\n&quot;
+ 
+-#: socket.c:664
++#: socket.c:615
+ msgid &quot;Unknown Organization\n&quot;
+ msgstr &quot;&#208;&#157;&#208;&#181;&#208;&#184;&#208;&#183;&#208;&#178;&#208;&#181;&#209;&#129;&#209;&#130;&#208;&#189;&#208;&#176;&#209;&#143; &#208;&#190;&#209;&#128;&#208;&#179;&#208;&#176;&#208;&#189;&#208;&#184;&#208;&#183;&#208;&#176;&#209;&#134;&#208;&#184;&#209;&#143;\n&quot;
+ 
+-#: socket.c:666
++#: socket.c:617
+ #, c-format
+ msgid &quot;Issuer CommonName: %s\n&quot;
+ msgstr &quot;&#208;&#158;&#208;&#177;&#209;&#137;&#208;&#181;&#208;&#191;&#209;&#128;&#208;&#184;&#208;&#189;&#209;&#143;&#209;&#130;&#208;&#190;&#208;&#181; &#208;&#184;&#208;&#188;&#209;&#143;: %s\n&quot;
+ 
+-#: socket.c:668
++#: socket.c:619
+ msgid &quot;Warning: Issuer CommonName too long (possibly truncated).\n&quot;
+ msgstr &quot;&quot;
+ &quot;&#208;&#159;&#209;&#128;&#208;&#181;&#208;&#180;&#209;&#131;&#208;&#191;&#209;&#128;&#208;&#181;&#208;&#182;&#208;&#180;&#208;&#181;&#208;&#189;&#208;&#184;&#208;&#181;: &#208;&#190;&#208;&#177;&#209;&#137;&#208;&#181;&#208;&#191;&#209;&#128;&#208;&#184;&#208;&#189;&#209;&#143;&#209;&#130;&#208;&#190;&#208;&#181; &#208;&#184;&#208;&#188;&#209;&#143; &#209;&#129;&#208;&#187;&#208;&#184;&#209;&#136;&#208;&#186;&#208;&#190;&#208;&#188; &#208;&#180;&#208;&#187;&#208;&#184;&#208;&#189;&#208;&#189;&#208;&#190;&#208;&#181; (&#208;&#178;&#208;&#190;&#208;&#183;&#208;&#188;&#208;&#190;&#208;&#182;&#208;&#189;&#208;&#190; &#209;&#131;&#208;&#186;&#208;&#190;&#209;&#128;&#208;&#190;&#209;&#135;&#208;&#181;&#208;&#189;&#208;&#190;).\n&quot;
+ 
+-#: socket.c:670
++#: socket.c:621
+ msgid &quot;Unknown Issuer CommonName\n&quot;
+ msgstr &quot;&#208;&#157;&#208;&#181;&#208;&#184;&#208;&#183;&#208;&#178;&#208;&#181;&#209;&#129;&#209;&#130;&#208;&#189;&#208;&#190;&#208;&#181; &#208;&#190;&#208;&#177;&#209;&#137;&#208;&#181;&#208;&#191;&#209;&#128;&#208;&#184;&#208;&#189;&#209;&#143;&#209;&#130;&#208;&#190;&#208;&#181; &#208;&#184;&#208;&#188;&#209;&#143;\n&quot;
+ 
+-#: socket.c:674
++#: socket.c:625
+ #, c-format
+ msgid &quot;Server CommonName: %s\n&quot;
+ msgstr &quot;&#208;&#158;&#208;&#177;&#209;&#137;&#208;&#181;&#208;&#191;&#209;&#128;&#208;&#184;&#208;&#189;&#209;&#143;&#209;&#130;&#208;&#190;&#208;&#181; &#208;&#184;&#208;&#188;&#209;&#143; &#209;&#129;&#208;&#181;&#209;&#128;&#208;&#178;&#208;&#181;&#209;&#128;&#208;&#176;: %s\n&quot;
+ 
+-#: socket.c:678
++#: socket.c:629
+ msgid &quot;Bad certificate: Subject CommonName too long!\n&quot;
+ msgstr &quot;&#208;&#157;&#208;&#181;&#208;&#191;&#209;&#128;&#208;&#176;&#208;&#178;&#208;&#184;&#208;&#187;&#209;&#140;&#208;&#189;&#209;&#139;&#208;&#185; &#209;&#129;&#208;&#181;&#209;&#128;&#209;&#130;&#208;&#184;&#209;&#132;&#208;&#184;&#208;&#186;&#208;&#176;&#209;&#130;: &#208;&#190;&#208;&#177;&#209;&#137;&#208;&#181;&#208;&#181; &#208;&#189;&#208;&#176;&#208;&#183;&#208;&#178;&#208;&#176;&#208;&#189;&#208;&#184;&#208;&#181; &#208;&#162;&#208;&#181;&#208;&#188;&#209;&#139; &#209;&#129;&#208;&#187;&#208;&#184;&#209;&#136;&#208;&#186;&#208;&#190;&#208;&#188; &#208;&#180;&#208;&#187;&#208;&#184;&#208;&#189;&#208;&#189;&#208;&#190;&#208;&#181;!\n&quot;
+ 
+-#: socket.c:724
++#: socket.c:675
+ #, c-format
+ msgid &quot;Server CommonName mismatch: %s != %s\n&quot;
+ msgstr &quot;&#208;&#157;&#208;&#181;&#209;&#129;&#208;&#190;&#208;&#178;&#208;&#191;&#208;&#176;&#208;&#180;&#208;&#181;&#208;&#189;&#208;&#184;&#208;&#181; &#208;&#190;&#208;&#177;&#209;&#137;&#208;&#181;&#208;&#191;&#209;&#128;&#208;&#184;&#208;&#189;&#209;&#143;&#209;&#130;&#208;&#190;&#208;&#179;&#208;&#190; &#208;&#184;&#208;&#188;&#208;&#181;&#208;&#189;&#208;&#184; &#209;&#129;&#208;&#181;&#209;&#128;&#208;&#178;&#208;&#181;&#209;&#128;&#208;&#176;: %s != %s\n&quot;
+ 
+-#: socket.c:730
++#: socket.c:681
+ msgid &quot;Server name not set, could not verify certificate!\n&quot;
+ msgstr &quot;&#208;&#152;&#208;&#188;&#209;&#143; &#209;&#129;&#208;&#181;&#209;&#128;&#208;&#178;&#208;&#181;&#209;&#128;&#208;&#176; &#208;&#189;&#208;&#181; &#209;&#131;&#209;&#129;&#209;&#130;&#208;&#176;&#208;&#189;&#208;&#190;&#208;&#178;&#208;&#187;&#208;&#181;&#208;&#189;&#208;&#190;, &#208;&#189;&#208;&#181;&#208;&#178;&#208;&#190;&#208;&#183;&#208;&#188;&#208;&#190;&#208;&#182;&#208;&#189;&#208;&#190; &#208;&#191;&#209;&#128;&#208;&#190;&#208;&#178;&#208;&#181;&#209;&#128;&#208;&#184;&#209;&#130;&#209;&#140; &#209;&#129;&#208;&#181;&#209;&#128;&#209;&#130;&#208;&#184;&#209;&#132;&#208;&#184;&#208;&#186;&#208;&#176;&#209;&#130;!\n&quot;
+ 
+-#: socket.c:735
++#: socket.c:686
+ msgid &quot;Unknown Server CommonName\n&quot;
+ msgstr &quot;&#208;&#157;&#208;&#181;&#208;&#184;&#208;&#183;&#208;&#178;&#208;&#181;&#209;&#129;&#209;&#130;&#208;&#189;&#208;&#190;&#208;&#181; &#208;&#190;&#208;&#177;&#209;&#137;&#208;&#181;&#208;&#191;&#209;&#128;&#208;&#184;&#208;&#189;&#209;&#143;&#209;&#130;&#208;&#190;&#208;&#181; &#208;&#184;&#208;&#188;&#209;&#143; &#209;&#129;&#208;&#181;&#209;&#128;&#208;&#178;&#208;&#181;&#209;&#128;&#208;&#176;\n&quot;
+ 
+-#: socket.c:737
++#: socket.c:688
+ msgid &quot;Server name not specified in certificate!\n&quot;
+ msgstr &quot;&#208;&#152;&#208;&#188;&#209;&#143; &#209;&#129;&#208;&#181;&#209;&#128;&#208;&#178;&#208;&#181;&#209;&#128;&#208;&#176; &#208;&#189;&#208;&#181; &#209;&#131;&#208;&#186;&#208;&#176;&#208;&#183;&#208;&#176;&#208;&#189;&#208;&#190; &#208;&#178; &#209;&#129;&#208;&#181;&#209;&#128;&#209;&#130;&#208;&#184;&#209;&#132;&#208;&#184;&#208;&#186;&#208;&#176;&#209;&#130;&#208;&#181;!\n&quot;
+ 
+-#: socket.c:749
++#: socket.c:700
+ msgid &quot;EVP_md5() failed!\n&quot;
+ msgstr &quot;&#209;&#129;&#208;&#177;&#208;&#190;&#208;&#185; EVP_md5()!\n&quot;
+ 
+-#: socket.c:753
++#: socket.c:704
+ msgid &quot;Out of memory!\n&quot;
+ msgstr &quot;&#208;&#157;&#208;&#181;&#209;&#133;&#208;&#178;&#208;&#176;&#209;&#130;&#208;&#186;&#208;&#176; &#208;&#191;&#208;&#176;&#208;&#188;&#209;&#143;&#209;&#130;&#208;&#184;!\n&quot;
+ 
+-#: socket.c:761
++#: socket.c:712
+ msgid &quot;Digest text buffer too small!\n&quot;
+ msgstr &quot;&#208;&#145;&#209;&#131;&#209;&#132;&#208;&#181;&#209;&#128; &#209;&#130;&#208;&#181;&#208;&#186;&#209;&#129;&#209;&#130;&#208;&#190;&#208;&#178;&#208;&#190;&#208;&#179;&#208;&#190; &#208;&#182;&#209;&#131;&#209;&#128;&#208;&#189;&#208;&#176;&#208;&#187;&#208;&#176; &#209;&#129;&#208;&#187;&#208;&#184;&#209;&#136;&#208;&#186;&#208;&#190;&#208;&#188; &#208;&#188;&#208;&#176;&#208;&#187;!\n&quot;
+ 
+-#: socket.c:767
++#: socket.c:718
+ #, c-format
+ msgid &quot;%s key fingerprint: %s\n&quot;
+ msgstr &quot;&#208;&#158;&#209;&#130;&#208;&#191;&#208;&#181;&#209;&#135;&#208;&#176;&#209;&#130;&#208;&#190;&#208;&#186; &#208;&#186;&#208;&#187;&#209;&#142;&#209;&#135;&#208;&#176; %s: %s\n&quot;
+ 
+-#: socket.c:771
++#: socket.c:722
+ #, c-format
+ msgid &quot;%s fingerprints match.\n&quot;
+ msgstr &quot;&#208;&#158;&#209;&#130;&#208;&#191;&#208;&#181;&#209;&#135;&#208;&#176;&#209;&#130;&#208;&#186;&#208;&#184; %s &#209;&#129;&#208;&#190;&#208;&#178;&#208;&#191;&#208;&#176;&#208;&#180;&#208;&#176;&#209;&#142;&#209;&#130;.\n&quot;
+ 
+-#: socket.c:773
++#: socket.c:724
+ #, c-format
+ msgid &quot;%s fingerprints do not match!\n&quot;
+ msgstr &quot;&#208;&#158;&#209;&#130;&#208;&#191;&#208;&#181;&#209;&#135;&#208;&#176;&#209;&#130;&#208;&#186;&#208;&#184; %s &#208;&#189;&#208;&#181; &#209;&#129;&#208;&#190;&#208;&#178;&#208;&#191;&#208;&#176;&#208;&#180;&#208;&#176;&#209;&#142;&#209;&#130;!\n&quot;
+ 
+-#: socket.c:782
++#: socket.c:733
+ #, c-format
+ msgid &quot;Server certificate verification error: %s\n&quot;
+ msgstr &quot;&#208;&#158;&#209;&#136;&#208;&#184;&#208;&#177;&#208;&#186;&#208;&#176; &#208;&#191;&#209;&#128;&#208;&#190;&#208;&#178;&#208;&#181;&#209;&#128;&#208;&#186;&#208;&#184; &#209;&#129;&#208;&#181;&#209;&#128;&#209;&#130;&#208;&#184;&#209;&#132;&#208;&#184;&#208;&#186;&#208;&#176;&#209;&#130;&#208;&#176; &#209;&#129;&#208;&#181;&#209;&#128;&#208;&#178;&#208;&#181;&#209;&#128;&#208;&#176;: %s\n&quot;
+ 
+-#: socket.c:788
++#: socket.c:739
+ #, c-format
+ msgid &quot;unknown issuer (first %d characters): %s\n&quot;
+ msgstr &quot;&#208;&#189;&#208;&#181;&#208;&#184;&#208;&#183;&#208;&#178;&#208;&#181;&#209;&#129;&#209;&#130;&#208;&#189;&#208;&#176;&#209;&#143; &#208;&#183;&#208;&#176;&#208;&#191;&#209;&#128;&#208;&#176;&#209;&#136;&#208;&#184;&#208;&#178;&#208;&#176;&#209;&#142;&#209;&#137;&#208;&#176;&#209;&#143; &#209;&#129;&#209;&#130;&#208;&#190;&#209;&#128;&#208;&#190;&#208;&#189;&#208;&#176; (&#208;&#191;&#208;&#181;&#209;&#128;&#208;&#178;&#209;&#139;&#208;&#181; %d &#209;&#129;&#208;&#184;&#208;&#188;&#208;&#178;&#208;&#190;&#208;&#187;&#208;&#190;&#208;&#178;): %s\n&quot;
+ 
+-#: socket.c:875
++#: socket.c:826
+ msgid &quot;File descriptor out of range for SSL&quot;
+ msgstr &quot;&#208;&#148;&#208;&#181;&#209;&#129;&#208;&#186;&#209;&#128;&#208;&#184;&#208;&#191;&#209;&#130;&#208;&#190;&#209;&#128; &#209;&#132;&#208;&#176;&#208;&#185;&#208;&#187;&#208;&#176; &#208;&#178;&#208;&#189;&#208;&#181; &#208;&#180;&#208;&#184;&#208;&#176;&#208;&#191;&#208;&#176;&#208;&#183;&#208;&#190;&#208;&#189;&#208;&#176; SSL&quot;
+ 
+-#: socket.c:891
++#: socket.c:842
+ #, c-format
+ msgid &quot;Invalid SSL protocol '%s' specified, using default (SSLv23).\n&quot;
+ msgstr &quot;&quot;
+ &quot;&#208;&#163;&#208;&#186;&#208;&#176;&#208;&#183;&#208;&#176;&#208;&#189; &#208;&#189;&#208;&#181;&#208;&#178;&#208;&#181;&#209;&#128;&#208;&#189;&#209;&#139;&#208;&#185; &#208;&#191;&#209;&#128;&#208;&#190;&#209;&#130;&#208;&#190;&#208;&#186;&#208;&#190;&#208;&#187; SSL '%s', &#208;&#184;&#209;&#129;&#208;&#191;&#208;&#190;&#208;&#187;&#209;&#140;&#208;&#183;&#209;&#131;&#208;&#181;&#209;&#130;&#209;&#129;&#209;&#143; &#208;&#191;&#209;&#128;&#208;&#190;&#209;&#130;&#208;&#190;&#208;&#186;&#208;&#190;&#208;&#187; &#208;&#191;&#208;&#190; &#209;&#131;&#208;&#188;&#208;&#190;&#208;&#187;&#209;&#135;&#208;&#176;&#208;&#189;&#208;&#184;&#209;&#142; &quot;
+ &quot;(SSLv23).\n&quot;
+ 
+-#: socket.c:964
++#: socket.c:916
+ msgid &quot;Certificate/fingerprint verification was somehow skipped!\n&quot;
+ msgstr &quot;&#208;&#159;&#209;&#128;&#208;&#190;&#208;&#178;&#208;&#181;&#209;&#128;&#208;&#186;&#208;&#176; &#209;&#129;&#208;&#181;&#209;&#128;&#209;&#130;&#208;&#184;&#209;&#132;&#208;&#184;&#208;&#186;&#208;&#176;&#209;&#130;&#208;&#176;/&#208;&#190;&#209;&#130;&#208;&#191;&#208;&#181;&#209;&#135;&#208;&#176;&#209;&#130;&#208;&#186;&#208;&#176; &#208;&#177;&#209;&#139;&#208;&#187;&#208;&#176; &#208;&#186;&#208;&#176;&#208;&#186;-&#209;&#130;&#208;&#190; &#208;&#191;&#209;&#128;&#208;&#190;&#208;&#191;&#209;&#131;&#209;&#137;&#208;&#181;&#208;&#189;&#208;&#176;!\n&quot;
+ 
+-#: socket.c:1042
++#: socket.c:994
+ msgid &quot;Cygwin socket read retry\n&quot;
+ msgstr &quot;&#208;&#159;&#208;&#190;&#208;&#178;&#209;&#130;&#208;&#190;&#209;&#128;&#208;&#189;&#208;&#176;&#209;&#143; &#208;&#191;&#208;&#190;&#208;&#191;&#209;&#139;&#209;&#130;&#208;&#186;&#208;&#176; &#209;&#135;&#209;&#130;&#208;&#181;&#208;&#189;&#208;&#184;&#209;&#143; &#209;&#129;&#208;&#190;&#208;&#186;&#208;&#181;&#209;&#130;&#208;&#176; Cygwin\n&quot;
+ 
+-#: socket.c:1045
++#: socket.c:997
+ msgid &quot;Cygwin socket read retry failed!\n&quot;
+ msgstr &quot;&#208;&#161;&#208;&#177;&#208;&#190;&#208;&#185; &#208;&#191;&#208;&#190;&#208;&#178;&#209;&#130;&#208;&#190;&#209;&#128;&#208;&#189;&#208;&#190;&#208;&#179;&#208;&#190; &#209;&#135;&#209;&#130;&#208;&#181;&#208;&#189;&#208;&#184;&#209;&#143; &#209;&#129;&#208;&#190;&#208;&#186;&#208;&#181;&#209;&#130;&#208;&#176; Cygwin!\n&quot;
+ 
+@@ -3085,30 +3085,30 @@
+ msgid &quot;discarding new UID list\n&quot;
+ msgstr &quot;&#208;&#190;&#209;&#130;&#208;&#177;&#209;&#128;&#208;&#176;&#209;&#129;&#209;&#139;&#208;&#178;&#208;&#176;&#208;&#181;&#209;&#130;&#209;&#129;&#209;&#143; &#208;&#189;&#208;&#190;&#208;&#178;&#209;&#139;&#208;&#185; &#209;&#129;&#208;&#191;&#208;&#184;&#209;&#129;&#208;&#190;&#208;&#186; UID\n&quot;
+ 
+-#: uid.c:616
++#: uid.c:617
+ msgid &quot;Deleting fetchids file.\n&quot;
+ msgstr &quot;&#208;&#163;&#208;&#180;&#208;&#176;&#208;&#187;&#209;&#143;&#208;&#181;&#209;&#130;&#209;&#129;&#209;&#143; &#209;&#132;&#208;&#176;&#208;&#185;&#208;&#187; fetchids.\n&quot;
+ 
+-#: uid.c:618
++#: uid.c:620
+ #, c-format
+ msgid &quot;Error deleting %s: %s\n&quot;
+ msgstr &quot;&#208;&#158;&#209;&#136;&#208;&#184;&#208;&#177;&#208;&#186;&#208;&#176; &#209;&#131;&#208;&#180;&#208;&#176;&#208;&#187;&#208;&#181;&#208;&#189;&#208;&#184;&#209;&#143; %s: %s\n&quot;
+ 
+-#: uid.c:624
++#: uid.c:626
+ msgid &quot;Writing fetchids file.\n&quot;
+ msgstr &quot;&#208;&#151;&#208;&#176;&#208;&#191;&#208;&#184;&#209;&#129;&#209;&#139;&#208;&#178;&#208;&#176;&#208;&#181;&#209;&#130;&#209;&#129;&#209;&#143; &#209;&#132;&#208;&#176;&#208;&#185;&#208;&#187; fetchids.\n&quot;
+ 
+-#: uid.c:643
++#: uid.c:645
+ #, c-format
+ msgid &quot;Error writing to fetchids file %s, old file left in place.\n&quot;
+ msgstr &quot;&#208;&#158;&#209;&#136;&#208;&#184;&#208;&#177;&#208;&#186;&#208;&#176; &#208;&#183;&#208;&#176;&#208;&#191;&#208;&#184;&#209;&#129;&#208;&#184; &#208;&#178; fetchids-&#209;&#132;&#208;&#176;&#208;&#185;&#208;&#187; %s, &#209;&#129;&#209;&#130;&#208;&#176;&#209;&#128;&#209;&#139;&#208;&#185; &#209;&#132;&#208;&#176;&#208;&#185;&#208;&#187; &#208;&#190;&#209;&#129;&#209;&#130;&#208;&#176;&#208;&#187;&#209;&#129;&#209;&#143; &#208;&#189;&#208;&#176; &#208;&#188;&#208;&#181;&#209;&#129;&#209;&#130;&#208;&#181;.\n&quot;
+ 
+-#: uid.c:647
++#: uid.c:649
+ #, c-format
+ msgid &quot;Cannot rename fetchids file %s to %s: %s\n&quot;
+ msgstr &quot;&#208;&#157;&#208;&#181;&#208;&#178;&#208;&#190;&#208;&#183;&#208;&#188;&#208;&#190;&#208;&#182;&#208;&#189;&#208;&#190; &#208;&#191;&#208;&#181;&#209;&#128;&#208;&#181;&#208;&#184;&#208;&#188;&#208;&#181;&#208;&#189;&#208;&#190;&#208;&#178;&#208;&#176;&#209;&#130;&#209;&#140; fetchids-&#209;&#132;&#208;&#176;&#208;&#185;&#208;&#187; %s &#208;&#178; %s: %s\n&quot;
+ 
+-#: uid.c:651
++#: uid.c:653
+ #, c-format
+ msgid &quot;Cannot open fetchids file %s for writing: %s\n&quot;
+ msgstr &quot;&#208;&#157;&#208;&#181;&#208;&#178;&#208;&#190;&#208;&#183;&#208;&#188;&#208;&#190;&#208;&#182;&#208;&#189;&#208;&#190; &#208;&#190;&#209;&#130;&#208;&#186;&#209;&#128;&#209;&#139;&#209;&#130;&#209;&#140; fetchids-&#209;&#132;&#208;&#176;&#208;&#185;&#208;&#187; %s &#208;&#180;&#208;&#187;&#209;&#143; &#208;&#183;&#208;&#176;&#208;&#191;&#208;&#184;&#209;&#129;&#208;&#184;: %s\n&quot;
+
+Modified: branches/BRANCH_6-3/po/sq.po
+===================================================================
+--- branches/BRANCH_6-3/po/sq.po	2008-01-29 13:19:58 UTC (rev 5154)
++++ branches/BRANCH_6-3/po/sq.po	2008-01-31 09:15:53 UTC (rev 5155)
+@@ -7,7 +7,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.2.9-rc9\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-06-27 11:18+0200\n&quot;
++&quot;POT-Creation-Date: 2008-01-31 10:14+0100\n&quot;
+ &quot;PO-Revision-Date: 2005-11-18 22:25+0200\n&quot;
+ &quot;Last-Translator: Besnik Bleta &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">besnik at spymac.com</A>&gt;\n&quot;
+ &quot;Language-Team: Albanian &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">translation-team-sq at lists.sourceforge.net</A>&gt;\n&quot;
+@@ -1709,12 +1709,12 @@
+ msgid &quot;will idle after poll\n&quot;
+ msgstr &quot;do t&#235; rrij&#235; bosh pas vjeljeje\n&quot;
+ 
+-#: imap.c:441 pop3.c:505
++#: imap.c:441 pop3.c:511
+ #, c-format
+ msgid &quot;%s: upgrade to TLS succeeded.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: imap.c:450 pop3.c:514
++#: imap.c:450 pop3.c:520
+ #, c-format
+ msgid &quot;%s: upgrade to TLS failed.\n&quot;
+ msgstr &quot;&quot;
+@@ -1728,7 +1728,7 @@
+ msgid &quot;Required OTP capability not compiled into fetchmail\n&quot;
+ msgstr &quot;Aft&#235;si e nevojshme OTP e pap&#235;rpiluar tek fetchmail-i\n&quot;
+ 
+-#: imap.c:587 pop3.c:380
++#: imap.c:587 pop3.c:386
+ msgid &quot;Required NTLM capability not compiled into fetchmail\n&quot;
+ msgstr &quot;Aft&#235;si e nevojshme NTML e pap&#235;rpiluar tek fetchmail-i\n&quot;
+ 
+@@ -1784,7 +1784,7 @@
+ msgid &quot;%lu is unseen\n&quot;
+ msgstr &quot;%u &#235;sht&#235; i pav&#235;rejtur\n&quot;
+ 
+-#: imap.c:897 pop3.c:876
++#: imap.c:897 pop3.c:882
+ #, c-format
+ msgid &quot;%u is first unseen\n&quot;
+ msgstr &quot;%u &#235;sht&#235; i pari i pav&#235;rejtur\n&quot;
+@@ -1985,7 +1985,7 @@
+ msgid &quot;Could not decode OTP challenge\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: opie.c:64 pop3.c:597
++#: opie.c:64 pop3.c:603
+ msgid &quot;Secret pass phrase: &quot;
+ msgstr &quot;Fraz&#235; pass sekrete: &quot;
+ 
+@@ -2292,81 +2292,81 @@
+ msgid &quot;      --showdots    show progress dots even in logfiles\n&quot;
+ msgstr &quot;      --showdots    shfaq pika p&#235;rparimi edhe n&#235; kartela regjistrimi\n&quot;
+ 
+-#: pop3.c:350
++#: pop3.c:356
+ msgid &quot;&quot;
+ &quot;Warning: \&quot;Maillennium POP3/PROXY server\&quot; found, using RETR command instead &quot;
+ &quot;of TOP.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:449
++#: pop3.c:455
+ msgid &quot;TLS is mandatory for this session, but server refused CAPA command.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:450
++#: pop3.c:456
+ msgid &quot;The CAPA command is however necessary for TLS.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:525
++#: pop3.c:531
+ #, c-format
+ msgid &quot;%s: opportunistic upgrade to TLS failed, trying to continue.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:633
++#: pop3.c:639
+ msgid &quot;We've run out of allowed authenticators and cannot continue.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:647
++#: pop3.c:653
+ msgid &quot;Required APOP timestamp not found in greeting\n&quot;
+ msgstr &quot;Nuk u gjet vul&#235; kohore e nevojshme APOP n&#235; p&#235;rsh&#235;ndetje\n&quot;
+ 
+-#: pop3.c:656
++#: pop3.c:662
+ msgid &quot;Timestamp syntax error in greeting\n&quot;
+ msgstr &quot;Gabim sintakse vule kohore n&#235; p&#235;rsh&#235;ndetje\n&quot;
+ 
+-#: pop3.c:672
++#: pop3.c:678
+ msgid &quot;Invalid APOP timestamp.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:696
++#: pop3.c:702
+ msgid &quot;Undefined protocol request in POP3_auth\n&quot;
+ msgstr &quot;K&#235;rkes&#235; protokolli e pap&#235;rcaktuar n&#235; POP3_auth\n&quot;
+ 
+-#: pop3.c:717
++#: pop3.c:723
+ msgid &quot;lock busy!  Is another session active?\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:796
++#: pop3.c:802
+ msgid &quot;Cannot handle UIDL response from upstream server.\n&quot;
+ msgstr &quot;&quot;
+ 
+-#: pop3.c:819
++#: pop3.c:825
+ msgid &quot;Server responded with UID for wrong message.\n&quot;
+ msgstr &quot;Sh&#235;rbyesi u p&#235;rgjigj me UID p&#235;r mesazh t&#235; gabuar.\n&quot;
+ 
+-#: pop3.c:846 pop3.c:1092
++#: pop3.c:852 pop3.c:1098
+ #, fuzzy, c-format
+ msgid &quot;id=%s (num=%d) was deleted, but is still present!\n&quot;
+ msgstr &quot;id=%s (num=%d) qe fshir&#235;, por &#235;sht&#235; ende i pranish&#235;m!\n&quot;
+ 
+-#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
++#: pop3.c:861 pop3.c:873 pop3.c:1107 pop3.c:1114
+ #, c-format
+ msgid &quot;%u is unseen\n&quot;
+ msgstr &quot;%u &#235;sht&#235; i pav&#235;rejtur\n&quot;
+ 
+-#: pop3.c:952
++#: pop3.c:958
+ msgid &quot;Messages inserted into list on server. Cannot handle this.\n&quot;
+ msgstr &quot;&quot;
+ &quot;Mesazhe t&#235; futur n&#235; nj&#235; list&#235; te sh&#235;rbyesi. Nuk mund ta b&#235;j dot k&#235;t&#235;.\n&quot;
+ 
+-#: pop3.c:1044
++#: pop3.c:1050
+ msgid &quot;protocol error\n&quot;
+ msgstr &quot;gabim protokolli\n&quot;
+ 
+-#: pop3.c:1060
++#: pop3.c:1066
+ msgid &quot;protocol error while fetching UIDLs\n&quot;
+ msgstr &quot;gabim protokolli gjat&#235; sjelljes s&#235; UIDL-ve\n&quot;
+ 
+-#: pop3.c:1430
++#: pop3.c:1436
+ msgid &quot;Option --folder is not supported with POP3\n&quot;
+ msgstr &quot;Mund&#235;sia --dosje nuk mbulohet me POP3\n&quot;
+ 
+@@ -2402,17 +2402,17 @@
+ msgid &quot;end of input&quot;
+ msgstr &quot;fund futjeje&quot;
+ 
+-#: rcfile_y.y:419
++#: rcfile_y.y:420
+ #, c-format
+ msgid &quot;File %s must be a regular file.\n&quot;
+ msgstr &quot;Kartela %s duhet t&#235; jet&#235; nj&#235; kartel&#235; e rregullt.\n&quot;
+ 
+-#: rcfile_y.y:429
++#: rcfile_y.y:430
+ #, c-format
+ msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
+ msgstr &quot;Kartela %s duhet t&#235; ket&#235; jo m&#235; shum&#235; se lejet -rwx--x--- (0710).\n&quot;
+ 
+-#: rcfile_y.y:441
++#: rcfile_y.y:442
+ #, c-format
+ msgid &quot;File %s must be owned by you.\n&quot;
+ msgstr &quot;Kartela %s duhet t&#235; jet&#235; prona juaj.\n&quot;
+@@ -2846,116 +2846,116 @@
+ msgid &quot;connected.\n&quot;
+ msgstr &quot;Lidhja SSL d&#235;shtoi.\n&quot;
+ 
+-#: socket.c:660
++#: socket.c:611
+ #, c-format
+ msgid &quot;Issuer Organization: %s\n&quot;
+ msgstr &quot;Organiz&#235;m L&#235;shues: %s\n&quot;
+ 
+-#: socket.c:662
++#: socket.c:613
+ msgid &quot;Warning: Issuer Organization Name too long (possibly truncated).\n&quot;
+ msgstr &quot;Sinjalizim: Em&#235;r Organizmi L&#235;shues shum&#235; i gjat&#235; (mundet u cungua).\n&quot;
+ 
+-#: socket.c:664
++#: socket.c:615
+ msgid &quot;Unknown Organization\n&quot;
+ msgstr &quot;Organiz&#235;m i Panjohur\n&quot;
+ 
+-#: socket.c:666
++#: socket.c:617
+ #, c-format
+ msgid &quot;Issuer CommonName: %s\n&quot;
+ msgstr &quot;Em&#235;r i Zakonsh&#235;m L&#235;shuesi: %s\n&quot;
+ 
+-#: socket.c:668
++#: socket.c:619
+ msgid &quot;Warning: Issuer CommonName too long (possibly truncated).\n&quot;
+ msgstr &quot;&quot;
+ &quot;Sinjalizim: Em&#235;r i Zakonsh&#235;m L&#235;shues shum&#235; i gjat&#235; (mundet u cungua).\n&quot;
+ 
+-#: socket.c:670
++#: socket.c:621
+ msgid &quot;Unknown Issuer CommonName\n&quot;
+ msgstr &quot;Em&#235;r i Zakonsh&#235;m L&#235;shuesi i Panjohur\n&quot;
+ 
+-#: socket.c:674
++#: socket.c:625
+ #, c-format
+ msgid &quot;Server CommonName: %s\n&quot;
+ msgstr &quot;Em&#235;r i Zakonsh&#235;m Sh&#235;rbyesi: %s\n&quot;
+ 
+-#: socket.c:678
++#: socket.c:629
+ msgid &quot;Bad certificate: Subject CommonName too long!\n&quot;
+ msgstr &quot;D&#235;shmi e gabuar: Em&#235;r i Zakonsh&#235;m Subjekti shum&#235; i gjat&#235;!\n&quot;
+ 
+-#: socket.c:724
++#: socket.c:675
+ #, c-format
+ msgid &quot;Server CommonName mismatch: %s != %s\n&quot;
+ msgstr &quot;Ngat&#235;rrim Emri t&#235; Zakonsh&#235;m Sh&#235;rbyesi: %s != %s\n&quot;
+ 
+-#: socket.c:730
++#: socket.c:681
+ msgid &quot;Server name not set, could not verify certificate!\n&quot;
+ msgstr &quot;Em&#235;r sh&#235;rbyesi i pacaktuar, nuk munda t&#235; verifikoj d&#235;shmin&#235;!\n&quot;
+ 
+-#: socket.c:735
++#: socket.c:686
+ msgid &quot;Unknown Server CommonName\n&quot;
+ msgstr &quot;Em&#235;r i Zakonsh&#235;m Sh&#235;rbyesi I panjohur\n&quot;
+ 
+-#: socket.c:737
++#: socket.c:688
+ msgid &quot;Server name not specified in certificate!\n&quot;
+ msgstr &quot;Em&#235;r sh&#235;rbyesi i pacaktuar n&#235; d&#235;shmi!\n&quot;
+ 
+-#: socket.c:749
++#: socket.c:700
+ msgid &quot;EVP_md5() failed!\n&quot;
+ msgstr &quot;EVP_md5() d&#235;shtoi!\n&quot;
+ 
+-#: socket.c:753
++#: socket.c:704
+ msgid &quot;Out of memory!\n&quot;
+ msgstr &quot;Kujtes&#235; e pamjaftueshme!\n&quot;
+ 
+-#: socket.c:761
++#: socket.c:712
+ msgid &quot;Digest text buffer too small!\n&quot;
+ msgstr &quot;Shtyt&#235;z p&#235;rmbledhjeje tekstesh shum&#235; e vog&#235;l!\n&quot;
+ 
+-#: socket.c:767
++#: socket.c:718
+ #, c-format
+ msgid &quot;%s key fingerprint: %s\n&quot;
+ msgstr &quot;gjurm&#235; gishtash ky&#231;i %s: %s\n&quot;
+ 
+-#: socket.c:771
++#: socket.c:722
+ #, c-format
+ msgid &quot;%s fingerprints match.\n&quot;
+ msgstr &quot;%s gjurmat e gishtave p&#235;rputhen.\n&quot;
+ 
+-#: socket.c:773
++#: socket.c:724
+ #, c-format
+ msgid &quot;%s fingerprints do not match!\n&quot;
+ msgstr &quot;%s gjurmat e gishtave nuk p&#235;rputhen!\n&quot;
+ 
+-#: socket.c:782
++#: socket.c:733
+ #, c-format
+ msgid &quot;Server certificate verification error: %s\n&quot;
+ msgstr &quot;Gabim verifikim d&#235;shmie sh&#235;rbyesi: %s\n&quot;
+ 
+-#: socket.c:788
++#: socket.c:739
+ #, c-format
+ msgid &quot;unknown issuer (first %d characters): %s\n&quot;
+ msgstr &quot;l&#235;shues i panjohur (%d g&#235;rmat e para): %s\n&quot;
+ 
+-#: socket.c:875
++#: socket.c:826
+ msgid &quot;File descriptor out of range for SSL&quot;
+ msgstr &quot;P&#235;rshkrues kartele jasht&#235; intervali p&#235;r SSL&quot;
+ 
+-#: socket.c:891
++#: socket.c:842
+ #, c-format
+ msgid &quot;Invalid SSL protocol '%s' specified, using default (SSLv23).\n&quot;
+ msgstr &quot;&quot;
+ &quot;Treguar protokoll SSL i pavlefsh&#235;m '%s', po p&#235;rdor t&#235; parazgjedhurin &quot;
+ &quot;(SSLv23).\n&quot;
+ 
+-#: socket.c:964
++#: socket.c:916
+ msgid &quot;Certificate/fingerprint verification was somehow skipped!\n&quot;
+ msgstr &quot;Verifikimi i d&#235;shmis&#235;/gjurm&#235;s s&#235; gishtave pak a shum&#235; u anashkalua!\n&quot;
+ 
+-#: socket.c:1042
++#: socket.c:994
+ msgid &quot;Cygwin socket read retry\n&quot;
+ msgstr &quot;Riprov&#235; p&#235;r lexim prej nj&#235; \&quot;socket\&quot;-i Cygwin\n&quot;
+ 
+-#: socket.c:1045
++#: socket.c:997
+ msgid &quot;Cygwin socket read retry failed!\n&quot;
+ msgstr &quot;Riprova p&#235;r lexim prej nj&#235; \&quot;socket\&quot;-i Cygwin d&#235;shtoi!\n&quot;
+ 
+@@ -3085,31 +3085,31 @@
+ msgid &quot;discarding new UID list\n&quot;
+ msgstr &quot;po hedh tej list&#235; t&#235; re UID-sh\n&quot;
+ 
+-#: uid.c:616
++#: uid.c:617
+ msgid &quot;Deleting fetchids file.\n&quot;
+ msgstr &quot;Po fshij kartel&#235; \&quot;fetchids\&quot;.\n&quot;
+ 
+-#: uid.c:618
++#: uid.c:620
+ #, c-format
+ msgid &quot;Error deleting %s: %s\n&quot;
+ msgstr &quot;Gabim n&#235; fshirjen e kartel&#235;s \&quot;%s\&quot;: %s\n&quot;
+ 
+-#: uid.c:624
++#: uid.c:626
+ msgid &quot;Writing fetchids file.\n&quot;
+ msgstr &quot;Po shkruaj kartel&#235; \&quot;fetchids\&quot;.\n&quot;
+ 
+-#: uid.c:643
++#: uid.c:645
+ #, c-format
+ msgid &quot;Error writing to fetchids file %s, old file left in place.\n&quot;
+ msgstr &quot;&quot;
+ &quot;Gabim gjat&#235; shkrimit te kartela fetchids %s, u la n&#235; vend kartela e vjet&#235;r.\n&quot;
+ 
+-#: uid.c:647
++#: uid.c:649
+ #, c-format
+ msgid &quot;Cannot rename fetchids file %s to %s: %s\n&quot;
+ msgstr &quot;S'riem&#235;rtoj dot kartel&#235;n fetchids %s si %s: %s\n&quot;
+ 
+-#: uid.c:651
++#: uid.c:653
+ #, c-format
+ msgid &quot;Cannot open fetchids file %s for writing: %s\n&quot;
+ msgstr &quot;S'hap dot kartel&#235;n fetchids %s p&#235;r shkrim n&#235; t&#235;: %s\n&quot;
+
+Modified: branches/BRANCH_6-3/po/vi.po
+===================================================================
+--- branches/BRANCH_6-3/po/vi.po	2008-01-29 13:19:58 UTC (rev 5154)
++++ branches/BRANCH_6-3/po/vi.po	2008-01-31 09:15:53 UTC (rev 5155)
+@@ -6,7 +6,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.3.8\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2007-06-27 11:18+0200\n&quot;
++&quot;POT-Creation-Date: 2008-01-31 10:14+0100\n&quot;
+ &quot;PO-Revision-Date: 2007-05-28 21:48+0930\n&quot;
+ &quot;Last-Translator: Clytie Siddall &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">clytie at riverland.net.au</A>&gt;\n&quot;
+ &quot;Language-Team: Vietnamese &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">vi-VN at googlegroups.com</A>&gt;\n&quot;
+@@ -1670,12 +1670,12 @@
+ msgid &quot;will idle after poll\n&quot;
+ msgstr &quot;s&#225;&#186;&#189; ngh&#225;&#187;&#137; sau khi th&#196;&#131;m d&#195;&#178;\n&quot;
+ 
+-#: imap.c:441 pop3.c:505
++#: imap.c:441 pop3.c:511
+ #, c-format
+ msgid &quot;%s: upgrade to TLS succeeded.\n&quot;
+ msgstr &quot;%s: vi&#225;&#187;&#135;c n&#195;&#162;ng c&#225;&#186;&#165;p l&#195;&#170;n TLS &#196;&#145;&#195;&#163; th&#195;&#160;nh c&#195;&#180;ng.\n&quot;
+ 
+-#: imap.c:450 pop3.c:514
++#: imap.c:450 pop3.c:520
+ #, c-format
+ msgid &quot;%s: upgrade to TLS failed.\n&quot;
+ msgstr &quot;%s: vi&#225;&#187;&#135;c n&#195;&#162;ng c&#225;&#186;&#165;p l&#195;&#170;n TLS b&#225;&#187;&#139; l&#225;&#187;&#151;i.\n&quot;
+@@ -1690,7 +1690,7 @@
+ msgid &quot;Required OTP capability not compiled into fetchmail\n&quot;
+ msgstr &quot;Kh&#225;&#186;&#163; n&#196;&#131;ng OTP c&#225;&#186;&#167;n thi&#225;&#186;&#191;t kh&#195;&#180;ng &#196;&#145;&#198;&#176;&#225;&#187;&#163;c bi&#195;&#170;n d&#225;&#187;&#139;ch v&#195;&#160;o fetchmail\n&quot;
+ 
+-#: imap.c:587 pop3.c:380
++#: imap.c:587 pop3.c:386
+ msgid &quot;Required NTLM capability not compiled into fetchmail\n&quot;
+ msgstr &quot;Kh&#225;&#186;&#163; n&#196;&#131;ng NTLM c&#225;&#186;&#167;n thi&#225;&#186;&#191;t kh&#195;&#180;ng &#196;&#145;&#198;&#176;&#225;&#187;&#163;c bi&#195;&#170;n d&#225;&#187;&#139;ch v&#195;&#160;o fetchmail\n&quot;
+ 
+@@ -1743,7 +1743,7 @@
+ msgid &quot;%lu is unseen\n&quot;
+ msgstr &quot;%lu ch&#198;&#176;a xem\n&quot;
+ 
+-#: imap.c:897 pop3.c:876
++#: imap.c:897 pop3.c:882
+ #, c-format
+ msgid &quot;%u is first unseen\n&quot;
+ msgstr &quot;%u l&#195;&#160; th&#198;&#176; &#196;&#145;&#225;&#186;&#167;u ch&#198;&#176;a xem\n&quot;
+@@ -1945,7 +1945,7 @@
+ msgid &quot;Could not decode OTP challenge\n&quot;
+ msgstr &quot;Kh&#195;&#180;ng th&#225;&#187;&#131; gi&#225;&#186;&#163;i m&#195;&#163; y&#195;&#170;u c&#225;&#186;&#167;u OTP\n&quot;
+ 
+-#: opie.c:64 pop3.c:597
++#: opie.c:64 pop3.c:603
+ msgid &quot;Secret pass phrase: &quot;
+ msgstr &quot;C&#225;&#187;&#165;m t&#225;&#187;&#171; m&#225;&#186;&#173;t kh&#225;&#186;&#169;u b&#195;&#173; m&#225;&#186;&#173;t: &quot;
+ 
+@@ -2269,7 +2269,7 @@
+ msgstr &quot;&quot;
+ &quot;      --showdots    _hi&#225;&#187;&#135;n c&#195;&#161;c ch&#225;&#186;&#165;m_ ti&#225;&#186;&#191;n h&#195;&#160;nh ngay c&#225;&#186;&#163; trong t&#225;&#186;&#173;p tin ghi l&#198;&#176;u\n&quot;
+ 
+-#: pop3.c:350
++#: pop3.c:356
+ msgid &quot;&quot;
+ &quot;Warning: \&quot;Maillennium POP3/PROXY server\&quot; found, using RETR command instead &quot;
+ &quot;of TOP.\n&quot;
+@@ -2277,81 +2277,81 @@
+ &quot;C&#225;&#186;&#163;nh b&#195;&#161;o : t&#195;&#172;m th&#225;&#186;&#165;y &#194;&#171; Maillennium POP3/PROXY server &#194;&#187; n&#195;&#170;n d&#195;&#185;ng l&#225;&#187;&#135;nh RETR &quot;
+ &quot;thay v&#195;&#160;o TOP.\n&quot;
+ 
+-#: pop3.c:449
++#: pop3.c:455
+ msgid &quot;TLS is mandatory for this session, but server refused CAPA command.\n&quot;
+ msgstr &quot;&quot;
+ &quot;B&#225;&#186;&#175;t bu&#225;&#187;&#153;c ph&#225;&#186;&#163;i s&#225;&#187;&#173; d&#225;&#187;&#165;ng TLS trong phi&#195;&#170;n ch&#225;&#186;&#161;y n&#195;&#160;y m&#195;&#160; tr&#195;&#172;nh ph&#225;&#187;&#165;c v&#225;&#187;&#165; &#196;&#145;&#195;&#163; t&#225;&#187;&#171; ch&#225;&#187;&#145;i &quot;
+ &quot;l&#225;&#187;&#135;nh CAPA.\n&quot;
+ 
+-#: pop3.c:450
++#: pop3.c:456
+ msgid &quot;The CAPA command is however necessary for TLS.\n&quot;
+ msgstr &quot;C&#195;&#178;n l&#225;&#187;&#135;nh CAPA c&#225;&#186;&#167;n thi&#225;&#186;&#191;t cho TLS.\n&quot;
+ 
+-#: pop3.c:525
++#: pop3.c:531
+ #, c-format
+ msgid &quot;%s: opportunistic upgrade to TLS failed, trying to continue.\n&quot;
+ msgstr &quot;&quot;
+ &quot;%s: vi&#225;&#187;&#135;c n&#195;&#162;ng c&#225;&#186;&#165;p l&#195;&#170;n TLS m&#225;&#187;&#153;t c&#195;&#161;ch c&#198;&#161; h&#225;&#187;&#153;i ch&#225;&#187;&#167; ngh&#196;&#169;a b&#225;&#187;&#139; l&#225;&#187;&#151;i n&#195;&#170;n th&#225;&#187;&#173; ti&#225;&#186;&#191;p &quot;
+ &quot;t&#225;&#187;&#165;c.\n&quot;
+ 
+-#: pop3.c:633
++#: pop3.c:639
+ msgid &quot;We've run out of allowed authenticators and cannot continue.\n&quot;
+ msgstr &quot;H&#225;&#186;&#191;t c&#195;&#161;c b&#225;&#187;&#153; x&#195;&#161;c th&#225;&#187;&#177;c &#196;&#145;&#198;&#176;&#225;&#187;&#163;c ph&#195;&#169;p n&#195;&#170;n kh&#195;&#180;ng th&#225;&#187;&#131; ti&#225;&#186;&#191;p t&#225;&#187;&#165;c.\n&quot;
+ 
+-#: pop3.c:647
++#: pop3.c:653
+ msgid &quot;Required APOP timestamp not found in greeting\n&quot;
+ msgstr &quot;Kh&#195;&#180;ng t&#195;&#172;m th&#225;&#186;&#165;y nh&#195;&#163;n th&#225;&#187;&#157;i gian APOP c&#225;&#186;&#167;n thi&#225;&#186;&#191;t trong l&#225;&#187;&#157;i ch&#195;&#160;o m&#225;&#187;&#171;ng\n&quot;
+ 
+-#: pop3.c:656
++#: pop3.c:662
+ msgid &quot;Timestamp syntax error in greeting\n&quot;
+ msgstr &quot;G&#225;&#186;&#183;p l&#225;&#187;&#151;i c&#195;&#186; ph&#195;&#161;p nh&#195;&#163;n th&#225;&#187;&#157;i gian trong l&#225;&#187;&#157;i ch&#195;&#160;o m&#225;&#187;&#171;ng\n&quot;
+ 
+-#: pop3.c:672
++#: pop3.c:678
+ msgid &quot;Invalid APOP timestamp.\n&quot;
+ msgstr &quot;Nh&#195;&#163;n gi&#225;&#187;&#157; APOP kh&#195;&#180;ng h&#225;&#187;&#163;p l&#225;&#187;&#135;.\n&quot;
+ 
+-#: pop3.c:696
++#: pop3.c:702
+ msgid &quot;Undefined protocol request in POP3_auth\n&quot;
+ msgstr &quot;&quot;
+ &quot;G&#225;&#186;&#183;p y&#195;&#170;u c&#225;&#186;&#167;u giao th&#225;&#187;&#169;c kh&#195;&#180;ng &#196;&#145;&#198;&#176;&#225;&#187;&#163;c x&#195;&#161;c &#196;&#145;&#225;&#187;&#139;nh trong &#194;&#171; POP3_auth &#194;&#187; (x&#195;&#161;c th&#225;&#187;&#177;c)\n&quot;
+ 
+-#: pop3.c:717
++#: pop3.c:723
+ msgid &quot;lock busy!  Is another session active?\n&quot;
+ msgstr &quot;kho&#195;&#161; b&#225;&#186;&#173;n ! C&#195;&#179; phi&#195;&#170;n ch&#225;&#186;&#161;y kh&#195;&#161;c ho&#225;&#186;&#161;t &#196;&#145;&#225;&#187;&#153;ng kh&#195;&#180;ng?\n&quot;
+ 
+-#: pop3.c:796
++#: pop3.c:802
+ msgid &quot;Cannot handle UIDL response from upstream server.\n&quot;
+ msgstr &quot;Kh&#195;&#180;ng th&#225;&#187;&#131; x&#225;&#187;&#173; l&#195;&#189; &#196;&#145;&#195;&#161;p &#225;&#187;&#169;ng UIDL t&#225;&#187;&#171; m&#195;&#161;y ph&#225;&#187;&#165;c v&#225;&#187;&#165; ngu&#225;&#187;&#147;n.\n&quot;
+ 
+-#: pop3.c:819
++#: pop3.c:825
+ msgid &quot;Server responded with UID for wrong message.\n&quot;
+ msgstr &quot;M&#195;&#161;y ph&#225;&#187;&#165;c v&#225;&#187;&#165; &#196;&#145;&#195;&#163; &#196;&#145;&#195;&#161;p &#225;&#187;&#169;ng UID cho th&#198;&#176; kh&#195;&#180;ng &#196;&#145;&#195;&#186;ng.\n&quot;
+ 
+-#: pop3.c:846 pop3.c:1092
++#: pop3.c:852 pop3.c:1098
+ #, c-format
+ msgid &quot;id=%s (num=%d) was deleted, but is still present!\n&quot;
+ msgstr &quot;id=%s (s&#225;&#187;&#145;=%d) &#196;&#145;&#195;&#163; &#196;&#145;&#198;&#176;&#225;&#187;&#163;c xo&#195;&#161; b&#225;&#187;&#143;, nh&#198;&#176;ng c&#195;&#178;n c&#195;&#179;.\n&quot;
+ 
+-#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
++#: pop3.c:861 pop3.c:873 pop3.c:1107 pop3.c:1114
+ #, c-format
+ msgid &quot;%u is unseen\n&quot;
+ msgstr &quot;%u ch&#198;&#176;a xem\n&quot;
+ 
+-#: pop3.c:952
++#: pop3.c:958
+ msgid &quot;Messages inserted into list on server. Cannot handle this.\n&quot;
+ msgstr &quot;&quot;
+ &quot;G&#225;&#186;&#183;p th&#198;&#176; &#196;&#145;&#198;&#176;&#225;&#187;&#163;c ch&#195;&#168;n v&#195;&#160;o danh s&#195;&#161;ch tr&#195;&#170;n m&#195;&#161;y ph&#225;&#187;&#165;c v&#225;&#187;&#165;. Kh&#195;&#180;ng th&#225;&#187;&#131; x&#225;&#187;&#173; l&#195;&#189; tr&#198;&#176;&#225;&#187;&#157;ng h&#225;&#187;&#163;p &quot;
+ &quot;n&#195;&#160;y.\n&quot;
+ 
+-#: pop3.c:1044
++#: pop3.c:1050
+ msgid &quot;protocol error\n&quot;
+ msgstr &quot;l&#225;&#187;&#151;i giao th&#225;&#187;&#169;c\n&quot;
+ 
+-#: pop3.c:1060
++#: pop3.c:1066
+ msgid &quot;protocol error while fetching UIDLs\n&quot;
+ msgstr &quot;g&#225;&#186;&#183;p l&#225;&#187;&#151;i giao th&#225;&#187;&#169;c khi l&#225;&#186;&#165;y c&#195;&#161;c UIDL\n&quot;
+ 
+-#: pop3.c:1430
++#: pop3.c:1436
+ msgid &quot;Option --folder is not supported with POP3\n&quot;
+ msgstr &quot;Kh&#195;&#180;ng h&#225;&#187;&#151; tr&#225;&#187;&#163; t&#195;&#185;y ch&#225;&#187;&#141;n &#194;&#171; --folder &#194;&#187; (th&#198;&#176; m&#225;&#187;&#165;c) v&#225;&#187;&#155;i POP3\n&quot;
+ 
+@@ -2387,18 +2387,18 @@
+ msgid &quot;end of input&quot;
+ msgstr &quot;k&#225;&#186;&#191;t th&#195;&#186;c k&#225;&#186;&#191;t nh&#225;&#186;&#173;p&quot;
+ 
+-#: rcfile_y.y:419
++#: rcfile_y.y:420
+ #, c-format
+ msgid &quot;File %s must be a regular file.\n&quot;
+ msgstr &quot;T&#225;&#186;&#173;p tin %s ph&#225;&#186;&#163;i l&#195;&#160; m&#225;&#187;&#153;t t&#225;&#186;&#173;p tin chu&#225;&#186;&#169;n.\n&quot;
+ 
+-#: rcfile_y.y:429
++#: rcfile_y.y:430
+ #, c-format
+ msgid &quot;File %s must have no more than -rwx--x--- (0710) permissions.\n&quot;
+ msgstr &quot;&quot;
+ &quot;Kh&#195;&#180;ng cho ph&#195;&#169;p t&#225;&#186;&#173;p tin %s c&#195;&#179; quy&#225;&#187;&#129;n h&#225;&#186;&#161;n l&#225;&#187;&#155;n h&#198;&#161;n &#194;&#171; -rws--x--- &#194;&#187; (0710).\n&quot;
+ 
+-#: rcfile_y.y:441
++#: rcfile_y.y:442
+ #, c-format
+ msgid &quot;File %s must be owned by you.\n&quot;
+ msgstr &quot;T&#225;&#186;&#173;p tin %s ph&#225;&#186;&#163;i b&#225;&#187;&#139; b&#225;&#186;&#161;n s&#225;&#187;&#159; h&#225;&#187;&#175;u.\n&quot;
+@@ -2830,114 +2830,114 @@
+ msgid &quot;connected.\n&quot;
+ msgstr &quot;&#196;&#145;&#195;&#163; k&#225;&#186;&#191;t n&#225;&#187;&#145;i.\n&quot;
+ 
+-#: socket.c:660
++#: socket.c:611
+ #, c-format
+ msgid &quot;Issuer Organization: %s\n&quot;
+ msgstr &quot;T&#225;&#187;&#149; ch&#225;&#187;&#169;c ph&#195;&#161;t h&#195;&#160;nh: %s\n&quot;
+ 
+-#: socket.c:662
++#: socket.c:613
+ msgid &quot;Warning: Issuer Organization Name too long (possibly truncated).\n&quot;
+ msgstr &quot;C&#225;&#186;&#163;nh b&#195;&#161;o : t&#195;&#170;n T&#225;&#187;&#149; ch&#225;&#187;&#169;c Ph&#195;&#161;t h&#195;&#160;nh qu&#195;&#161; d&#195;&#160;i (c&#195;&#179; th&#225;&#187;&#131; b&#225;&#187;&#139; c&#225;&#186;&#175;t x&#195;&#169;n).\n&quot;
+ 
+-#: socket.c:664
++#: socket.c:615
+ msgid &quot;Unknown Organization\n&quot;
+ msgstr &quot;Kh&#195;&#180;ng bi&#225;&#186;&#191;t T&#225;&#187;&#149; ch&#225;&#187;&#169;c\n&quot;
+ 
+-#: socket.c:666
++#: socket.c:617
+ #, c-format
+ msgid &quot;Issuer CommonName: %s\n&quot;
+ msgstr &quot;T&#195;&#170;n Chung ph&#195;&#161;t h&#195;&#160;nh: %s\n&quot;
+ 
+-#: socket.c:668
++#: socket.c:619
+ msgid &quot;Warning: Issuer CommonName too long (possibly truncated).\n&quot;
+ msgstr &quot;C&#225;&#186;&#163;nh b&#195;&#161;o : T&#195;&#170;n Chung nh&#195;&#160; ph&#195;&#161;t h&#195;&#160;nh qu&#195;&#161; d&#195;&#160;i (c&#195;&#179; th&#225;&#187;&#131; b&#225;&#187;&#139; c&#225;&#186;&#175;t x&#195;&#169;n).\n&quot;
+ 
+-#: socket.c:670
++#: socket.c:621
+ msgid &quot;Unknown Issuer CommonName\n&quot;
+ msgstr &quot;Kh&#195;&#180;ng bi&#225;&#186;&#191;t T&#195;&#170;n Chung nh&#195;&#160; ph&#195;&#161;t h&#195;&#160;nh\n&quot;
+ 
+-#: socket.c:674
++#: socket.c:625
+ #, c-format
+ msgid &quot;Server CommonName: %s\n&quot;
+ msgstr &quot;T&#195;&#170;n Chung tr&#195;&#172;nh ph&#225;&#187;&#165;c v&#225;&#187;&#165;: %s\n&quot;
+ 
+-#: socket.c:678
++#: socket.c:629
+ msgid &quot;Bad certificate: Subject CommonName too long!\n&quot;
+ msgstr &quot;Ch&#225;&#187;&#169;ng nh&#225;&#186;&#173;n sai: T&#195;&#170;n Chung Ch&#225;&#187;&#167; &#196;&#145;&#225;&#187;&#129; qu&#195;&#161; d&#195;&#160;i.\n&quot;
+ 
+-#: socket.c:724
++#: socket.c:675
+ #, c-format
+ msgid &quot;Server CommonName mismatch: %s != %s\n&quot;
+ msgstr &quot;T&#195;&#170;n Chung m&#195;&#161;y ph&#225;&#187;&#165;c v&#225;&#187;&#165; kh&#195;&#180;ng kh&#225;&#187;&#155;p: %s != %s\n&quot;
+ 
+-#: socket.c:730
++#: socket.c:681
+ msgid &quot;Server name not set, could not verify certificate!\n&quot;
+ msgstr &quot;Chpa &#196;&#145;&#225;&#186;&#183;t t&#195;&#170;n m&#195;&#161;y ph&#225;&#187;&#165;c v&#225;&#187;&#165; n&#195;&#170;n kh&#195;&#180;ng th&#225;&#187;&#131; th&#225;&#186;&#169;m tra ch&#225;&#187;&#169;ng nh&#225;&#186;&#173;n.\n&quot;
+ 
+-#: socket.c:735
++#: socket.c:686
+ msgid &quot;Unknown Server CommonName\n&quot;
+ msgstr &quot;Kh&#195;&#180;ng bi&#225;&#186;&#191;t T&#195;&#170;n Chung m&#195;&#161;y ph&#225;&#187;&#165;c v&#225;&#187;&#165;\n&quot;
+ 
+-#: socket.c:737
++#: socket.c:688
+ msgid &quot;Server name not specified in certificate!\n&quot;
+ msgstr &quot;Kh&#195;&#180;ng x&#195;&#161;c &#196;&#145;&#225;&#187;&#139;nh t&#195;&#170;n m&#195;&#161;y ph&#225;&#187;&#165;c v&#225;&#187;&#165; trong ch&#225;&#187;&#169;ng nh&#225;&#186;&#173;n.\n&quot;
+ 
+-#: socket.c:749
++#: socket.c:700
+ msgid &quot;EVP_md5() failed!\n&quot;
+ msgstr &quot;EVP_md5() b&#225;&#187;&#139; l&#225;&#187;&#151;i.\n&quot;
+ 
+-#: socket.c:753
++#: socket.c:704
+ msgid &quot;Out of memory!\n&quot;
+ msgstr &quot;H&#225;&#186;&#191;t b&#225;&#187;&#153; nh&#225;&#187;&#155;.\n&quot;
+ 
+-#: socket.c:761
++#: socket.c:712
+ msgid &quot;Digest text buffer too small!\n&quot;
+ msgstr &quot;B&#225;&#187;&#153; &#196;&#145;&#225;&#187;&#135;m digest qu&#195;&#161; nh&#225;&#187;&#143;.\n&quot;
+ 
+-#: socket.c:767
++#: socket.c:718
+ #, c-format
+ msgid &quot;%s key fingerprint: %s\n&quot;
+ msgstr &quot;V&#195;&#162;n tay kho&#195;&#161; %s: %s\n&quot;
+ 
+-#: socket.c:771
++#: socket.c:722
+ #, c-format
+ msgid &quot;%s fingerprints match.\n&quot;
+ msgstr &quot;V&#195;&#162;n tay kho&#195;&#161; %s tr&#195;&#185;ng.\n&quot;
+ 
+-#: socket.c:773
++#: socket.c:724
+ #, c-format
+ msgid &quot;%s fingerprints do not match!\n&quot;
+ msgstr &quot;V&#195;&#162;n tay kho&#195;&#161; %s kh&#195;&#180;ng tr&#195;&#185;ng.\n&quot;
+ 
+-#: socket.c:782
++#: socket.c:733
+ #, c-format
+ msgid &quot;Server certificate verification error: %s\n&quot;
+ msgstr &quot;L&#225;&#187;&#151;i th&#225;&#186;&#169;m tra ch&#225;&#187;&#169;ng nh&#225;&#186;&#173;n m&#195;&#161;y ph&#225;&#187;&#165;c v&#225;&#187;&#165; : %s\n&quot;
+ 
+-#: socket.c:788
++#: socket.c:739
+ #, c-format
+ msgid &quot;unknown issuer (first %d characters): %s\n&quot;
+ msgstr &quot;kh&#195;&#180;ng bi&#225;&#186;&#191;t nh&#195;&#160; ph&#195;&#161;t h&#195;&#160;nh (%d k&#195;&#189; t&#225;&#187;&#177; &#196;&#145;&#225;&#186;&#167;u): %s\n&quot;
+ 
+-#: socket.c:875
++#: socket.c:826
+ msgid &quot;File descriptor out of range for SSL&quot;
+ msgstr &quot;B&#225;&#187;&#153; m&#195;&#180; t&#225;&#186;&#163; t&#225;&#186;&#173;p tin &#225;&#187;&#159; ngo&#225;&#186;&#161;i ph&#225;&#186;&#161;m v&#225;&#187;&#139; SSL&quot;
+ 
+-#: socket.c:891
++#: socket.c:842
+ #, c-format
+ msgid &quot;Invalid SSL protocol '%s' specified, using default (SSLv23).\n&quot;
+ msgstr &quot;&quot;
+ &quot;X&#195;&#161;c &#196;&#145;&#225;&#187;&#139;nh giao th&#225;&#187;&#169;c SSL kh&#195;&#180;ng h&#225;&#187;&#163;p l&#225;&#187;&#135; &#194;&#171; %s &#194;&#187; n&#195;&#170;n d&#195;&#185;ng m&#225;&#186;&#183;c &#196;&#145;&#225;&#187;&#139;nh (SSLv23).\n&quot;
+ 
+-#: socket.c:964
++#: socket.c:916
+ msgid &quot;Certificate/fingerprint verification was somehow skipped!\n&quot;
+ msgstr &quot;Vi&#225;&#187;&#135;c th&#225;&#186;&#169;m tra ch&#225;&#187;&#169;ng nh&#225;&#186;&#173;n/v&#195;&#162;n tay b&#225;&#187;&#139; b&#225;&#187;&#143; qua v&#195;&#172; l&#195;&#189; do n&#195;&#160;o.\n&quot;
+ 
+-#: socket.c:1042
++#: socket.c:994
+ msgid &quot;Cygwin socket read retry\n&quot;
+ msgstr &quot;Vi&#225;&#187;&#135;c c&#225;&#187;&#145; l&#225;&#186;&#161;i &#196;&#145;&#225;&#187;&#141;c &#225;&#187;&#149; c&#225;&#186;&#175;m Cygwin\n&quot;
+ 
+-#: socket.c:1045
++#: socket.c:997
+ msgid &quot;Cygwin socket read retry failed!\n&quot;
+ msgstr &quot;Vi&#225;&#187;&#135;c c&#225;&#187;&#145; l&#225;&#186;&#161;i &#196;&#145;&#225;&#187;&#141;c &#225;&#187;&#149; c&#225;&#186;&#175;m Cygwin b&#225;&#187;&#139; l&#225;&#187;&#151;i.\n&quot;
+ 
+@@ -3066,31 +3066,31 @@
+ msgid &quot;discarding new UID list\n&quot;
+ msgstr &quot;&#196;&#145;ang h&#225;&#187;&#167;y danh s&#195;&#161;ch UID m&#225;&#187;&#155;i...\n&quot;
+ 
+-#: uid.c:616
++#: uid.c:617
+ msgid &quot;Deleting fetchids file.\n&quot;
+ msgstr &quot;&#196;&#144;ang xo&#195;&#161; b&#225;&#187;&#143; t&#225;&#186;&#173;p tin fetchids (l&#225;&#186;&#165;y c&#195;&#161;c ID)...\n&quot;
+ 
+-#: uid.c:618
++#: uid.c:620
+ #, c-format
+ msgid &quot;Error deleting %s: %s\n&quot;
+ msgstr &quot;G&#225;&#186;&#183;p l&#225;&#187;&#151;i khi xo&#195;&#161; b&#225;&#187;&#143; %s: %s\n&quot;
+ 
+-#: uid.c:624
++#: uid.c:626
+ msgid &quot;Writing fetchids file.\n&quot;
+ msgstr &quot;&#196;&#144;ang ghi t&#225;&#186;&#173;p tin fetchids (l&#225;&#186;&#165;y c&#195;&#161;c ID)...\n&quot;
+ 
+-#: uid.c:643
++#: uid.c:645
+ #, c-format
+ msgid &quot;Error writing to fetchids file %s, old file left in place.\n&quot;
+ msgstr &quot;&quot;
+ &quot;G&#225;&#186;&#183;p l&#225;&#187;&#151;i khi ghi v&#195;&#160;o t&#225;&#186;&#173;p tin fetchids (l&#225;&#186;&#165;y c&#195;&#161;c ID) %s n&#195;&#170;n &#196;&#145;&#225;&#187;&#131; l&#225;&#186;&#161;i t&#225;&#186;&#173;p tin c&#197;&#169;.\n&quot;
+ 
+-#: uid.c:647
++#: uid.c:649
+ #, c-format
+ msgid &quot;Cannot rename fetchids file %s to %s: %s\n&quot;
+ msgstr &quot;Kh&#195;&#180;ng th&#225;&#187;&#131; &#196;&#145;&#225;&#187;&#149;i t&#195;&#170;n t&#225;&#186;&#173;p tin  fetchids (l&#225;&#186;&#165;y c&#195;&#161;c ID) %s th&#195;&#160;nh %s: %s\n&quot;
+ 
+-#: uid.c:651
++#: uid.c:653
+ #, c-format
+ msgid &quot;Cannot open fetchids file %s for writing: %s\n&quot;
+ msgstr &quot;Kh&#195;&#180;ng th&#225;&#187;&#131; m&#225;&#187;&#159; t&#225;&#186;&#173;p tin  fetchids (l&#225;&#186;&#165;y c&#195;&#161;c ID) %s &#196;&#145;&#225;&#187;&#131; ghi: %s\n&quot;
+
+Modified: branches/BRANCH_6-3/socket.c
+===================================================================
+--- branches/BRANCH_6-3/socket.c	2008-01-29 13:19:58 UTC (rev 5154)
++++ branches/BRANCH_6-3/socket.c	2008-01-31 09:15:53 UTC (rev 5155)
+@@ -415,9 +415,6 @@
+ {
+     char *newline, *bp = buf;
+     int n;
+-#ifdef	FORCE_STUFFING
+-    int maxavailable = 0;
+-#endif
+ #ifdef	SSL_ENABLE
+     SSL *ssl;
+ #endif
+@@ -457,9 +454,6 @@
+ 			(void)SSL_get_error(ssl, n);
+ 			return(-1);
+ 		}
+-#ifdef FORCE_STUFFING
+-		maxavailable = n;
+-#endif
+ 		if( 0 == n ) {
+ 			/* SSL_peek says no data...  Does he mean no data
+ 			or did the connection blow up?  If we got an error
+@@ -503,9 +497,6 @@
+ 	    if ((n = fm_peek(sock, bp, len)) &lt;= 0)
+ #endif
+ 		return (-1);
+-#ifdef FORCE_STUFFING
+-	    maxavailable = n;
+-#endif
+ 	    if ((newline = (char *)memchr(bp, '\n', n)) != NULL)
+ 		n = newline - bp + 1;
+ #ifndef __BEOS__
+@@ -519,46 +510,6 @@
+ 	    (!newline &amp;&amp; len);
+     *bp = '\0';
+ 
+-#ifdef FORCE_STUFFING		/* too ugly to live -- besides, there's IMAP */
+-    /* OK, very weird hack coming up here:
+-     * When POP3 servers send us a message, they're supposed to
+-     * terminate the message with a line containing only a dot. To protect
+-     * against lines in the real message that might contain only a dot,
+-     * they're supposed to preface any line that starts with a dot with
+-     * an additional dot, which will be removed on the client side. That
+-     * process, called byte-stuffing (and unstuffing) is really not the
+-     * concern of this low-level routine, ordinarily, but there are some
+-     * POP servers (and maybe IMAP servers too, who knows) that fail to
+-     * do the byte-stuffing, and this routine is the best place to try to
+-     * identify and fix that fault.
+-     *
+-     * Since the DOT line is supposed to come only at the end of a
+-     * message, the implication is that right after we see it, the server
+-     * is supposed to go back to waiting for the next command. There
+-     * isn't supposed to be any more data to read after we see the dot.
+-     * THEREFORE, if we see more data to be read after something that
+-     * looks like the dot line, then probably the server is failing to
+-     * do byte-stuffing. In that case, we'll byte-pack it for them so
+-     * that the higher-level routines see things as hunky-dorey.
+-     * This is not a perfect test or fix by any means (it has an
+-     * obvious race condition, for one thing), but it should at least
+-     * reduce the nastiness that ensues when people don't know how
+-     * to write POP servers.
+-     */
+-    if ((maxavailable &gt; (bp-buf)) &amp;&amp;
+-	    ((((bp-buf) == 3) &amp;&amp;
+-	      (buf[0] == '.') &amp;&amp;
+-	      (buf[1] == '\r') &amp;&amp;
+-	      (buf[2] == '\n')) ||
+-	     (((bp-buf) == 2) &amp;&amp;
+-	      (buf[0] == '.') &amp;&amp;
+-	      (buf[1] == '\n')))) {
+-
+-	memmove(buf+1, buf, (bp-buf)+1);
+-	buf[0] = '.';
+-	bp++;
+-    }
+-#endif /* FORCE_STUFFING */
+     return bp - buf;
+ }
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000144.html">[fetchmail-svn] r5154 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000146.html">[fetchmail-svn] r5156 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#145">[ date ]</a>
+              <a href="thread.html#145">[ thread ]</a>
+              <a href="subject.html#145">[ subject ]</a>
+              <a href="author.html#145">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

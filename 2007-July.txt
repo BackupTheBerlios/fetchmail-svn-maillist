@@ -1,0 +1,534 @@
+From svn at mknod.org  Wed Jul 11 10:26:31 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Wed, 11 Jul 2007 03:26:31 -0500 (CDT)
+Subject: [fetchmail-svn] r5110 - branches/BRANCH_6-3
+Message-ID: <20070711082631.CE4E62180CD@mknod.org>
+
+Author: m-a
+Date: 2007-07-11 03:26:31 -0500 (Wed, 11 Jul 2007)
+New Revision: 5110
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+update.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2007-06-10 22:55:36 UTC (rev 5109)
++++ branches/BRANCH_6-3/TODO.txt	2007-07-11 08:26:31 UTC (rev 5110)
+@@ -1,6 +1,7 @@
+ soon:
+ - find a solution for the "invalid header" discards message problem
+   (escape headers and stuff reminder into body)
++- http://bugs.debian.org/432618 - no "nossl" option to override defaults
+ 
+ 6.4:
+ - make the SSL default v3 (rather than v23).
+
+
+
+From svn at mknod.org  Wed Jul 11 10:59:37 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Wed, 11 Jul 2007 03:59:37 -0500 (CDT)
+Subject: [fetchmail-svn] r5111 - branches/BRANCH_6-3
+Message-ID: <20070711085937.9F6B12180CD@mknod.org>
+
+Author: m-a
+Date: 2007-07-11 03:59:37 -0500 (Wed, 11 Jul 2007)
+New Revision: 5111
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+update.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2007-07-11 08:26:31 UTC (rev 5110)
++++ branches/BRANCH_6-3/TODO.txt	2007-07-11 08:59:37 UTC (rev 5111)
+@@ -2,6 +2,7 @@
+ - find a solution for the "invalid header" discards message problem
+   (escape headers and stuff reminder into body)
+ - http://bugs.debian.org/432618 - no "nossl" option to override defaults
++- https://bugzilla.novell.com/show_bug.cgi?id=246829
+ 
+ 6.4:
+ - make the SSL default v3 (rather than v23).
+
+
+
+From svn at mknod.org  Wed Jul 11 17:23:40 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Wed, 11 Jul 2007 10:23:40 -0500 (CDT)
+Subject: [fetchmail-svn] r5112 - branches/BRANCH_6-3
+Message-ID: <20070711152340.455092180CF@mknod.org>
+
+Author: m-a
+Date: 2007-07-11 10:23:40 -0500 (Wed, 11 Jul 2007)
+New Revision: 5112
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Remove bogus Debian Bug#432618 - user should use no ssl rather than nossl.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2007-07-11 08:59:37 UTC (rev 5111)
++++ branches/BRANCH_6-3/TODO.txt	2007-07-11 15:23:40 UTC (rev 5112)
+@@ -1,7 +1,6 @@
+ soon:
+ - find a solution for the "invalid header" discards message problem
+   (escape headers and stuff reminder into body)
+-- http://bugs.debian.org/432618 - no "nossl" option to override defaults
+ - https://bugzilla.novell.com/show_bug.cgi?id=246829
+ 
+ 6.4:
+
+
+
+From svn at mknod.org  Wed Jul 11 17:50:41 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Wed, 11 Jul 2007 10:50:41 -0500 (CDT)
+Subject: [fetchmail-svn] r5113 - branches/BRANCH_6-3
+Message-ID: <20070711155041.F39582180CD@mknod.org>
+
+Author: m-a
+Date: 2007-07-11 10:50:41 -0500 (Wed, 11 Jul 2007)
+New Revision: 5113
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/fetchmail.man
+Log:
+The manual page no longer asserts that .fetchids were for exclusive POP3 use, 
+since it is planned to use it also with IMAP4.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2007-07-11 15:23:40 UTC (rev 5112)
++++ branches/BRANCH_6-3/NEWS	2007-07-11 15:50:41 UTC (rev 5113)
+@@ -56,6 +56,10 @@
+   Fixes Debian Bug#421446 (Holger Leskien), Novell Bug #247233 (Jon Nelson).
+   Thanks to Matthias Strau? for a configuration to reproduce the issue.
+ 
++# DOCUMENTATION:
++* The manual page no longer asserts that .fetchids were for exclusive POP3 use, 
++  since it is planned to use it also with IMAP4.
++
+ # TRANSLATION UPDATES:
+ * Polish (Jakub Bogusz)
+ * Japanese (Takeshi Hamasaki)
+
+Modified: branches/BRANCH_6-3/fetchmail.man
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.man	2007-07-11 15:23:40 UTC (rev 5112)
++++ branches/BRANCH_6-3/fetchmail.man	2007-07-11 15:50:41 UTC (rev 5113)
+@@ -787,7 +787,7 @@
+ .TP
+ .B \-i <pathname> | \-\-idfile <pathname>
+ (Keyword: idfile)
+-Specify an alternate name for the .fetchids file used to save POP3
++Specify an alternate name for the .fetchids file used to save message
+ UIDs. NOTE: since fetchmail 6.3.0, write access to the directory
+ containing the idfile is required, as fetchmail writes a temporary file
+ and renames it into the place of the real idfile only if the temporary
+@@ -2560,9 +2560,7 @@
+ default run control file
+ .TP 5
+ ~/.fetchids
+-default location of file associating hosts with last message IDs seen
+-(used only with newer RFC1939-compliant POP3 servers supporting the
+-UIDL command).
++default location of file recording last message UIDs seen per host.
+ .TP 5
+ ~/.fetchmail.pid
+ lock file to help prevent concurrent runs (non-root mode).
+
+
+
+From svn at mknod.org  Sun Jul 15 12:34:47 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Sun, 15 Jul 2007 05:34:47 -0500 (CDT)
+Subject: [fetchmail-svn] r5114 - branches/BRANCH_6-3
+Message-ID: <20070715103447.2A567218112@mknod.org>
+
+Author: m-a
+Date: 2007-07-15 05:34:46 -0500 (Sun, 15 Jul 2007)
+New Revision: 5114
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+Log:
+Revise recent change comment about .fetchids.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2007-07-11 15:50:41 UTC (rev 5113)
++++ branches/BRANCH_6-3/NEWS	2007-07-15 10:34:46 UTC (rev 5114)
+@@ -58,7 +58,7 @@
+ 
+ # DOCUMENTATION:
+ * The manual page no longer asserts that .fetchids were for exclusive POP3 use, 
+-  since it is planned to use it also with IMAP4.
++  since it is planned to use the file with IMAP4 later.
+ 
+ # TRANSLATION UPDATES:
+ * Polish (Jakub Bogusz)
+
+
+
+From svn at mknod.org  Tue Jul 17 15:26:24 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Tue, 17 Jul 2007 08:26:24 -0500 (CDT)
+Subject: [fetchmail-svn] r5115 - branches/BRANCH_6-3
+Message-ID: <20070717132624.F0305218117@mknod.org>
+
+Author: m-a
+Date: 2007-07-17 08:26:24 -0500 (Tue, 17 Jul 2007)
+New Revision: 5115
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Add missing SSL error reporting bug.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2007-07-15 10:34:46 UTC (rev 5114)
++++ branches/BRANCH_6-3/TODO.txt	2007-07-17 13:26:24 UTC (rev 5115)
+@@ -1,4 +1,7 @@
+ soon:
++- thread on fetchmail users "Invalid SSL certificate" by Philip Susi,
++  SSL negotiation does not use ERR_error_string(3ssl) to report errors 
++  in a readable way, we just report socket errors with no good reason.
+ - find a solution for the "invalid header" discards message problem
+   (escape headers and stuff reminder into body)
+ - https://bugzilla.novell.com/show_bug.cgi?id=246829
+
+
+
+From svn at mknod.org  Wed Jul 18 23:46:05 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Wed, 18 Jul 2007 16:46:05 -0500 (CDT)
+Subject: [fetchmail-svn] r5116 - branches/BRANCH_6-3
+Message-ID: <20070718214605.7D67221811A@mknod.org>
+
+Author: m-a
+Date: 2007-07-18 16:46:04 -0500 (Wed, 18 Jul 2007)
+New Revision: 5116
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/fetchmail.man
+Log:
+Re-add two lines to the manual page that had accidentally become comments.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2007-07-17 13:26:24 UTC (rev 5115)
++++ branches/BRANCH_6-3/NEWS	2007-07-18 21:46:04 UTC (rev 5116)
+@@ -57,6 +57,9 @@
+   Thanks to Matthias Strau? for a configuration to reproduce the issue.
+ 
+ # DOCUMENTATION:
++* Re-add two lines to the manual page that had accidentally become comments 
++  to nroff. One was part of the --sslproto documentation, and one in the 
++  "Awakening the background daemon" section.
+ * The manual page no longer asserts that .fetchids were for exclusive POP3 use, 
+   since it is planned to use the file with IMAP4 later.
+ 
+
+Modified: branches/BRANCH_6-3/fetchmail.man
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.man	2007-07-17 13:26:24 UTC (rev 5115)
++++ branches/BRANCH_6-3/fetchmail.man	2007-07-18 21:46:04 UTC (rev 5116)
+@@ -411,7 +411,7 @@
+ Forces an SSL or TLS protocol. Possible values are '\fBSSL2\fR',
+ \&'\fBSSL3\fR', '\fBSSL23\fR', and '\fBTLS1\fR'. Try this if the default
+ handshake does not work for your server. Use this option with
+-'\fBTLS1\fR' to enforce a TLS connection. To defeat opportunistic TLSv1
++\&'\fBTLS1\fR' to enforce a TLS connection. To defeat opportunistic TLSv1
+ negotiation when the server advertises STARTTLS or STLS, use \fB''\fR.
+ This option, even if the argument is the empty string, will also
+ suppress the diagnostic 'SERVER: opportunistic upgrade to TLS.' message
+@@ -1171,7 +1171,7 @@
+ wake-up signal to the daemon and quits without output. The background
+ daemon then starts its next poll cycle immediately.  The wake-up signal,
+ SIGUSR1, can also be sent manually. The wake-up action also clears any
+-'wedged' flags indicating that connections have wedged due to failed
++\&'wedged' flags indicating that connections have wedged due to failed
+ authentication or multiple timeouts.
+ .SS Terminating the background daemon
+ .PP
+
+
+
+From svn at mknod.org  Sun Jul 29 11:18:20 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Sun, 29 Jul 2007 04:18:20 -0500 (CDT)
+Subject: [fetchmail-svn] r5118 - branches/BRANCH_6-3
+Message-ID: <20070729091820.4D795630002@mknod.org>
+
+Author: m-a
+Date: 2007-07-29 04:18:19 -0500 (Sun, 29 Jul 2007)
+New Revision: 5118
+
+Modified:
+   branches/BRANCH_6-3/unmime.c
+Log:
+quench warnings about unused arguments
+
+Modified: branches/BRANCH_6-3/unmime.c
+===================================================================
+--- branches/BRANCH_6-3/unmime.c	2007-07-24 15:10:22 UTC (rev 5117)
++++ branches/BRANCH_6-3/unmime.c	2007-07-29 09:18:19 UTC (rev 5118)
+@@ -668,6 +668,10 @@
+   char *buffer, *buf_p;
+   int nl_count, i, bodytype;
+ 
++  /* quench warnings about unused arguments */
++  (void)argc;
++  (void)argv;
++
+ #ifdef DEBUG
+   pid_t pid;
+   FILE *fd_orig, *fd_conv;
+
+
+
+From svn at mknod.org  Sun Jul 29 11:36:23 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Sun, 29 Jul 2007 04:36:23 -0500 (CDT)
+Subject: [fetchmail-svn] r5119 - branches/BRANCH_6-3
+Message-ID: <20070729093623.4D991630002@mknod.org>
+
+Author: m-a
+Date: 2007-07-29 04:36:23 -0500 (Sun, 29 Jul 2007)
+New Revision: 5119
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/sink.c
+Log:
+Fix long-standing (since r2215/v4.6.8) crash on NULL pointer dereference
+when the local SMTP listener rejects a warning message of fetchmail's.
+Report and suggested fix by Earl Chew.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2007-07-29 09:18:19 UTC (rev 5118)
++++ branches/BRANCH_6-3/NEWS	2007-07-29 09:36:23 UTC (rev 5119)
+@@ -44,6 +44,14 @@
+ 
+ fetchmail 6.3.9 (not yet released):
+ 
++# CRITICAL BUG FIX:
++* When fetchmail tries to inject a warning message it created itself, and the
++  message is refused by the SMTP listener, fetchmail dereferences a NULL
++  pointer and crashes. Report and fix by Earl Chew.
++  This bug was apparently introduced on 1998-11-27 when the bouncemail facility
++  was modularized by ESR. The bug made then its appearance in fetchmail release
++  4.6.8.
++
+ # BUG FIXES:
+ * The configure script will additionally check for 'dn_skipname', to fix build
+   failures with ?Clibc. The new check still recognizes the resolver libraries on
+
+Modified: branches/BRANCH_6-3/sink.c
+===================================================================
+--- branches/BRANCH_6-3/sink.c	2007-07-29 09:18:19 UTC (rev 5118)
++++ branches/BRANCH_6-3/sink.c	2007-07-29 09:36:23 UTC (rev 5119)
+@@ -262,7 +262,7 @@
+     const char *md1 = "MAILER-DAEMON", *md2 = "MAILER-DAEMON@";
+ 
+     /* don't bounce in reply to undeliverable bounces */
+-    if (!msg->return_path[0] ||
++    if (!msg || !msg->return_path[0] ||
+ 	strcmp(msg->return_path, "<>") == 0 ||
+ 	strcasecmp(msg->return_path, md1) == 0 ||
+ 	strncasecmp(msg->return_path, md2, strlen(md2)) == 0)
+
+
+
+From svn at mknod.org  Sun Jul 29 11:48:20 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Sun, 29 Jul 2007 04:48:20 -0500 (CDT)
+Subject: [fetchmail-svn] r5120 - branches/BRANCH_6-3
+Message-ID: <20070729094820.BCA80630002@mknod.org>
+
+Author: m-a
+Date: 2007-07-29 04:48:20 -0500 (Sun, 29 Jul 2007)
+New Revision: 5120
+
+Added:
+   branches/BRANCH_6-3/fetchmail-SA-2007-02.txt
+Modified:
+   branches/BRANCH_6-3/Makefile.am
+   branches/BRANCH_6-3/NEWS
+Log:
+Add fetchmail-SA-2007-02.txt and promote Earl Chew's bug fix to security.
+
+Modified: branches/BRANCH_6-3/Makefile.am
+===================================================================
+--- branches/BRANCH_6-3/Makefile.am	2007-07-29 09:36:23 UTC (rev 5119)
++++ branches/BRANCH_6-3/Makefile.am	2007-07-29 09:48:20 UTC (rev 5120)
+@@ -129,6 +129,7 @@
+ 		fetchmail-features.html README.SSL README.NTLM \
+ 		README.packaging \
+ 		fetchmail-FAQ.book fetchmail-FAQ.pdf fetchmail-FAQ.html \
++		fetchmail-SA-2007-02.txt \
+ 		fetchmail-SA-2007-01.txt \
+ 		fetchmail-SA-2006-03.txt \
+ 		fetchmail-SA-2006-02.txt \
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2007-07-29 09:36:23 UTC (rev 5119)
++++ branches/BRANCH_6-3/NEWS	2007-07-29 09:48:20 UTC (rev 5120)
+@@ -44,13 +44,16 @@
+ 
+ fetchmail 6.3.9 (not yet released):
+ 
+-# CRITICAL BUG FIX:
+-* When fetchmail tries to inject a warning message it created itself, and the
+-  message is refused by the SMTP listener, fetchmail dereferences a NULL
+-  pointer and crashes. Report and fix by Earl Chew.
++# SECURITY FIX:
++* CVE-2007-XXXX: Denial of service: When fetchmail tries to inject a warning
++  message it created itself, and the message is refused by the SMTP listener,
++  fetchmail dereferences a NULL pointer and crashes. Report & fix by Earl Chew.
++  Note while this is theoretically a remote denial of service attack vector,
++  fetchmail by default talks SMTP to the localhost, so the overall risk is
++  rather low.
+   This bug was apparently introduced on 1998-11-27 when the bouncemail facility
+-  was modularized by ESR. The bug made then its appearance in fetchmail release
+-  4.6.8.
++  was modularized. The bug made then its appearance in fetchmail release 4.6.8.
++  See fetchmail-SA-2007-02.txt.
+ 
+ # BUG FIXES:
+ * The configure script will additionally check for 'dn_skipname', to fix build
+@@ -65,6 +68,7 @@
+   Thanks to Matthias Strau? for a configuration to reproduce the issue.
+ 
+ # DOCUMENTATION:
++* Add fetchmail-SA-2007-02.txt
+ * Re-add two lines to the manual page that had accidentally become comments 
+   to nroff. One was part of the --sslproto documentation, and one in the 
+   "Awakening the background daemon" section.
+
+Added: branches/BRANCH_6-3/fetchmail-SA-2007-02.txt
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-SA-2007-02.txt	2007-07-29 09:36:23 UTC (rev 5119)
++++ branches/BRANCH_6-3/fetchmail-SA-2007-02.txt	2007-07-29 09:48:20 UTC (rev 5120)
+@@ -0,0 +1,74 @@
++fetchmail-SA-2007-02: Crash when warning message is rejected
++
++Topics:		Crash when fetchmail-generated warning message is rejected
++
++Author:		Matthias Andree
++Version:	1.0
++Announced:	2007-07-29
++Type:		NULL pointer dereference trigged by outside circumstances
++Impact:		denial of service possible
++Danger:		low
++Credits:	Earl Chew
++CVE Name:	XXX
++URL:		http://fetchmail.berlios.de/fetchmail-SA-2007-01.txt
++Project URL:	http://fetchmail.berlios.de/
++
++Affects:	fetchmail release < 6.3.9
++
++Not affected:	fetchmail release 6.3.9
++
++Corrected:	2007-07-29 fetchmail SVN (rev 5119)
++
++
++0. Release history
++==================
++
++2007-07-29 1.0	first release
++
++
++1. Background
++=============
++
++fetchmail is a software package to retrieve mail from remote POP2, POP3,
++IMAP, ETRN or ODMR servers and forward it to local SMTP, LMTP servers or
++message delivery agents.
++
++fetchmail ships with a graphical, Python/Tkinter based configuration
++utility named "fetchmailconf" to help the user create configuration (run
++control) files for fetchmail.
++
++
++2. Problem description and Impact
++=================================
++
++fetchmail will generated warning messages to the local postmaster or user in
++certain circumstances, for instance when authentication fails.
++
++If this warning message is refused by the SMTP listener that fetchmail is
++talking to, fetchmail attempts to dereference a NULL pointer when trying to find
++out if it should allow a bounce message to be sent.
++
++
++3. Solution
++===========
++
++Install fetchmail 6.3.9 or newer.  The fetchmail source code is available from
++<http://developer.berlios.de/project/showfiles.php?group_id=1824>.
++
++
++A. Copyright, License and Warranty
++==================================
++
++(C) Copyright 2007 by Matthias Andree, <matthias.andree at gmx.de>.
++Some rights reserved.
++
++This work is licensed under the Creative Commons
++Attribution-NonCommercial-NoDerivs German License. To view a copy of
++this license, visit http://creativecommons.org/licenses/by-nc-nd/2.0/de/
++or send a letter to Creative Commons; 559 Nathan Abbott Way;
++Stanford, California 94305; USA.
++
++THIS WORK IS PROVIDED FREE OF CHARGE AND WITHOUT ANY WARRANTIES.
++Use the information herein at your own risk.
++
++END OF fetchmail-SA-2007-02.txt
+
+
+
+From svn at mknod.org  Sun Jul 29 12:01:56 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Sun, 29 Jul 2007 05:01:56 -0500 (CDT)
+Subject: [fetchmail-svn] r5121 - branches/BRANCH_6-3
+Message-ID: <20070729100156.8C91D630002@mknod.org>
+
+Author: m-a
+Date: 2007-07-29 05:01:56 -0500 (Sun, 29 Jul 2007)
+New Revision: 5121
+
+Modified:
+   branches/BRANCH_6-3/configure.ac
+Log:
+Bump version to 6.3.9-rc1.
+
+Modified: branches/BRANCH_6-3/configure.ac
+===================================================================
+--- branches/BRANCH_6-3/configure.ac	2007-07-29 09:48:20 UTC (rev 5120)
++++ branches/BRANCH_6-3/configure.ac	2007-07-29 10:01:56 UTC (rev 5121)
+@@ -8,7 +8,7 @@
+ dnl Process this file with autoconf to produce a configure script.
+ dnl
+ 
+-AC_INIT([fetchmail],[6.3.8],[fetchmail-users at lists.berlios.de])
++AC_INIT([fetchmail],[6.3.9-rc1],[fetchmail-users at lists.berlios.de])
+ AC_CONFIG_SRCDIR([fetchmail.h])
+ AC_CONFIG_HEADERS([config.h])
+ AC_CONFIG_LIBOBJ_DIR([.])
+
+
+

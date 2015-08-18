@@ -1,0 +1,185 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5361 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-June/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5361%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090620095742.3FF4721EFD5%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000424.html">
+   <LINK REL="Next"  HREF="000426.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5361 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5361%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090620095742.3FF4721EFD5%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5361 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Sat Jun 20 11:57:42 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000424.html">[fetchmail-svn] r5360 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000426.html">[fetchmail-svn] r5362 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#425">[ date ]</a>
+              <a href="thread.html#425">[ thread ]</a>
+              <a href="subject.html#425">[ subject ]</a>
+              <a href="author.html#425">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-06-20 04:57:41 -0500 (Sat, 20 Jun 2009)
+New Revision: 5361
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/fetchmail-FAQ.html
+   branches/BRANCH_6-3/fetchmail.man
+Log:
+Add documentation on how to make EXIT CODE 1 not an error.
+
+Fixes Debian Bug#530749, filed by Reuben Thomas.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-06-18 20:12:50 UTC (rev 5360)
++++ branches/BRANCH_6-3/NEWS	2009-06-20 09:57:41 UTC (rev 5361)
+@@ -123,9 +123,13 @@
+ * A document, README.SSL-SERVER, was added to describe server-side requirements
+   for proper SSL and/or TLS service offerings. These are not specific to
+   fetchmail.
++* Documentation on how to make &quot;NOMAIL&quot; (exit code 1) not treated an error has
++  been added to the EXIT CODES section of the manpage and to the FAQ as item C8.
++  The suggested solution uses a tiny POSIX shell script fragment.
++  Fixes Debian Bug #530749, filed by Reuben Thomas.
+ 
+ # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
+-* [cs]	  Czech (Petr Pisar)
++* [cs]    Czech (Petr Pisar)
+ * [en_GB] English/British
+ * [de]    German
+ * [id]    Indonesian (Andhika Padmawan)
+
+Modified: branches/BRANCH_6-3/fetchmail-FAQ.html
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-FAQ.html	2009-06-18 20:12:50 UTC (rev 5360)
++++ branches/BRANCH_6-3/fetchmail-FAQ.html	2009-06-20 09:57:41 UTC (rev 5361)
+@@ -115,9 +115,10 @@
+ &lt;a href=&quot;#C6&quot;&gt;C6. Fetchmail works OK started up manually, but not
+ from an init script.&lt;/a&gt;&lt;br/&gt;
+ &lt;a href=&quot;#C7&quot;&gt;C7. How can I forward mail to another
+-host?.&lt;/a&gt;&lt;br/&gt;
++host?&lt;/a&gt;&lt;br/&gt;
++&lt;a href=&quot;#C8&quot;&gt;C8. Why is &quot;NOMAIL&quot; an error?/I frequently get messages
++from cron!&lt;/a&gt;&lt;br/&gt;
+ 
+-
+ &lt;h2 id=&quot;C_T&quot;&gt;How to make fetchmail play nice with various MTAs&lt;/h2&gt;
+ 
+ &lt;a href=&quot;#T1&quot;&gt;T1. How can I use fetchmail with sendmail?&lt;/a&gt;&lt;br/&gt;
+@@ -1290,6 +1291,37 @@
+ fetchmail on, use the &lt;code&gt;smtphost&lt;/code&gt; or
+ &lt;code&gt;smtpname&lt;/code&gt; option. See the manual page for details.&lt;/p&gt;
+ 
++&lt;h2&gt;&lt;a id=&quot;C8&quot; name=&quot;C8&quot;&gt;C8. Why is &quot;NOMAIL&quot; an error?/I frequently get messages
++from cron!&lt;/a&gt;&lt;/h2&gt;
++
++&lt;p&gt;Some users want to write scripts that take action only if mail
++could/could not be retrieved, thus fetchmail reports if it has retrieved
++messages or not.&lt;/p&gt;
++
++&lt;p&gt;If you do not want &quot;no mail&quot; to be an error condition (for instance,
++for cron jobs), use a POSIX-compliant shell and add this to the end of
++the fetchmail command line, it will change an exit code of 1 to 0 and
++others to 1:&lt;/p&gt;
++&lt;pre&gt;
++|| [ $? -eq 1 ]
++&lt;/pre&gt;
++
++&lt;p&gt;If you want to map more than one code to 0, you cannot cascade multiple
++&lt;strong&gt;|| [ $? -eq N ]&lt;/strong&gt;, but you must instead use the
++&lt;strong&gt;-o&lt;/strong&gt; operator inside the brackets, (see the test(1)
++manpage for details), such as:&lt;/p&gt;
++
++&lt;pre&gt;
++|| [ $? -eq 1 -o $? -eq 9 ]
++&lt;/pre&gt;
++
++&lt;p&gt;A full cron line might then look like this:&lt;/p&gt;
++
++&lt;pre&gt;
++*/15 * * * * fetchmail -s || [ $? -eq 1 ]
++&lt;/pre&gt;
++
++
+ &lt;hr/&gt;
+ &lt;h1&gt;How to make fetchmail play nice with various MTAs&lt;/h1&gt;
+ &lt;h2&gt;&lt;a id=&quot;T1&quot; name=&quot;T1&quot;&gt;T1. How can I use fetchmail with
+
+Modified: branches/BRANCH_6-3/fetchmail.man
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.man	2009-06-18 20:12:50 UTC (rev 5360)
++++ branches/BRANCH_6-3/fetchmail.man	2009-06-20 09:57:41 UTC (rev 5361)
+@@ -2561,7 +2561,17 @@
+ was selected, were found waiting but not retrieved).
+ .IP 1
+ There was no mail awaiting retrieval.  (There may have been old mail still
+-on the server but not selected for retrieval.)
++on the server but not selected for retrieval.) If you do not want &quot;no
++mail&quot; to be an error condition (for instance, for cron jobs), use a
++POSIX-compliant shell and add
++
++.nf
++|| [ $? -eq 1 ]
++.fi
++
++to the end of the fetchmail command line, note that this leaves 0
++untouched, maps 1 to 0, and maps all other codes to 1. See also item #C8
++in the FAQ.
+ .IP 2
+ An error was encountered when attempting to open a socket to retrieve
+ mail.  If you don't know what a socket is, don't worry about it --
+@@ -2582,9 +2592,7 @@
+ The run control file had bad permissions.
+ .IP 7
+ There was an error condition reported by the server.  Can also
+-fire if
+-\fBfetchmail\fP
+-timed out while waiting for the server.
++fire if \fBfetchmail\fP timed out while waiting for the server.
+ .IP 8
+ Client-side exclusion error.  This means
+ \fBfetchmail\fP
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000424.html">[fetchmail-svn] r5360 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000426.html">[fetchmail-svn] r5362 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#425">[ date ]</a>
+              <a href="thread.html#425">[ thread ]</a>
+              <a href="subject.html#425">[ subject ]</a>
+              <a href="author.html#425">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

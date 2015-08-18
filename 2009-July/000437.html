@@ -1,0 +1,533 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5375 - in branches/BRANCH_6-3: . po
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-July/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5375%20-%20in%20branches/BRANCH_6-3%3A%20.%20po&In-Reply-To=%3C20090706182121.0B56521F326%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000436.html">
+   <LINK REL="Next"  HREF="000438.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5375 - in branches/BRANCH_6-3: . po</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5375%20-%20in%20branches/BRANCH_6-3%3A%20.%20po&In-Reply-To=%3C20090706182121.0B56521F326%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5375 - in branches/BRANCH_6-3: . po">svn at mknod.org
+       </A><BR>
+    <I>Mon Jul  6 20:21:20 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000436.html">[fetchmail-svn] r5374 - branches/BRANCH_6-3/website
+</A></li>
+        <LI>Next message: <A HREF="000438.html">[fetchmail-svn] r5377 - branches/BRANCH_MAPI
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#437">[ date ]</a>
+              <a href="thread.html#437">[ thread ]</a>
+              <a href="subject.html#437">[ subject ]</a>
+              <a href="author.html#437">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-07-06 13:21:20 -0500 (Mon, 06 Jul 2009)
+New Revision: 5375
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/po/es.po
+   branches/BRANCH_6-3/po/zh_CN.po
+Log:
+Update Chinese/Simplified and Spanish translations.
+
+Through the documentation project.
+Courtesy of Ji Zheng-Yu and Francisco Molinero.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-07-02 20:17:29 UTC (rev 5374)
++++ branches/BRANCH_6-3/NEWS	2009-07-06 18:21:20 UTC (rev 5375)
+@@ -47,6 +47,13 @@
+ 
+ --------------------------------------------------------------------------------
+ 
++fetchmail 6.3.11 (released XXXX-XX-XX - i. e. not yet):
++
++# TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
++* [zh_CN] Chinese/Simplified (Ji ZhengYu)
++* [es]    Spanish/Castilian (Francisco Molinero)
++
++
+ fetchmail 6.3.10 (released 2009-07-02):
+ 
+ # INCOMPATIBLE BUGFIXES AND CHANGES
+
+Modified: branches/BRANCH_6-3/po/es.po
+===================================================================
+--- branches/BRANCH_6-3/po/es.po	2009-07-02 20:17:29 UTC (rev 5374)
++++ branches/BRANCH_6-3/po/es.po	2009-07-06 18:21:20 UTC (rev 5375)
+@@ -7,10 +7,10 @@
+ #
+ msgid &quot;&quot;
+ msgstr &quot;&quot;
+-&quot;Project-Id-Version: fetchmail 6.3.10-pre1\n&quot;
++&quot;Project-Id-Version: fetchmail 6.3.10-pre2\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2009-07-02 21:34+0200\n&quot;
+-&quot;PO-Revision-Date: 2009-05-26 11:12+0200\n&quot;
++&quot;POT-Creation-Date: 2009-07-06 20:14+0200\n&quot;
++&quot;PO-Revision-Date: 2009-07-03 20:09+0200\n&quot;
+ &quot;Last-Translator: Francisco Molinero &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">paco at byasl.com</A>&gt;\n&quot;
+ &quot;Language-Team: Spanish &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">es at li.org</A>&gt;\n&quot;
+ &quot;MIME-Version: 1.0\n&quot;
+@@ -221,8 +221,8 @@
+ &quot;Fetchmail won't poll this mailbox again until you restart it.\n&quot;
+ msgstr &quot;&quot;
+ &quot;Esto puede significar que su servidor de correo se bloque&#243;, o que su\n&quot;
+-&quot;servidor SMTP se colg&#243;, o que su casilla de correo en el servidor ha\n&quot;
+-&quot;sido corrompida por un error de servidor. Puede ejecutar &#171;fetchmail -v -v&#187;\n&quot;
++&quot;servidor SMTP se colg&#243;, o que su casilla de correo en el servidor se ha\n&quot;
++&quot;corrompido por un error de servidor. Puede ejecutar &#171;fetchmail -v -v&#187;\n&quot;
+ &quot;para diagnosticar el problema.\n&quot;
+ &quot;Fetchmail no consultar&#225; esta casilla hasta que lo reinicie.\n&quot;
+ 
+@@ -248,7 +248,7 @@
+ #: driver.c:1021
+ #, c-format
+ msgid &quot;couldn't find canonical DNS name of %s (%s): %s\n&quot;
+-msgstr &quot;no se encontr&#243; el nombre DNS can&#243;nico de%s (%s): %s\n&quot;
++msgstr &quot;no se encontr&#243; el nombre DNS can&#243;nico de %s (%s): %s\n&quot;
+ 
+ #: driver.c:1068
+ #, c-format
+@@ -332,7 +332,7 @@
+ msgstr &quot;&quot;
+ &quot;\n&quot;
+ &quot;Sin embargo, si HA cambiado los detalles de su cuenta desde el inicio del\n&quot;
+-&quot;demonio fetchmail tiene que parar el demonio, cambiar su configuraci&#243;n\n&quot;
++&quot;demonio fetchmail, tiene que parar el demonio, cambiar su configuraci&#243;n\n&quot;
+ &quot;de fetchmail, y reiniciar el demonio.\n&quot;
+ &quot;\n&quot;
+ &quot;El demonio fetchmail continuar&#225; corriendo e intentando conectar\n&quot;
+@@ -364,7 +364,7 @@
+ #: driver.c:1240
+ #, c-format
+ msgid &quot;Repoll immediately on %s@%s\n&quot;
+-msgstr &quot;Reconsultar inmediatamente %s@%s\n&quot;
++msgstr &quot;Volver a consultar inmediatamente %s@%s\n&quot;
+ 
+ #: driver.c:1245
+ #, c-format
+@@ -388,16 +388,16 @@
+ 
+ #: driver.c:1283
+ msgid &quot;Service has been restored.\n&quot;
+-msgstr &quot;El servicio ha sido reestablecido.\n&quot;
++msgstr &quot;El servicio se ha reestablecido.\n&quot;
+ 
+ #: driver.c:1315
+ #, c-format
+ msgid &quot;selecting or re-polling folder %s\n&quot;
+-msgstr &quot;seleccionando o reconsultando la carpeta %s\n&quot;
++msgstr &quot;seleccionando o volviendo a consultar la carpeta %s\n&quot;
+ 
+ #: driver.c:1317
+ msgid &quot;selecting or re-polling default folder\n&quot;
+-msgstr &quot;seleccionando o reconsultando la carpeta predeterminada\n&quot;
++msgstr &quot;seleccionando o volviendo a consultar la carpeta predeterminada\n&quot;
+ 
+ #: driver.c:1329
+ #, c-format
+@@ -454,7 +454,7 @@
+ 
+ #: driver.c:1540
+ msgid &quot;missing or bad RFC822 header&quot;
+-msgstr &quot;el encabezado RFC822 falta o es inocrrecto&quot;
++msgstr &quot;el encabezado RFC822 falta o es incorrecto&quot;
+ 
+ #: driver.c:1543
+ msgid &quot;MDA&quot;
+@@ -700,7 +700,7 @@
+ #: fetchmail.c:283
+ #, c-format
+ msgid &quot;This is fetchmail release %s&quot;
+-msgstr &quot;Esta es la versi&#243;n de fetchmail %s&quot;
++msgstr &quot;Esta es la versi&#243;n %s de fetchmail&quot;
+ 
+ #: fetchmail.c:403
+ #, c-format
+@@ -722,7 +722,7 @@
+ 
+ #: fetchmail.c:442
+ msgid &quot;fetchmail: no other fetchmail is running\n&quot;
+-msgstr &quot;fetchmail: ning&#250;n otro fetchmail se est&#225; ejecutado\n&quot;
++msgstr &quot;fetchmail: ning&#250;n otro fetchmail se est&#225; ejecutando\n&quot;
+ 
+ #: fetchmail.c:448
+ #, c-format
+@@ -778,7 +778,7 @@
+ #: fetchmail.c:521
+ #, c-format
+ msgid &quot;fetchmail: elder sibling at %d died mysteriously.\n&quot;
+-msgstr &quot;fetchmail: proceso hijo m&#225;s antiguo (%d) muri&#243; misteriosamente.\n&quot;
++msgstr &quot;fetchmail: el proceso hijo m&#225;s antiguo (%d) muri&#243; misteriosamente.\n&quot;
+ 
+ #: fetchmail.c:536
+ #, c-format
+@@ -838,7 +838,7 @@
+ #, c-format
+ msgid &quot;poll of %s skipped (failed authentication or too many timeouts)\n&quot;
+ msgstr &quot;&quot;
+-&quot;no se consulta %s (fallo en la autenticaci&#243;n o demasiados excesos de &quot;
++&quot;la consulta %s se omiti&#243; (fallo en la autenticaci&#243;n o demasiados excesos de &quot;
+ &quot;espera)\n&quot;
+ 
+ #: fetchmail.c:726
+@@ -973,13 +973,13 @@
+ msgid &quot;&quot;
+ &quot;fetchmail: warning: no DNS available to check multidrop fetches from %s\n&quot;
+ msgstr &quot;&quot;
+-&quot;fetchmail: cuidado: no hay DNS disponible para verificar recepciones &quot;
++&quot;fetchmail: aviso: no hay DNS disponible para verificar recepciones &quot;
+ &quot;&#171;multidrop&#187; de %s\n&quot;
+ 
+ #: fetchmail.c:1284
+ #, c-format
+ msgid &quot;warning: multidrop for %s requires envelope option!\n&quot;
+-msgstr &quot;aviso: &#161;&#171;multidrop&#187; para %s requiere la opci&#243;n envelope!\n&quot;
++msgstr &quot;aviso: &#161;&#171;multidrop&#187; para %s requiere la opci&#243;n &#171;envelope&#187;!\n&quot;
+ 
+ #: fetchmail.c:1285
+ msgid &quot;warning: Do not ask for support if all mail goes to postmaster!\n&quot;
+@@ -1133,13 +1133,12 @@
+ #: fetchmail.c:1580
+ msgid &quot;  This host will not be queried when no host is specified.\n&quot;
+ msgstr &quot;&quot;
+-&quot;  Este anfitri&#243;n no ser&#225; interrogado cuando no se especifica un anfitri&#243;n.\n&quot;
++&quot;  Este anfitri&#243;n no ser&#225; consultado cuando no se especifica un anfitri&#243;n.\n&quot;
+ 
+ #: fetchmail.c:1581
+ msgid &quot;  This host will be queried when no host is specified.\n&quot;
+ msgstr &quot;&quot;
+-&quot;  Este anfitri&#243;n ser&#225; interrogado cuando no se especifique ning&#250;n &quot;
+-&quot;anfitri&#243;n.\n&quot;
++&quot;  Este anfitri&#243;n ser&#225; consultado cuando no se especifique ning&#250;n anfitri&#243;n.\n&quot;
+ 
+ #: fetchmail.c:1585
+ msgid &quot;  Password will be prompted for.\n&quot;
+@@ -1158,7 +1157,7 @@
+ #: fetchmail.c:1595
+ #, c-format
+ msgid &quot;  Password = \&quot;%s\&quot;.\n&quot;
+-msgstr &quot;  Contrase&#241;a = &#8220;%s&#8221;.\n&quot;
++msgstr &quot;  Contrase&#241;a = &#171;%s&#187;.\n&quot;
+ 
+ #: fetchmail.c:1604
+ #, c-format
+@@ -1436,24 +1435,24 @@
+ #: fetchmail.c:1748
+ msgid &quot;  Do binary search of UIDs during each poll (--fastuidl 1).\n&quot;
+ msgstr &quot;&quot;
+-&quot;  Utilizar b&#250;squeda binaria de UIDs durante cada consulta (--fastuidl 1).\n&quot;
++&quot;  Utilizar b&#250;squeda binaria de UID durante cada consulta (--fastuidl 1).\n&quot;
+ 
+ #: fetchmail.c:1750
+ #, c-format
+ msgid &quot;  Do binary search of UIDs during %d out of %d polls (--fastuidl %d).\n&quot;
+ msgstr &quot;&quot;
+-&quot;  Utilizar b&#250;squeda binaria de UIDs durante %d de cada %d consultas (--&quot;
++&quot;  Utilizar b&#250;squeda binaria de UID durante %d de cada %d consultas (--&quot;
+ &quot;fastuidl %d).\n&quot;
+ 
+ #: fetchmail.c:1753
+ msgid &quot;   Do linear search of UIDs during each poll (--fastuidl 0).\n&quot;
+ msgstr &quot;&quot;
+-&quot;  Utilizar b&#250;squeda lineal de UIDs durante cada consulta (--fastuidl 0).\n&quot;
++&quot;  Utilizar b&#250;squeda lineal de UID durante cada consulta (--fastuidl 0).\n&quot;
+ 
+ #: fetchmail.c:1755
+ #, c-format
+ msgid &quot;  SMTP message batch limit is %d.\n&quot;
+-msgstr &quot;  El l&#237;mite de mensaje por lote SMTP es %d.\n&quot;
++msgstr &quot;  El l&#237;mite de mensajes por lote SMTP es %d.\n&quot;
+ 
+ #: fetchmail.c:1757
+ msgid &quot;  No SMTP message batch limit (--batchlimit 0).\n&quot;
+@@ -1525,7 +1524,7 @@
+ #: fetchmail.c:1826
+ #, c-format
+ msgid &quot;  Server connection will be taken down with \&quot;%s\&quot;.\n&quot;
+-msgstr &quot;  La conexi&#243;n al servidor se terminar&#225; con &#8220;%s&#8221;.\n&quot;
++msgstr &quot;  La conexi&#243;n al servidor se terminar&#225; con &#171;%s&#187;.\n&quot;
+ 
+ #: fetchmail.c:1829
+ msgid &quot;  No post-connection command.\n&quot;
+@@ -1644,12 +1643,12 @@
+ 
+ #: fetchmail.c:1930
+ msgid &quot;  No UIDs saved from this host.\n&quot;
+-msgstr &quot;  No hay UIDs guardadas de este anfitri&#243;n.\n&quot;
++msgstr &quot;  No hay UID guardadas de este anfitri&#243;n.\n&quot;
+ 
+ #: fetchmail.c:1939
+ #, c-format
+ msgid &quot;  %d UIDs saved.\n&quot;
+-msgstr &quot;  %d UIDs guardadas.\n&quot;
++msgstr &quot;  %d UID guardadas.\n&quot;
+ 
+ #: fetchmail.c:1947
+ msgid &quot;  Poll trace information will be added to the Received header.\n&quot;
+@@ -1724,7 +1723,7 @@
+ 
+ #: gssapi.c:187
+ msgid &quot;Error creating security level request\n&quot;
+-msgstr &quot;Error creando pedido de nivel de seguridad\n&quot;
++msgstr &quot;Error creando petici&#243;n de nivel de seguridad\n&quot;
+ 
+ #: gssapi.c:198
+ msgid &quot;Releasing GSS credentials\n&quot;
+@@ -1737,7 +1736,7 @@
+ #: idle.c:61
+ #, c-format
+ msgid &quot;fetchmail: thread sleeping for %d sec.\n&quot;
+-msgstr &quot;fetchmail: la tarea dormir&#225; por %d segundos\n&quot;
++msgstr &quot;fetchmail: la tarea dormir&#225; durante %d segundos\n&quot;
+ 
+ #: imap.c:326
+ msgid &quot;Protocol identified as IMAP4 rev 1\n&quot;
+@@ -1933,7 +1932,7 @@
+ #: kerberos.c:147
+ #, c-format
+ msgid &quot;non-null instance (%s) might cause strange behavior\n&quot;
+-msgstr &quot;La instancia no-nula (%s) puede causar comportamiento extra&#241;o\n&quot;
++msgstr &quot;La instancia no nula (%s) puede causar un comportamiento extra&#241;o\n&quot;
+ 
+ #: kerberos.c:213
+ msgid &quot;could not decode BASE64 ready response\n&quot;
+@@ -2133,7 +2132,7 @@
+ 
+ #: options.c:616
+ msgid &quot;  -i, --idfile      specify alternate UIDs file\n&quot;
+-msgstr &quot;  -i, --idfile      especificar archivo de UIDs alterno\n&quot;
++msgstr &quot;  -i, --idfile      especificar archivo de UID alterno\n&quot;
+ 
+ #: options.c:617
+ msgid &quot;      --pidfile     specify alternate PID (lock) file\n&quot;
+@@ -2229,7 +2228,7 @@
+ 
+ #: options.c:640
+ msgid &quot;  -U, --uidl        force the use of UIDLs (pop3 only)\n&quot;
+-msgstr &quot;  -U, --uidl        forzar el uso de UIDLs (s&#243;lo pop3)\n&quot;
++msgstr &quot;  -U, --uidl        forzar el uso de UIDL (s&#243;lo pop3)\n&quot;
+ 
+ #: options.c:641
+ msgid &quot;      --port        TCP port to connect to (obsolete, use --service)\n&quot;
+@@ -2302,7 +2301,7 @@
+ #: options.c:657
+ msgid &quot;  -l, --limit       don't fetch messages over given size\n&quot;
+ msgstr &quot;&quot;
+-&quot;  -l, --limit       no recibir los mensajes m&#225;s grandes que lo especificado\n&quot;
++&quot;  -l, --limit       no recibir mensajes m&#225;s grandes de lo especificado\n&quot;
+ 
+ #: options.c:658
+ msgid &quot;  -w, --warnings    interval between warning mail notification\n&quot;
+@@ -2348,7 +2347,7 @@
+ 
+ #: options.c:668
+ msgid &quot;      --fastuidl    do a binary search for UIDLs\n&quot;
+-msgstr &quot;      --fastuidl    utilizar b&#250;squeda binaria para los UIDLs\n&quot;
++msgstr &quot;      --fastuidl    utilizar b&#250;squeda binaria para los UIDL\n&quot;
+ 
+ #: options.c:669
+ msgid &quot;  -e, --expunge     set max deletions between expunges\n&quot;
+@@ -2453,7 +2452,7 @@
+ 
+ #: pop3.c:1073
+ msgid &quot;protocol error while fetching UIDLs\n&quot;
+-msgstr &quot;error de protocolo durante la recepci&#243;n de UIDLs\n&quot;
++msgstr &quot;error de protocolo durante la recepci&#243;n de UIDL\n&quot;
+ 
+ #: pop3.c:1443
+ msgid &quot;Option --folder is not supported with POP3\n&quot;
+@@ -2489,7 +2488,7 @@
+ 
+ #: rcfile_y.y:385
+ msgid &quot;end of input&quot;
+-msgstr &quot;fin de entradas&quot;
++msgstr &quot;fin de entrada&quot;
+ 
+ #: rcfile_y.y:423
+ #, c-format
+@@ -2755,13 +2754,13 @@
+ #: sink.c:990
+ #, c-format
+ msgid &quot;%cMTP listener doesn't like recipient address `%s'\n&quot;
+-msgstr &quot;Al servidor %cMTP no le gusta la direcci&#243;n de recipiente &#8216;%s&#8217;\n&quot;
++msgstr &quot;Al servidor %cMTP no le gusta la direcci&#243;n de recipiente &#171;%s&#187;\n&quot;
+ 
+ #: sink.c:997
+ #, c-format
+ msgid &quot;%cMTP listener doesn't really like recipient address `%s'\n&quot;
+ msgstr &quot;&quot;
+-&quot;Al servidor %cMTP realmente no le gusta la direcci&#243;n de recipiente &#8216;%s&#8217;\n&quot;
++&quot;Al servidor %cMTP realmente no le gusta la direcci&#243;n de recipiente &#171;%s&#187;\n&quot;
+ 
+ #: sink.c:1043
+ msgid &quot;no address matches; no postmaster set.\n&quot;
+@@ -2809,7 +2808,7 @@
+ #: sink.c:1370
+ #, c-format
+ msgid &quot;MDA returned nonzero status %d\n&quot;
+-msgstr &quot;MDA devolvi&#243; un estado distinto a cero %d\n&quot;
++msgstr &quot;MDA devolvi&#243; un estado %d distinto de cero\n&quot;
+ 
+ #: sink.c:1373
+ #, c-format
+@@ -2972,7 +2971,7 @@
+ 
+ #: socket.c:632
+ msgid &quot;Bad certificate: Subject CommonName too long!\n&quot;
+-msgstr &quot;Certificado malo: el &#171;CommonName&#187; del asunto es muy largo.\n&quot;
++msgstr &quot;Certificado incorrecto: el &#171;CommonName&#187; del asunto es muy largo.\n&quot;
+ 
+ #: socket.c:678
+ #, c-format
+@@ -3090,7 +3089,7 @@
+ 
+ #: transact.c:343
+ msgid &quot;no Received address found\n&quot;
+-msgstr &quot;no se encontr&#243; direcci&#243;n de &#171;Received&#187;\n&quot;
++msgstr &quot;no se encontr&#243; la direcci&#243;n de &#171;Received&#187;\n&quot;
+ 
+ #: transact.c:352
+ #, c-format
+@@ -3099,11 +3098,13 @@
+ 
+ #: transact.c:566
+ msgid &quot;message delimiter found while scanning headers\n&quot;
+-msgstr &quot;delimitador de mensajes encontrado durante el barrido de encabezados\n&quot;
++msgstr &quot;&quot;
++&quot;delimitador de mensajes encontrado durante la exploraci&#243;n de encabezados\n&quot;
+ 
+ #: transact.c:597
+ msgid &quot;incorrect header line found while scanning headers\n&quot;
+-msgstr &quot;encabezado incorrecto encontrado durante la revisi&#243;n de encabezados\n&quot;
++msgstr &quot;&quot;
++&quot;encabezado incorrecto encontrado durante la exploraci&#243;n de encabezados\n&quot;
+ 
+ #: transact.c:599
+ #, c-format
+@@ -3131,7 +3132,7 @@
+ #: transact.c:1289
+ #, c-format
+ msgid &quot;recipient address %s didn't match any local name&quot;
+-msgstr &quot;la direcci&#243;n de destino %s no coincide con alg&#250;n nombre local&quot;
++msgstr &quot;la direcci&#243;n de destino %s no coincide con ning&#250;n nombre local&quot;
+ 
+ #: transact.c:1298
+ msgid &quot;message has embedded NULs&quot;
+@@ -3156,7 +3157,7 @@
+ 
+ #: uid.c:262
+ msgid &quot;Scratch list of UIDs:&quot;
+-msgstr &quot;Lista borrador de UIDs:&quot;
++msgstr &quot;Lista borrador de UID:&quot;
+ 
+ #: uid.c:517 uid.c:569
+ #, c-format
+@@ -3175,7 +3176,7 @@
+ #: uid.c:556
+ msgid &quot;not swapping UID lists, no UIDs seen this query\n&quot;
+ msgstr &quot;&quot;
+-&quot;no se intercambian las listas de UID, no se encontraron UIDs en esta &quot;
++&quot;no se intercambian las listas de UID, no se encontraron UID en esta &quot;
+ &quot;consulta\n&quot;
+ 
+ #: uid.c:581
+
+Modified: branches/BRANCH_6-3/po/zh_CN.po
+===================================================================
+--- branches/BRANCH_6-3/po/zh_CN.po	2009-07-02 20:17:29 UTC (rev 5374)
++++ branches/BRANCH_6-3/po/zh_CN.po	2009-07-06 18:21:20 UTC (rev 5375)
+@@ -6,10 +6,10 @@
+ #
+ msgid &quot;&quot;
+ msgstr &quot;&quot;
+-&quot;Project-Id-Version: fetchmail 6.3.10-pre1\n&quot;
++&quot;Project-Id-Version: fetchmail 6.3.10-pre2\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2009-07-02 21:34+0200\n&quot;
+-&quot;PO-Revision-Date: 2009-05-27 22:41&#20013;&#22269;&#26631;&#20934;&#26102;&#38388;\n&quot;
++&quot;POT-Creation-Date: 2009-07-06 20:14+0200\n&quot;
++&quot;PO-Revision-Date: 2009-07-05 10:01+0800\n&quot;
+ &quot;Last-Translator: Ji ZhengYu &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">zhengyuji at gmail.com</A>&gt;\n&quot;
+ &quot;Language-Team: Chinese (simplified) &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">translation-team-zh-cn at lists.</A>&quot;
+ &quot;sourceforge.net&gt;\n&quot;
+@@ -206,14 +206,14 @@
+ &quot;Fetchmail &#19981;&#20250;&#20877;&#26597;&#23547;&#27492;&#37038;&#31665;&#20013;&#30340;&#37038;&#20214;&#65292;&#38500;&#38750;&#24744;&#37325;&#21551;\n&quot;
+ 
+ #: driver.c:946
+-#, fuzzy, c-format
++#, c-format
+ msgid &quot;pre-connection command terminated with signal %d\n&quot;
+-msgstr &quot;&#39044;&#36830;&#25509;&#21629;&#20196;&#22833;&#36133;&#65292;&#36820;&#22238;&#29366;&#24577; %d\n&quot;
++msgstr &quot;&#39044;&#36830;&#25509;&#21629;&#20196;&#32456;&#27490;&#65292;&#36820;&#22238;&#20449;&#21495; %d\n&quot;
+ 
+ #: driver.c:949
+ #, c-format
+ msgid &quot;pre-connection command failed with status %d\n&quot;
+-msgstr &quot;&#39044;&#36830;&#25509;&#21629;&#20196;&#22833;&#36133;&#65292;&#36820;&#22238;&#29366;&#24577; %d\n&quot;
++msgstr &quot;&#39044;&#36830;&#25509;&#21629;&#20196;&#22833;&#36133;&#65292;&#29366;&#24577;&#30721; %d\n&quot;
+ 
+ #: driver.c:973
+ #, c-format
+@@ -460,14 +460,14 @@
+ msgstr &quot;&#20174; %2$s@%3$s &#25910;&#20214;&#26102;&#20135;&#29983;&#38169;&#35823; %1$s\n&quot;
+ 
+ #: driver.c:1583
+-#, fuzzy, c-format
++#, c-format
+ msgid &quot;post-connection command terminated with signal %d\n&quot;
+-msgstr &quot;&#36830;&#25509;&#21518;&#25191;&#34892;&#31243;&#24207;&#22833;&#36133;&#65292;&#38169;&#35823;&#20195;&#30721; %d\n&quot;
++msgstr &quot;&#25191;&#34892;&#21518;&#32493;&#31243;&#24207;&#22833;&#36133;&#65292;&#36820;&#22238;&#20449;&#21495; %d\n&quot;
+ 
+ #: driver.c:1585
+-#, fuzzy, c-format
++#, c-format
+ msgid &quot;post-connection command failed with status %d\n&quot;
+-msgstr &quot;&#36830;&#25509;&#21518;&#25191;&#34892;&#31243;&#24207;&#22833;&#36133;&#65292;&#38169;&#35823;&#20195;&#30721; %d\n&quot;
++msgstr &quot;&#25191;&#34892;&#21518;&#32493;&#31243;&#24207;&#22833;&#36133;&#65292;&#29366;&#24577;&#30721; %d\n&quot;
+ 
+ #: driver.c:1604
+ msgid &quot;Kerberos V4 support not linked.\n&quot;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000436.html">[fetchmail-svn] r5374 - branches/BRANCH_6-3/website
+</A></li>
+	<LI>Next message: <A HREF="000438.html">[fetchmail-svn] r5377 - branches/BRANCH_MAPI
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#437">[ date ]</a>
+              <a href="thread.html#437">[ thread ]</a>
+              <a href="subject.html#437">[ subject ]</a>
+              <a href="author.html#437">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

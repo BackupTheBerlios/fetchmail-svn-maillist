@@ -1,0 +1,512 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5145 - in branches/BRANCH_6-3: . KAME libesmtp m4
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2007-December/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5145%20-%20in%20branches/BRANCH_6-3%3A%20.%20KAME%20libesmtp%20m4&In-Reply-To=%3C20071226143709.8393A6B0CCE%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000134.html">
+   <LINK REL="Next"  HREF="000136.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5145 - in branches/BRANCH_6-3: . KAME libesmtp m4</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5145%20-%20in%20branches/BRANCH_6-3%3A%20.%20KAME%20libesmtp%20m4&In-Reply-To=%3C20071226143709.8393A6B0CCE%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5145 - in branches/BRANCH_6-3: . KAME libesmtp m4">svn at mknod.org
+       </A><BR>
+    <I>Wed Dec 26 15:37:09 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000134.html">[fetchmail-svn] r5144 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000136.html">[fetchmail-svn] r5146 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#135">[ date ]</a>
+              <a href="thread.html#135">[ thread ]</a>
+              <a href="subject.html#135">[ subject ]</a>
+              <a href="author.html#135">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2007-12-26 08:37:09 -0600 (Wed, 26 Dec 2007)
+New Revision: 5145
+
+Modified:
+   branches/BRANCH_6-3/KAME/getnameinfo.c
+   branches/BRANCH_6-3/Makefile.am
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/TODO.txt
+   branches/BRANCH_6-3/configure.ac
+   branches/BRANCH_6-3/libesmtp/gethostbyname.c
+   branches/BRANCH_6-3/m4/gethostbyname_r.m4
+   branches/BRANCH_6-3/smbencrypt.c
+Log:
+Merge portability patch from Peter O'Gorman, fetchmail-devel 2007-10-31.
+This requires some minor fixes though.
+
+Modified: branches/BRANCH_6-3/KAME/getnameinfo.c
+===================================================================
+--- branches/BRANCH_6-3/KAME/getnameinfo.c	2007-12-26 14:18:17 UTC (rev 5144)
++++ branches/BRANCH_6-3/KAME/getnameinfo.c	2007-12-26 14:37:09 UTC (rev 5145)
+@@ -291,8 +291,11 @@
+ 				    hostlen) == NULL)
+ 					return EAI_SYSTEM;
+ #else
+-				if (afd-&gt;a_af == AF_INET)
+-				    strlcpy(host, inet_ntoa(addr), hostlen);
++				if (afd-&gt;a_af == AF_INET) {
++				    struct in_addr addr_tmp;
++				    addr_tmp.s_addr = addr;
++				    strlcpy(host, inet_ntoa(addr_tmp), hostlen);
++				}
+ 				else
+ 				    return EAI_FAMILY;
+ #endif
+
+Modified: branches/BRANCH_6-3/Makefile.am
+===================================================================
+--- branches/BRANCH_6-3/Makefile.am	2007-12-26 14:18:17 UTC (rev 5144)
++++ branches/BRANCH_6-3/Makefile.am	2007-12-26 14:37:09 UTC (rev 5145)
+@@ -3,9 +3,7 @@
+ SUBDIRS=		m4 po
+ AUTOMAKE_OPTIONS=	1.8 foreign no-dist-gzip dist-bzip2
+ 
+-AM_CFLAGS=		@CEFLAGS@
+-AM_CPPFLAGS=		@CPFLAGS@ -I$(srcdir)/libesmtp
+-AM_LDFLAGS=		@LDEFLAGS@
++AM_CPPFLAGS=		-I$(srcdir)/libesmtp
+ ACLOCAL_AMFLAGS=	-I m4 -I m4-local
+ AM_YFLAGS=		-d
+ BUILT_SOURCES=		rcfile_y.h
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2007-12-26 14:18:17 UTC (rev 5144)
++++ branches/BRANCH_6-3/NEWS	2007-12-26 14:37:09 UTC (rev 5145)
+@@ -75,6 +75,21 @@
+   default with no switches in configure to enable it. However, the macro would 
+   have been prone to a symlink attack. Found by Nico Golde.
+ 
++* Include the typedef for int16 in the #ifndef _AIX in smbencrypt.c (Peter
++  O'Gorman)
++* Correct check for u_int32_t in configure.ac (seems to be typedef'ed in
++  namser.h on some platforms.) (Peter O'Gorman)
++* In configure.ac change all CPFLAGS to CPPFLAGS, CEFLAGS to CFLAGS and LDEFLAGS
++  to LDFLAGS otherwise the results of some tests (additional -L and -I flags) do
++  not get used for later tests causing incorrect configure results. Makefile.am
++  was also changed to reflect this. (Peter O'Gorman)
++* m4/gethostbyname_r.m4 does AC_TRY_COMPILE, which unfortunately can pass even
++  if there is no gethostbyname_r. Changed to AC_TRY_LINK. (Peter O'Gorman)
++* __attribute__ ((unused)) is a gccism, removed from libesmtp/gethostbyname.c.
++  (Peter O'Gorman)
++* In KAME/getnameinfo.c it's best to use the correct argument to inet_ntoa.
++  (Peter O'Gorman)
++
+ # DOCUMENTATION:
+ * Add fetchmail-SA-2007-02.txt
+ * Re-add two lines to the manual page that had accidentally become comments 
+@@ -89,6 +104,8 @@
+ * Spanish (Javier Fern&#225;ndez-Sanguino Pe&#241;a, Matthias Andree)
+ * Vietnamese (Clytie Siddall)
+ 
++
++
+ fetchmail 6.3.8 (released 2007-04-06):
+ 
+ # SECURITY STRENGTHENING:
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2007-12-26 14:18:17 UTC (rev 5144)
++++ branches/BRANCH_6-3/TODO.txt	2007-12-26 14:37:09 UTC (rev 5145)
+@@ -5,7 +5,6 @@
+ - report multiline SMTP errors properly (sample in private mail from 
+   Earl Chew, 2007-07-30T02:28)
+ - publish SA-2007-02 after release
+-- Peter O'Gorman 2007-10-31 fetchmail-6.3.8 portability patches [-devel list]
+ 
+ soon - SHOULD:
+ - BerliOS Bug #11576, thread on fetchmail users &quot;Invalid SSL certificate&quot; by
+
+Modified: branches/BRANCH_6-3/configure.ac
+===================================================================
+--- branches/BRANCH_6-3/configure.ac	2007-12-26 14:18:17 UTC (rev 5144)
++++ branches/BRANCH_6-3/configure.ac	2007-12-26 14:37:09 UTC (rev 5145)
+@@ -49,11 +49,17 @@
+ AC_TYPE_SIZE_T
+ AC_TYPE_PID_T
+ AC_TYPE_SIGNAL
+-AC_CHECK_TYPE(u_int32_t,unsigned int)
+ AC_CHECK_HEADERS([unistd.h termios.h termio.h sgtty.h stdarg.h \
+ 	sys/itimer.h fcntl.h sys/fcntl.h memory.h sys/wait.h \
+-	arpa/inet.h arpa/nameser.h netinet/in.h net/socket.h \
++	arpa/inet.h arpa/nameser.h netinet/in.h net/socket.h netdb.h \
+ 	sys/select.h sys/socket.h sys/time.h langinfo.h])
++AC_CHECK_TYPE(u_int32_t,,
++	AC_DEFINE(u_int32_t,unsigned int,
++		[Define to unsigned int if &lt;sys/types.h&gt; does not define.]),
++	[AC_INCLUDES_DEFAULT
++#ifdef HAVE_ARPA_NAMESER_H
++#include &lt;arpa/nameser.h&gt;
++#endif])
+ AC_CHECK_HEADERS([resolv.h],,,[
+ #include &lt;sys/types.h&gt;
+ #ifdef HAVE_NETINET_IN_H
+@@ -74,7 +80,7 @@
+ case $target_os in
+ darwin*)
+     AC_MSG_NOTICE(found Darwin - Adding -DBIND_8_COMPAT to CFLAGS)
+-    CPFLAGS=&quot;-DBIND_8_COMPAT&quot;
++    CPPFLAGS=&quot;$CPPFLAGS -DBIND_8_COMPAT&quot;
+     ;;
+ # Check for FreeBSD special case: more libs needed
+ freebsd*)
+@@ -88,7 +94,7 @@
+     LIBS=&quot;$LIBS -lbsd&quot;
+     LDFLAGS=`echo $LDFLAGS | sed &quot;s/-s //&quot;`
+     AC_MSG_NOTICE(found LynxOS - Prepending standard include path to gcc flags)
+-    CPFLAGS=&quot;-I/usr/include&quot;
++    CPPFLAGS=&quot;$CPPFLAGS -I/usr/include&quot;
+     ;;
+ # Check for Rhapsody special case: it doesn't like -s
+ rhapsody*)
+@@ -431,13 +437,47 @@
+ 	[with_opie=no])
+ test &quot;$with_opie&quot; = &quot;yes&quot; &amp;&amp; AC_DEFINE(OPIE_ENABLE,1,Define if you want OPIE support compiled in)
+ 
+-AC_SEARCH_LIBS(getaddrinfo, inet6, [AC_DEFINE(HAVE_GETADDRINFO,1,[define to 1 if you have the getaddrinfo function])])
+-AC_CHECK_FUNCS(getnameinfo inet_ntop)
+-AM_CONDITIONAL(NEED_GETADDRINFO, test &quot;$ac_cv_search_getaddrinfo&quot; != &quot;none required&quot;)
+-AM_CONDITIONAL(NEED_GETNAMEINFO, test &quot;$ac_cv_func_getnameinfo&quot;   != yes)
++dnl Mostly stolen from gnulib's getaddrinfo.m4
++AC_SEARCH_LIBS(getaddrinfo, [nsl socket])
++AC_CACHE_CHECK([for getaddrinfo],[fm_cv_getaddrinfo],[
++  AC_TRY_LINK([
++#include &lt;sys/types.h&gt;
++#ifdef HAVE_SYS_SOCKET_H
++#include &lt;sys/socket.h&gt;
++#endif
++#ifdef HAVE_NETDB_H
++#include &lt;netdb.h&gt;
++#endif
++  ], [getaddrinfo(0, 0, 0, 0);],
++    [ fm_cv_getaddrinfo=yes],
++    [ fm_cv_getaddrinfo=no ])
++])
+ 
++if test x&quot;$fm_cv_getaddrinfo&quot; = &quot;xyes&quot;; then  
++     AC_DEFINE(HAVE_GETADDRINFO, 1,
++      [Define to 1 if you have the getaddrinfo function.])
++fi
++
++AC_CACHE_CHECK([for getnameinfo],[fm_cv_getnameinfo],[
++  AC_TRY_LINK([
++#include &lt;sys/types.h&gt;
++#ifdef HAVE_SYS_SOCKET_H
++#include &lt;sys/socket.h&gt;
++#endif
++#ifdef HAVE_NETDB_H
++#include &lt;netdb.h&gt;
++#endif
++  ], [getnameinfo(NULL,0, NULL,0, NULL, 0, 0);],
++    [ fm_cv_getnameinfo=yes],
++    [ fm_cv_getnameinfo=no ])
++])
++
++AM_CONDITIONAL(NEED_GETADDRINFO, test &quot;$fm_cv_getaddrinfo&quot; != yes)
++AM_CONDITIONAL(NEED_GETNAMEINFO, test &quot;$fm_cv_getnameinfo&quot;   != yes)
++
++AC_CHECK_FUNCS(inet_ntop)
+ dnl Check if getaddrinfo is async-signal-safe - most implementations aren't
+-if test &quot;$ac_cv_search_getaddrinfo&quot; = &quot;none required&quot; ; then
++if test &quot;$fm_cv_getaddrinfo&quot; = yes ; then
+     AC_MSG_CHECKING(if your getaddrinfo is async-signal-safe)
+     gai_ts=no
+     dnl we have getaddrinfo() - check if the OS is known to have a async-signal-safe implementation
+@@ -481,23 +521,23 @@
+   AS_MESSAGE(checking kerberosV for OpenBSD...)
+   AC_DEFINE(HEIMDAL,1,Define if you have HEIMDAL kerberos 5)
+   AC_DEFINE(KERBEROS_V5,1,Define if you have Kerberos V5)
+-  CEFLAGS=&quot;$CEFLAGS -I/usr/include/kerberosV&quot;
++  CFLAGS=&quot;$CFLAGS -I/usr/include/kerberosV&quot;
+   LIBS=&quot;$LIBS -lasn1 -lkrb5 -lcom_err -lkafs&quot;
+ elif krb5-config 2&gt; /dev/null &gt;/dev/null ; then
+   krb5_prefix=`krb5-config --prefix krb5`
+   AC_MSG_RESULT([krb5-config points to kerberosV under $krb5_prefix])
+   if test -f ${krb5_prefix}/include/et/com_err.h &amp;&amp; \
+    ! test -f ${krb5_prefix}/include/com_err.h  ; then
+-    CEFLAGS=&quot;$CEFLAGS -I${krb5_prefix}/include/et&quot;
++    CFLAGS=&quot;$CFLAGS -I${krb5_prefix}/include/et&quot;
+   fi
+   unset krb5_prefix
+-  CEFLAGS=&quot;$CEFLAGS `krb5-config --cflags krb5`&quot;
++  CFLAGS=&quot;$CFLAGS `krb5-config --cflags krb5`&quot;
+   LIBS=&quot;$LIBS `krb5-config --libs krb5`&quot;
+   AC_DEFINE(KERBEROS_V5)
+ else
+   if test &quot;$with_kerberos5&quot; != &quot;yes&quot; 
+   then
+-      LDEFLAGS=&quot;$LDEFLAGS -L${with_kerberos5}/lib&quot;
++      LDFLAGS=&quot;$LDFLAGS -L${with_kerberos5}/lib&quot;
+       searchdirs=&quot;$with_kerberos5&quot;
+   else
+       searchdirs=&quot;/usr/kerberos /usr/local/krb5 /usr/athena /usr&quot;
+@@ -507,7 +547,7 @@
+   do AC_MSG_CHECKING([for Kerberos V in $dir])
+      if test -f &quot;$dir/include/krb5.h&quot; || test -f &quot;$dir/include/krb5/krb5.h&quot;
+      then
+-	if test -d &quot;$dir/include/krb5&quot; ; then CPFLAGS=&quot;$CPFLAGS -I$dir/include/krb5&quot; ; fi
++	if test -d &quot;$dir/include/krb5&quot; ; then CPPFLAGS=&quot;$CPPFLAGS -I$dir/include/krb5&quot; ; fi
+         ac_krblibs=
+         if test -f &quot;$dir/include/roken.h&quot; || test -f &quot;$dir/include/krb5/roken.h&quot;
+         then
+@@ -516,12 +556,12 @@
+           dnl Attempt to detect if we need to -ldb2 to link Heimdal
+           dnl we assume we do if it is available
+            AC_CHECK_LIB(db2, db_open, ac_krblibs=&quot;$ac_krblibs -ldb2&quot;, [],
+-                ${LDEFLAGS})
++                ${LDFLAGS})
+            AC_CHECK_LIB(des, des_string_to_key, libk5crypto=-ldes,
+               AC_CHECK_LIB(ssl, MD5_Init, [],
+                 AC_MSG_ERROR([DES libraries not found. Try adding --with-ssl to enable OpenSSL support]),
+-                ${LDEFLAGS} ${ac_krblibs}),
+-           ${LDEFLAGS} ${ac_krblibs})
++                ${LDFLAGS} ${ac_krblibs}),
++           ${LDFLAGS} ${ac_krblibs})
+            AC_DEFINE(HEIMDAL)
+         else
+           AC_MSG_RESULT([found])
+@@ -533,15 +573,15 @@
+                    krb5_des_string_to_key,
+                    libk5crypto=-lk5crypto,
+                       AC_MSG_ERROR([Kerberos 5 DES libraries not found]),
+-                   ${LDEFLAGS} ${ac_krblibs}),
+-                 ${LDEFLAGS} ${ac_krblibs})
++                   ${LDFLAGS} ${ac_krblibs}),
++                 ${LDFLAGS} ${ac_krblibs})
+         fi
+         AC_CHECK_LIB(krb5, krb5_init_context,[],
+            continue,
+-           ${LDEFLAGS} ${ac_krblibs})
++           ${LDFLAGS} ${ac_krblibs})
+         AC_DEFINE(KERBEROS_V5)
+-        test &quot;$dir&quot; != &quot;/usr&quot; &amp;&amp; CEFLAGS=&quot;$CEFLAGS -I$dir/include&quot;
+-        LDEFLAGS=&quot;$LDEFLAGS -L$dir/lib&quot;
++        test &quot;$dir&quot; != &quot;/usr&quot; &amp;&amp; CFLAGS=&quot;$CFLAGS -I$dir/include&quot;
++        LDFLAGS=&quot;$LDFLAGS -L$dir/lib&quot;
+        LIBS=&quot;$LIBS $ac_krblibs $libk5crypto&quot;
+         with_kerberos5=$dir
+         break
+@@ -569,7 +609,7 @@
+ then
+   AS_MESSAGE(checking kerberosIV for `uname`...)
+   KERBEROS_V4=1
+-  CEFLAGS=&quot;$CEFLAGS -I/usr/include/kerberosIV&quot;
++  CFLAGS=&quot;$CFLAGS -I/usr/include/kerberosIV&quot;
+   case `uname` in
+       NetBSD)  LIBS=&quot;$LIBS -lkrb -ldes -lroken -lcom_err&quot; ;;
+       OpenBSD) LIBS=&quot;$LIBS -lkrb -ldes&quot; ;;
+@@ -578,7 +618,7 @@
+   krb4_prefix=`krb4-config --prefix`
+   AC_MSG_RESULT([krb4-config points to kerberosIV under $krb4_prefix])
+   unset krb4_prefix
+-  CEFLAGS=&quot;$CEFLAGS `krb4-config --cflags`&quot;
++  CFLAGS=&quot;$CFLAGS `krb4-config --cflags`&quot;
+   LIBS=&quot;$LIBS `krb4-config --libs`&quot;
+   KERBEROS_V4=1
+ elif krb5-config 2&gt; /dev/null &gt;/dev/null ; then
+@@ -588,7 +628,7 @@
+     AC_DEFINE(KERBEROS_V4_V5,1,Define if you have Kerberos V4 headers under a kerberosIV directory)
+   fi
+   unset krb4_prefix
+-  CEFLAGS=&quot;$CEFLAGS `krb5-config --cflags krb4`&quot;
++  CFLAGS=&quot;$CFLAGS `krb5-config --cflags krb4`&quot;
+   LIBS=&quot;$LIBS `krb5-config --libs krb4`&quot;
+   KERBEROS_V4=1
+ else
+@@ -631,8 +671,8 @@
+      fi
+      KERBEROS_V4=1
+      test -f &quot;$with_kerberos5/roken.h&quot; &amp;&amp; AC_DEFINE(HEIMDAL)
+-     test &quot;$dir&quot; != &quot;/usr/include&quot; &amp;&amp; CEFLAGS=&quot;$CEFLAGS -I$dir&quot;
+-     LDEFLAGS=&quot;$LDEFLAGS -L$with_kerberos/lib&quot;
++     test &quot;$dir&quot; != &quot;/usr/include&quot; &amp;&amp; CFLAGS=&quot;$CFLAGS -I$dir&quot;
++     LDFLAGS=&quot;$LDFLAGS -L$with_kerberos/lib&quot;
+      break
+   done
+   if test -z &quot;$with_kerberos&quot; ; then
+@@ -695,22 +735,22 @@
+   then
+     ###	ssl.h found under openssl.  Use openssl configuration preferentially,
+     AC_MSG_NOTICE(Enabling OpenSSL support in $with_ssl.)
+-    test &quot;$with_ssl&quot; != &quot;/usr&quot; &amp;&amp; CEFLAGS=&quot;$CEFLAGS -I$with_ssl/include&quot;
++    test &quot;$with_ssl&quot; != &quot;/usr&quot; &amp;&amp; CFLAGS=&quot;$CFLAGS -I$with_ssl/include&quot;
+     ### In Red Hat 9, this file includes a reference to &lt;krb5.h&gt;, so we
+     ### force the Kerberos direcory onto the include path so it will build.
+-    CEFLAGS=&quot;$CEFLAGS -I/usr/kerberos/include&quot;
++    CFLAGS=&quot;$CFLAGS -I/usr/kerberos/include&quot;
+     ###	OpenBSD comes with ssl headers
+   else
+     AC_MSG_ERROR([SSL support enabled, but OpenSSL not found])
+   fi
+-  LDEFLAGS=&quot;$LDEFLAGS -L$with_ssl/lib&quot;
++  LDFLAGS=&quot;$LDFLAGS -L$with_ssl/lib&quot;
+   LIBS=&quot;$LIBS -lssl -lcrypto&quot;
+   dnl check if -ldl is needed
+   AC_MSG_CHECKING([for additional library dependencies of SSL])
+   found=0
+   save_LIBS=&quot;$LIBS&quot;
+   for i in &quot;&quot; &quot;-ldl&quot; ; do
+-      LIBS=&quot;$LDEFLAGS $save_LIBS $i&quot;
++      LIBS=&quot;$LDFLAGS $save_LIBS $i&quot;
+       AC_LINK_IFELSE([AC_LANG_PROGRAM(,[SSL_library_init()])],[found=1; break])
+   done
+   if test $found = 0 ; then
+@@ -734,13 +774,13 @@
+ then
+     if test &quot;$with_socks&quot; != yes
+     then
+-        LDEFLAGS=&quot;$LDEFLAGS -L$with_socks&quot;
++        LDFLAGS=&quot;$LDFLAGS -L$with_socks&quot;
+     else
+         AC_CHECK_LIB(socks, Rconnect,,
+                AC_MSG_ERROR([could not find libsocks which is needed for built-in SOCKS support]))
+     fi
+     AC_DEFINE(HAVE_SOCKS,1,Define if you want built-in SOCKS support)
+-    CEFLAGS=&quot;$CEFLAGS -Dconnect=Rconnect -Dgetsockname=Rgetsockname -Dbind=Rbind -Daccept=Raccept -Dlisten=Rlisten -Dselect=Rselect&quot;
++    CFLAGS=&quot;$CFLAGS -Dconnect=Rconnect -Dgetsockname=Rgetsockname -Dbind=Rbind -Daccept=Raccept -Dlisten=Rlisten -Dselect=Rselect&quot;
+     LIBS=&quot;-lsocks $LIBS&quot;
+ fi])
+ 
+@@ -752,14 +792,14 @@
+ then
+   if test &quot;$with_socks5&quot; != yes
+   then
+-    LDEFLAGS=&quot;$LDEFLAGS -L$with_socks5&quot;
++    LDFLAGS=&quot;$LDFLAGS -L$with_socks5&quot;
+   fi
+   ac_savedLDFLAGS=&quot;$LDFLAGS&quot;
+-  LDFLAGS=&quot;$LDEFLAGS $LDFLAGS&quot;
++  LDFLAGS=&quot;$LDFLAGS $LDFLAGS&quot;
+   AC_CHECK_LIB(socks5, SOCKSconnect,,
+   	AC_MSG_ERROR([could not find libsocks5 which is needed for built-in SOCKS5 support]))
+   AC_DEFINE(HAVE_SOCKS)
+-  CEFLAGS=&quot;$CEFLAGS -Dconnect=SOCKSconnect -Dgetsockname=SOCKSgetsockname -Dbind=SOCKSbind -Daccept=SOCKSaccept -Dlisten=SOCKSlisten -Dselect=SOCKSselect -Drecvfrom=SOCKSrecvfrom -Dsendto=SOCKSsendto -Drecv=SOCKSrecv -Dsend=SOCKSsend -Dread=SOCKSread -Dwrite=SOCKSwrite -Drresvport=SOCKSrresvport -Dshutdown=SOCKSshutdown -Dlisten=SOCKSlisten -Dclose=SOCKSclose -Ddup=SOCKSdup -Ddup2=SOCKSdup2 -Dgethostbyname=SOCKSgethostbyname&quot;
++  CFLAGS=&quot;$CFLAGS -Dconnect=SOCKSconnect -Dgetsockname=SOCKSgetsockname -Dbind=SOCKSbind -Daccept=SOCKSaccept -Dlisten=SOCKSlisten -Dselect=SOCKSselect -Drecvfrom=SOCKSrecvfrom -Dsendto=SOCKSsendto -Drecv=SOCKSrecv -Dsend=SOCKSsend -Dread=SOCKSread -Dwrite=SOCKSwrite -Drresvport=SOCKSrresvport -Dshutdown=SOCKSshutdown -Dlisten=SOCKSlisten -Dclose=SOCKSclose -Ddup=SOCKSdup -Ddup2=SOCKSdup2 -Dgethostbyname=SOCKSgethostbyname&quot;
+   AC_CHECK_FUNC(SOCKSfclose, [CFLAGS=&quot;$CFLAGS -Dfclose=SOCKSfclose&quot;])
+   LDFLAGS=&quot;$ac_savedLDFLAGS&quot;
+ fi])
+@@ -816,7 +856,7 @@
+   fi
+   AC_DEFINE(GSSAPI,1,Define if you want GSSAPI authentication)
+   if test &quot;$with_gssapi&quot; != yes ; then
+-    CPPFLAGS=&quot;-I$with_gssapi/include&quot;
++    CPPFLAGS=&quot;$CPPFLAGS-I$with_gssapi/include&quot;
+   fi
+   AC_CHECK_HEADERS(gss.h gssapi.h gssapi/gssapi.h gssapi/gssapi_generic.h)
+   if test &quot;$ac_cv_header_gssapi_h&quot; = &quot;yes&quot;; then
+@@ -826,10 +866,6 @@
+   fi
+ fi])
+ 
+-AC_SUBST(CPFLAGS)
+-AC_SUBST(CEFLAGS)
+-AC_SUBST(LDEFLAGS)
+-
+ dnl ,------------------------------------------------------------------
+ dnl Check if we need TRIO
+ needtrio=0
+
+Modified: branches/BRANCH_6-3/libesmtp/gethostbyname.c
+===================================================================
+--- branches/BRANCH_6-3/libesmtp/gethostbyname.c	2007-12-26 14:18:17 UTC (rev 5144)
++++ branches/BRANCH_6-3/libesmtp/gethostbyname.c	2007-12-26 14:37:09 UTC (rev 5145)
+@@ -201,7 +201,7 @@
+ #else
+ 
+ void
+-free_ghbnctx (struct ghbnctx *ctx __attribute__ ((unused)))
++free_ghbnctx (struct ghbnctx *ctx )
+ {
+   assert (ctx != NULL);
+ }
+
+Modified: branches/BRANCH_6-3/m4/gethostbyname_r.m4
+===================================================================
+--- branches/BRANCH_6-3/m4/gethostbyname_r.m4	2007-12-26 14:18:17 UTC (rev 5144)
++++ branches/BRANCH_6-3/m4/gethostbyname_r.m4	2007-12-26 14:37:09 UTC (rev 5145)
+@@ -17,7 +17,7 @@
+ AC_DEFUN([ACX_WHICH_GETHOSTBYNAME_R],
+ [AC_CACHE_CHECK(number of arguments to gethostbyname_r,
+                 acx_which_gethostbyname_r, [
+-	AC_TRY_COMPILE([
++	AC_TRY_LINK([
+ #		include &lt;netdb.h&gt; 
+   	], 	[
+ 
+@@ -29,7 +29,7 @@
+ 		],acx_which_gethostbyname_r=3, 
+ 			[
+ dnl			acx_which_gethostbyname_r=0
+-  AC_TRY_COMPILE([
++  AC_TRY_LINK([
+ #   include &lt;netdb.h&gt;
+   ], [
+ 	char *name;
+@@ -42,7 +42,7 @@
+   
+   [
+ dnl  acx_which_gethostbyname_r=0
+-  AC_TRY_COMPILE([
++  AC_TRY_LINK([
+ #   include &lt;netdb.h&gt;
+   ], [
+ 			char *name;
+
+Modified: branches/BRANCH_6-3/smbencrypt.c
+===================================================================
+--- branches/BRANCH_6-3/smbencrypt.c	2007-12-26 14:18:17 UTC (rev 5144)
++++ branches/BRANCH_6-3/smbencrypt.c	2007-12-26 14:37:09 UTC (rev 5145)
+@@ -35,8 +35,8 @@
+ 
+ #ifndef _AIX
+ typedef unsigned char uchar;
++typedef signed short int16;
+ #endif
+-typedef signed short int16;
+ typedef int BOOL;
+ #define False 0
+ #define True  1
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000134.html">[fetchmail-svn] r5144 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000136.html">[fetchmail-svn] r5146 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#135">[ date ]</a>
+              <a href="thread.html#135">[ thread ]</a>
+              <a href="subject.html#135">[ subject ]</a>
+              <a href="author.html#135">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

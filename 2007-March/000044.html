@@ -1,0 +1,331 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5051 - in branches/BRANCH_6-3: . contrib
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2007-March/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5051%20-%20in%20branches/BRANCH_6-3%3A%20.%20contrib&In-Reply-To=%3C20070317111230.0A741218053%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000043.html">
+   <LINK REL="Next"  HREF="000045.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5051 - in branches/BRANCH_6-3: . contrib</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5051%20-%20in%20branches/BRANCH_6-3%3A%20.%20contrib&In-Reply-To=%3C20070317111230.0A741218053%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5051 - in branches/BRANCH_6-3: . contrib">svn at mknod.org
+       </A><BR>
+    <I>Sat Mar 17 12:12:30 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000043.html">[fetchmail-svn] r5050 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000045.html">[fetchmail-svn] r5052 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#44">[ date ]</a>
+              <a href="thread.html#44">[ thread ]</a>
+              <a href="subject.html#44">[ subject ]</a>
+              <a href="author.html#44">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2007-03-17 06:12:29 -0500 (Sat, 17 Mar 2007)
+New Revision: 5051
+
+Added:
+   branches/BRANCH_6-3/contrib/delete-later
+   branches/BRANCH_6-3/contrib/delete-later.README
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/contrib/README
+Log:
+Add delete-later, kindly donated by Carsten Ralle/Yoo GmbH, Germany.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2007-03-16 08:34:10 UTC (rev 5050)
++++ branches/BRANCH_6-3/NEWS	2007-03-17 11:12:29 UTC (rev 5051)
+@@ -60,6 +60,11 @@
+ * Document SOCKS is not run-time configurable. Patch by Rob MacGregor.
+ * Use envelope option in multidrop example. Patch by Rob MacGregor.
+ 
++# CONTRIB:
++* Add delete-later and delete-later.README, a script and documentation for
++  a MySQL/Tcl-based client-side &quot;delete-after&quot; feature.
++  Kindly donated by Yoo GmbH, Gro&#223;voigtsberg, Germany (Carsten Ralle).
++
+ # KNOWN BUGS AND WORKAROUNDS:
+   (this section floats upwards through the NEWS file so it stays with the
+   current release information)
+
+Modified: branches/BRANCH_6-3/contrib/README
+===================================================================
+--- branches/BRANCH_6-3/contrib/README	2007-03-16 08:34:10 UTC (rev 5050)
++++ branches/BRANCH_6-3/contrib/README	2007-03-17 11:12:29 UTC (rev 5051)
+@@ -197,3 +197,9 @@
+ A logrotate configuration file developped by Daniel Leidert for Debian,
+ when he wanted to use /var/log/fetchmail instead of the usual syslog.
+ It probably needs to be adjusted for use on other systems.
++
++### delete-later (added 2007-03-17, --ma)
++
++A MySQL/Tcl/Expect-based client-side script to remove messages at a
++certain age.  See delete-later.README for details.
++(By Carsten Ralle, Yoo GmbH, Germany.)
+
+Added: branches/BRANCH_6-3/contrib/delete-later
+===================================================================
+--- branches/BRANCH_6-3/contrib/delete-later	2007-03-16 08:34:10 UTC (rev 5050)
++++ branches/BRANCH_6-3/contrib/delete-later	2007-03-17 11:12:29 UTC (rev 5051)
+@@ -0,0 +1,56 @@
++#!/usr/bin/expect -f
++
++# MySQL database connection settings
++set CRDB_host     localhost
++set CRDB_DB       test
++set CRDB_username root
++set CRDB_password root
++
++# set eiter one to 1 for verbose output
++log_user 0
++set comments 0
++
++package require mysqltcl
++
++# connect to MySQL database
++set handle [::mysql::connect -host $CRDB_host -user $CRDB_username -password $CRDB_password]
++
++# get server/usernames to clean up
++set userlist [::mysql::sel $handle &quot;SELECT UserID, server, username, password, retaindays from $CRDB_DB.fetchmail_user&quot; -flatlist]
++
++# loop through all users in database
++foreach {userid server username password days} $userlist {
++  if {$comments==1} { send_user &quot;\r\nWorking on accound #$userid\r\n*******************************\r\n&quot; }
++  eval spawn telnet -l fetchmail_cleanup $server 110
++  expect &quot;ready&quot;
++  send &quot;USER $username\r&quot;
++  expect &quot;password&quot;
++  send &quot;PASS $password\r&quot;
++  expect &quot;OK&quot;
++  send &quot;STAT\r&quot;
++  expect &quot;+OK &quot;
++  expect -re &quot;\[0-9]* &quot;
++  set anz $expect_out(0,string)
++  if {$comments==1} { send_user &quot;message count: $anz \r\n&quot; }
++  set i 0
++  while { $i &lt; $anz } {
++    incr i
++    send &quot;UIDL $i\r&quot;
++    expect -re &quot;\\\+OK $i \(.*\)\r&quot;
++    set uid $expect_out(1,string)
++    ::mysql::exec $handle &quot;insert ignore into $CRDB_DB.fetchmail values ($userid,'$uid',now());&quot;
++    set age [::mysql::sel $handle &quot;SELECT DATEDIFF(now(),Fetchdate) from $CRDB_DB.fetchmail where UserID=$userid and UID='$uid'&quot; -list]
++    if {$comments==1} { send_user &quot;Message #$i: UID: $uid , age: $age \r\n&quot; }
++    if {$age &gt; $days} {
++      send &quot;DELE $i\r&quot;
++      expect &quot;deleted&quot;
++      if {$comments==1} { send_user &quot;Message $i deleted.\r\n&quot; }
++    }
++  }
++  send &quot;quit\r&quot;
++  expect &quot;signing off&quot;
++  ::mysql::exec $handle &quot;delete from $CRDB_DB.fetchmail where DATEDIFF(now(),Fetchdate)&gt;($days*2) and UserID=$userid;&quot;
++}
++::mysql::close $handle
++exit
++
+
+Added: branches/BRANCH_6-3/contrib/delete-later.README
+===================================================================
+--- branches/BRANCH_6-3/contrib/delete-later.README	2007-03-16 08:34:10 UTC (rev 5050)
++++ branches/BRANCH_6-3/contrib/delete-later.README	2007-03-17 11:12:29 UTC (rev 5051)
+@@ -0,0 +1,157 @@
++*******************  DELETE - LATER ********************
++
++    version 0.11  2007-02-06
++
++
++    A tool for deleting email messages on POP3 accounts
++    after a given period of time (in days)
++
++    E.g. if you want to keep the messages 30 days to
++    have webmail access while on the road
++
++********************************************************
++
++  The script queries the current contents of a POP3 mailbox,
++  stores the message IDs of that run and saves them to a
++  MySQL database.
++
++  On each run, it compares the date on which the message was
++  first seen with the current date and deletes the message,
++  if that difference is greater than the value of the column
++  &quot;retaindays&quot;.
++
++  The script stores account settings in a separate MySQL
++  table for easy maintenance each email account needs an
++  unique ID.
++
++  The script scales well on large installations with several
++  thousands of messages a day if you run it at a time of low
++  email volume (e.g. at 4 am).
++
++
++
++REQUIREMENTS
++------------
++
++- MySQL database server and client software (v4.x or later,
++  www.mysql.com)
++
++  MySQL sources (for compiling mysqltcl only)
++
++- mysqltcl script (www.xdobry.de/mysqltcl/)
++
++- libexpect (v5 or later)
++
++
++
++INSTALLATION
++------------
++
++1. create the tables &quot;fetchmail&quot; and &quot;fetchmail_users&quot; on a
++   MySQL server by running
++
++   CREATE TABLE `fetchmail` ( `UserID` BIGINT UNSIGNED NOT NULL DEFAULT 0, `UID` VARCHAR(255) NOT NULL DEFAULT '',  `Fetchdate` DATE NOT NULL DEFAULT 0,  PRIMARY KEY(`UserID`, `UID`));
++
++   CREATE TABLE `fetchmail_user` ( `UserID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT, `server` VARCHAR(255) NOT NULL DEFAULT '', `username` VARCHAR(63) NOT NULL DEFAULT '', `password` VARCHAR(63) NOT NULL DEFAULT '',  `retaindays` INTEGER UNSIGNED NOT NULL DEFAULT 0, PRIMARY KEY(`UserID`));
++
++2. Fill the table &quot;fetchmail_users&quot; with the settings of the
++   email accounts you wish to handle
++
++3. copy the script &quot;delete-later&quot; to a safe place, (on
++   Linux/Unix: make it executable) and edit the first lines to
++   match your MySQL setup
++
++4. run &quot;delete-later&quot; via cron AFTER you fetched your emails
++   with settings that keep the messages on the server (e.g. via
++   fetchmail --keep)
++
++
++
++KNOWN ISSUES
++------------
++
++The mysqltcl libraries sometimes don't compile against
++earlier versions of MySQL 4.x.
++
++If you are experiencing any problems with compiling
++mysqltcl, please look for pre-compiled binaries for your
++distribution (or contact <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">mail at xdobry.de</A>), the win32 binaries
++work out of the box on most M$ systems.
++
++As most linux distributions don't include mysqltcl, get the
++latest precompiled 5.x series MySQL binariesand the matching
++source code from www.mysql.com, install them onto a separate
++location and run &quot;configure &amp;&amp; make &amp;&amp; make install&quot; to
++compile mysqltcl yourself.
++
++
++
++NOTES
++-----
++
++The age of an email message is calculated by the difference
++in days between the run of &quot;delete-later&quot; it was first seen
++on and the current date, not the actual date the message was
++sent. So if you run the script every week, the period after
++which a message is delete may vary up to 14 days.
++
++This was implemented that way, because of the common
++practice of spammers to change the message date to some date
++in the far future to place the message first in your inbox.
++
++
++
++COPYRIGHT
++---------
++
++Copyright (c) 2007 Yoo GmbH
++                   Zellwaldring 51
++                   09603 GROSSVOIGTSBERG
++                   GERMANY
++
++Permission to use, copy, modify, distribute, and sell this software
++and its documentation for any purpose is hereby granted without fee,
++provided that the content of this README file appears in all copies
++of the software and related documentation.
++
++
++
++DISCLAIMER
++----------
++
++THE SCRIPT IS PROVIDED &quot;AS IS&quot; WITHOUT WARRANTY OF ANY KIND.
++
++WE (YOO) HEREBY DISCLAIM ALL WARRANTIES AND CONDITIONS WITH REGARD
++TO THIS README AND SCRIPT, INCLUDING ALL WARRANTIES AND CONDITIONS
++OF MERCHANTABILITY, WHETHER EXPRESS, IMPLIED OR STATUTORY, FITNESS
++FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT.
++
++IN NO EVENT SHALL YOO AND/OR ITS REPRESENTATIVES AND/OR RESPECTIVE
++SUPPLIERS BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
++DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA
++OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
++TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
++PERFORMANCE OF THIS README OR SCRIPT.
++
++
++
++CONTACT
++-------
++
++For help, bug reports or other request regarding &quot;delete-later&quot; please
++contact Carsten Ralle (English/German) by writing an e-mail to
++
++                   cr &lt;at&gt; i4yoo &lt;dot&gt; de
++
++with a subject starting with &quot;DELETE-LATER: &quot;
++
++Please note that messages containing HTML or images will be
++automatically deleted.
++
++
++
++********************************************************************************
++Yoo GmbH, Zellwaldring 51, D-09603 Grossvoigtsberg, Germany
++
++                                                                  www.yoogmbh.de
++********************************************************************************
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000043.html">[fetchmail-svn] r5050 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000045.html">[fetchmail-svn] r5052 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#44">[ date ]</a>
+              <a href="thread.html#44">[ thread ]</a>
+              <a href="subject.html#44">[ subject ]</a>
+              <a href="author.html#44">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

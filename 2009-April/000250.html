@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5269 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-April/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5269%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090423143948.E154821F02E%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000249.html">
+   <LINK REL="Next"  HREF="000251.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5269 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5269%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090423143948.E154821F02E%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5269 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Thu Apr 23 16:39:48 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000249.html">[fetchmail-svn] r5268 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000251.html">[fetchmail-svn] r5268 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#250">[ date ]</a>
+              <a href="thread.html#250">[ thread ]</a>
+              <a href="subject.html#250">[ subject ]</a>
+              <a href="author.html#250">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-04-23 09:39:48 -0500 (Thu, 23 Apr 2009)
+New Revision: 5269
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/imap.c
+Log:
+Support NIL as body length (Exchange). Fixes Berlios Bug #11980.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-04-23 14:39:11 UTC (rev 5268)
++++ branches/BRANCH_6-3/NEWS	2009-04-23 14:39:48 UTC (rev 5269)
+@@ -62,6 +62,8 @@
+   Courtesy of Nico Golde, Debian.
+ * When a pre- or post-connect command fails, now report the exit status or
+   termination signal properly through sys/wait.h macros.
++* When acquiring a body, understand NIL (&quot;no such data item&quot;), as returned by
++  some MS Exchange versions. Fixes BerliOS Bug #11980 by KB Sriram.
+ 
+ # CHANGES
+ * Make the comparison of the SSL fingerprints case insensitive, to
+
+Modified: branches/BRANCH_6-3/imap.c
+===================================================================
+--- branches/BRANCH_6-3/imap.c	2009-04-23 14:39:11 UTC (rev 5268)
++++ branches/BRANCH_6-3/imap.c	2009-04-23 14:39:48 UTC (rev 5269)
+@@ -1153,6 +1153,13 @@
+     if (num != number)
+ 	return(PS_ERROR);
+ 
++    /* Understand &quot;NIL&quot; as length =&gt; no body present
++     * (MS Exchange, BerliOS Bug #11980) */
++    if (strstr(buf+10, &quot;NIL)&quot;)) {
++	    *lenp = 0;
++	    return PS_SUCCESS;
++    }
++
+     /*
+      * Try to extract a length from the FETCH response.  RFC2060 requires
+      * it to be present, but at least one IMAP server (Novell GroupWise)
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000249.html">[fetchmail-svn] r5268 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000251.html">[fetchmail-svn] r5268 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#250">[ date ]</a>
+              <a href="thread.html#250">[ thread ]</a>
+              <a href="subject.html#250">[ subject ]</a>
+              <a href="author.html#250">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

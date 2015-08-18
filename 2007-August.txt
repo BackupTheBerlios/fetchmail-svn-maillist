@@ -1,0 +1,409 @@
+From svn at mknod.org  Thu Aug  9 17:53:11 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu,  9 Aug 2007 10:53:11 -0500 (CDT)
+Subject: [fetchmail-svn] r5122 - branches/BRANCH_6-3
+Message-ID: <20070809155311.C05816307D4@mknod.org>
+
+Author: m-a
+Date: 2007-08-09 10:53:11 -0500 (Thu, 09 Aug 2007)
+New Revision: 5122
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Update.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2007-07-29 10:01:56 UTC (rev 5121)
++++ branches/BRANCH_6-3/TODO.txt	2007-08-09 15:53:11 UTC (rev 5122)
+@@ -7,6 +7,8 @@
+ - https://bugzilla.novell.com/show_bug.cgi?id=246829
+ - http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=432618
+   * write a table of combinations of TLS/SSL options
++- complete SA based on feedback from reporter, with CVE Name and publish
++- add To: header to warning mails (authfail for instance)
+ 
+ 6.4:
+ - change SSL/TLS UI incompatibly, making it easier to use
+
+
+
+From svn at mknod.org  Wed Aug 22 16:25:17 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Wed, 22 Aug 2007 09:25:17 -0500 (CDT)
+Subject: [fetchmail-svn] r5123 - branches/BRANCH_6-3
+Message-ID: <20070822142517.BB146631315@mknod.org>
+
+Author: m-a
+Date: 2007-08-22 09:25:17 -0500 (Wed, 22 Aug 2007)
+New Revision: 5123
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Add two more bugs to look at.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2007-08-09 15:53:11 UTC (rev 5122)
++++ branches/BRANCH_6-3/TODO.txt	2007-08-22 14:25:17 UTC (rev 5123)
+@@ -9,6 +9,7 @@
+   * write a table of combinations of TLS/SSL options
+ - complete SA based on feedback from reporter, with CVE Name and publish
+ - add To: header to warning mails (authfail for instance)
++- BerliOS Bug #11576, Bug #11797
+ 
+ 6.4:
+ - change SSL/TLS UI incompatibly, making it easier to use
+
+
+
+From svn at mknod.org  Tue Aug 28 15:47:44 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Tue, 28 Aug 2007 08:47:44 -0500 (CDT)
+Subject: [fetchmail-svn] r5124 - branches/BRANCH_6-3
+Message-ID: <20070828134744.D16AD63131F@mknod.org>
+
+Author: m-a
+Date: 2007-08-28 08:47:44 -0500 (Tue, 28 Aug 2007)
+New Revision: 5124
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+   branches/BRANCH_6-3/fetchmail-SA-2007-02.txt
+Log:
+Add CVE Name, update URL of fetchmail-SA-2007-02.txt.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2007-08-22 14:25:17 UTC (rev 5123)
++++ branches/BRANCH_6-3/TODO.txt	2007-08-28 13:47:44 UTC (rev 5124)
+@@ -7,7 +7,7 @@
+ - https://bugzilla.novell.com/show_bug.cgi?id=246829
+ - http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=432618
+   * write a table of combinations of TLS/SSL options
+-- complete SA based on feedback from reporter, with CVE Name and publish
++- complete SA based on feedback from reporter, publish it after release
+ - add To: header to warning mails (authfail for instance)
+ - BerliOS Bug #11576, Bug #11797
+ 
+
+Modified: branches/BRANCH_6-3/fetchmail-SA-2007-02.txt
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-SA-2007-02.txt	2007-08-22 14:25:17 UTC (rev 5123)
++++ branches/BRANCH_6-3/fetchmail-SA-2007-02.txt	2007-08-28 13:47:44 UTC (rev 5124)
+@@ -9,8 +9,8 @@
+ Impact:		denial of service possible
+ Danger:		low
+ Credits:	Earl Chew
+-CVE Name:	XXX
+-URL:		http://fetchmail.berlios.de/fetchmail-SA-2007-01.txt
++CVE Name:	CVE-2007-4565
++URL:		http://fetchmail.berlios.de/fetchmail-SA-2007-02.txt
+ Project URL:	http://fetchmail.berlios.de/
+ 
+ Affects:	fetchmail release < 6.3.9
+@@ -23,7 +23,7 @@
+ 0. Release history
+ ==================
+ 
+-2007-07-29 1.0	first release
++2007-07-29 1.0	first draft for MITRE/CVE (visible in SVN)
+ 
+ 
+ 1. Background
+
+
+
+From svn at mknod.org  Wed Aug 29 12:38:08 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Wed, 29 Aug 2007 05:38:08 -0500 (CDT)
+Subject: [fetchmail-svn] r5125 - branches/BRANCH_6-3
+Message-ID: <20070829103808.B2843631322@mknod.org>
+
+Author: m-a
+Date: 2007-08-29 05:38:08 -0500 (Wed, 29 Aug 2007)
+New Revision: 5125
+
+Modified:
+   branches/BRANCH_6-3/fetchmail-SA-2007-02.txt
+Log:
+Mark 6.3.9 not yet available.
+
+Modified: branches/BRANCH_6-3/fetchmail-SA-2007-02.txt
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-SA-2007-02.txt	2007-08-28 13:47:44 UTC (rev 5124)
++++ branches/BRANCH_6-3/fetchmail-SA-2007-02.txt	2007-08-29 10:38:08 UTC (rev 5125)
+@@ -1,4 +1,4 @@
+-fetchmail-SA-2007-02: Crash when warning message is rejected
++fetchmail-SA-2007-02: Crash when local warning message is rejected
+ 
+ Topics:		Crash when fetchmail-generated warning message is rejected
+ 
+@@ -15,7 +15,7 @@
+ 
+ Affects:	fetchmail release < 6.3.9
+ 
+-Not affected:	fetchmail release 6.3.9
++Not affected:	fetchmail release 6.3.9 (not yet available)
+ 
+ Corrected:	2007-07-29 fetchmail SVN (rev 5119)
+ 
+
+
+
+From svn at mknod.org  Wed Aug 29 13:28:04 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Wed, 29 Aug 2007 06:28:04 -0500 (CDT)
+Subject: [fetchmail-svn] r5126 - branches/BRANCH_6-3
+Message-ID: <20070829112804.B3FFA631322@mknod.org>
+
+Author: m-a
+Date: 2007-08-29 06:28:04 -0500 (Wed, 29 Aug 2007)
+New Revision: 5126
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+Log:
+Add CVE number.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2007-08-29 10:38:08 UTC (rev 5125)
++++ branches/BRANCH_6-3/NEWS	2007-08-29 11:28:04 UTC (rev 5126)
+@@ -45,7 +45,7 @@
+ fetchmail 6.3.9 (not yet released):
+ 
+ # SECURITY FIX:
+-* CVE-2007-XXXX: Denial of service: When fetchmail tries to inject a warning
++* CVE-2007-4565: Denial of service: When fetchmail tries to inject a warning
+   message it created itself, and the message is refused by the SMTP listener,
+   fetchmail dereferences a NULL pointer and crashes. Report & fix by Earl Chew.
+   Note while this is theoretically a remote denial of service attack vector,
+@@ -53,7 +53,7 @@
+   rather low.
+   This bug was apparently introduced on 1998-11-27 when the bouncemail facility
+   was modularized. The bug made then its appearance in fetchmail release 4.6.8.
+-  See fetchmail-SA-2007-02.txt.
++  See also fetchmail-SA-2007-02.txt.
+ 
+ # BUG FIXES:
+ * The configure script will additionally check for 'dn_skipname', to fix build
+
+
+
+From svn at mknod.org  Wed Aug 29 14:13:23 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Wed, 29 Aug 2007 07:13:23 -0500 (CDT)
+Subject: [fetchmail-svn] r5127 - branches/BRANCH_6-3
+Message-ID: <20070829121323.BF7A1631322@mknod.org>
+
+Author: m-a
+Date: 2007-08-29 07:13:23 -0500 (Wed, 29 Aug 2007)
+New Revision: 5127
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Add one more bug.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2007-08-29 11:28:04 UTC (rev 5126)
++++ branches/BRANCH_6-3/TODO.txt	2007-08-29 12:13:23 UTC (rev 5127)
+@@ -10,6 +10,8 @@
+ - complete SA based on feedback from reporter, publish it after release
+ - add To: header to warning mails (authfail for instance)
+ - BerliOS Bug #11576, Bug #11797
++- report multiline SMTP errors properly (sample in private mail from 
++  Earl Chew, 2007-07-30T02:28)
+ 
+ 6.4:
+ - change SSL/TLS UI incompatibly, making it easier to use
+
+
+
+From svn at mknod.org  Wed Aug 29 14:15:24 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Wed, 29 Aug 2007 07:15:24 -0500 (CDT)
+Subject: [fetchmail-svn] r5128 - branches/BRANCH_6-3
+Message-ID: <20070829121524.E2DF1631322@mknod.org>
+
+Author: m-a
+Date: 2007-08-29 07:15:24 -0500 (Wed, 29 Aug 2007)
+New Revision: 5128
+
+Modified:
+   branches/BRANCH_6-3/fetchmail-SA-2007-02.txt
+Log:
+Update to fetchmail-SA-2007-02 v1.1.
+Includes official fix.
+
+Modified: branches/BRANCH_6-3/fetchmail-SA-2007-02.txt
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-SA-2007-02.txt	2007-08-29 12:13:23 UTC (rev 5127)
++++ branches/BRANCH_6-3/fetchmail-SA-2007-02.txt	2007-08-29 12:15:24 UTC (rev 5128)
+@@ -1,21 +1,24 @@
+-fetchmail-SA-2007-02: Crash when local warning message is rejected
++fetchmail-SA-2007-02: Crash when a local warning message is rejected
+ 
+-Topics:		Crash when fetchmail-generated warning message is rejected
++Topics:		Crash when a fetchmail-generated warning message is rejected
+ 
+ Author:		Matthias Andree
+-Version:	1.0
+-Announced:	2007-07-29
++Version:	1.1
++Announced:	2007-08-28
+ Type:		NULL pointer dereference trigged by outside circumstances
+ Impact:		denial of service possible
+ Danger:		low
++CVSS V2 vector: (AV:N/AC:M/Au:N/C:N/I:N/A:C/E:?/RL:O/RC:C)
++		
+ Credits:	Earl Chew
+ CVE Name:	CVE-2007-4565
+ URL:		http://fetchmail.berlios.de/fetchmail-SA-2007-02.txt
+ Project URL:	http://fetchmail.berlios.de/
+ 
+-Affects:	fetchmail release < 6.3.9
++Affects:	fetchmail release < 6.3.9 exclusively
+ 
+-Not affected:	fetchmail release 6.3.9 (not yet available)
++Not affected:	fetchmail release 6.3.9 and newer
++		fetchmail releases < 4.6.8 exclusively
+ 
+ Corrected:	2007-07-29 fetchmail SVN (rev 5119)
+ 
+@@ -24,6 +27,7 @@
+ ==================
+ 
+ 2007-07-29 1.0	first draft for MITRE/CVE (visible in SVN)
++2007-08-28 1.1	reworked, added fix, official release
+ 
+ 
+ 1. Background
+@@ -41,21 +45,44 @@
+ 2. Problem description and Impact
+ =================================
+ 
+-fetchmail will generated warning messages to the local postmaster or user in
+-certain circumstances, for instance when authentication fails.
++fetchmail will generate warning messages in certain circumstances and 
++send them to the local postmaster or the user starting it. Such warning 
++messages can be generated, for instance, if logging into an upstream 
++server fails repeatedly or if messages beyond the size limit (if 
++configured, default: no limit) are left on the server.
+ 
+-If this warning message is refused by the SMTP listener that fetchmail is
+-talking to, fetchmail attempts to dereference a NULL pointer when trying to find
+-out if it should allow a bounce message to be sent.
++If this warning message is then refused by the SMTP listener that 
++fetchmail is forwarding the message to, fetchmail attempts to 
++dereference a NULL pointer when trying to find out if it should allow a 
++bounce message to be sent.
+ 
++This causes fetchmail to crash and not collect further messages until it 
++is restarted.
+ 
++Risk assessment: low. In default configuration, fetchmail will talk 
++through the loopback interface, that is to the SMTP listener on the same 
++computer as it is running on. Otherwise, it will commonly be configured 
++to talk to trusted SMTP servers, so a compromise of misconfiguration of 
++a trusted or the same computer is required to exploit this problem - 
++which usually opens up much easier ways of denying service, or worse.
++
++
+ 3. Solution
+ ===========
+ 
+-Install fetchmail 6.3.9 or newer.  The fetchmail source code is available from
+-<http://developer.berlios.de/project/showfiles.php?group_id=1824>.
++There are two alternatives, either of them by itself is sufficient:
+ 
++a. Apply the patch found in section B of this announcement to fetchmail 6.3.8,
++   recompile and reinstall it.
+ 
++b. Install fetchmail 6.3.9 or newer when it becomes available.  The 
++   fetchmail source code is available from 
++   <http://developer.berlios.de/project/showfiles.php?group_id=1824>.
++
++Note there are no workarounds presented here since all known workarounds 
++are more intrusive than the actual solution.
++
++
+ A. Copyright, License and Warranty
+ ==================================
+ 
+@@ -71,4 +98,23 @@
+ THIS WORK IS PROVIDED FREE OF CHARGE AND WITHOUT ANY WARRANTIES.
+ Use the information herein at your own risk.
+ 
++
++
++B. Patch to remedy the problem
++==============================
++
++Index: sink.c
++===================================================================
++--- sink.c	(revision 5118)
+++++ sink.c	(revision 5119)
++@@ -262,7 +262,7 @@
++     const char *md1 = "MAILER-DAEMON", *md2 = "MAILER-DAEMON@";
++ 
++     /* don't bounce in reply to undeliverable bounces */
++-    if (!msg->return_path[0] ||
+++    if (!msg || !msg->return_path[0] ||
++ 	strcmp(msg->return_path, "<>") == 0 ||
++ 	strcasecmp(msg->return_path, md1) == 0 ||
++ 	strncasecmp(msg->return_path, md2, strlen(md2)) == 0)
++
+ END OF fetchmail-SA-2007-02.txt
+
+
+
+From svn at mknod.org  Wed Aug 29 14:25:35 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Wed, 29 Aug 2007 07:25:35 -0500 (CDT)
+Subject: [fetchmail-svn] r5129 - branches/BRANCH_6-3
+Message-ID: <20070829122535.0711C631323@mknod.org>
+
+Author: m-a
+Date: 2007-08-29 07:25:34 -0500 (Wed, 29 Aug 2007)
+New Revision: 5129
+
+Modified:
+   branches/BRANCH_6-3/fetchmail-SA-2007-02.txt
+Log:
+Fix typo and make assessment clearer, update URLs.
+
+Modified: branches/BRANCH_6-3/fetchmail-SA-2007-02.txt
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-SA-2007-02.txt	2007-08-29 12:15:24 UTC (rev 5128)
++++ branches/BRANCH_6-3/fetchmail-SA-2007-02.txt	2007-08-29 12:25:34 UTC (rev 5129)
+@@ -12,8 +12,8 @@
+ 		
+ Credits:	Earl Chew
+ CVE Name:	CVE-2007-4565
+-URL:		http://fetchmail.berlios.de/fetchmail-SA-2007-02.txt
+-Project URL:	http://fetchmail.berlios.de/
++URL:		http://www.fetchmail.info/fetchmail-SA-2007-02.txt
++Project URL:	http://www.fetchmail.info/
+ 
+ Affects:	fetchmail release < 6.3.9 exclusively
+ 
+@@ -60,9 +60,9 @@
+ is restarted.
+ 
+ Risk assessment: low. In default configuration, fetchmail will talk 
+-through the loopback interface, that is to the SMTP listener on the same 
++through the loopback interface, that means to the SMTP server on the same 
+ computer as it is running on. Otherwise, it will commonly be configured 
+-to talk to trusted SMTP servers, so a compromise of misconfiguration of 
++to talk to trusted SMTP servers, so a compromise or misconfiguration of 
+ a trusted or the same computer is required to exploit this problem - 
+ which usually opens up much easier ways of denying service, or worse.
+ 
+
+
+

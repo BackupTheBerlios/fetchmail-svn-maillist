@@ -1,0 +1,306 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5412 - branches/BRANCH_MAPI
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-August/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5412%20-%20branches/BRANCH_MAPI&In-Reply-To=%3C20090812180932.C9A1021F2D0%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000470.html">
+   <LINK REL="Next"  HREF="000472.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5412 - branches/BRANCH_MAPI</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5412%20-%20branches/BRANCH_MAPI&In-Reply-To=%3C20090812180932.C9A1021F2D0%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5412 - branches/BRANCH_MAPI">svn at mknod.org
+       </A><BR>
+    <I>Wed Aug 12 20:09:32 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000470.html">[fetchmail-svn] r5411 - branches/BRANCH_MAPI
+</A></li>
+        <LI>Next message: <A HREF="000472.html">[fetchmail-svn] r5413 - branches/BRANCH_MAPI
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#471">[ date ]</a>
+              <a href="thread.html#471">[ thread ]</a>
+              <a href="subject.html#471">[ subject ]</a>
+              <a href="author.html#471">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: mojmir
+Date: 2009-08-12 13:09:32 -0500 (Wed, 12 Aug 2009)
+New Revision: 5412
+
+Modified:
+   branches/BRANCH_MAPI/mapi.c
+Log:
+* some of these nasty warnings
+
+
+
+Modified: branches/BRANCH_MAPI/mapi.c
+===================================================================
+--- branches/BRANCH_MAPI/mapi.c	2009-08-12 16:52:56 UTC (rev 5411)
++++ branches/BRANCH_MAPI/mapi.c	2009-08-12 18:09:32 UTC (rev 5412)
+@@ -23,15 +23,17 @@
+ #include  &quot;config.h&quot;
+ 
+ #ifdef MAPI_ENABLE
++
++#define USE_UINT_ENUMS 1
+ #include &lt;libmapi/libmapi.h&gt;
+ #include &lt;ctype.h&gt;
+ 
+ #if defined(HAVE_UNISTD_H)
+-#include &lt;unistd.h&gt;
++# include &lt;unistd.h&gt;
+ #endif
+ 
+ #if defined(STDC_HEADERS)
+-#include &lt;stdlib.h&gt;
++# include &lt;stdlib.h&gt;
+ #endif
+ 
+ #include &lt;errno.h&gt;
+@@ -113,6 +115,7 @@
+ int MapiRead (int sock, char *buf, int len)
+ {
+ 	int count = 0;
++	(void)sock;
+ 
+ 	while (g_mapi_buffer_count &lt; g_mapi_buffer.length) {
+ 		*(buf + count) = *(g_mapi_buffer.data + g_mapi_buffer_count);
+@@ -139,6 +142,7 @@
+  */
+ int MapiPeek (int sock)
+ {
++	(void)sock;
+ 	if (g_mapi_buffer_count &lt; g_mapi_buffer.length)
+ 		return *(g_mapi_buffer.data + g_mapi_buffer_count);
+ 	else
+@@ -165,7 +169,6 @@
+  */
+ static char * get_base64_attachment (TALLOC_CTX * mem_ctx, mapi_object_t obj_attach, const uint32_t size, char ** magic)
+ {
+-	enum MAPISTATUS retval;
+ 	mapi_object_t	obj_stream;
+ 	DATA_BLOB		data;
+ 	size_t		data_pos = 0;
+@@ -200,7 +203,7 @@
+ 	*magic = talloc_strdup(mem_ctx, magic_buffer(cookie, data.data, data.length));
+ 	magic_close(cookie);
+ 
+-	return ldb_base64_encode(mem_ctx, data.data, data.length);
++	return ldb_base64_encode(mem_ctx, (char const *)data.data, data.length);
+ }
+ 
+ 
+@@ -219,7 +222,7 @@
+ 	 *	' ( ) + , - . / : = ?
+ 	 *-----------------------------------------------------------------------------*/
+ 	return isalnum(ch) || ch == '\'' || ch == '(' || ch == ')' || ch == '+' || ch == ','
+-	|| ch == '-' || ch == '.' || ch == '/' || ch == ':' || ch == '=' || ch == '?';
++		|| ch == '-' || ch == '.' || ch == '/' || ch == ':' || ch == '=' || ch == '?';
+ }
+ 
+ 
+@@ -232,7 +235,7 @@
+ static void quoted_printable_encode(const DATA_BLOB * body, int *lenp)
+ {
+ 	int				line_count = 0;
+-	int				body_count = 0;
++	size_t			body_count = 0;
+ 	char			hex[16] = &quot;0123456789ABCDEF&quot;;
+ 	char			ch;
+ 	char			line[78];
+@@ -290,17 +293,17 @@
+  *				  Note: it only searches in the top level, i.e. it's not recursive 
+  * =====================================================================================
+  */
+-static int mapi_open_folder(mapi_object_t * obj_container, mapi_object_t * obj_child, const char *folder)
++static enum MAPISTATUS mapi_open_folder(mapi_object_t * obj_container, mapi_object_t * obj_child, const char *folder)
+ {
+ 	enum MAPISTATUS retval;
+-	struct SPropTagArray *SPropTagArray;
+-	struct SPropValue		*lpProps;
+-	struct SRowSet	rowset;
+-	mapi_object_t	obj_htable;
+-	const char	   *name;
+-	const uint64_t *fid;
+-	uint32_t		index;
+-	int				count;
++	struct SPropTagArray * SPropTagArray;
++	struct SPropValue * lpProps;
++	struct SRowSet rowset;
++	mapi_object_t obj_htable;
++	char const * name = NULL;
++	uint64_t const * fid = NULL;
++	uint32_t index = 0;
++	uint32_t count = 0;
+ 
+ 	mapi_object_init(&amp;obj_htable);
+ 	retval = GetHierarchyTable(obj_container, &amp;obj_htable, 0, &amp;count);
+@@ -314,7 +317,8 @@
+ 	retval = QueryRows(&amp;obj_htable, count, TBL_ADVANCE, &amp;rowset);
+ 	if (retval != MAPI_E_SUCCESS) return GetLastError();
+ 
+-	if (!rowset.cRows) return MAPI_E_NOT_FOUND;
++	if (!rowset.cRows)
++		return MAPI_E_NOT_FOUND;
+ 
+ 	for (index = 0; index &lt; rowset.cRows; index++)
+ 	{
+@@ -597,6 +601,8 @@
+  */
+ static int mapi_ok(int sock, char *argbuf)
+ {
++	(void)sock;
++	(void)argbuf;
+ 	if (outlevel &gt;= O_MONITOR) report(stdout, &quot;MAPI&gt; mapi_ok()\n&quot;);
+ 	return PS_SUCCESS;
+ }
+@@ -663,7 +669,7 @@
+ 	enum MAPISTATUS retval;
+ 	struct mapi_session *session = NULL;
+ 	struct SRowSet	proftable;
+-	int				profcount;
++	size_t profcount;
+ 	char			localhost_name[256];
+ 	const char	   *workstation = NULL;
+ 	const char	   *ldif = NULL;
+@@ -671,6 +677,8 @@
+ 	const char	   *name_in_proftable = NULL;
+ 	uint32_t		flags;
+ 	char		   *realhost = ctl-&gt;server.via ? ctl-&gt;server.via : ctl-&gt;server.pollname;
++	(void)sock;
++	(void)greeting;
+ 
+ 	if (outlevel &gt; O_MONITOR) report(stdout, &quot;MAPI&gt; mapi_getauth()\n&quot;);
+ 
+@@ -800,12 +808,13 @@
+ 	struct SPropValue *lpProps;
+ 	struct SRow		aRow;
+ 	const char	   *msgid;
+-	int				props_count;
++	size_t props_count;
+ 	mapi_object_t	obj_message;
+ 	mapi_id_t	   *fid;
+ 	mapi_id_t	   *mid;
+-	int				i;
++	size_t i;
+ 
++	(void)sock;
+ 	if (outlevel &gt;= O_MONITOR) report(stdout, &quot;MAPI&gt; mapi_getrange()\n&quot;);
+ 
+ 	*countp = 0;
+@@ -885,6 +894,7 @@
+ 	mapi_id_t	   *fid;
+ 	mapi_id_t	   *mid;
+ 	int				i;
++	(void)sock;
+ 
+ 	if (first != -1)
+ 	{
+@@ -972,6 +982,7 @@
+ 	mapi_id_t	   *fid;
+ 	mapi_id_t	   *mid;
+ 	int				props_count;
++	(void)sock;
+ 
+ 	if (outlevel &gt;= O_MONITOR) report(stdout, &quot;MAPI&gt; mapi_is_old(number %d)\n&quot;, number);
+ 
+@@ -1099,6 +1110,7 @@
+ 	int				props_count;
+ 
+ 	(void) ctl;
++	(void)sock;
+ 	*lenp = 0;
+ 
+ 	if (outlevel &gt;= O_MONITOR) report(stdout, &quot;MAPI&gt; mapi_fetch_headers(number %d)\n&quot;, number);
+@@ -1269,6 +1281,7 @@
+ 	uint8_t			format;
+ 
+ 	(void) ctl;
++	(void)sock;
+ 	*lenp = 0;
+ 
+ 	if (outlevel &gt;= O_MONITOR) report(stdout, &quot;MAPI&gt; mapi_fetch_body(number %d)\n&quot;, number);
+@@ -1435,6 +1448,8 @@
+  */
+ static int mapi_trail(int sock, struct query *ctl, const char *tag)
+ {
++	(void)ctl;
++	(void)sock;
+ 	if (outlevel &gt;= O_MONITOR) report(stdout, &quot;MAPI&gt; mapi_trail(tag %s)\n&quot;, tag);
+ 
+ 	/*-----------------------------------------------------------------------------
+@@ -1468,6 +1483,8 @@
+ 	mapi_id_t	   *mid;
+ 	int				props_count;
+ 
++	(void)sock;
++
+ 	if (outlevel &gt;= O_MONITOR) report(stdout, &quot;MAPI&gt; mapi_delete(number %d)\n&quot;, number);
+ 
+ 	if (!g_mapi_initialized) return PS_UNDEFINED;
+@@ -1541,6 +1558,7 @@
+ 	mapi_id_t	   *mid;
+ 	int				props_count;
+ 	long			message_flags;
++	(void)sock;
+ 
+ 	if (outlevel &gt;= O_MONITOR) report(stdout, &quot;MAPI&gt; mapi_mark_seen(number %d)\n&quot;, number);
+ 
+@@ -1624,7 +1642,8 @@
+ static int mapi_end_mailbox_poll(int sock, struct query *ctl)
+ {
+ 	int				flag = PS_SUCCESS;
+-	(void) ctl;
++	(void)ctl;
++	(void)sock;
+ 	if (outlevel &gt;= O_MONITOR) report(stdout, &quot;MAPI&gt; mapi_end_mailbox_poll()\n&quot;);
+ 
+ 	flag = expunge_deleted();
+@@ -1642,7 +1661,8 @@
+  */
+ static int mapi_logout(int sock, struct query *ctl)
+ {
+-	(void) ctl;
++	(void)ctl;
++	(void)sock;
+ 	if (outlevel &gt;= O_MONITOR) report(stdout, &quot;MAPI&gt; mapi_logout()\n&quot;);
+ 
+ 	if (g_mapi_initialized) mapi_clean();
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000470.html">[fetchmail-svn] r5411 - branches/BRANCH_MAPI
+</A></li>
+	<LI>Next message: <A HREF="000472.html">[fetchmail-svn] r5413 - branches/BRANCH_MAPI
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#471">[ date ]</a>
+              <a href="thread.html#471">[ thread ]</a>
+              <a href="subject.html#471">[ subject ]</a>
+              <a href="author.html#471">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

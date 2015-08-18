@@ -1,0 +1,367 @@
+From svn at mknod.org  Mon May  5 14:02:36 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Mon,  5 May 2008 07:02:36 -0500 (CDT)
+Subject: [fetchmail-svn] r5180 - branches/BRANCH_6-3
+Message-ID: <20080505120236.818F16B00C5@mknod.org>
+
+Author: m-a
+Date: 2008-05-05 07:02:36 -0500 (Mon, 05 May 2008)
+New Revision: 5180
+
+Modified:
+   branches/BRANCH_6-3/COPYING
+Log:
+Update Matthias Andree's copyright; summarize external licenses.
+
+Modified: branches/BRANCH_6-3/COPYING
+===================================================================
+--- branches/BRANCH_6-3/COPYING	2008-04-24 14:48:55 UTC (rev 5179)
++++ branches/BRANCH_6-3/COPYING	2008-05-05 12:02:36 UTC (rev 5180)
+@@ -2,25 +2,28 @@
+ and Copyright (C) 2004 by Matthias Andree, Eric S. Raymond,
+                           Robert M. Funk and Graham Wilson
+ and Copyright (C) 2005 by Matthias Andree and Sunil Shetye
+-and Copyright (C) 2006 - 2007 by Matthias Andree.
++and Copyright (C) 2006 - 2008 by Matthias Andree.
+ 
+ Some older portions not explicitly mentioned above are copyrighted by
+ Carl E. Harris, George M. Sipe, Graham Wilson, Matthias Andree and Sunil Shetye.
+ 
+ The support for SMB authentication is copyright by Andrew Tridgell and
+-is under GPL version 2.  Andrew Tridgell has granted a specific
+-exemption for his GPL-licensed code to be linked with non-GPL-compliant
+-code in fetchmail.  The relevant files are smb*.[ch] and ntlm.h.
++is under GPL version 2 (or any later version).  Andrew Tridgell has
++granted a specific exemption for his GPL-licensed code to be linked with
++non-GPL-compliant code in fetchmail.  The relevant files are smb*.[ch]
++and ntlm.h.
+ 
+ The following files are public-domain: acconfig.h, md5c.c, md5.h.
+ 
+-The following files are explicitly GPL-licensed: getopt1.c, getopt.c, getopt.h.
++The following files are explicitly GPL-licensed (v2 or any later
++version): getopt1.c, getopt.c, getopt.h.
+ 
+ The file m4-local/ac_ma_search_package.m4 is copyright by Caolan
+ McNamara <caolan at skynet.ie> with fixes from Alexandre Duret-Lutz
+ <duret_g at lrde.epita.fr>, Matthew Mueller <donut at azstarnet.com> and
+ Matthias Andree <matthias.andree at gmx.de>
+-The license is detailed in m4-local/ac-archive-license.txt.
++The license is detailed in m4-local/ac-archive-license.txt and is a
++relaxed GPLv2-or-later version.
+ 
+ The *.c files in the ucs/ directory are Copyright (C) 2002, 2003 by
+ Markus Kuhn, with a liberal license as follows:
+@@ -40,7 +43,8 @@
+  | CONTRIBUTORS ACCEPT NO RESPONSIBILITY IN ANY CONCEIVABLE MANNER.
+ 
+ The m4/gethostbyname_r.m4 and libesmtp/* files functions are (C) by
+-Brian Stafford, see the respective file headers for details.
++Brian Stafford, see the respective file headers for details (LGPL v2.1
++or later).
+ 
+ The KAME/* files are (C) Copyright (C) 1995, 1996, 1997, and 1998 WIDE
+ Project, see the respective file headers for details.
+
+
+
+From svn at mknod.org  Mon May 12 15:21:02 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Mon, 12 May 2008 08:21:02 -0500 (CDT)
+Subject: [fetchmail-svn] r5181 - branches/BRANCH_6-3
+Message-ID: <20080512132102.C3D806B00FB@mknod.org>
+
+Author: m-a
+Date: 2008-05-12 08:21:02 -0500 (Mon, 12 May 2008)
+New Revision: 5181
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Add Debian #480851.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2008-05-05 12:02:36 UTC (rev 5180)
++++ branches/BRANCH_6-3/TODO.txt	2008-05-12 13:21:02 UTC (rev 5181)
+@@ -3,6 +3,7 @@
+   issue)
+ - publish SA-2007-02 after release
+ - Debian Bug #475239, MIME decoder may break up words (need to quote results)
++- Debian Bug #480851, stuck mail from gandi.net (IMAP; Dovecot) http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=480851
+ - Replace sscanf/fscanf by functions that do range checking (strtol/strtoul) :-/
+   See http://sourceware.org/bugzilla/show_bug.cgi?id=6453
+ 
+
+
+
+From svn at mknod.org  Tue May 13 18:34:23 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Tue, 13 May 2008 11:34:23 -0500 (CDT)
+Subject: [fetchmail-svn] r5182 - branches/BRANCH_6-3
+Message-ID: <20080513163423.17F5B6B00FB@mknod.org>
+
+Author: m-a
+Date: 2008-05-13 11:34:22 -0500 (Tue, 13 May 2008)
+New Revision: 5182
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Add an Ubuntu bug.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2008-05-12 13:21:02 UTC (rev 5181)
++++ branches/BRANCH_6-3/TODO.txt	2008-05-13 16:34:22 UTC (rev 5182)
+@@ -6,6 +6,9 @@
+ - Debian Bug #480851, stuck mail from gandi.net (IMAP; Dovecot) http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=480851
+ - Replace sscanf/fscanf by functions that do range checking (strtol/strtoul) :-/
+   See http://sourceware.org/bugzilla/show_bug.cgi?id=6453
++- Ubuntu Launchpad Bug #64152, fetchmailconf fails if fetchmail compiled
++  without res_search() since "dns" missing in "Server" typemap.
++  https://bugs.launchpad.net/ubuntu/+source/fetchmail/+bug/64152
+ 
+ soon - SHOULD:
+ - https://bugzilla.novell.com/show_bug.cgi?id=246829 - fetchmail lost some mail
+
+
+
+From svn at mknod.org  Tue May 13 18:37:07 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Tue, 13 May 2008 11:37:07 -0500 (CDT)
+Subject: [fetchmail-svn] r5183 - branches/BRANCH_6-3
+Message-ID: <20080513163707.C1A8F6B00FB@mknod.org>
+
+Author: m-a
+Date: 2008-05-13 11:37:07 -0500 (Tue, 13 May 2008)
+New Revision: 5183
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Add yet another Launchpad Ubuntu bug (can't download mail with long Cc:).
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2008-05-13 16:34:22 UTC (rev 5182)
++++ branches/BRANCH_6-3/TODO.txt	2008-05-13 16:37:07 UTC (rev 5183)
+@@ -9,6 +9,8 @@
+ - Ubuntu Launchpad Bug #64152, fetchmailconf fails if fetchmail compiled
+   without res_search() since "dns" missing in "Server" typemap.
+   https://bugs.launchpad.net/ubuntu/+source/fetchmail/+bug/64152
++- Ubuntu Launchpad Bug #151333, cannot download mail with long Cc: field
++  https://bugs.launchpad.net/ubuntu/+source/fetchmail/+bug/151333
+ 
+ soon - SHOULD:
+ - https://bugzilla.novell.com/show_bug.cgi?id=246829 - fetchmail lost some mail
+
+
+
+From svn at mknod.org  Wed May 21 12:28:02 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Wed, 21 May 2008 05:28:02 -0500 (CDT)
+Subject: [fetchmail-svn] r5184 - branches/BRANCH_6-3
+Message-ID: <20080521102802.5D4986B0121@mknod.org>
+
+Author: m-a
+Date: 2008-05-21 05:28:02 -0500 (Wed, 21 May 2008)
+New Revision: 5184
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Add debugging aid.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2008-05-13 16:37:07 UTC (rev 5183)
++++ branches/BRANCH_6-3/TODO.txt	2008-05-21 10:28:02 UTC (rev 5184)
+@@ -54,6 +54,12 @@
+   <simpkins at cisco.com> around Nov 2nd)?
+ 
+ 6.4:
++- help systematic debugging
++    - by making logging more strict (Postfix's msg_* as example??)
++    - by adding a --loggingtest or something that emits 
++      a set of test log messages at various severity levels, in order to 
++      make sure people get complete logs.
++    - by adding messages where fetchmail stuffed its output.
+ - Debian Bug #454291 fetchmail --quit: should check, that pid file 
+   really contains pid of fetchmail process (Dmitry Nezhevenko)
+   => use fcntl() lock?
+
+
+
+From svn at mknod.org  Sat May 24 13:01:44 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Sat, 24 May 2008 06:01:44 -0500 (CDT)
+Subject: [fetchmail-svn] r5185 - branches/BRANCH_6-3
+Message-ID: <20080524110144.1FBF36B0164@mknod.org>
+
+Author: m-a
+Date: 2008-05-24 06:01:43 -0500 (Sat, 24 May 2008)
+New Revision: 5185
+
+Modified:
+   branches/BRANCH_6-3/configure.ac
+Log:
+Update for autoconf 2.60 and newer.
+
+Modified: branches/BRANCH_6-3/configure.ac
+===================================================================
+--- branches/BRANCH_6-3/configure.ac	2008-05-21 10:28:02 UTC (rev 5184)
++++ branches/BRANCH_6-3/configure.ac	2008-05-24 11:01:43 UTC (rev 5185)
+@@ -16,7 +16,8 @@
+ AC_CANONICAL_TARGET
+ 
+ dnl automake options are in Makefile.am
+-AC_PREREQ(2.59)
++AC_PREREQ(2.60)
++dnl 2.60 required for AC_USE_SYSTEM_EXTENSIONS
+ AM_INIT_AUTOMAKE
+ 
+ dnl autobuild support, see <http://josefsson.org/autobuild/>
+@@ -41,6 +42,8 @@
+ AC_PROG_CPP			dnl Later checks need this.
+ AC_PROG_RANLIB
+ AM_PROG_CC_C_O
++AC_USE_SYSTEM_EXTENSIONS
++
+ AC_AIX
+ AC_ISC_POSIX
+ AC_MINIX
+
+
+
+From svn at mknod.org  Sat May 24 13:16:58 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Sat, 24 May 2008 06:16:58 -0500 (CDT)
+Subject: [fetchmail-svn] r5186 - branches/BRANCH_6-3
+Message-ID: <20080524111658.42BA96B0164@mknod.org>
+
+Author: m-a
+Date: 2008-05-24 06:16:58 -0500 (Sat, 24 May 2008)
+New Revision: 5186
+
+Modified:
+   branches/BRANCH_6-3/configure.ac
+Log:
+Remove AC_AIX and AC_MINIX, they are a subset of AC_USE_SYSTEM_EXTENSIONS.
+
+Modified: branches/BRANCH_6-3/configure.ac
+===================================================================
+--- branches/BRANCH_6-3/configure.ac	2008-05-24 11:01:43 UTC (rev 5185)
++++ branches/BRANCH_6-3/configure.ac	2008-05-24 11:16:58 UTC (rev 5186)
+@@ -44,9 +44,14 @@
+ AM_PROG_CC_C_O
+ AC_USE_SYSTEM_EXTENSIONS
+ 
+-AC_AIX
+ AC_ISC_POSIX
+-AC_MINIX
++dnl AC_ISC_POSIX: - XXX FIXME: remove in fetchmail 6.4.
++dnl This macro adds `-lcposix' to output variable `LIBS' if necessary
++dnl for Posix facilities.  Sun dropped support for the obsolete
++dnl INTERACTIVE Systems Corporation Unix on 2006-07-23.  New programs
++dnl need not use this macro.  It is implemented as
++dnl `AC_SEARCH_LIBS([strerror], [cposix])'
++
+ AC_HEADER_STDC
+ AC_HEADER_TIME
+ AC_TYPE_SIZE_T
+
+
+
+From svn at mknod.org  Sat May 24 13:21:11 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Sat, 24 May 2008 06:21:11 -0500 (CDT)
+Subject: [fetchmail-svn] r5187 - branches/BRANCH_6-3
+Message-ID: <20080524112111.7CC6F6B0164@mknod.org>
+
+Author: m-a
+Date: 2008-05-24 06:21:11 -0500 (Sat, 24 May 2008)
+New Revision: 5187
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+Log:
+Document autoconf requirement.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2008-05-24 11:16:58 UTC (rev 5186)
++++ branches/BRANCH_6-3/NEWS	2008-05-24 11:21:11 UTC (rev 5187)
+@@ -79,6 +79,8 @@
+   Fixes BerliOS Bug #13207 (reported + fix suggested by Terry Brown).
+ 
+ # CHANGES:
++* autoconf 2.60 is now required to build fetchmail; it uses
++  AC_USE_SYSTEM_EXTENSIONS to replace AC_AIX, AC_MINIX, and the like.
+ * Removed dead FETCHMAIL_DEBUG code from fetchmail.h that was disabled by 
+   default with no switches in configure to enable it. However, the macro would 
+   have been prone to a symlink attack. Found by Nico Golde.
+
+
+
+From svn at mknod.org  Wed May 28 19:18:08 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Wed, 28 May 2008 12:18:08 -0500 (CDT)
+Subject: [fetchmail-svn] r5188 - branches/BRANCH_6-3
+Message-ID: <20080528171808.2B9526B0108@mknod.org>
+
+Author: m-a
+Date: 2008-05-28 12:18:08 -0500 (Wed, 28 May 2008)
+New Revision: 5188
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Add a feature idea.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2008-05-24 11:21:11 UTC (rev 5187)
++++ branches/BRANCH_6-3/TODO.txt	2008-05-28 17:18:08 UTC (rev 5188)
+@@ -63,6 +63,7 @@
+ - Debian Bug #454291 fetchmail --quit: should check, that pid file 
+   really contains pid of fetchmail process (Dmitry Nezhevenko)
+   => use fcntl() lock?
++- feature to skip first N or all messages upon first download
+ - download only messages whose headers match a filter (by Toby, Usenet
+   Nov 2007 de.comm.software.mailserver
+   Message-ID: <1195033726.123704.296060 at k79g2000hse.googlegroups.com>)
+
+
+
+From svn at mknod.org  Thu May 29 10:10:26 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 29 May 2008 03:10:26 -0500 (CDT)
+Subject: [fetchmail-svn] r5189 - branches/BRANCH_6-3
+Message-ID: <20080529081026.9C0BA6B0122@mknod.org>
+
+Author: m-a
+Date: 2008-05-29 03:10:26 -0500 (Thu, 29 May 2008)
+New Revision: 5189
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Optimize UID list handling.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2008-05-28 17:18:08 UTC (rev 5188)
++++ branches/BRANCH_6-3/TODO.txt	2008-05-29 08:10:26 UTC (rev 5189)
+@@ -54,6 +54,8 @@
+   <simpkins at cisco.com> around Nov 2nd)?
+ 
+ 6.4:
++- make UID code more efficient, parsing is O(n^2), should be no worse
++  than O(n log n).
+ - help systematic debugging
+     - by making logging more strict (Postfix's msg_* as example??)
+     - by adding a --loggingtest or something that emits 
+
+
+

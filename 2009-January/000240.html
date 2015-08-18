@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5260 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-January/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5260%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090106180022.4731121F13B%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000239.html">
+   <LINK REL="Next"  HREF="000241.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5260 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5260%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090106180022.4731121F13B%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5260 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Tue Jan  6 19:00:21 CET 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000239.html">[fetchmail-svn] r5259 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000241.html">[fetchmail-svn] r5261 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#240">[ date ]</a>
+              <a href="thread.html#240">[ thread ]</a>
+              <a href="subject.html#240">[ subject ]</a>
+              <a href="author.html#240">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-01-06 12:00:21 -0600 (Tue, 06 Jan 2009)
+New Revision: 5260
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/interface.c
+Log:
+Fix: Do not overlap source and destination fields in snprintf() in
+interface.c.  Courtesy of Nico Golde, Debian.
+
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-01-04 14:23:32 UTC (rev 5259)
++++ branches/BRANCH_6-3/NEWS	2009-01-06 18:00:21 UTC (rev 5260)
+@@ -54,6 +54,8 @@
+   Details: <A HREF="http://blog.flameeyes.eu/2009/01/01/the-canonical-target">http://blog.flameeyes.eu/2009/01/01/the-canonical-target</A>
+ * Do not lose PS_MAXFETCH (13) exit status when hitting maxpoll. Reported by
+   Michelle Konzack, Debian Bug#508667.
++* Do not overlap source and destination fields in snprintf() in interface.c.
++  Courtesy of Nico Golde, Debian.
+ 
+ # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
+ * [it] Italian (Vincenzo Campanella)
+
+Modified: branches/BRANCH_6-3/interface.c
+===================================================================
+--- branches/BRANCH_6-3/interface.c	2009-01-04 14:23:32 UTC (rev 5259)
++++ branches/BRANCH_6-3/interface.c	2009-01-06 18:00:21 UTC (rev 5260)
+@@ -271,7 +271,7 @@
+ 	{
+ 		kvm_read(kvmfd, ifnet_addr, &amp;ifnet, sizeof(ifnet));
+ 		kvm_read(kvmfd, (unsigned long) ifnet.if_name, tname, sizeof tname);
+-		snprintf(tname, sizeof tname, &quot;%s%d&quot;, tname, ifnet.if_unit);
++		snprintf(tname + strlen(tname), sizeof(tname) - strlen(tname), &quot;%d&quot;, ifnet.if_unit);
+ 
+ 		if (!strcmp(tname, iname))
+ 		{
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000239.html">[fetchmail-svn] r5259 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000241.html">[fetchmail-svn] r5261 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#240">[ date ]</a>
+              <a href="thread.html#240">[ thread ]</a>
+              <a href="subject.html#240">[ subject ]</a>
+              <a href="author.html#240">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

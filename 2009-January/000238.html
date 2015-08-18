@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5258 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-January/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5258%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090104140708.E865021F137%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000239.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5258 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5258%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090104140708.E865021F137%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5258 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Sun Jan  4 15:07:08 CET 2009</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000239.html">[fetchmail-svn] r5259 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#238">[ date ]</a>
+              <a href="thread.html#238">[ thread ]</a>
+              <a href="subject.html#238">[ subject ]</a>
+              <a href="author.html#238">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-01-04 08:07:07 -0600 (Sun, 04 Jan 2009)
+New Revision: 5258
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/configure.ac
+Log:
+Berlios Patch #2525, courtesy of Diego E. &quot;Flameeyes&quot; Petten?\195?\178:
+
+&quot;The AC_CANONICAL_TARGET macro and the $target_os variables are used for the
+target of compilers and other code-generation tools, and should not be used
+during cross-compile of generic software. Replace them with
+AC_CANONICAL_HOST and $host_os instead, as they should have been from the
+start.
+
+For a breakdown of what host, build and target machines are, please see
+<A HREF="http://blog.flameeyes.eu/s/canonical-target">http://blog.flameeyes.eu/s/canonical-target</A> .&quot;
+
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2008-12-17 16:21:11 UTC (rev 5257)
++++ branches/BRANCH_6-3/NEWS	2009-01-04 14:07:07 UTC (rev 5258)
+@@ -45,12 +45,17 @@
+ fetchmail 6.3.10 (not yet released):
+ 
+ # BUGFIXES
++* Fix misuse of canonical autoconf target as _TARGET when it should have been
++  _HOST. Report and patch courtesy of Diego E. &quot;Flameeyes&quot; Petten&#242;.
++  Details: <A HREF="http://blog.flameeyes.eu/2009/01/01/the-canonical-target">http://blog.flameeyes.eu/2009/01/01/the-canonical-target</A>
+ * Do not lose PS_MAXFETCH (13) exit status when hitting maxpoll. Reported by
+   Michelle Konzack, Debian Bug#508667.
+ 
+ # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
+ * [it] Italian (Vincenzo Campanella)
+ 
++
++
+ fetchmail 6.3.9 (2008-11-16):
+ 
+ # SECURITY AND CRITICAL BUG FIXES:
+
+Modified: branches/BRANCH_6-3/configure.ac
+===================================================================
+--- branches/BRANCH_6-3/configure.ac	2008-12-17 16:21:11 UTC (rev 5257)
++++ branches/BRANCH_6-3/configure.ac	2009-01-04 14:07:07 UTC (rev 5258)
+@@ -13,7 +13,7 @@
+ AC_CONFIG_HEADERS([config.h])
+ AC_CONFIG_LIBOBJ_DIR([.])
+ 
+-AC_CANONICAL_TARGET
++AC_CANONICAL_HOST
+ 
+ dnl automake options are in Makefile.am
+ AC_PREREQ(2.60)
+@@ -88,7 +88,7 @@
+ AC_PROG_YACC
+ 
+ # Check for OS special cases
+-case $target_os in
++case $host_os in
+ darwin*)
+     AC_MSG_NOTICE(found Darwin - Adding -DBIND_8_COMPAT to CFLAGS)
+     CPPFLAGS=&quot;$CPPFLAGS -DBIND_8_COMPAT&quot;
+@@ -498,7 +498,7 @@
+     AC_MSG_CHECKING(if your getaddrinfo is async-signal-safe)
+     gai_ts=no
+     dnl we have getaddrinfo() - check if the OS is known to have a async-signal-safe implementation
+-    case $target_os in
++    case $host_os in
+ 	darwin9*)				gai_ts=yes ;;
+ 	linux*)					gai_ts=yes ;;
+ 	freebsd5.5|freebsd6*|freebsd7*)		gai_ts=yes ;;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000239.html">[fetchmail-svn] r5259 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#238">[ date ]</a>
+              <a href="thread.html#238">[ thread ]</a>
+              <a href="subject.html#238">[ subject ]</a>
+              <a href="author.html#238">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

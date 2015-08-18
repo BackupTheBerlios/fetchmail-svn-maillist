@@ -1,0 +1,4326 @@
+From svn at mknod.org  Tue Jan  8 15:18:45 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Tue,  8 Jan 2008 08:18:45 -0600 (CST)
+Subject: [fetchmail-svn] r5150 - branches/BRANCH_6-3
+Message-ID: <20080108141845.BA20D6B064A@mknod.org>
+
+Author: m-a
+Date: 2008-01-08 08:18:45 -0600 (Tue, 08 Jan 2008)
+New Revision: 5150
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Add item.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2007-12-31 09:11:55 UTC (rev 5149)
++++ branches/BRANCH_6-3/TODO.txt	2008-01-08 14:18:45 UTC (rev 5150)
+@@ -6,6 +6,8 @@
+ - publish SA-2007-02 after release
+ 
+ soon - SHOULD:
++- log configured server name on certificate mismatch (perhaps pay
++  attention to via entries and stuff like that)
+ - BerliOS Bug #11576, thread on fetchmail users "Invalid SSL certificate" by
+   Philip Susi, SSL negotiation does not use ERR_error_string(3ssl) to report
+   errors in a readable way, we just report socket errors with no good reason.
+
+
+
+From svn at mknod.org  Fri Jan 11 11:24:31 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Fri, 11 Jan 2008 04:24:31 -0600 (CST)
+Subject: [fetchmail-svn] r5151 - branches/BRANCH_6-3
+Message-ID: <20080111102431.77D916B0796@mknod.org>
+
+Author: m-a
+Date: 2008-01-11 04:24:31 -0600 (Fri, 11 Jan 2008)
+New Revision: 5151
+
+Modified:
+   branches/BRANCH_6-3/pop3.c
+Log:
+Undocumented and untested hack: setting FETCHMAIL_POP3_FORCE_RETR in the
+environment forces fetchmail to use RETR instead of TOP for POP3.
+
+Modified: branches/BRANCH_6-3/pop3.c
+===================================================================
+--- branches/BRANCH_6-3/pop3.c	2008-01-08 14:18:45 UTC (rev 5150)
++++ branches/BRANCH_6-3/pop3.c	2008-01-11 10:24:31 UTC (rev 5151)
+@@ -329,6 +329,12 @@
+ 
+     /* Set this up before authentication quits early. */
+     set_peek_capable(ctl);
++
++    /* Hack: allow user to force RETR. */
++    if (peek_capable && getenv("FETCHMAIL_POP3_FORCE_RETR")) {
++	peek_capable = 0;
++    }
++
+     /*
+      * The "Maillennium POP3/PROXY server" deliberately truncates
+      * TOP replies after c. 64 or 80 kByte (we have varying reports), so
+
+
+
+From svn at mknod.org  Fri Jan 11 15:31:50 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Fri, 11 Jan 2008 08:31:50 -0600 (CST)
+Subject: [fetchmail-svn] r5152 - branches/BRANCH_6-3
+Message-ID: <20080111143150.9431F6B079A@mknod.org>
+
+Author: m-a
+Date: 2008-01-11 08:31:50 -0600 (Fri, 11 Jan 2008)
+New Revision: 5152
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+add request:
+allow forcing RETR (RETR vs. TOP, fetchmail-users, drbob 2008-01-11)
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2008-01-11 10:24:31 UTC (rev 5151)
++++ branches/BRANCH_6-3/TODO.txt	2008-01-11 14:31:50 UTC (rev 5152)
+@@ -80,6 +80,7 @@
+ - add code to allow safe authentication schemes if TLS fails
+ - make APOP an authenticator, integrate with regular auto authentication
+   but stuff it at the end
++- allow forcing RETR (RETR vs. TOP, fetchmail-users, drbob 2008-01-11)
+ - use SASL?
+ 
+ DOCUMENTATION:
+
+
+
+From svn at mknod.org  Mon Jan 21 03:24:40 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Sun, 20 Jan 2008 20:24:40 -0600 (CST)
+Subject: [fetchmail-svn] r5153 - branches/BRANCH_6-3
+Message-ID: <20080121022440.76E696B09A0@mknod.org>
+
+Author: m-a
+Date: 2008-01-20 20:24:39 -0600 (Sun, 20 Jan 2008)
+New Revision: 5153
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/fetchmail.man
+Log:
+Add grammar fixes from Dan Jacobson to fetchmail.man. Debian Bug #461642.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2008-01-11 14:31:50 UTC (rev 5152)
++++ branches/BRANCH_6-3/NEWS	2008-01-21 02:24:39 UTC (rev 5153)
+@@ -106,6 +106,7 @@
+   "Awakening the background daemon" section.
+ * The manual page no longer asserts that .fetchids were for exclusive POP3 use, 
+   since it is planned to use the file with IMAP4 later.
++* Add grammar fixes from Dan Jacobson to fetchmail.man. Debian Bug #461642.
+ 
+ # TRANSLATION UPDATES:
+ * Polish (Jakub Bogusz)
+
+Modified: branches/BRANCH_6-3/fetchmail.man
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.man	2008-01-11 14:31:50 UTC (rev 5152)
++++ branches/BRANCH_6-3/fetchmail.man	2008-01-21 02:24:39 UTC (rev 5153)
+@@ -310,12 +310,12 @@
+ timeout in seconds.  If a mailserver does not send a greeting message
+ or respond to commands for the given number of seconds,
+ \fIfetchmail\fR will hang up on it.  Without such a timeout
+-\fIfetchmail\fR might hang up indefinitely trying to fetch mail from a
++\fIfetchmail\fR might hang indefinitely trying to fetch mail from a
+ down host.  This would be particularly annoying for a \fIfetchmail\fR
+-running in background.  There is a default timeout which fetchmail\~\-V
++running in the background.  There is a default timeout which fetchmail\~\-V
+ will report.  If a given connection receives too many timeouts in
+-succession, fetchmail will consider it wedged and stop retrying,
+-the calling user will be notified by email if this happens.
++succession, fetchmail will consider it wedged and stop retrying.
++The calling user will be notified by email if this happens.
+ .TP
+ .B \-\-plugin <command>
+ (Keyword: plugin) The plugin option allows you to use an external
+
+
+
+From svn at mknod.org  Tue Jan 29 14:19:58 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Tue, 29 Jan 2008 07:19:58 -0600 (CST)
+Subject: [fetchmail-svn] r5154 - branches/BRANCH_6-3
+Message-ID: <20080129131958.D4C2E6B02D9@mknod.org>
+
+Author: m-a
+Date: 2008-01-29 07:19:58 -0600 (Tue, 29 Jan 2008)
+New Revision: 5154
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Add MSG_PEEK issue.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2008-01-21 02:24:39 UTC (rev 5153)
++++ branches/BRANCH_6-3/TODO.txt	2008-01-29 13:19:58 UTC (rev 5154)
+@@ -21,6 +21,7 @@
+ soon - MAY:
+ - https://bugzilla.novell.com/show_bug.cgi?id=246829 - fetchmail lost some mail
+   (5XX error code in contradiction with manual?)
++- Fix Cygwin workaround - can we *easily* get rid of MSG_PEEK altogether?
+ 
+ soon - after 6.3.9:
+ - find a solution for the "invalid header" discards message problem
+
+
+
+From svn at mknod.org  Thu Jan 31 10:15:55 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 31 Jan 2008 03:15:55 -0600 (CST)
+Subject: [fetchmail-svn] r5155 - in branches/BRANCH_6-3: . po
+Message-ID: <20080131091555.0A4256B02D8@mknod.org>
+
+Author: m-a
+Date: 2008-01-31 03:15:53 -0600 (Thu, 31 Jan 2008)
+New Revision: 5155
+
+Modified:
+   branches/BRANCH_6-3/po/ca.po
+   branches/BRANCH_6-3/po/cs.po
+   branches/BRANCH_6-3/po/de.po
+   branches/BRANCH_6-3/po/en_GB.po
+   branches/BRANCH_6-3/po/es.po
+   branches/BRANCH_6-3/po/fr.po
+   branches/BRANCH_6-3/po/ja.po
+   branches/BRANCH_6-3/po/pl.po
+   branches/BRANCH_6-3/po/ru.po
+   branches/BRANCH_6-3/po/sq.po
+   branches/BRANCH_6-3/po/vi.po
+   branches/BRANCH_6-3/socket.c
+Log:
+Drop dead code under FORCE_STUFFING condition.
+
+Modified: branches/BRANCH_6-3/po/ca.po
+===================================================================
+--- branches/BRANCH_6-3/po/ca.po	2008-01-29 13:19:58 UTC (rev 5154)
++++ branches/BRANCH_6-3/po/ca.po	2008-01-31 09:15:53 UTC (rev 5155)
+@@ -6,7 +6,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 6.3.5-b1\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2007-06-27 11:18+0200\n"
++"POT-Creation-Date: 2008-01-31 10:14+0100\n"
+ "PO-Revision-Date: 2006-08-31 19:22+0200\n"
+ "Last-Translator: Ernest Adrogu? Calveras <eadrogue at gmx.net>\n"
+ "Language-Team: Catalan <ca at dodds.net>\n"
+@@ -1703,12 +1703,12 @@
+ msgid "will idle after poll\n"
+ msgstr "es far? una pausa despr?s de l'obtenci?\n"
+ 
+-#: imap.c:441 pop3.c:505
++#: imap.c:441 pop3.c:511
+ #, fuzzy, c-format
+ msgid "%s: upgrade to TLS succeeded.\n"
+ msgstr "%s: actualitzaci? oportunista a TLS.\n"
+ 
+-#: imap.c:450 pop3.c:514
++#: imap.c:450 pop3.c:520
+ #, fuzzy, c-format
+ msgid "%s: upgrade to TLS failed.\n"
+ msgstr "%s: actualitzaci? oportunista a TLS.\n"
+@@ -1722,7 +1722,7 @@
+ msgid "Required OTP capability not compiled into fetchmail\n"
+ msgstr "Es requereix capacitat per OTP no compilada en el fetchmail\n"
+ 
+-#: imap.c:587 pop3.c:380
++#: imap.c:587 pop3.c:386
+ msgid "Required NTLM capability not compiled into fetchmail\n"
+ msgstr "Es requereix capacitat per NTLM no compilada en el fetchmail\n"
+ 
+@@ -1777,7 +1777,7 @@
+ msgid "%lu is unseen\n"
+ msgstr "%lu ?s no llegit\n"
+ 
+-#: imap.c:897 pop3.c:876
++#: imap.c:897 pop3.c:882
+ #, c-format
+ msgid "%u is first unseen\n"
+ msgstr "%u ?s el primer missatge no llegit\n"
+@@ -1983,7 +1983,7 @@
+ msgid "Could not decode OTP challenge\n"
+ msgstr "No s'ha pogut desxifrar la codificaci? OTP\n"
+ 
+-#: opie.c:64 pop3.c:597
++#: opie.c:64 pop3.c:603
+ msgid "Secret pass phrase: "
+ msgstr "Contrasenya secreta: "
+ 
+@@ -2298,7 +2298,7 @@
+ "      --showdots    mostra punts de progressi? ?dhuc als fitxers de "
+ "registre\n"
+ 
+-#: pop3.c:350
++#: pop3.c:356
+ msgid ""
+ "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
+ "of TOP.\n"
+@@ -2306,76 +2306,76 @@
+ "Atenci?: s'ha detectat un \"Maillennium POP3/PROXY server\", s'usa RETR en "
+ "lloc de TOP.\n"
+ 
+-#: pop3.c:449
++#: pop3.c:455
+ msgid "TLS is mandatory for this session, but server refused CAPA command.\n"
+ msgstr ""
+ 
+-#: pop3.c:450
++#: pop3.c:456
+ msgid "The CAPA command is however necessary for TLS.\n"
+ msgstr ""
+ 
+-#: pop3.c:525
++#: pop3.c:531
+ #, fuzzy, c-format
+ msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
+ msgstr "%s: actualitzaci? oportunista a TLS.\n"
+ 
+-#: pop3.c:633
++#: pop3.c:639
+ msgid "We've run out of allowed authenticators and cannot continue.\n"
+ msgstr ""
+ 
+ # timestamp: marca hor?ria
+-#: pop3.c:647
++#: pop3.c:653
+ msgid "Required APOP timestamp not found in greeting\n"
+ msgstr "No s'ha trobat la marca hor?ria APOP requerida a la salutaci?\n"
+ 
+-#: pop3.c:656
++#: pop3.c:662
+ msgid "Timestamp syntax error in greeting\n"
+ msgstr "Error de sintaxi en la marca hor?ria de la salutaci?\n"
+ 
+-#: pop3.c:672
++#: pop3.c:678
+ msgid "Invalid APOP timestamp.\n"
+ msgstr ""
+ 
+-#: pop3.c:696
++#: pop3.c:702
+ msgid "Undefined protocol request in POP3_auth\n"
+ msgstr "Petici? de protocol indefinida a POP3_auth\n"
+ 
+-#: pop3.c:717
++#: pop3.c:723
+ msgid "lock busy!  Is another session active?\n"
+ msgstr "bloqueig temporal! Hi ha alguna altra sessi? activa?\n"
+ 
+-#: pop3.c:796
++#: pop3.c:802
+ msgid "Cannot handle UIDL response from upstream server.\n"
+ msgstr "No s'ha pogut administrar la resposta UIDL del servidor remot.\n"
+ 
+-#: pop3.c:819
++#: pop3.c:825
+ msgid "Server responded with UID for wrong message.\n"
+ msgstr "El servidor ha respost amb un UID pel missatge equivocat.\n"
+ 
+-#: pop3.c:846 pop3.c:1092
++#: pop3.c:852 pop3.c:1098
+ #, c-format
+ msgid "id=%s (num=%d) was deleted, but is still present!\n"
+ msgstr "id=%s (n?m=%d) s'ha esborrat, per? encara est? present!\n"
+ 
+-#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
++#: pop3.c:861 pop3.c:873 pop3.c:1107 pop3.c:1114
+ #, c-format
+ msgid "%u is unseen\n"
+ msgstr "%u ?s no llegit\n"
+ 
+-#: pop3.c:952
++#: pop3.c:958
+ msgid "Messages inserted into list on server. Cannot handle this.\n"
+ msgstr ""
+ "Els missatges estan inserits a la llista del servidor. No es pot continuar.\n"
+ 
+-#: pop3.c:1044
++#: pop3.c:1050
+ msgid "protocol error\n"
+ msgstr "error de protocol\n"
+ 
+-#: pop3.c:1060
++#: pop3.c:1066
+ msgid "protocol error while fetching UIDLs\n"
+ msgstr "error de protocol quan es rebien els UIDLs\n"
+ 
+-#: pop3.c:1430
++#: pop3.c:1436
+ msgid "Option --folder is not supported with POP3\n"
+ msgstr "L'opci? --folder no est? suportada per POP3\n"
+ 
+@@ -2411,17 +2411,17 @@
+ msgid "end of input"
+ msgstr "final de l'entrada"
+ 
+-#: rcfile_y.y:419
++#: rcfile_y.y:420
+ #, c-format
+ msgid "File %s must be a regular file.\n"
+ msgstr "El fitxer %s ha de ser un fitxer ordinari.\n"
+ 
+-#: rcfile_y.y:429
++#: rcfile_y.y:430
+ #, c-format
+ msgid "File %s must have no more than -rwx--x--- (0710) permissions.\n"
+ msgstr "El fitxer %s no pot tenir permisos m?s que -rwx--x--- (0710).\n"
+ 
+-#: rcfile_y.y:441
++#: rcfile_y.y:442
+ #, c-format
+ msgid "File %s must be owned by you.\n"
+ msgstr "El fitxer %s ha de ser propietat vostra.\n"
+@@ -2854,118 +2854,118 @@
+ msgid "connected.\n"
+ msgstr "connectat.\n"
+ 
+-#: socket.c:660
++#: socket.c:611
+ #, c-format
+ msgid "Issuer Organization: %s\n"
+ msgstr "Organitzaci? emissora: %s\n"
+ 
+-#: socket.c:662
++#: socket.c:613
+ msgid "Warning: Issuer Organization Name too long (possibly truncated).\n"
+ msgstr ""
+ "Atenci?: El nom de l'organitzaci? emissora ?s massa llarg (pot estar "
+ "truncat).\n"
+ 
+-#: socket.c:664
++#: socket.c:615
+ msgid "Unknown Organization\n"
+ msgstr "Organitzaci? desconeguda\n"
+ 
+-#: socket.c:666
++#: socket.c:617
+ #, c-format
+ msgid "Issuer CommonName: %s\n"
+ msgstr "Nom com? de l'emissor: %s\n"
+ 
+-#: socket.c:668
++#: socket.c:619
+ msgid "Warning: Issuer CommonName too long (possibly truncated).\n"
+ msgstr ""
+ "Atenci?: El nom com? de l'emissor ?s massa llarg (pot estar truncat).\n"
+ 
+-#: socket.c:670
++#: socket.c:621
+ msgid "Unknown Issuer CommonName\n"
+ msgstr "Nom com? de l'emissor desconegut\n"
+ 
+-#: socket.c:674
++#: socket.c:625
+ #, c-format
+ msgid "Server CommonName: %s\n"
+ msgstr "Nom com? del servidor: %s\n"
+ 
+-#: socket.c:678
++#: socket.c:629
+ msgid "Bad certificate: Subject CommonName too long!\n"
+ msgstr "Certificat incorrecte: El component CommonName ?s massa llarg!\n"
+ 
+-#: socket.c:724
++#: socket.c:675
+ #, c-format
+ msgid "Server CommonName mismatch: %s != %s\n"
+ msgstr "El nom com? del servidor no encaixa: %s != %s\n"
+ 
+-#: socket.c:730
++#: socket.c:681
+ msgid "Server name not set, could not verify certificate!\n"
+ msgstr ""
+ "El nom del servidor no est? definit, no es pot verificar el certificat!\n"
+ 
+-#: socket.c:735
++#: socket.c:686
+ msgid "Unknown Server CommonName\n"
+ msgstr "Nom com? del servidor desconegut\n"
+ 
+-#: socket.c:737
++#: socket.c:688
+ msgid "Server name not specified in certificate!\n"
+ msgstr "El certificat no especifica el nom del servidor!\n"
+ 
+-#: socket.c:749
++#: socket.c:700
+ msgid "EVP_md5() failed!\n"
+ msgstr "EVP_md5() ha fallat!\n"
+ 
+-#: socket.c:753
++#: socket.c:704
+ msgid "Out of memory!\n"
+ msgstr "Mem?ria exhaurida!\n"
+ 
+ # digest text
+-#: socket.c:761
++#: socket.c:712
+ msgid "Digest text buffer too small!\n"
+ msgstr "El buffer del sumari de text ?s massa petit!\n"
+ 
+-#: socket.c:767
++#: socket.c:718
+ #, c-format
+ msgid "%s key fingerprint: %s\n"
+ msgstr "Empremta de la clau de %s: %s\n"
+ 
+-#: socket.c:771
++#: socket.c:722
+ #, c-format
+ msgid "%s fingerprints match.\n"
+ msgstr "Les empremtes digitals de %s encaixen.\n"
+ 
+-#: socket.c:773
++#: socket.c:724
+ #, c-format
+ msgid "%s fingerprints do not match!\n"
+ msgstr "Les empremtes digitals de %s no encaixen!\n"
+ 
+-#: socket.c:782
++#: socket.c:733
+ #, c-format
+ msgid "Server certificate verification error: %s\n"
+ msgstr "Error en verificar el certificat del servidor: %s\n"
+ 
+-#: socket.c:788
++#: socket.c:739
+ #, c-format
+ msgid "unknown issuer (first %d characters): %s\n"
+ msgstr "emissor desconegut (primers %d car?cters): %s\n"
+ 
+-#: socket.c:875
++#: socket.c:826
+ msgid "File descriptor out of range for SSL"
+ msgstr "Descriptor del fitxer fora d'abast per SSL"
+ 
+-#: socket.c:891
++#: socket.c:842
+ #, c-format
+ msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+ msgstr "El protocol SSL especificat `%s' no ?s v?lid, s'usa SSLv23.\n"
+ 
+-#: socket.c:964
++#: socket.c:916
+ msgid "Certificate/fingerprint verification was somehow skipped!\n"
+ msgstr "La verificaci? del certificat o de l'empremta s'ha om?s!\n"
+ 
+-#: socket.c:1042
++#: socket.c:994
+ msgid "Cygwin socket read retry\n"
+ msgstr "Es torna a intentar llegir el socket Cygwin\n"
+ 
+-#: socket.c:1045
++#: socket.c:997
+ msgid "Cygwin socket read retry failed!\n"
+ msgstr "El reintent de llegir el socket Cygwin ha fallat!\n"
+ 
+@@ -3097,30 +3097,30 @@
+ msgid "discarding new UID list\n"
+ msgstr "descartant la llista nova d'UIDs\n"
+ 
+-#: uid.c:616
++#: uid.c:617
+ msgid "Deleting fetchids file.\n"
+ msgstr "Esborrant el fitxer d'identificadors.\n"
+ 
+-#: uid.c:618
++#: uid.c:620
+ #, c-format
+ msgid "Error deleting %s: %s\n"
+ msgstr "Error en eliminar %s: %s\n"
+ 
+-#: uid.c:624
++#: uid.c:626
+ msgid "Writing fetchids file.\n"
+ msgstr "Escrivint el fitxer d'identificadors.\n"
+ 
+-#: uid.c:643
++#: uid.c:645
+ #, c-format
+ msgid "Error writing to fetchids file %s, old file left in place.\n"
+ msgstr "Error en escriure el fitxer d'ids %s, es mant? l'antic.\n"
+ 
+-#: uid.c:647
++#: uid.c:649
+ #, c-format
+ msgid "Cannot rename fetchids file %s to %s: %s\n"
+ msgstr "No s'ha pogut reanomenar el fitxer d'ids %s a %s: %s\n"
+ 
+-#: uid.c:651
++#: uid.c:653
+ #, c-format
+ msgid "Cannot open fetchids file %s for writing: %s\n"
+ msgstr "No s'ha pogut obrir el fitxer d'ids %s per escriure-hi: %s\n"
+
+Modified: branches/BRANCH_6-3/po/cs.po
+===================================================================
+--- branches/BRANCH_6-3/po/cs.po	2008-01-29 13:19:58 UTC (rev 5154)
++++ branches/BRANCH_6-3/po/cs.po	2008-01-31 09:15:53 UTC (rev 5155)
+@@ -7,7 +7,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail-6.2.6.alpha1\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2007-06-27 11:18+0200\n"
++"POT-Creation-Date: 2008-01-31 10:14+0100\n"
+ "PO-Revision-Date: 2005-07-03 03:57+0200\n"
+ "Last-Translator: Miloslav Trmac <mitr at volny.cz>\n"
+ "Language-Team: Czech <cs at li.org>\n"
+@@ -1677,12 +1677,12 @@
+ msgid "will idle after poll\n"
+ msgstr "po stahov??n?? budu ne??inn??\n"
+ 
+-#: imap.c:441 pop3.c:505
++#: imap.c:441 pop3.c:511
+ #, c-format
+ msgid "%s: upgrade to TLS succeeded.\n"
+ msgstr ""
+ 
+-#: imap.c:450 pop3.c:514
++#: imap.c:450 pop3.c:520
+ #, c-format
+ msgid "%s: upgrade to TLS failed.\n"
+ msgstr ""
+@@ -1696,7 +1696,7 @@
+ msgid "Required OTP capability not compiled into fetchmail\n"
+ msgstr "Fetchmail byl p??elo??en bez podpory pro po??adovanou schopnost OTP\n"
+ 
+-#: imap.c:587 pop3.c:380
++#: imap.c:587 pop3.c:386
+ msgid "Required NTLM capability not compiled into fetchmail\n"
+ msgstr "Fetchmail byl p??elo??en bez podpory pro po??adovanou schopnost NTLM\n"
+ 
+@@ -1757,7 +1757,7 @@
+ msgid "%lu is unseen\n"
+ msgstr "%u nebyla p??e??tena\n"
+ 
+-#: imap.c:897 pop3.c:876
++#: imap.c:897 pop3.c:882
+ #, c-format
+ msgid "%u is first unseen\n"
+ msgstr "%u je prvn?? nep??e??ten??\n"
+@@ -1959,7 +1959,7 @@
+ msgid "Could not decode OTP challenge\n"
+ msgstr "Nemohu dek??dovat v??zvu OTP\n"
+ 
+-#: opie.c:64 pop3.c:597
++#: opie.c:64 pop3.c:603
+ msgid "Secret pass phrase: "
+ msgstr "Tajn?? heslo: "
+ 
+@@ -2265,80 +2265,80 @@
+ msgstr ""
+ "      --showdots    zobrazovat te??ky pr??b??hu i v souborech se z??znamy\n"
+ 
+-#: pop3.c:350
++#: pop3.c:356
+ msgid ""
+ "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
+ "of TOP.\n"
+ msgstr ""
+ 
+-#: pop3.c:449
++#: pop3.c:455
+ msgid "TLS is mandatory for this session, but server refused CAPA command.\n"
+ msgstr ""
+ 
+-#: pop3.c:450
++#: pop3.c:456
+ msgid "The CAPA command is however necessary for TLS.\n"
+ msgstr ""
+ 
+-#: pop3.c:525
++#: pop3.c:531
+ #, c-format
+ msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
+ msgstr ""
+ 
+-#: pop3.c:633
++#: pop3.c:639
+ msgid "We've run out of allowed authenticators and cannot continue.\n"
+ msgstr ""
+ 
+-#: pop3.c:647
++#: pop3.c:653
+ msgid "Required APOP timestamp not found in greeting\n"
+ msgstr "Po??adovan?? ??asov?? ??daj APOP nebyl v pozdravu nalezen\n"
+ 
+-#: pop3.c:656
++#: pop3.c:662
+ msgid "Timestamp syntax error in greeting\n"
+ msgstr "Syntaktick?? chyba v ??asov??m ??daji z pozdravu\n"
+ 
+-#: pop3.c:672
++#: pop3.c:678
+ msgid "Invalid APOP timestamp.\n"
+ msgstr ""
+ 
+-#: pop3.c:696
++#: pop3.c:702
+ msgid "Undefined protocol request in POP3_auth\n"
+ msgstr "????dost o nedefinovan?? protokol v POP3_auth\n"
+ 
+-#: pop3.c:717
++#: pop3.c:723
+ msgid "lock busy!  Is another session active?\n"
+ msgstr "zam??eno! Je aktivn?? jin?? sezen???\n"
+ 
+-#: pop3.c:796
++#: pop3.c:802
+ msgid "Cannot handle UIDL response from upstream server.\n"
+ msgstr ""
+ 
+-#: pop3.c:819
++#: pop3.c:825
+ msgid "Server responded with UID for wrong message.\n"
+ msgstr ""
+ 
+-#: pop3.c:846 pop3.c:1092
++#: pop3.c:852 pop3.c:1098
+ #, c-format
+ msgid "id=%s (num=%d) was deleted, but is still present!\n"
+ msgstr "id=%s (num=%d) bylo odstran??no, ale je st??le p????tomno!\n"
+ 
+-#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
++#: pop3.c:861 pop3.c:873 pop3.c:1107 pop3.c:1114
+ #, c-format
+ msgid "%u is unseen\n"
+ msgstr "%u nebyla p??e??tena\n"
+ 
+-#: pop3.c:952
++#: pop3.c:958
+ msgid "Messages inserted into list on server. Cannot handle this.\n"
+ msgstr "Zpr??vy vlo??eny do seznamu na serveru. To neum??m zpracovat.\n"
+ 
+-#: pop3.c:1044
++#: pop3.c:1050
+ msgid "protocol error\n"
+ msgstr "chyba protokolu\n"
+ 
+-#: pop3.c:1060
++#: pop3.c:1066
+ msgid "protocol error while fetching UIDLs\n"
+ msgstr "chyba protokolu p??i stahov??n?? UIDL\n"
+ 
+-#: pop3.c:1430
++#: pop3.c:1436
+ #, fuzzy
+ msgid "Option --folder is not supported with POP3\n"
+ msgstr "P??ep??na?? --remote nen?? s POP3 podporov??n\n"
+@@ -2374,17 +2374,17 @@
+ msgid "end of input"
+ msgstr "konec vstupu"
+ 
+-#: rcfile_y.y:419
++#: rcfile_y.y:420
+ #, c-format
+ msgid "File %s must be a regular file.\n"
+ msgstr "Soubor %s mus?? b??t oby??ejn?? soubor.\n"
+ 
+-#: rcfile_y.y:429
++#: rcfile_y.y:430
+ #, c-format
+ msgid "File %s must have no more than -rwx--x--- (0710) permissions.\n"
+ msgstr "Soubor %s nesm?? m??t opr??vn??n?? v??ce ne?? -rwx--x--- (0710).\n"
+ 
+-#: rcfile_y.y:441
++#: rcfile_y.y:442
+ #, c-format
+ msgid "File %s must be owned by you.\n"
+ msgstr "Mus??te vlastnit soubor %s.\n"
+@@ -2815,113 +2815,113 @@
+ msgid "connected.\n"
+ msgstr "Spojen?? SSL selhalo.\n"
+ 
+-#: socket.c:660
++#: socket.c:611
+ #, c-format
+ msgid "Issuer Organization: %s\n"
+ msgstr "Organizace vydavatele: %s\n"
+ 
+-#: socket.c:662
++#: socket.c:613
+ msgid "Warning: Issuer Organization Name too long (possibly truncated).\n"
+ msgstr "Varov??n??: N??zev organizace vydavatele p????li?? dlouh?? (mo??n?? zkr??cen).\n"
+ 
+-#: socket.c:664
++#: socket.c:615
+ msgid "Unknown Organization\n"
+ msgstr "Nezn??m?? organizace\n"
+ 
+-#: socket.c:666
++#: socket.c:617
+ #, c-format
+ msgid "Issuer CommonName: %s\n"
+ msgstr "Jm??no vydavatele: %s\n"
+ 
+-#: socket.c:668
++#: socket.c:619
+ msgid "Warning: Issuer CommonName too long (possibly truncated).\n"
+ msgstr "Varov??n??: Jm??no vydavatele p????li?? dlouh?? (mo??n?? zkr??ceno).\n"
+ 
+-#: socket.c:670
++#: socket.c:621
+ msgid "Unknown Issuer CommonName\n"
+ msgstr "Nezn??m?? jm??no vydavatele\n"
+ 
+-#: socket.c:674
++#: socket.c:625
+ #, c-format
+ msgid "Server CommonName: %s\n"
+ msgstr "Jm??no serveru: %s\n"
+ 
+-#: socket.c:678
++#: socket.c:629
+ msgid "Bad certificate: Subject CommonName too long!\n"
+ msgstr "??patn?? certifik??t: Jm??no p??edm??tu p????li?? dlouh??!\n"
+ 
+-#: socket.c:724
++#: socket.c:675
+ #, c-format
+ msgid "Server CommonName mismatch: %s != %s\n"
+ msgstr "Jm??no serveru neodpov??d??: %s != %s\n"
+ 
+-#: socket.c:730
++#: socket.c:681
+ msgid "Server name not set, could not verify certificate!\n"
+ msgstr "Jm??no serveru nenastaveno, nemohu ov????it certifik??t!\n"
+ 
+-#: socket.c:735
++#: socket.c:686
+ msgid "Unknown Server CommonName\n"
+ msgstr "Nezn??m?? jm??no serveru\n"
+ 
+-#: socket.c:737
++#: socket.c:688
+ msgid "Server name not specified in certificate!\n"
+ msgstr "Jm??no serveru nen?? v certifik??tu zad??no!\n"
+ 
+-#: socket.c:749
++#: socket.c:700
+ msgid "EVP_md5() failed!\n"
+ msgstr "EVP_md5() selhalo!\n"
+ 
+-#: socket.c:753
++#: socket.c:704
+ msgid "Out of memory!\n"
+ msgstr "Nedostatek pam??ti!\n"
+ 
+-#: socket.c:761
++#: socket.c:712
+ msgid "Digest text buffer too small!\n"
+ msgstr "Vyrovn??vac?? pam???? textu digestu p????li?? mal??!\n"
+ 
+-#: socket.c:767
++#: socket.c:718
+ #, c-format
+ msgid "%s key fingerprint: %s\n"
+ msgstr "otisk kl????e %s: %s\n"
+ 
+-#: socket.c:771
++#: socket.c:722
+ #, c-format
+ msgid "%s fingerprints match.\n"
+ msgstr "otisky %s odpov??daj??.\n"
+ 
+-#: socket.c:773
++#: socket.c:724
+ #, c-format
+ msgid "%s fingerprints do not match!\n"
+ msgstr "otisky %s neodpov??daj??.\n"
+ 
+-#: socket.c:782
++#: socket.c:733
+ #, c-format
+ msgid "Server certificate verification error: %s\n"
+ msgstr "Chyba ov????ov??n?? certifik??tu serveru: %s\n"
+ 
+-#: socket.c:788
++#: socket.c:739
+ #, c-format
+ msgid "unknown issuer (first %d characters): %s\n"
+ msgstr "nezn??m?? vydavatel (prvn??ch %d znak??): %s\n"
+ 
+-#: socket.c:875
++#: socket.c:826
+ msgid "File descriptor out of range for SSL"
+ msgstr "Deskriptor souboru mimo rozsah pro SSL"
+ 
+-#: socket.c:891
++#: socket.c:842
+ #, c-format
+ msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+ msgstr "Zad??n neplatn?? protokol SSL `%s', pou????v??m implicitn?? (SSLv23).\n"
+ 
+-#: socket.c:964
++#: socket.c:916
+ msgid "Certificate/fingerprint verification was somehow skipped!\n"
+ msgstr "Ov????en?? certifik??tu/otisku bylo n??jak p??esko??eno!\n"
+ 
+-#: socket.c:1042
++#: socket.c:994
+ msgid "Cygwin socket read retry\n"
+ msgstr "Dal???? pokus ??ten?? ze socektu Cygwin\n"
+ 
+-#: socket.c:1045
++#: socket.c:997
+ msgid "Cygwin socket read retry failed!\n"
+ msgstr "Dal???? pokus ??ten?? ze socektu Cygwin selhal!\n"
+ 
+@@ -3051,31 +3051,31 @@
+ msgid "discarding new UID list\n"
+ msgstr "zahazuji nov?? seznam UID\n"
+ 
+-#: uid.c:616
++#: uid.c:617
+ msgid "Deleting fetchids file.\n"
+ msgstr "Odstra??uji soubor fetchids.\n"
+ 
+-#: uid.c:618
++#: uid.c:620
+ #, c-format
+ msgid "Error deleting %s: %s\n"
+ msgstr "Chyba p??i odstra??ov??n?? %s. %s\n"
+ 
+-#: uid.c:624
++#: uid.c:626
+ msgid "Writing fetchids file.\n"
+ msgstr "Zapisuji soubor fetchids.\n"
+ 
+-#: uid.c:643
++#: uid.c:645
+ #, c-format
+ msgid "Error writing to fetchids file %s, old file left in place.\n"
+ msgstr ""
+ "Chyba p??i z??pisu do souboru fetchids %s, star?? soubor ponech??n na m??st??.\n"
+ 
+-#: uid.c:647
++#: uid.c:649
+ #, c-format
+ msgid "Cannot rename fetchids file %s to %s: %s\n"
+ msgstr "Nemohu p??ejmenovat soubor fetchids %s na %s: %s\n"
+ 
+-#: uid.c:651
++#: uid.c:653
+ #, c-format
+ msgid "Cannot open fetchids file %s for writing: %s\n"
+ msgstr "Nemohu otev????t soubor fetchids %s pro z??pis: %s\n"
+
+Modified: branches/BRANCH_6-3/po/de.po
+===================================================================
+--- branches/BRANCH_6-3/po/de.po	2008-01-29 13:19:58 UTC (rev 5154)
++++ branches/BRANCH_6-3/po/de.po	2008-01-31 09:15:53 UTC (rev 5155)
+@@ -8,7 +8,7 @@
+ msgstr ""
+ "Project-Id-Version: de\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2007-06-27 11:18+0200\n"
++"POT-Creation-Date: 2008-01-31 10:14+0100\n"
+ "PO-Revision-Date: 2006-11-27 04:32+0100\n"
+ "Last-Translator: Matthias Andree <matthias.andree>\n"
+ "Language-Team: Deutsch <de at li.org>\n"
+@@ -1708,12 +1708,12 @@
+ msgid "will idle after poll\n"
+ msgstr "werde nach Abfrage unt??tig sein\n"
+ 
+-#: imap.c:441 pop3.c:505
++#: imap.c:441 pop3.c:511
+ #, c-format
+ msgid "%s: upgrade to TLS succeeded.\n"
+ msgstr "%s: Upgrade auf TLS erfolgreich.\n"
+ 
+-#: imap.c:450 pop3.c:514
++#: imap.c:450 pop3.c:520
+ #, c-format
+ msgid "%s: upgrade to TLS failed.\n"
+ msgstr "%s: Upgrade auf TLS fehlgeschlagen.\n"
+@@ -1728,7 +1728,7 @@
+ msgid "Required OTP capability not compiled into fetchmail\n"
+ msgstr "Ben??tigte OTP-F??higkeit nicht in fetchmail einkompiliert\n"
+ 
+-#: imap.c:587 pop3.c:380
++#: imap.c:587 pop3.c:386
+ msgid "Required NTLM capability not compiled into fetchmail\n"
+ msgstr "Ben??tigte NTLM-F??higkeit nicht in fetchmail einkompiliert\n"
+ 
+@@ -1783,7 +1783,7 @@
+ msgid "%lu is unseen\n"
+ msgstr "%lu ist ungesehen\n"
+ 
+-#: imap.c:897 pop3.c:876
++#: imap.c:897 pop3.c:882
+ #, c-format
+ msgid "%u is first unseen\n"
+ msgstr "%u ist erste ungesehene\n"
+@@ -1985,7 +1985,7 @@
+ msgid "Could not decode OTP challenge\n"
+ msgstr "Konnte OTP-Herausforderung nicht dekodieren\n"
+ 
+-#: opie.c:64 pop3.c:597
++#: opie.c:64 pop3.c:603
+ msgid "Secret pass phrase: "
+ msgstr "Geheime Passphrase: "
+ 
+@@ -2288,7 +2288,7 @@
+ msgid "      --showdots    show progress dots even in logfiles\n"
+ msgstr "      --showdots    Fortschrittspunkte auch in Log-Dateien zeigen\n"
+ 
+-#: pop3.c:350
++#: pop3.c:356
+ msgid ""
+ "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
+ "of TOP.\n"
+@@ -2296,79 +2296,79 @@
+ "Warnung: ???Maillennium POP3/PROXY-Server??? gefunden, benutze RETR-Befehl statt "
+ "TOP.\n"
+ 
+-#: pop3.c:449
++#: pop3.c:455
+ msgid "TLS is mandatory for this session, but server refused CAPA command.\n"
+ msgstr ""
+ "TLS ist f??r diese Sitzung n??tig, aber der Server hat den CAPA-Befehl "
+ "abgelehnt.\n"
+ 
+-#: pop3.c:450
++#: pop3.c:456
+ msgid "The CAPA command is however necessary for TLS.\n"
+ msgstr "Der CAPA-Befehl ist allerdings f??r TLS erforderlich.\n"
+ 
+-#: pop3.c:525
++#: pop3.c:531
+ #, c-format
+ msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
+ msgstr ""
+ "%s: opportunistisches Upgrade auf TLS fehlgeschlagen, versuche Fortsetzung.\n"
+ 
+-#: pop3.c:633
++#: pop3.c:639
+ msgid "We've run out of allowed authenticators and cannot continue.\n"
+ msgstr ""
+ "Keine weiteren Authentifizierungsverfahren verf??gbar, Fortsetzung nicht "
+ "m??glich.\n"
+ 
+-#: pop3.c:647
++#: pop3.c:653
+ msgid "Required APOP timestamp not found in greeting\n"
+ msgstr "Erforderlicher APOP-Zeitstempel nicht in Begr????ung gefunden\n"
+ 
+-#: pop3.c:656
++#: pop3.c:662
+ msgid "Timestamp syntax error in greeting\n"
+ msgstr "Zeitstempel-Syntax-Fehler in Begr????ung\n"
+ 
+-#: pop3.c:672
++#: pop3.c:678
+ msgid "Invalid APOP timestamp.\n"
+ msgstr "Ung??ltiger APOP-Zeitstempel.\n"
+ 
+-#: pop3.c:696
++#: pop3.c:702
+ msgid "Undefined protocol request in POP3_auth\n"
+ msgstr "Anfrage nach undefiniertem Protokoll in POP3_auth\n"
+ 
+-#: pop3.c:717
++#: pop3.c:723
+ msgid "lock busy!  Is another session active?\n"
+ msgstr "Lock besch??ftigt!  Ist eine weitere Sitzung aktiv?\n"
+ 
+-#: pop3.c:796
++#: pop3.c:802
+ msgid "Cannot handle UIDL response from upstream server.\n"
+ msgstr "Kann die UIDL-Antwort des Servers nicht verarbeiten.\n"
+ 
+-#: pop3.c:819
++#: pop3.c:825
+ msgid "Server responded with UID for wrong message.\n"
+ msgstr "Server hat mit UID der falschen Nachricht geantwortet.\n"
+ 
+-#: pop3.c:846 pop3.c:1092
++#: pop3.c:852 pop3.c:1098
+ #, c-format
+ msgid "id=%s (num=%d) was deleted, but is still present!\n"
+ msgstr "id=%s (num=%d) wurde gel??scht, ist aber immer noch da!\n"
+ 
+-#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
++#: pop3.c:861 pop3.c:873 pop3.c:1107 pop3.c:1114
+ #, c-format
+ msgid "%u is unseen\n"
+ msgstr "%u ist ungesehen\n"
+ 
+-#: pop3.c:952
++#: pop3.c:958
+ msgid "Messages inserted into list on server. Cannot handle this.\n"
+ msgstr "Nachrichten in Liste auf Server eingef??gt. Kann damit nicht umgehen.\n"
+ 
+-#: pop3.c:1044
++#: pop3.c:1050
+ msgid "protocol error\n"
+ msgstr "Protokollfehler\n"
+ 
+-#: pop3.c:1060
++#: pop3.c:1066
+ msgid "protocol error while fetching UIDLs\n"
+ msgstr "Protokollfehler beim Holen der UIDL\n"
+ 
+-#: pop3.c:1430
++#: pop3.c:1436
+ msgid "Option --folder is not supported with POP3\n"
+ msgstr "Option --folder wird mit POP3 nicht unterst??tzt\n"
+ 
+@@ -2404,17 +2404,17 @@
+ msgid "end of input"
+ msgstr "Ende der Eingabe"
+ 
+-#: rcfile_y.y:419
++#: rcfile_y.y:420
+ #, c-format
+ msgid "File %s must be a regular file.\n"
+ msgstr "Datei %s muss eine regul??re Datei sein.\n"
+ 
+-#: rcfile_y.y:429
++#: rcfile_y.y:430
+ #, c-format
+ msgid "File %s must have no more than -rwx--x--- (0710) permissions.\n"
+ msgstr "Datei %s darf nicht mehr Zugriffrechte haben als -rwx--x-- (0710).\n"
+ 
+-#: rcfile_y.y:441
++#: rcfile_y.y:442
+ #, c-format
+ msgid "File %s must be owned by you.\n"
+ msgstr "Datei %s muss Ihnen geh??ren.\n"
+@@ -2844,117 +2844,117 @@
+ msgid "connected.\n"
+ msgstr "verbunden.\n"
+ 
+-#: socket.c:660
++#: socket.c:611
+ #, c-format
+ msgid "Issuer Organization: %s\n"
+ msgstr "Herausgeber-Organisation: %s\n"
+ 
+-#: socket.c:662
++#: socket.c:613
+ msgid "Warning: Issuer Organization Name too long (possibly truncated).\n"
+ msgstr ""
+ "Warnung: Herausgeber-Organisations-Name zu lang (m??glicherweise "
+ "beschnitten).\n"
+ 
+-#: socket.c:664
++#: socket.c:615
+ msgid "Unknown Organization\n"
+ msgstr "Unbekannte Organisation\n"
+ 
+-#: socket.c:666
++#: socket.c:617
+ #, c-format
+ msgid "Issuer CommonName: %s\n"
+ msgstr "Herausgeber-CommonName: %s\n"
+ 
+-#: socket.c:668
++#: socket.c:619
+ msgid "Warning: Issuer CommonName too long (possibly truncated).\n"
+ msgstr ""
+ "Warnung: Herausgeber-CommonName zu lang (m??glicherweise beschnitten).\n"
+ 
+-#: socket.c:670
++#: socket.c:621
+ msgid "Unknown Issuer CommonName\n"
+ msgstr "Unbekannter Herausgeber-CommonName\n"
+ 
+-#: socket.c:674
++#: socket.c:625
+ #, c-format
+ msgid "Server CommonName: %s\n"
+ msgstr "Server-CommonName: %s\n"
+ 
+-#: socket.c:678
++#: socket.c:629
+ msgid "Bad certificate: Subject CommonName too long!\n"
+ msgstr "Ung??ltiges Zertifikat: Server-CommonName zu lang!\n"
+ 
+-#: socket.c:724
++#: socket.c:675
+ #, c-format
+ msgid "Server CommonName mismatch: %s != %s\n"
+ msgstr "Server-CommonName stimmt nicht ??berein: %s != %s\n"
+ 
+-#: socket.c:730
++#: socket.c:681
+ msgid "Server name not set, could not verify certificate!\n"
+ msgstr "Server-Name nicht gesetzt, konnte Zertifikat nicht verifizieren!\n"
+ 
+-#: socket.c:735
++#: socket.c:686
+ msgid "Unknown Server CommonName\n"
+ msgstr "Unbekannter Server-CommonName\n"
+ 
+-#: socket.c:737
++#: socket.c:688
+ msgid "Server name not specified in certificate!\n"
+ msgstr "Server-Name nicht in Zertifikat spezifiziert!\n"
+ 
+-#: socket.c:749
++#: socket.c:700
+ msgid "EVP_md5() failed!\n"
+ msgstr "EVP_md5() fehlgeschlagen!\n"
+ 
+-#: socket.c:753
++#: socket.c:704
+ msgid "Out of memory!\n"
+ msgstr "Kein Speicher mehr frei!\n"
+ 
+-#: socket.c:761
++#: socket.c:712
+ msgid "Digest text buffer too small!\n"
+ msgstr "Textpuffer f??r Digest zu klein!\n"
+ 
+-#: socket.c:767
++#: socket.c:718
+ #, c-format
+ msgid "%s key fingerprint: %s\n"
+ msgstr "%s-Schl??ssel-Fingerabdruck: %s\n"
+ 
+-#: socket.c:771
++#: socket.c:722
+ #, c-format
+ msgid "%s fingerprints match.\n"
+ msgstr "%s-Fingerabdr??cke stimmen ??berein.\n"
+ 
+-#: socket.c:773
++#: socket.c:724
+ #, c-format
+ msgid "%s fingerprints do not match!\n"
+ msgstr "%s-Fingerabdr??cke stimmen nicht ??berein!\n"
+ 
+-#: socket.c:782
++#: socket.c:733
+ #, c-format
+ msgid "Server certificate verification error: %s\n"
+ msgstr "Fehler bei Server-Zertifikat-??berpr??fung: %s\n"
+ 
+-#: socket.c:788
++#: socket.c:739
+ #, c-format
+ msgid "unknown issuer (first %d characters): %s\n"
+ msgstr "unbekannter Herausgeber (erste %d Zeichen): %s\n"
+ 
+-#: socket.c:875
++#: socket.c:826
+ msgid "File descriptor out of range for SSL"
+ msgstr "Datei-Deskriptor au??erhalb des Bereichs f??r SSL"
+ 
+-#: socket.c:891
++#: socket.c:842
+ #, c-format
+ msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+ msgstr ""
+ "Ung??ltiges SSL-Protokoll ???%s??? angegeben, benutze Voreinstellung (SSLv23).\n"
+ 
+-#: socket.c:964
++#: socket.c:916
+ msgid "Certificate/fingerprint verification was somehow skipped!\n"
+ msgstr "Zertifikat-/Fingerabdruck-??berpr??fung wurde irgendwie ??bersprungen!\n"
+ 
+-#: socket.c:1042
++#: socket.c:994
+ msgid "Cygwin socket read retry\n"
+ msgstr "Cygwin-Socket-Lese-Wiederholung\n"
+ 
+-#: socket.c:1045
++#: socket.c:997
+ msgid "Cygwin socket read retry failed!\n"
+ msgstr "Cygwin-Socket-Lese-Wiederholung fehlgeschlagen!\n"
+ 
+@@ -3084,30 +3084,30 @@
+ msgid "discarding new UID list\n"
+ msgstr "verwerfe neue UID-Liste\n"
+ 
+-#: uid.c:616
++#: uid.c:617
+ msgid "Deleting fetchids file.\n"
+ msgstr "Datei fetchids wird gel??scht.\n"
+ 
+-#: uid.c:618
++#: uid.c:620
+ #, c-format
+ msgid "Error deleting %s: %s\n"
+ msgstr "Fehler beim L??schen von %s: %s\n"
+ 
+-#: uid.c:624
++#: uid.c:626
+ msgid "Writing fetchids file.\n"
+ msgstr "Datei fetchids wird geschrieben.\n"
+ 
+-#: uid.c:643
++#: uid.c:645
+ #, c-format
+ msgid "Error writing to fetchids file %s, old file left in place.\n"
+ msgstr "Fehler beim Schreiben in die UID-Datei %s, alte Datei belassen.\n"
+ 
+-#: uid.c:647
++#: uid.c:649
+ #, c-format
+ msgid "Cannot rename fetchids file %s to %s: %s\n"
+ msgstr "Kann UID-Datei %s nicht in %s umbennen: %s\n"
+ 
+-#: uid.c:651
++#: uid.c:653
+ #, c-format
+ msgid "Cannot open fetchids file %s for writing: %s\n"
+ msgstr "Kann UID-Datei %s nicht zum Schreiben ??ffnen: %s\n"
+
+Modified: branches/BRANCH_6-3/po/en_GB.po
+===================================================================
+--- branches/BRANCH_6-3/po/en_GB.po	2008-01-29 13:19:58 UTC (rev 5154)
++++ branches/BRANCH_6-3/po/en_GB.po	2008-01-31 09:15:53 UTC (rev 5155)
+@@ -7,7 +7,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 6.3.5\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2007-06-27 11:18+0200\n"
++"POT-Creation-Date: 2008-01-31 10:14+0100\n"
+ "PO-Revision-Date: 2006-11-02 06:58-0000\n"
+ "Last-Translator: David Lodge <dave at cirt.net>\n"
+ "Language-Team: English (British) <en_gb at li.org>\n"
+@@ -1642,12 +1642,12 @@
+ msgid "will idle after poll\n"
+ msgstr "will idle after poll\n"
+ 
+-#: imap.c:441 pop3.c:505
++#: imap.c:441 pop3.c:511
+ #, c-format
+ msgid "%s: upgrade to TLS succeeded.\n"
+ msgstr "%s: upgrade to TLS succeeded.\n"
+ 
+-#: imap.c:450 pop3.c:514
++#: imap.c:450 pop3.c:520
+ #, c-format
+ msgid "%s: upgrade to TLS failed.\n"
+ msgstr "%s: upgrade to TLS failed.\n"
+@@ -1661,7 +1661,7 @@
+ msgid "Required OTP capability not compiled into fetchmail\n"
+ msgstr "Required OTP capability not compiled into fetchmail\n"
+ 
+-#: imap.c:587 pop3.c:380
++#: imap.c:587 pop3.c:386
+ msgid "Required NTLM capability not compiled into fetchmail\n"
+ msgstr "Required NTLM capability not compiled into fetchmail\n"
+ 
+@@ -1716,7 +1716,7 @@
+ msgid "%lu is unseen\n"
+ msgstr "%lu is unseen\n"
+ 
+-#: imap.c:897 pop3.c:876
++#: imap.c:897 pop3.c:882
+ #, c-format
+ msgid "%u is first unseen\n"
+ msgstr "%u is first unseen\n"
+@@ -1917,7 +1917,7 @@
+ msgid "Could not decode OTP challenge\n"
+ msgstr "Could not decode OTP challenge\n"
+ 
+-#: opie.c:64 pop3.c:597
++#: opie.c:64 pop3.c:603
+ msgid "Secret pass phrase: "
+ msgstr "Secret pass phrase: "
+ 
+@@ -2211,7 +2211,7 @@
+ msgid "      --showdots    show progress dots even in logfiles\n"
+ msgstr "      --showdots    show progress dots even in logfiles\n"
+ 
+-#: pop3.c:350
++#: pop3.c:356
+ msgid ""
+ "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
+ "of TOP.\n"
+@@ -2219,74 +2219,74 @@
+ "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
+ "of TOP.\n"
+ 
+-#: pop3.c:449
++#: pop3.c:455
+ msgid "TLS is mandatory for this session, but server refused CAPA command.\n"
+ msgstr "TLS is mandatory for this session, but server refused CAPA command.\n"
+ 
+-#: pop3.c:450
++#: pop3.c:456
+ msgid "The CAPA command is however necessary for TLS.\n"
+ msgstr "The CAPA command is however necessary for TLS.\n"
+ 
+-#: pop3.c:525
++#: pop3.c:531
+ #, c-format
+ msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
+ msgstr "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
+ 
+-#: pop3.c:633
++#: pop3.c:639
+ msgid "We've run out of allowed authenticators and cannot continue.\n"
+ msgstr "We've run out of allowed authenticators and cannot continue.\n"
+ 
+-#: pop3.c:647
++#: pop3.c:653
+ msgid "Required APOP timestamp not found in greeting\n"
+ msgstr "Required APOP timestamp not found in greeting\n"
+ 
+-#: pop3.c:656
++#: pop3.c:662
+ msgid "Timestamp syntax error in greeting\n"
+ msgstr "Timestamp syntax error in greeting\n"
+ 
+-#: pop3.c:672
++#: pop3.c:678
+ msgid "Invalid APOP timestamp.\n"
+ msgstr "Invalid APOP timestamp.\n"
+ 
+-#: pop3.c:696
++#: pop3.c:702
+ msgid "Undefined protocol request in POP3_auth\n"
+ msgstr "Undefined protocol request in POP3_auth\n"
+ 
+-#: pop3.c:717
++#: pop3.c:723
+ msgid "lock busy!  Is another session active?\n"
+ msgstr "lock busy!  Is another session active?\n"
+ 
+-#: pop3.c:796
++#: pop3.c:802
+ msgid "Cannot handle UIDL response from upstream server.\n"
+ msgstr "Cannot handle UIDL response from upstream server.\n"
+ 
+-#: pop3.c:819
++#: pop3.c:825
+ msgid "Server responded with UID for wrong message.\n"
+ msgstr "Server responded with UID for wrong message.\n"
+ 
+-#: pop3.c:846 pop3.c:1092
++#: pop3.c:852 pop3.c:1098
+ #, c-format
+ msgid "id=%s (num=%d) was deleted, but is still present!\n"
+ msgstr "id=%s (num=%d) was deleted, but is still present!\n"
+ 
+-#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
++#: pop3.c:861 pop3.c:873 pop3.c:1107 pop3.c:1114
+ #, c-format
+ msgid "%u is unseen\n"
+ msgstr "%u is unseen\n"
+ 
+-#: pop3.c:952
++#: pop3.c:958
+ msgid "Messages inserted into list on server. Cannot handle this.\n"
+ msgstr "Messages inserted into list on server. Cannot handle this.\n"
+ 
+-#: pop3.c:1044
++#: pop3.c:1050
+ msgid "protocol error\n"
+ msgstr "protocol error\n"
+ 
+-#: pop3.c:1060
++#: pop3.c:1066
+ msgid "protocol error while fetching UIDLs\n"
+ msgstr "protocol error while fetching UIDLs\n"
+ 
+-#: pop3.c:1430
++#: pop3.c:1436
+ msgid "Option --folder is not supported with POP3\n"
+ msgstr "Option --folder is not supported with POP3\n"
+ 
+@@ -2322,17 +2322,17 @@
+ msgid "end of input"
+ msgstr "end of input"
+ 
+-#: rcfile_y.y:419
++#: rcfile_y.y:420
+ #, c-format
+ msgid "File %s must be a regular file.\n"
+ msgstr "File %s must be a regular file.\n"
+ 
+-#: rcfile_y.y:429
++#: rcfile_y.y:430
+ #, c-format
+ msgid "File %s must have no more than -rwx--x--- (0710) permissions.\n"
+ msgstr "File %s must have no more than -rwx--x--- (0710) permissions.\n"
+ 
+-#: rcfile_y.y:441
++#: rcfile_y.y:442
+ #, c-format
+ msgid "File %s must be owned by you.\n"
+ msgstr "File %s must be owned by you.\n"
+@@ -2762,113 +2762,113 @@
+ msgid "connected.\n"
+ msgstr "connected.\n"
+ 
+-#: socket.c:660
++#: socket.c:611
+ #, c-format
+ msgid "Issuer Organization: %s\n"
+ msgstr "Issuer Organisation: %s\n"
+ 
+-#: socket.c:662
++#: socket.c:613
+ msgid "Warning: Issuer Organization Name too long (possibly truncated).\n"
+ msgstr "Warning: Issuer Organsation Name too long (possibly truncated).\n"
+ 
+-#: socket.c:664
++#: socket.c:615
+ msgid "Unknown Organization\n"
+ msgstr "Unknown Organisation\n"
+ 
+-#: socket.c:666
++#: socket.c:617
+ #, c-format
+ msgid "Issuer CommonName: %s\n"
+ msgstr "Issuer CommonName: %s\n"
+ 
+-#: socket.c:668
++#: socket.c:619
+ msgid "Warning: Issuer CommonName too long (possibly truncated).\n"
+ msgstr "Warning: Issuer CommonName too long (possibly truncated).\n"
+ 
+-#: socket.c:670
++#: socket.c:621
+ msgid "Unknown Issuer CommonName\n"
+ msgstr "Unknown Issuer CommonName\n"
+ 
+-#: socket.c:674
++#: socket.c:625
+ #, c-format
+ msgid "Server CommonName: %s\n"
+ msgstr "Server CommonName: %s\n"
+ 
+-#: socket.c:678
++#: socket.c:629
+ msgid "Bad certificate: Subject CommonName too long!\n"
+ msgstr "Bad certificate: Subject CommonName too long!\n"
+ 
+-#: socket.c:724
++#: socket.c:675
+ #, c-format
+ msgid "Server CommonName mismatch: %s != %s\n"
+ msgstr "Server CommonName mismatch: %s != %s\n"
+ 
+-#: socket.c:730
++#: socket.c:681
+ msgid "Server name not set, could not verify certificate!\n"
+ msgstr "Server name not set, could not verify certificate!\n"
+ 
+-#: socket.c:735
++#: socket.c:686
+ msgid "Unknown Server CommonName\n"
+ msgstr "Unknown Server CommonName\n"
+ 
+-#: socket.c:737
++#: socket.c:688
+ msgid "Server name not specified in certificate!\n"
+ msgstr "Server name not specified in certificate!\n"
+ 
+-#: socket.c:749
++#: socket.c:700
+ msgid "EVP_md5() failed!\n"
+ msgstr "EVP_md5() failed!\n"
+ 
+-#: socket.c:753
++#: socket.c:704
+ msgid "Out of memory!\n"
+ msgstr "Out of memory!\n"
+ 
+-#: socket.c:761
++#: socket.c:712
+ msgid "Digest text buffer too small!\n"
+ msgstr "Digest text buffer too small!\n"
+ 
+-#: socket.c:767
++#: socket.c:718
+ #, c-format
+ msgid "%s key fingerprint: %s\n"
+ msgstr "%s key fingerprint: %s\n"
+ 
+-#: socket.c:771
++#: socket.c:722
+ #, c-format
+ msgid "%s fingerprints match.\n"
+ msgstr "%s fingerprints match.\n"
+ 
+-#: socket.c:773
++#: socket.c:724
+ #, c-format
+ msgid "%s fingerprints do not match!\n"
+ msgstr "%s fingerprints do not match!\n"
+ 
+-#: socket.c:782
++#: socket.c:733
+ #, c-format
+ msgid "Server certificate verification error: %s\n"
+ msgstr "Server certificate verification error: %s\n"
+ 
+-#: socket.c:788
++#: socket.c:739
+ #, c-format
+ msgid "unknown issuer (first %d characters): %s\n"
+ msgstr "unknown issuer (first %d characters): %s\n"
+ 
+-#: socket.c:875
++#: socket.c:826
+ msgid "File descriptor out of range for SSL"
+ msgstr "File descriptor out of range for SSL"
+ 
+-#: socket.c:891
++#: socket.c:842
+ #, c-format
+ msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+ msgstr "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+ 
+-#: socket.c:964
++#: socket.c:916
+ msgid "Certificate/fingerprint verification was somehow skipped!\n"
+ msgstr "Certificate/fingerprint verification was somehow skipped!\n"
+ 
+-#: socket.c:1042
++#: socket.c:994
+ msgid "Cygwin socket read retry\n"
+ msgstr "Cygwin socket read retry\n"
+ 
+-#: socket.c:1045
++#: socket.c:997
+ msgid "Cygwin socket read retry failed!\n"
+ msgstr "Cygwin socket read retry failed!\n"
+ 
+@@ -2997,30 +2997,30 @@
+ msgid "discarding new UID list\n"
+ msgstr "discarding new UID list\n"
+ 
+-#: uid.c:616
++#: uid.c:617
+ msgid "Deleting fetchids file.\n"
+ msgstr "Deleting fetchids file.\n"
+ 
+-#: uid.c:618
++#: uid.c:620
+ #, c-format
+ msgid "Error deleting %s: %s\n"
+ msgstr "Error deleting %s: %s\n"
+ 
+-#: uid.c:624
++#: uid.c:626
+ msgid "Writing fetchids file.\n"
+ msgstr "Writing fetchids file.\n"
+ 
+-#: uid.c:643
++#: uid.c:645
+ #, c-format
+ msgid "Error writing to fetchids file %s, old file left in place.\n"
+ msgstr "Error writing to fetchids file %s, old file left in place.\n"
+ 
+-#: uid.c:647
++#: uid.c:649
+ #, c-format
+ msgid "Cannot rename fetchids file %s to %s: %s\n"
+ msgstr "Cannot rename fetchids file %s to %s: %s\n"
+ 
+-#: uid.c:651
++#: uid.c:653
+ #, c-format
+ msgid "Cannot open fetchids file %s for writing: %s\n"
+ msgstr "Cannot open fetchids file %s for writing: %s\n"
+
+Modified: branches/BRANCH_6-3/po/es.po
+===================================================================
+--- branches/BRANCH_6-3/po/es.po	2008-01-29 13:19:58 UTC (rev 5154)
++++ branches/BRANCH_6-3/po/es.po	2008-01-31 09:15:53 UTC (rev 5155)
+@@ -20,7 +20,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 6.3.4-rc1\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2007-06-27 11:18+0200\n"
++"POT-Creation-Date: 2008-01-31 10:14+0100\n"
+ "PO-Revision-Date: 2007-05-02 00:05+0200\n"
+ "Last-Translator: H??ctor Garc??a <hector at el-mundo.net>\n"
+ "Language-Team: Spanish <es at li.org>\n"
+@@ -1765,12 +1765,12 @@
+ msgid "will idle after poll\n"
+ msgstr "descansar?? despu??s de consultar\n"
+ 
+-#: imap.c:441 pop3.c:505
++#: imap.c:441 pop3.c:511
+ #, c-format
+ msgid "%s: upgrade to TLS succeeded.\n"
+ msgstr "%s: la actualizaci??n a TLS tuvo ??xito.\n"
+ 
+-#: imap.c:450 pop3.c:514
++#: imap.c:450 pop3.c:520
+ #, c-format
+ msgid "%s: upgrade to TLS failed.\n"
+ msgstr "%s: fall?? la actualizaci??n a TLS.\n"
+@@ -1784,7 +1784,7 @@
+ msgid "Required OTP capability not compiled into fetchmail\n"
+ msgstr "La capacidad OTP requerida no fue compilada en fetchmail\n"
+ 
+-#: imap.c:587 pop3.c:380
++#: imap.c:587 pop3.c:386
+ msgid "Required NTLM capability not compiled into fetchmail\n"
+ msgstr "La capacidad NTLM requerida no fue compilada en fetchmail\n"
+ 
+@@ -1839,7 +1839,7 @@
+ msgid "%lu is unseen\n"
+ msgstr "%lu no se ha visto\n"
+ 
+-#: imap.c:897 pop3.c:876
++#: imap.c:897 pop3.c:882
+ #, c-format
+ msgid "%u is first unseen\n"
+ msgstr "%u es el primero que no fue visto\n"
+@@ -2041,7 +2041,7 @@
+ msgid "Could not decode OTP challenge\n"
+ msgstr "No fue posible decodificar el desaf??o OTP\n"
+ 
+-#: opie.c:64 pop3.c:597
++#: opie.c:64 pop3.c:603
+ msgid "Secret pass phrase: "
+ msgstr "Frase de contrase??a secreta: "
+ 
+@@ -2370,7 +2370,7 @@
+ "      --showdots    mostrar puntos de progreso incluso en los archivos de "
+ "registro\n"
+ 
+-#: pop3.c:350
++#: pop3.c:356
+ msgid ""
+ "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
+ "of TOP.\n"
+@@ -2378,79 +2378,79 @@
+ "Aviso: se ha encontrado ??Maillennium POP3/PROXY server??, se utilizar?? la "
+ "orden RETR en lugar de TOP.\n"
+ 
+-#: pop3.c:449
++#: pop3.c:455
+ msgid "TLS is mandatory for this session, but server refused CAPA command.\n"
+ msgstr ""
+ "Se debe utilizar TLS en esta sesi??n pero el servidor rechaz?? la orden CAPA.\n"
+ 
+-#: pop3.c:450
++#: pop3.c:456
+ msgid "The CAPA command is however necessary for TLS.\n"
+ msgstr "La orden CAPA se necesita, sin embargo, para utilizar TLS.\n"
+ 
+-#: pop3.c:525
++#: pop3.c:531
+ #, c-format
+ msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
+ msgstr ""
+ "%s: fall?? la actualizaci??n oportunista a TLS, se intentar?? continuar.\n"
+ 
+-#: pop3.c:633
++#: pop3.c:639
+ msgid "We've run out of allowed authenticators and cannot continue.\n"
+ msgstr ""
+ "No se pueden utilizar otros mecanismos de autenticaci??n y no se puede "
+ "continuar.\n"
+ 
+-#: pop3.c:647
++#: pop3.c:653
+ msgid "Required APOP timestamp not found in greeting\n"
+ msgstr "Marca de tiempo APOP requerida no encontrada en el saludo\n"
+ 
+-#: pop3.c:656
++#: pop3.c:662
+ msgid "Timestamp syntax error in greeting\n"
+ msgstr "Error de sintaxis en la marca de tiempo en el saludo\n"
+ 
+-#: pop3.c:672
++#: pop3.c:678
+ msgid "Invalid APOP timestamp.\n"
+ msgstr "Marca de tiempo APOP inv??lida.\n"
+ 
+-#: pop3.c:696
++#: pop3.c:702
+ msgid "Undefined protocol request in POP3_auth\n"
+ msgstr "Solicitud de protocolo indefinido en POP3_auth\n"
+ 
+-#: pop3.c:717
++#: pop3.c:723
+ msgid "lock busy!  Is another session active?\n"
+ msgstr "??bloqueo ocupado! ??Hay otra sesi??n activa?\n"
+ 
+-#: pop3.c:796
++#: pop3.c:802
+ msgid "Cannot handle UIDL response from upstream server.\n"
+ msgstr "No se puede manejar la respuesta UIDL proveniente del servidor.\n"
+ 
+-#: pop3.c:819
++#: pop3.c:825
+ msgid "Server responded with UID for wrong message.\n"
+ msgstr "El servidor devolvi?? el UID de un mensaje incorrecto.\n"
+ 
+-#: pop3.c:846 pop3.c:1092
++#: pop3.c:852 pop3.c:1098
+ #, c-format
+ msgid "id=%s (num=%d) was deleted, but is still present!\n"
+ msgstr "id=%s (num=%d) fue borrado, ??pero a??n se encuentra presente!\n"
+ 
+-#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
++#: pop3.c:861 pop3.c:873 pop3.c:1107 pop3.c:1114
+ #, c-format
+ msgid "%u is unseen\n"
+ msgstr "%u no se ha visto\n"
+ 
+-#: pop3.c:952
++#: pop3.c:958
+ msgid "Messages inserted into list on server. Cannot handle this.\n"
+ msgstr ""
+ "Mensajes insertados en una lista en el servidor. No se puede manejar esto.\n"
+ 
+-#: pop3.c:1044
++#: pop3.c:1050
+ msgid "protocol error\n"
+ msgstr "error de protocolo\n"
+ 
+-#: pop3.c:1060
++#: pop3.c:1066
+ msgid "protocol error while fetching UIDLs\n"
+ msgstr "error de protocolo durante la recepci??n de UIDLs\n"
+ 
+-#: pop3.c:1430
++#: pop3.c:1436
+ msgid "Option --folder is not supported with POP3\n"
+ msgstr "La opci??n --folder no est?? soportada con POP3\n"
+ 
+@@ -2486,17 +2486,17 @@
+ msgid "end of input"
+ msgstr "fin de entradas"
+ 
+-#: rcfile_y.y:419
++#: rcfile_y.y:420
+ #, c-format
+ msgid "File %s must be a regular file.\n"
+ msgstr "El archivo %s debe ser de tipo normal.\n"
+ 
+-#: rcfile_y.y:429
++#: rcfile_y.y:430
+ #, c-format
+ msgid "File %s must have no more than -rwx--x--- (0710) permissions.\n"
+ msgstr "El archivo %s no debe tener mas que los permisos -rwx--x--- (0710).\n"
+ 
+-#: rcfile_y.y:441
++#: rcfile_y.y:442
+ #, c-format
+ msgid "File %s must be owned by you.\n"
+ msgstr "Vd. debe ser el propietario del archivo ??%s??.\n"
+@@ -2928,121 +2928,121 @@
+ msgid "connected.\n"
+ msgstr "conectado.\n"
+ 
+-#: socket.c:660
++#: socket.c:611
+ #, c-format
+ msgid "Issuer Organization: %s\n"
+ msgstr "Organizaci??n emisora: %s\n"
+ 
+-#: socket.c:662
++#: socket.c:613
+ msgid "Warning: Issuer Organization Name too long (possibly truncated).\n"
+ msgstr ""
+ "Aviso: el Nombre de la Organizaci??n emisora es muy largo (posiblemente "
+ "truncado).\n"
+ 
+-#: socket.c:664
++#: socket.c:615
+ msgid "Unknown Organization\n"
+ msgstr "Organizaci??n Desconocida\n"
+ 
+-#: socket.c:666
++#: socket.c:617
+ #, c-format
+ msgid "Issuer CommonName: %s\n"
+ msgstr "??CommonName?? del emisor: %s\n"
+ 
+-#: socket.c:668
++#: socket.c:619
+ msgid "Warning: Issuer CommonName too long (possibly truncated).\n"
+ msgstr ""
+ "Aviso: el ??CommonName?? del emisor es muy largo (posiblemente truncado).\n"
+ 
+-#: socket.c:670
++#: socket.c:621
+ msgid "Unknown Issuer CommonName\n"
+ msgstr "??CommonName?? del emisor desconocido\n"
+ 
+-#: socket.c:674
++#: socket.c:625
+ #, c-format
+ msgid "Server CommonName: %s\n"
+ msgstr "??CommonName?? del servidor: %s\n"
+ 
+-#: socket.c:678
++#: socket.c:629
+ msgid "Bad certificate: Subject CommonName too long!\n"
+ msgstr "Certificado inv??lido: el ??CommonName?? del sujeto es muy largo!\n"
+ 
+-#: socket.c:724
++#: socket.c:675
+ #, c-format
+ msgid "Server CommonName mismatch: %s != %s\n"
+ msgstr "El ??CommonName?? del servidor no coincide: %s != %s\n"
+ 
+-#: socket.c:730
++#: socket.c:681
+ msgid "Server name not set, could not verify certificate!\n"
+ msgstr ""
+ "No se configur?? el nombre de servidor, ??no fue posible verificar el "
+ "certificado!\n"
+ 
+-#: socket.c:735
++#: socket.c:686
+ msgid "Unknown Server CommonName\n"
+ msgstr "??CommonName?? del servidor desconocido\n"
+ 
+-#: socket.c:737
++#: socket.c:688
+ msgid "Server name not specified in certificate!\n"
+ msgstr "??No se especifica el nombre del servidor en el certificado!\n"
+ 
+-#: socket.c:749
++#: socket.c:700
+ msgid "EVP_md5() failed!\n"
+ msgstr "EVP_md5() fall??\n"
+ 
+-#: socket.c:753
++#: socket.c:704
+ msgid "Out of memory!\n"
+ msgstr "??No hay memoria!\n"
+ 
+-#: socket.c:761
++#: socket.c:712
+ msgid "Digest text buffer too small!\n"
+ msgstr "??El espacio para el resumen de texto es muy chico!\n"
+ 
+-#: socket.c:767
++#: socket.c:718
+ #, c-format
+ msgid "%s key fingerprint: %s\n"
+ msgstr "Huella digital de la clave %s: %s\n"
+ 
+-#: socket.c:771
++#: socket.c:722
+ #, c-format
+ msgid "%s fingerprints match.\n"
+ msgstr "Las huellas digitales de %s coinciden.\n"
+ 
+-#: socket.c:773
++#: socket.c:724
+ #, c-format
+ msgid "%s fingerprints do not match!\n"
+ msgstr "??Las huellas digitales de %s no coinciden!\n"
+ 
+-#: socket.c:782
++#: socket.c:733
+ #, c-format
+ msgid "Server certificate verification error: %s\n"
+ msgstr "Fall?? la verificaci??n del certificado del servidor: %s\n"
+ 
+-#: socket.c:788
++#: socket.c:739
+ #, c-format
+ msgid "unknown issuer (first %d characters): %s\n"
+ msgstr "Emisor desconocido (primeros %d caracteres): %s\n"
+ 
+-#: socket.c:875
++#: socket.c:826
+ msgid "File descriptor out of range for SSL"
+ msgstr "Descriptor de archivo fuera de rango para SSL"
+ 
+-#: socket.c:891
++#: socket.c:842
+ #, c-format
+ msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+ msgstr ""
+ "El protocolo SSL ??%s?? especificado es inv??lido, usando el valor por omisi??n "
+ "(SSLv23).\n"
+ 
+-#: socket.c:964
++#: socket.c:916
+ msgid "Certificate/fingerprint verification was somehow skipped!\n"
+ msgstr ""
+ "??La verificaci??n de certificado/huella digital fue de alg??n modo saltada!\n"
+ 
+-#: socket.c:1042
++#: socket.c:994
+ msgid "Cygwin socket read retry\n"
+ msgstr "Reintento de lectura del socket cygwin\n"
+ 
+-#: socket.c:1045
++#: socket.c:997
+ msgid "Cygwin socket read retry failed!\n"
+ msgstr "??Fall?? el reintento de lectura del socket cygwin\n"
+ 
+@@ -3175,32 +3175,32 @@
+ msgid "discarding new UID list\n"
+ msgstr "descartando la nueva lista de UID\n"
+ 
+-#: uid.c:616
++#: uid.c:617
+ msgid "Deleting fetchids file.\n"
+ msgstr "Borrando el archivo fetchids.\n"
+ 
+-#: uid.c:618
++#: uid.c:620
+ #, c-format
+ msgid "Error deleting %s: %s\n"
+ msgstr "Error borrando %s: %s\n"
+ 
+-#: uid.c:624
++#: uid.c:626
+ msgid "Writing fetchids file.\n"
+ msgstr "Escribiendo el archivo fetchids.\n"
+ 
+-#: uid.c:643
++#: uid.c:645
+ #, c-format
+ msgid "Error writing to fetchids file %s, old file left in place.\n"
+ msgstr ""
+ "Error escribiendo al archivo fetchids %s. Se dej?? el archivo original "
+ "intacto.\n"
+ 
+-#: uid.c:647
++#: uid.c:649
+ #, c-format
+ msgid "Cannot rename fetchids file %s to %s: %s\n"
+ msgstr "No se puede renombrar el archivo fetchids %s a %s: %s\n"
+ 
+-#: uid.c:651
++#: uid.c:653
+ #, c-format
+ msgid "Cannot open fetchids file %s for writing: %s\n"
+ msgstr "No se puede abrir el archivo fetchids %s para escritura: %s\n"
+
+Modified: branches/BRANCH_6-3/po/fr.po
+===================================================================
+--- branches/BRANCH_6-3/po/fr.po	2008-01-29 13:19:58 UTC (rev 5154)
++++ branches/BRANCH_6-3/po/fr.po	2008-01-31 09:15:53 UTC (rev 5155)
+@@ -15,7 +15,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 6.2.9-rc9\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2007-06-27 11:18+0200\n"
++"POT-Creation-Date: 2008-01-31 10:14+0100\n"
+ "PO-Revision-Date: 2005-12-18 11:50+0100\n"
+ "Last-Translator: Matthias Andree <matthias.andree at gmx.de>\n"
+ "Language-Team: French <traduc at traduc.org>\n"
+@@ -1726,12 +1726,12 @@
+ msgid "will idle after poll\n"
+ msgstr "attendra apr??s la r??ception\n"
+ 
+-#: imap.c:441 pop3.c:505
++#: imap.c:441 pop3.c:511
+ #, c-format
+ msgid "%s: upgrade to TLS succeeded.\n"
+ msgstr ""
+ 
+-#: imap.c:450 pop3.c:514
++#: imap.c:450 pop3.c:520
+ #, c-format
+ msgid "%s: upgrade to TLS failed.\n"
+ msgstr ""
+@@ -1745,7 +1745,7 @@
+ msgid "Required OTP capability not compiled into fetchmail\n"
+ msgstr "La fonctionnalit?? OTP requise n'est pas support??e par fetchmail\n"
+ 
+-#: imap.c:587 pop3.c:380
++#: imap.c:587 pop3.c:386
+ msgid "Required NTLM capability not compiled into fetchmail\n"
+ msgstr "La fonctionnalit?? NTLM requise n'est pas support??e par fetchmail.\n"
+ 
+@@ -1801,7 +1801,7 @@
+ msgid "%lu is unseen\n"
+ msgstr "%lu n'est pas vu\n"
+ 
+-#: imap.c:897 pop3.c:876
++#: imap.c:897 pop3.c:882
+ #, c-format
+ msgid "%u is first unseen\n"
+ msgstr "%u est le premier a n'avoir pas ??t?? vu\n"
+@@ -2004,7 +2004,7 @@
+ msgid "Could not decode OTP challenge\n"
+ msgstr "Impossible de d??coder le challenge OTP\n"
+ 
+-#: opie.c:64 pop3.c:597
++#: opie.c:64 pop3.c:603
+ msgid "Secret pass phrase: "
+ msgstr "Phrase de passe secr??te : "
+ 
+@@ -2322,7 +2322,7 @@
+ msgstr ""
+ "      --showdots    affiche des points de progression, m??me dans le journal\n"
+ 
+-#: pop3.c:350
++#: pop3.c:356
+ msgid ""
+ "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
+ "of TOP.\n"
+@@ -2330,74 +2330,74 @@
+ "Avertissement: trouv?? ??Maillennium POP3/PROXY server??, la commande RETR est "
+ "utilis?? au lieu de TOP.\n"
+ 
+-#: pop3.c:449
++#: pop3.c:455
+ msgid "TLS is mandatory for this session, but server refused CAPA command.\n"
+ msgstr ""
+ 
+-#: pop3.c:450
++#: pop3.c:456
+ msgid "The CAPA command is however necessary for TLS.\n"
+ msgstr ""
+ 
+-#: pop3.c:525
++#: pop3.c:531
+ #, c-format
+ msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
+ msgstr ""
+ 
+-#: pop3.c:633
++#: pop3.c:639
+ msgid "We've run out of allowed authenticators and cannot continue.\n"
+ msgstr ""
+ 
+-#: pop3.c:647
++#: pop3.c:653
+ msgid "Required APOP timestamp not found in greeting\n"
+ msgstr "L'horodatage APOP requis est absent du message d'invitation\n"
+ 
+-#: pop3.c:656
++#: pop3.c:662
+ msgid "Timestamp syntax error in greeting\n"
+ msgstr "Erreur de syntaxe dans l'horodatage du message d'invitation\n"
+ 
+-#: pop3.c:672
++#: pop3.c:678
+ msgid "Invalid APOP timestamp.\n"
+ msgstr "L'horodatage APOP est invalide.\n"
+ 
+-#: pop3.c:696
++#: pop3.c:702
+ msgid "Undefined protocol request in POP3_auth\n"
+ msgstr "Requ??te de protocole ind??finie dans POP3_auth\n"
+ 
+-#: pop3.c:717
++#: pop3.c:723
+ msgid "lock busy!  Is another session active?\n"
+ msgstr "Fichier verrou en service. Y'a-t-il une autre session active ?\n"
+ 
+-#: pop3.c:796
++#: pop3.c:802
+ msgid "Cannot handle UIDL response from upstream server.\n"
+ msgstr "Ne peux pas manier la r??ponse UIDL du serveur.\n"
+ 
+-#: pop3.c:819
++#: pop3.c:825
+ msgid "Server responded with UID for wrong message.\n"
+ msgstr "Serveur r??pondait avec UID d'un faux message.\n"
+ 
+-#: pop3.c:846 pop3.c:1092
++#: pop3.c:852 pop3.c:1098
+ #, c-format
+ msgid "id=%s (num=%d) was deleted, but is still present!\n"
+ msgstr "id=%s (num=%d) a ??t?? effac??, mais est toujours pr??sent !\n"
+ 
+-#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
++#: pop3.c:861 pop3.c:873 pop3.c:1107 pop3.c:1114
+ #, c-format
+ msgid "%u is unseen\n"
+ msgstr "%u n'est pas vu\n"
+ 
+-#: pop3.c:952
++#: pop3.c:958
+ msgid "Messages inserted into list on server. Cannot handle this.\n"
+ msgstr "Messages ins??r??s dans une liste du serveur. Impossible de g??rer ??a.\n"
+ 
+-#: pop3.c:1044
++#: pop3.c:1050
+ msgid "protocol error\n"
+ msgstr "erreur de protocole\n"
+ 
+-#: pop3.c:1060
++#: pop3.c:1066
+ msgid "protocol error while fetching UIDLs\n"
+ msgstr "erreur de protocole durant la r??ception des UIDLs\n"
+ 
+-#: pop3.c:1430
++#: pop3.c:1436
+ msgid "Option --folder is not supported with POP3\n"
+ msgstr "L'option --folder n'est pas support??e avec POP3\n"
+ 
+@@ -2434,17 +2434,17 @@
+ msgid "end of input"
+ msgstr "fin de l'entr??e"
+ 
+-#: rcfile_y.y:419
++#: rcfile_y.y:420
+ #, c-format
+ msgid "File %s must be a regular file.\n"
+ msgstr "Le fichier %s doit etre un fichier normal.\n"
+ 
+-#: rcfile_y.y:429
++#: rcfile_y.y:430
+ #, c-format
+ msgid "File %s must have no more than -rwx--x--- (0710) permissions.\n"
+ msgstr "Le fichier %s doit avoir au moins les permissions -rwx--x--- (0710)\n"
+ 
+-#: rcfile_y.y:441
++#: rcfile_y.y:442
+ #, c-format
+ msgid "File %s must be owned by you.\n"
+ msgstr "Le fichier %s doit vous appartenir.\n"
+@@ -2876,119 +2876,119 @@
+ msgid "connected.\n"
+ msgstr "connect??.\n"
+ 
+-#: socket.c:660
++#: socket.c:611
+ #, c-format
+ msgid "Issuer Organization: %s\n"
+ msgstr "Organisation de l'exp??diteur: %s\n"
+ 
+-#: socket.c:662
++#: socket.c:613
+ msgid "Warning: Issuer Organization Name too long (possibly truncated).\n"
+ msgstr ""
+ "Avertissement: le nom de l'organisation de l'exp??diteur est tros long (et "
+ "peut etre tronqu??).\n"
+ 
+-#: socket.c:664
++#: socket.c:615
+ msgid "Unknown Organization\n"
+ msgstr "Organisation inconnue\n"
+ 
+-#: socket.c:666
++#: socket.c:617
+ #, c-format
+ msgid "Issuer CommonName: %s\n"
+ msgstr "Nom commun de l'??metteur : %s\n"
+ 
+-#: socket.c:668
++#: socket.c:619
+ msgid "Warning: Issuer CommonName too long (possibly truncated).\n"
+ msgstr ""
+ "Avertissement: le nom de l'exp??diteur est tros long (et peut etre tronqu??).\n"
+ 
+-#: socket.c:670
++#: socket.c:621
+ msgid "Unknown Issuer CommonName\n"
+ msgstr "Nom commun de l'exp??diteur inconnu\n"
+ 
+-#: socket.c:674
++#: socket.c:625
+ #, c-format
+ msgid "Server CommonName: %s\n"
+ msgstr "Nom commun du serveur: %s\n"
+ 
+-#: socket.c:678
++#: socket.c:629
+ msgid "Bad certificate: Subject CommonName too long!\n"
+ msgstr "Certificat erroni: Sujet nom commun trop long!\n"
+ 
+-#: socket.c:724
++#: socket.c:675
+ #, c-format
+ msgid "Server CommonName mismatch: %s != %s\n"
+ msgstr "Pas de concordance du nom commun du serveur: %s != %s\n"
+ 
+-#: socket.c:730
++#: socket.c:681
+ msgid "Server name not set, could not verify certificate!\n"
+ msgstr ""
+ "Le nom du serveur n'est pas sp??cifi??, impossible de v??rifier le certificat!\n"
+ 
+-#: socket.c:735
++#: socket.c:686
+ msgid "Unknown Server CommonName\n"
+ msgstr "Nom commun du serveur inconnu\n"
+ 
+-#: socket.c:737
++#: socket.c:688
+ msgid "Server name not specified in certificate!\n"
+ msgstr "Le nom du serveur n'est pas pr??sent dans le certificat!\n"
+ 
+-#: socket.c:749
++#: socket.c:700
+ msgid "EVP_md5() failed!\n"
+ msgstr "??chec de EVP_md5()\n"
+ 
+-#: socket.c:753
++#: socket.c:704
+ msgid "Out of memory!\n"
+ msgstr "Plus de m??moire!\n"
+ 
+-#: socket.c:761
++#: socket.c:712
+ msgid "Digest text buffer too small!\n"
+ msgstr "Le tampon r??sum?? est trop court!\n"
+ 
+-#: socket.c:767
++#: socket.c:718
+ #, c-format
+ msgid "%s key fingerprint: %s\n"
+ msgstr "signature de la cl?? %s??: %s\n"
+ 
+-#: socket.c:771
++#: socket.c:722
+ #, c-format
+ msgid "%s fingerprints match.\n"
+ msgstr "La signature %s correspond.\n"
+ 
+-#: socket.c:773
++#: socket.c:724
+ #, c-format
+ msgid "%s fingerprints do not match!\n"
+ msgstr "La signature %s ne correspond pas!\n"
+ 
+-#: socket.c:782
++#: socket.c:733
+ #, c-format
+ msgid "Server certificate verification error: %s\n"
+ msgstr "Erreur de v??rification du certificat du serveur : %s\n"
+ 
+-#: socket.c:788
++#: socket.c:739
+ #, c-format
+ msgid "unknown issuer (first %d characters): %s\n"
+ msgstr "exp??diteur inconnu (%d premiers caract??res) : %s\n"
+ 
+-#: socket.c:875
++#: socket.c:826
+ msgid "File descriptor out of range for SSL"
+ msgstr "Descripteur de fichier inaccessible pour SSL"
+ 
+-#: socket.c:891
++#: socket.c:842
+ #, c-format
+ msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+ msgstr ""
+ "Le protocole SSL ??%s?? sp??cifi?? est invalide, le protocole par d??faut "
+ "(SSLv23) est utilis??.\n"
+ 
+-#: socket.c:964
++#: socket.c:916
+ msgid "Certificate/fingerprint verification was somehow skipped!\n"
+ msgstr "La v??rification du certificat ou de la signature n'a pas ??t?? faite!\n"
+ 
+-#: socket.c:1042
++#: socket.c:994
+ msgid "Cygwin socket read retry\n"
+ msgstr "Nouvel essai de lecture sur la socket Cygwin\n"
+ 
+-#: socket.c:1045
++#: socket.c:997
+ msgid "Cygwin socket read retry failed!\n"
+ msgstr "Le nouvel essai de lecture sur la socket Cygwin a ??chou??!\n"
+ 
+@@ -3117,31 +3117,31 @@
+ msgid "discarding new UID list\n"
+ msgstr "??limination la nouvelle liste d'UIDs\n"
+ 
+-#: uid.c:616
++#: uid.c:617
+ msgid "Deleting fetchids file.\n"
+ msgstr "Effacement du fichier fetchids.\n"
+ 
+-#: uid.c:618
++#: uid.c:620
+ #, c-format
+ msgid "Error deleting %s: %s\n"
+ msgstr "Erreur d'effacement de %s : %s\n"
+ 
+-#: uid.c:624
++#: uid.c:626
+ msgid "Writing fetchids file.\n"
+ msgstr "Ecriture du fichier fetchids.\n"
+ 
+-#: uid.c:643
++#: uid.c:645
+ #, c-format
+ msgid "Error writing to fetchids file %s, old file left in place.\n"
+ msgstr ""
+ "Erreur d'??criture du fichier fetchids %s, vieux fichier laiss??en place.\n"
+ 
+-#: uid.c:647
++#: uid.c:649
+ #, c-format
+ msgid "Cannot rename fetchids file %s to %s: %s\n"
+ msgstr "Impossible de renommer %s ?? %s : %s\n"
+ 
+-#: uid.c:651
++#: uid.c:653
+ #, c-format
+ msgid "Cannot open fetchids file %s for writing: %s\n"
+ msgstr "Impossible d'ouvrir le fichier fetchids %s pour l'??criture : %s\n"
+
+Modified: branches/BRANCH_6-3/po/ja.po
+===================================================================
+--- branches/BRANCH_6-3/po/ja.po	2008-01-29 13:19:58 UTC (rev 5154)
++++ branches/BRANCH_6-3/po/ja.po	2008-01-31 09:15:53 UTC (rev 5155)
+@@ -8,7 +8,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 6.3.8\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2007-06-27 11:18+0200\n"
++"POT-Creation-Date: 2008-01-31 10:14+0100\n"
+ "PO-Revision-Date: 2007-04-28 20:54+0900\n"
+ "Last-Translator: Takeshi Hamasaki <hma at syd.odn.ne.jp>\n"
+ "Language-Team: Japanese <translation-team-ja at lists.sourceforge.net>\n"
+@@ -1682,12 +1682,12 @@
+ msgid "will idle after poll\n"
+ msgstr "?????????????????????????????????\n"
+ 
+-#: imap.c:441 pop3.c:505
++#: imap.c:441 pop3.c:511
+ #, c-format
+ msgid "%s: upgrade to TLS succeeded.\n"
+ msgstr "%s: TLS ???????????????????????????????????????\n"
+ 
+-#: imap.c:450 pop3.c:514
++#: imap.c:450 pop3.c:520
+ #, c-format
+ msgid "%s: upgrade to TLS failed.\n"
+ msgstr "%s: TLS ???????????????????????????????????????\n"
+@@ -1702,7 +1702,7 @@
+ msgstr ""
+ "OTP ??????????????????????????????fetchmail ??? OTP ????????????????????????????????????????????????\n"
+ 
+-#: imap.c:587 pop3.c:380
++#: imap.c:587 pop3.c:386
+ msgid "Required NTLM capability not compiled into fetchmail\n"
+ msgstr "??????????????? NTLM ??????????????? fetchmail ????????????????????????????????????\n"
+ 
+@@ -1754,7 +1754,7 @@
+ msgid "%lu is unseen\n"
+ msgstr "%lu ??????????????????\n"
+ 
+-#: imap.c:897 pop3.c:876
++#: imap.c:897 pop3.c:882
+ #, c-format
+ msgid "%u is first unseen\n"
+ msgstr "%u ??????????????????????????????????????????\n"
+@@ -1959,7 +1959,7 @@
+ msgid "Could not decode OTP challenge\n"
+ msgstr "OTP challenge ?????????????????????????????????????????????\n"
+ 
+-#: opie.c:64 pop3.c:597
++#: opie.c:64 pop3.c:603
+ msgid "Secret pass phrase: "
+ msgstr "Secret pass phrase: "
+ 
+@@ -2268,7 +2268,7 @@
+ msgid "      --showdots    show progress dots even in logfiles\n"
+ msgstr "      --showdots    ????????????????????????????????????????????? . ?????????????????????\n"
+ 
+-#: pop3.c:350
++#: pop3.c:356
+ msgid ""
+ "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
+ "of TOP.\n"
+@@ -2276,78 +2276,78 @@
+ "??????: Maillennium POP3/??????????????????????????????TOP ??????????????? RETR ?????????????????????"
+ "????????????\n"
+ 
+-#: pop3.c:449
++#: pop3.c:455
+ msgid "TLS is mandatory for this session, but server refused CAPA command.\n"
+ msgstr ""
+ "??????????????????????????? TLS ????????????????????????????????? CAPA ????????????????????????????????????\n"
+ 
+-#: pop3.c:450
++#: pop3.c:456
+ msgid "The CAPA command is however necessary for TLS.\n"
+ msgstr "CAPA ??????????????? TLS ?????????????????????\n"
+ 
+-#: pop3.c:525
++#: pop3.c:531
+ #, c-format
+ msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
+ msgstr "%s: TLS ????????????????????????????????????????????????????????????????????????????????????\n"
+ 
+-#: pop3.c:633
++#: pop3.c:639
+ msgid "We've run out of allowed authenticators and cannot continue.\n"
+ msgstr ""
+ "??????????????????????????????????????????????????????????????????????????????????????????????????????????????????"
+ "?????????????????????\n"
+ 
+-#: pop3.c:647
++#: pop3.c:653
+ msgid "Required APOP timestamp not found in greeting\n"
+ msgstr "greeting ?????? APOP ?????????????????????????????????????????????\n"
+ 
+-#: pop3.c:656
++#: pop3.c:662
+ msgid "Timestamp syntax error in greeting\n"
+ msgstr "greeting ?????? ???????????????????????????????????????\n"
+ 
+-#: pop3.c:672
++#: pop3.c:678
+ msgid "Invalid APOP timestamp.\n"
+ msgstr "????????? APOP ??????????????????????????????\n"
+ 
+-#: pop3.c:696
++#: pop3.c:702
+ msgid "Undefined protocol request in POP3_auth\n"
+ msgstr "POP3_auth ????????????????????????????????????????????????????????????????????????\n"
+ 
+-#: pop3.c:717
++#: pop3.c:723
+ msgid "lock busy!  Is another session active?\n"
+ msgstr "lock busy ??????????????????????????????????????????????????????????????????????????????\n"
+ 
+-#: pop3.c:796
++#: pop3.c:802
+ msgid "Cannot handle UIDL response from upstream server.\n"
+ msgstr "???????????????????????? UIDL ?????????????????????????????????\n"
+ 
+-#: pop3.c:819
++#: pop3.c:825
+ msgid "Server responded with UID for wrong message.\n"
+ msgstr "??????????????????????????????????????? UID ????????????????????????\n"
+ 
+-#: pop3.c:846 pop3.c:1092
++#: pop3.c:852 pop3.c:1098
+ #, c-format
+ msgid "id=%s (num=%d) was deleted, but is still present!\n"
+ msgstr "id=%s (num=%d) ?????????????????????????????????????????????????????????!\n"
+ 
+-#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
++#: pop3.c:861 pop3.c:873 pop3.c:1107 pop3.c:1114
+ #, c-format
+ msgid "%u is unseen\n"
+ msgstr "%u ??????????????????\n"
+ 
+-#: pop3.c:952
++#: pop3.c:958
+ msgid "Messages inserted into list on server. Cannot handle this.\n"
+ msgstr ""
+ "?????????????????????????????????????????????????????????????????????????????????????????????????????????\n"
+ 
+-#: pop3.c:1044
++#: pop3.c:1050
+ msgid "protocol error\n"
+ msgstr "?????????????????????????????????\n"
+ 
+-#: pop3.c:1060
++#: pop3.c:1066
+ msgid "protocol error while fetching UIDLs\n"
+ msgstr "UIDL ?????????????????????????????????????????????????????????????????????\n"
+ 
+-#: pop3.c:1430
++#: pop3.c:1436
+ msgid "Option --folder is not supported with POP3\n"
+ msgstr "POP3 ?????? --folder ??????????????????????????????????????????\n"
+ 
+@@ -2383,19 +2383,19 @@
+ msgid "end of input"
+ msgstr "???????????????"
+ 
+-#: rcfile_y.y:419
++#: rcfile_y.y:420
+ #, c-format
+ msgid "File %s must be a regular file.\n"
+ msgstr ""
+ "%s ????????????????????????????????????????????????????????????????????????????????????????????????????????????"
+ "?????????\n"
+ 
+-#: rcfile_y.y:429
++#: rcfile_y.y:430
+ #, c-format
+ msgid "File %s must have no more than -rwx--x--- (0710) permissions.\n"
+ msgstr "%s ??? -rwx--x--- (0710) ???????????????????????????????????????????????????????????????\n"
+ 
+-#: rcfile_y.y:441
++#: rcfile_y.y:442
+ #, c-format
+ msgid "File %s must be owned by you.\n"
+ msgstr "%s ????????????????????????????????????????????????????????????\n"
+@@ -2830,116 +2830,116 @@
+ msgid "connected.\n"
+ msgstr "?????????????????????\n"
+ 
+-#: socket.c:660
++#: socket.c:611
+ #, c-format
+ msgid "Issuer Organization: %s\n"
+ msgstr "??????????????????: %s\n"
+ 
+-#: socket.c:662
++#: socket.c:613
+ msgid "Warning: Issuer Organization Name too long (possibly truncated).\n"
+ msgstr "?????? : ??????????????????????????????????????????(???????????????????????????????????????)\n"
+ 
+-#: socket.c:664
++#: socket.c:615
+ msgid "Unknown Organization\n"
+ msgstr "????????????????????????\n"
+ 
+-#: socket.c:666
++#: socket.c:617
+ #, c-format
+ msgid "Issuer CommonName: %s\n"
+ msgstr "???????????? CommonName: %s\n"
+ 
+-#: socket.c:668
++#: socket.c:619
+ msgid "Warning: Issuer CommonName too long (possibly truncated).\n"
+ msgstr ""
+ "?????? : ???????????? CommonName ????????????????????? (???????????????????????????????????????)\n"
+ 
+-#: socket.c:670
++#: socket.c:621
+ msgid "Unknown Issuer CommonName\n"
+ msgstr "????????????????????? CommonName ?????????\n"
+ 
+-#: socket.c:674
++#: socket.c:625
+ #, c-format
+ msgid "Server CommonName: %s\n"
+ msgstr "???????????? CommonName: %s\n"
+ 
+-#: socket.c:678
++#: socket.c:629
+ msgid "Bad certificate: Subject CommonName too long!\n"
+ msgstr "??????????????? : Subject CommonName ?????????????????????\n"
+ 
+-#: socket.c:724
++#: socket.c:675
+ #, c-format
+ msgid "Server CommonName mismatch: %s != %s\n"
+ msgstr "???????????? CommonName ????????????????????? : %s != %s\n"
+ 
+-#: socket.c:730
++#: socket.c:681
+ msgid "Server name not set, could not verify certificate!\n"
+ msgstr "??????????????????????????????????????????????????????????????????????????????\n"
+ 
+-#: socket.c:735
++#: socket.c:686
+ msgid "Unknown Server CommonName\n"
+ msgstr "????????????????????? CommonName ?????????\n"
+ 
+-#: socket.c:737
++#: socket.c:688
+ msgid "Server name not specified in certificate!\n"
+ msgstr "????????????????????????????????????????????????????????????\n"
+ 
+-#: socket.c:749
++#: socket.c:700
+ msgid "EVP_md5() failed!\n"
+ msgstr "EVP_md5() ??????????????????????????????\n"
+ 
+-#: socket.c:753
++#: socket.c:704
+ msgid "Out of memory!\n"
+ msgstr "????????????????????????\n"
+ 
+-#: socket.c:761
++#: socket.c:712
+ msgid "Digest text buffer too small!\n"
+ msgstr "??????????????????????????????????????????????????????????????????\n"
+ 
+-#: socket.c:767
++#: socket.c:718
+ #, c-format
+ msgid "%s key fingerprint: %s\n"
+ msgstr "%s ??? key fingerprint ????????????????????????: %s \n"
+ 
+-#: socket.c:771
++#: socket.c:722
+ #, c-format
+ msgid "%s fingerprints match.\n"
+ msgstr "%s ??? fingerprints ????????????????????????\n"
+ 
+-#: socket.c:773
++#: socket.c:724
+ #, c-format
+ msgid "%s fingerprints do not match!\n"
+ msgstr "%s ??? fingerprints ?????????????????????????????????\n"
+ 
+-#: socket.c:782
++#: socket.c:733
+ #, c-format
+ msgid "Server certificate verification error: %s\n"
+ msgstr "?????????????????????????????????: %s\n"
+ 
+-#: socket.c:788
++#: socket.c:739
+ #, c-format
+ msgid "unknown issuer (first %d characters): %s\n"
+ msgstr "?????????????????? (???????????? %d ??????): %s\n"
+ 
+-#: socket.c:875
++#: socket.c:826
+ msgid "File descriptor out of range for SSL"
+ msgstr "???????????????????????? SSL ??????????????????????????????"
+ 
+-#: socket.c:891
++#: socket.c:842
+ #, c-format
+ msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+ msgstr ""
+ "????????? SSL ??????????????? `%s' ?????????????????????????????????????????? (SSLv23)???????????????"
+ "??????\n"
+ 
+-#: socket.c:964
++#: socket.c:916
+ msgid "Certificate/fingerprint verification was somehow skipped!\n"
+ msgstr "?????????/fingerprint ??????????????????????????????????????????\n"
+ 
+-#: socket.c:1042
++#: socket.c:994
+ msgid "Cygwin socket read retry\n"
+ msgstr "Cygwin ???????????????????????? ????????????\n"
+ 
+-#: socket.c:1045
++#: socket.c:997
+ msgid "Cygwin socket read retry failed!\n"
+ msgstr "Cygwin ???????????????????????? ???????????? ?????????????????????!\n"
+ 
+@@ -3068,32 +3068,32 @@
+ msgid "discarding new UID list\n"
+ msgstr "????????? UID ????????????????????????????????????\n"
+ 
+-#: uid.c:616
++#: uid.c:617
+ msgid "Deleting fetchids file.\n"
+ msgstr "fetchids ???????????????????????????????????????\n"
+ 
+-#: uid.c:618
++#: uid.c:620
+ #, c-format
+ msgid "Error deleting %s: %s\n"
+ msgstr "??????????????????????????????????????? %s: %s\n"
+ 
+-#: uid.c:624
++#: uid.c:626
+ msgid "Writing fetchids file.\n"
+ msgstr "fetchids ???????????????????????????????????????\n"
+ 
+-#: uid.c:643
++#: uid.c:645
+ #, c-format
+ msgid "Error writing to fetchids file %s, old file left in place.\n"
+ msgstr ""
+ "fetchids ???????????? %s ????????????????????????????????????????????????????????????????????????????????????"
+ "??????\n"
+ 
+-#: uid.c:647
++#: uid.c:649
+ #, c-format
+ msgid "Cannot rename fetchids file %s to %s: %s\n"
+ msgstr "fetchids ????????????????????????????????????????????????%s ?????? %s???: %s\n"
+ 
+-#: uid.c:651
++#: uid.c:653
+ #, c-format
+ msgid "Cannot open fetchids file %s for writing: %s\n"
+ msgstr ""
+
+Modified: branches/BRANCH_6-3/po/pl.po
+===================================================================
+--- branches/BRANCH_6-3/po/pl.po	2008-01-29 13:19:58 UTC (rev 5154)
++++ branches/BRANCH_6-3/po/pl.po	2008-01-31 09:15:53 UTC (rev 5155)
+@@ -8,7 +8,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 6.3.8\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2007-06-27 11:18+0200\n"
++"POT-Creation-Date: 2008-01-31 10:14+0100\n"
+ "PO-Revision-Date: 2007-04-27 17:28+0200\n"
+ "Last-Translator: Jakub Bogusz <qboosh at pld-linux.org>\n"
+ "Language-Team: Polish <translation-team-pl at lists.sourceforge.net>\n"
+@@ -1707,12 +1707,12 @@
+ msgid "will idle after poll\n"
+ msgstr "przejdzie w stan bezczynno?ci po odpytaniu\n"
+ 
+-#: imap.c:441 pop3.c:505
++#: imap.c:441 pop3.c:511
+ #, c-format
+ msgid "%s: upgrade to TLS succeeded.\n"
+ msgstr "%s: przej?cie na TLS powiod?o si?.\n"
+ 
+-#: imap.c:450 pop3.c:514
++#: imap.c:450 pop3.c:520
+ #, c-format
+ msgid "%s: upgrade to TLS failed.\n"
+ msgstr "%s: przej?cie na TLS nie powiod?o si?.\n"
+@@ -1726,7 +1726,7 @@
+ msgid "Required OTP capability not compiled into fetchmail\n"
+ msgstr "Wymagana metoda uwierzytelnienia OTP nie wkompilowana w fetchmaila\n"
+ 
+-#: imap.c:587 pop3.c:380
++#: imap.c:587 pop3.c:386
+ msgid "Required NTLM capability not compiled into fetchmail\n"
+ msgstr "Wymagana metoda uwierzytelnienia NTLM nie wkompilowana w fetchmaila\n"
+ 
+@@ -1784,7 +1784,7 @@
+ msgid "%lu is unseen\n"
+ msgstr "%lu jest nieprzeczytany\n"
+ 
+-#: imap.c:897 pop3.c:876
++#: imap.c:897 pop3.c:882
+ #, c-format
+ msgid "%u is first unseen\n"
+ msgstr "%u jest pierwszym nieprzeczytanym\n"
+@@ -1989,7 +1989,7 @@
+ msgid "Could not decode OTP challenge\n"
+ msgstr "Rozkodowanie wyzwania OTP by?o niemo?liwe\n"
+ 
+-#: opie.c:64 pop3.c:597
++#: opie.c:64 pop3.c:603
+ msgid "Secret pass phrase: "
+ msgstr "Tajne has?o: "
+ 
+@@ -2307,7 +2307,7 @@
+ msgstr ""
+ "      --showdots    pokazuje kropki oznaczaj?ce post?p tak?e w logach\n"
+ 
+-#: pop3.c:350
++#: pop3.c:356
+ msgid ""
+ "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
+ "of TOP.\n"
+@@ -2315,76 +2315,76 @@
+ "Uwaga: Odkryto serwer \"POP3/PROXY Maillennium\", u?ycie polecenia RETR "
+ "zamiast TOP.\n"
+ 
+-#: pop3.c:449
++#: pop3.c:455
+ msgid "TLS is mandatory for this session, but server refused CAPA command.\n"
+ msgstr "TLS jest wymagany dla tej sesji, ale serwer odrzuci? polecenie CAPA.\n"
+ 
+-#: pop3.c:450
++#: pop3.c:456
+ msgid "The CAPA command is however necessary for TLS.\n"
+ msgstr "Polecenie CAPA jest jednak niezb?dne dla TLS.\n"
+ 
+-#: pop3.c:525
++#: pop3.c:531
+ #, c-format
+ msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
+ msgstr "%s: zgodne przej?cie na TLS nie powiod?o si?, pr?ba kontynuacji.\n"
+ 
+-#: pop3.c:633
++#: pop3.c:639
+ msgid "We've run out of allowed authenticators and cannot continue.\n"
+ msgstr ""
+ "Wyczerpano dozwolone sposoby uwierzytelnienia, nie mo?na kontynuowa?.\n"
+ 
+-#: pop3.c:647
++#: pop3.c:653
+ msgid "Required APOP timestamp not found in greeting\n"
+ msgstr "W powitaniu serwera brakuje wymaganego znacznika czasu APOP\n"
+ 
+-#: pop3.c:656
++#: pop3.c:662
+ msgid "Timestamp syntax error in greeting\n"
+ msgstr "B??d sk?adni znacznika czasu w powitaniu\n"
+ 
+-#: pop3.c:672
++#: pop3.c:678
+ msgid "Invalid APOP timestamp.\n"
+ msgstr "B??dny znacznik czasu APOP.\n"
+ 
+-#: pop3.c:696
++#: pop3.c:702
+ msgid "Undefined protocol request in POP3_auth\n"
+ msgstr "Pro?ba o nieznany protok?? w POP3_auth\n"
+ 
+-#: pop3.c:717
++#: pop3.c:723
+ msgid "lock busy!  Is another session active?\n"
+ msgstr "plik zablokowany! Czy inna sesja nie jest aktywna?\n"
+ 
+-#: pop3.c:796
++#: pop3.c:802
+ msgid "Cannot handle UIDL response from upstream server.\n"
+ msgstr "Nie mo?na obs?u?y? odpowiedzi UIDL od serwera.\n"
+ 
+-#: pop3.c:819
++#: pop3.c:825
+ msgid "Server responded with UID for wrong message.\n"
+ msgstr "Serwer odpowiedzia? z UID-em dla niew?a?ciwego listu.\n"
+ 
+-#: pop3.c:846 pop3.c:1092
++#: pop3.c:852 pop3.c:1098
+ #, c-format
+ msgid "id=%s (num=%d) was deleted, but is still present!\n"
+ msgstr "id=%s (num=%d) zosta? skasowany, ale nadal istnieje!\n"
+ 
+-#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
++#: pop3.c:861 pop3.c:873 pop3.c:1107 pop3.c:1114
+ #, c-format
+ msgid "%u is unseen\n"
+ msgstr "%u jest nieprzeczytany\n"
+ 
+-#: pop3.c:952
++#: pop3.c:958
+ msgid "Messages inserted into list on server. Cannot handle this.\n"
+ msgstr ""
+ "Przesy?ki zosta?y dodane do listy na serwerze. Nie mog? tego obs?u?y?.\n"
+ 
+-#: pop3.c:1044
++#: pop3.c:1050
+ msgid "protocol error\n"
+ msgstr "b??d protoko?u\n"
+ 
+-#: pop3.c:1060
++#: pop3.c:1066
+ msgid "protocol error while fetching UIDLs\n"
+ msgstr "b??d protoko?u podczas pobierania UIDL\n"
+ 
+-#: pop3.c:1430
++#: pop3.c:1436
+ msgid "Option --folder is not supported with POP3\n"
+ msgstr "Opcja --folder nie dzia?a z POP3\n"
+ 
+@@ -2420,17 +2420,17 @@
+ msgid "end of input"
+ msgstr "koniec wej?cia"
+ 
+-#: rcfile_y.y:419
++#: rcfile_y.y:420
+ #, c-format
+ msgid "File %s must be a regular file.\n"
+ msgstr "Plik %s musi by? zwyk?ym plikiem.\n"
+ 
+-#: rcfile_y.y:429
++#: rcfile_y.y:430
+ #, c-format
+ msgid "File %s must have no more than -rwx--x--- (0710) permissions.\n"
+ msgstr "Plik %s nie mo?e mie? uprawnie? wi?kszych ni? -rwx--x--- (0710).\n"
+ 
+-#: rcfile_y.y:441
++#: rcfile_y.y:442
+ #, c-format
+ msgid "File %s must be owned by you.\n"
+ msgstr "Plik %s musi by? w?asno?ci? u?ytkownika.\n"
+@@ -2860,113 +2860,113 @@
+ msgid "connected.\n"
+ msgstr "po??czono.\n"
+ 
+-#: socket.c:660
++#: socket.c:611
+ #, c-format
+ msgid "Issuer Organization: %s\n"
+ msgstr "Organizacja wystawcy: %s\n"
+ 
+-#: socket.c:662
++#: socket.c:613
+ msgid "Warning: Issuer Organization Name too long (possibly truncated).\n"
+ msgstr "Uwaga: nazwa Organizacji wystawcy za d?uga (prawdopodobnie uci?ta).\n"
+ 
+-#: socket.c:664
++#: socket.c:615
+ msgid "Unknown Organization\n"
+ msgstr "Nieznana organizacja\n"
+ 
+-#: socket.c:666
++#: socket.c:617
+ #, c-format
+ msgid "Issuer CommonName: %s\n"
+ msgstr "CommonName wystawcy: %s\n"
+ 
+-#: socket.c:668
++#: socket.c:619
+ msgid "Warning: Issuer CommonName too long (possibly truncated).\n"
+ msgstr "Uwaga: CommonName wystawcy za d?ugie (prawdopodobnie uci?te).\n"
+ 
+-#: socket.c:670
++#: socket.c:621
+ msgid "Unknown Issuer CommonName\n"
+ msgstr "Nieznane CommonName wystawcy\n"
+ 
+-#: socket.c:674
++#: socket.c:625
+ #, c-format
+ msgid "Server CommonName: %s\n"
+ msgstr "CommonName serwera: %s\n"
+ 
+-#: socket.c:678
++#: socket.c:629
+ msgid "Bad certificate: Subject CommonName too long!\n"
+ msgstr "B??dny certyfikat: za d?ugie CommonName podmiotu!\n"
+ 
+-#: socket.c:724
++#: socket.c:675
+ #, c-format
+ msgid "Server CommonName mismatch: %s != %s\n"
+ msgstr "Niezgodno?? CommonName serwera: %s != %s\n"
+ 
+-#: socket.c:730
++#: socket.c:681
+ msgid "Server name not set, could not verify certificate!\n"
+ msgstr "Nazwa serwera nie ustawiona, nie mo?na sprawdzi? certyfikatu!\n"
+ 
+-#: socket.c:735
++#: socket.c:686
+ msgid "Unknown Server CommonName\n"
+ msgstr "Nieznane CommonName serwera\n"
+ 
+-#: socket.c:737
++#: socket.c:688
+ msgid "Server name not specified in certificate!\n"
+ msgstr "Nazwa serwera nie podana w certyfikacie!\n"
+ 
+-#: socket.c:749
++#: socket.c:700
+ msgid "EVP_md5() failed!\n"
+ msgstr "b??d EVP_md5()!\n"
+ 
+-#: socket.c:753
++#: socket.c:704
+ msgid "Out of memory!\n"
+ msgstr "Brak pami?ci!\n"
+ 
+-#: socket.c:761
++#: socket.c:712
+ msgid "Digest text buffer too small!\n"
+ msgstr "Bufor skr?tu tekstu za ma?y!\n"
+ 
+-#: socket.c:767
++#: socket.c:718
+ #, c-format
+ msgid "%s key fingerprint: %s\n"
+ msgstr "Odcisk klucza %s: %s\n"
+ 
+-#: socket.c:771
++#: socket.c:722
+ #, c-format
+ msgid "%s fingerprints match.\n"
+ msgstr "%s odcisk?w si? zgadza.\n"
+ 
+-#: socket.c:773
++#: socket.c:724
+ #, c-format
+ msgid "%s fingerprints do not match!\n"
+ msgstr "%s odcisk?w si? nie zgadza!\n"
+ 
+-#: socket.c:782
++#: socket.c:733
+ #, c-format
+ msgid "Server certificate verification error: %s\n"
+ msgstr "B??d weryfikacji certyfikatu serwera: %s\n"
+ 
+-#: socket.c:788
++#: socket.c:739
+ #, c-format
+ msgid "unknown issuer (first %d characters): %s\n"
+ msgstr "nieznany wystawca (pierwsze %d znak?w): %s\n"
+ 
+-#: socket.c:875
++#: socket.c:826
+ msgid "File descriptor out of range for SSL"
+ msgstr "Deskryptor pliku poza zakresem dla SSL"
+ 
+-#: socket.c:891
++#: socket.c:842
+ #, c-format
+ msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+ msgstr "Podano b??dny protok?? SSL `%s', u?ywam domy?lnego (SSLv23).\n"
+ 
+-#: socket.c:964
++#: socket.c:916
+ msgid "Certificate/fingerprint verification was somehow skipped!\n"
+ msgstr "Weryfikacja certyfikatu/odcisku klucza z jakiego? powodu pomini?ta!\n"
+ 
+-#: socket.c:1042
++#: socket.c:994
+ msgid "Cygwin socket read retry\n"
+ msgstr "Powt?rzenie odczytu z gniazda cygwinowego\n"
+ 
+-#: socket.c:1045
++#: socket.c:997
+ msgid "Cygwin socket read retry failed!\n"
+ msgstr "Powt?rzenie odczytu z gniazda cygwinowego nie powiod?o si?!\n"
+ 
+@@ -3095,32 +3095,32 @@
+ msgid "discarding new UID list\n"
+ msgstr "odrzucam now? list? UID-?w\n"
+ 
+-#: uid.c:616
++#: uid.c:617
+ msgid "Deleting fetchids file.\n"
+ msgstr "Kasuj? plik fetchids.\n"
+ 
+ # XXX
+-#: uid.c:618
++#: uid.c:620
+ #, c-format
+ msgid "Error deleting %s: %s\n"
+ msgstr "B??d podczas usuwania %s: %s\n"
+ 
+-#: uid.c:624
++#: uid.c:626
+ msgid "Writing fetchids file.\n"
+ msgstr "Zapisuj? plik fetchids.\n"
+ 
+-#: uid.c:643
++#: uid.c:645
+ #, c-format
+ msgid "Error writing to fetchids file %s, old file left in place.\n"
+ msgstr ""
+ "B??d podczas zapisu pliku fetchids %s, stary plik pozostawiono na miejscu.\n"
+ 
+-#: uid.c:647
++#: uid.c:649
+ #, c-format
+ msgid "Cannot rename fetchids file %s to %s: %s\n"
+ msgstr "Nie mo?na zmieni? nazwy pliku fetchids %s na %s: %s\n"
+ 
+-#: uid.c:651
++#: uid.c:653
+ #, c-format
+ msgid "Cannot open fetchids file %s for writing: %s\n"
+ msgstr "Nie mo?na otworzy? pliku fetchids %s do zapisu: %s\n"
+
+Modified: branches/BRANCH_6-3/po/ru.po
+===================================================================
+--- branches/BRANCH_6-3/po/ru.po	2008-01-29 13:19:58 UTC (rev 5154)
++++ branches/BRANCH_6-3/po/ru.po	2008-01-31 09:15:53 UTC (rev 5155)
+@@ -8,7 +8,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail-6.3.8-rc2\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2007-06-27 11:18+0200\n"
++"POT-Creation-Date: 2008-01-31 10:14+0100\n"
+ "PO-Revision-Date: 2007-03-27 00:47+0300\n"
+ "Last-Translator: Pavel Maryanov <acid_jack at ukr.net>\n"
+ "Language-Team: Russian <ru at li.org>\n"
+@@ -1693,12 +1693,12 @@
+ msgid "will idle after poll\n"
+ msgstr "?????????? ?????????????????????????? ?????????? ????????????\n"
+ 
+-#: imap.c:441 pop3.c:505
++#: imap.c:441 pop3.c:511
+ #, c-format
+ msgid "%s: upgrade to TLS succeeded.\n"
+ msgstr "%s: ???????????????????? ???? TLS ?????????????????? ??????????????.\n"
+ 
+-#: imap.c:450 pop3.c:514
++#: imap.c:450 pop3.c:520
+ #, c-format
+ msgid "%s: upgrade to TLS failed.\n"
+ msgstr "%s: ???????? ???????????????????? ???? TLS.\n"
+@@ -1714,7 +1714,7 @@
+ msgid "Required OTP capability not compiled into fetchmail\n"
+ msgstr "Fetchmail ?????????????????????????? ?????? ?????????????????? ?????????????????? OTP\n"
+ 
+-#: imap.c:587 pop3.c:380
++#: imap.c:587 pop3.c:386
+ msgid "Required NTLM capability not compiled into fetchmail\n"
+ msgstr "Fetchmail ?????????????????????????? ?????? ?????????????????? ?????????????????? NTLM\n"
+ 
+@@ -1769,7 +1769,7 @@
+ msgid "%lu is unseen\n"
+ msgstr "%lu ???? ??????????????????????\n"
+ 
+-#: imap.c:897 pop3.c:876
++#: imap.c:897 pop3.c:882
+ #, c-format
+ msgid "%u is first unseen\n"
+ msgstr "%u ???????????? ???? ??????????????????????????\n"
+@@ -1973,7 +1973,7 @@
+ msgid "Could not decode OTP challenge\n"
+ msgstr "???????????????????? ???????? ???????????????????????? ???????????? OTP\n"
+ 
+-#: opie.c:64 pop3.c:597
++#: opie.c:64 pop3.c:603
+ msgid "Secret pass phrase: "
+ msgstr "?????????????????? ?????????????????????????????????? ??????????:"
+ 
+@@ -2290,7 +2290,7 @@
+ msgstr ""
+ "      --showdots    ?????????????????????? ???????????????? ???????????? ?????????????????? ???????? ?? log-????????????\n"
+ 
+-#: pop3.c:350
++#: pop3.c:356
+ msgid ""
+ "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
+ "of TOP.\n"
+@@ -2298,78 +2298,78 @@
+ "????????????????????????????: ???????????? POP3/PROXY-???????????? Maillennium; ???????????? TOP "
+ "???????????????????????? ?????????????? RETR.\n"
+ 
+-#: pop3.c:449
++#: pop3.c:455
+ msgid "TLS is mandatory for this session, but server refused CAPA command.\n"
+ msgstr ""
+ "?????? ?????????? ???????????? ?????????????????? ???????????????????????? TLS, ???????????? ???????????? ???????????????? ?????????????? "
+ "CAPA.\n"
+ 
+-#: pop3.c:450
++#: pop3.c:456
+ msgid "The CAPA command is however necessary for TLS.\n"
+ msgstr "?????????????? CAPA ???????????????????? ?????? TLS.\n"
+ 
+-#: pop3.c:525
++#: pop3.c:531
+ #, c-format
+ msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
+ msgstr ""
+ "%s: ???????? ?????????????????????????????? ???????????????????? ???? TLS; ?????????????????????? ?????????????? ???????????????????? "
+ "????????????.\n"
+ 
+-#: pop3.c:633
++#: pop3.c:639
+ msgid "We've run out of allowed authenticators and cannot continue.\n"
+ msgstr "?????????????????????? ???????????????????? ??????????????????????????????, ?????????????????????? ????????????????????.\n"
+ 
+-#: pop3.c:647
++#: pop3.c:653
+ msgid "Required APOP timestamp not found in greeting\n"
+ msgstr "?? ?????????????????????? ???? ?????????????? ?????????????????? ?????????????????? ?????????? APOP\n"
+ 
+-#: pop3.c:656
++#: pop3.c:662
+ msgid "Timestamp syntax error in greeting\n"
+ msgstr "?? ?????????????????????? ???????????? ???????????????????? ?????????????????? ??????????\n"
+ 
+-#: pop3.c:672
++#: pop3.c:678
+ msgid "Invalid APOP timestamp.\n"
+ msgstr "???????????????????????? ?????????????????? ?????????? APOP.\n"
+ 
+-#: pop3.c:696
++#: pop3.c:702
+ msgid "Undefined protocol request in POP3_auth\n"
+ msgstr "???????????????????????????? ???????????? ?????????????????? ?? POP3_auth\n"
+ 
+-#: pop3.c:717
++#: pop3.c:723
+ msgid "lock busy!  Is another session active?\n"
+ msgstr "???????????????????? ??????????????????!  ?????????? ?????????????? ???????????? ???????????\n"
+ 
+-#: pop3.c:796
++#: pop3.c:802
+ msgid "Cannot handle UIDL response from upstream server.\n"
+ msgstr "???????????????????? ???????????????????? UIDL-?????????? upstream-??????????????.\n"
+ 
+-#: pop3.c:819
++#: pop3.c:825
+ msgid "Server responded with UID for wrong message.\n"
+ msgstr "???????????? ?????????????????? ?????????? ?? UID ?????? ?????????????????? ??????????????????.\n"
+ 
+-#: pop3.c:846 pop3.c:1092
++#: pop3.c:852 pop3.c:1098
+ #, c-format
+ msgid "id=%s (num=%d) was deleted, but is still present!\n"
+ msgstr "id=%s (??????????=%d) ???????? ??????????????, ???? ?????? ?????? ????????????????????????!\n"
+ 
+-#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
++#: pop3.c:861 pop3.c:873 pop3.c:1107 pop3.c:1114
+ #, c-format
+ msgid "%u is unseen\n"
+ msgstr "%u ???? ??????????????????????\n"
+ 
+-#: pop3.c:952
++#: pop3.c:958
+ msgid "Messages inserted into list on server. Cannot handle this.\n"
+ msgstr "?????????????????? ?????????????????? ?? ???????????? ???? ??????????????. ?????????????????? ????????????????????.\n"
+ 
+-#: pop3.c:1044
++#: pop3.c:1050
+ msgid "protocol error\n"
+ msgstr "???????????? ??????????????????\n"
+ 
+-#: pop3.c:1060
++#: pop3.c:1066
+ msgid "protocol error while fetching UIDLs\n"
+ msgstr "???????????? ?????????????????? ?????? ?????????????? UIDL'????\n"
+ 
+-#: pop3.c:1430
++#: pop3.c:1436
+ msgid "Option --folder is not supported with POP3\n"
+ msgstr "?????????? --folder ???? ???????????????????????????? ?? POP3\n"
+ 
+@@ -2404,17 +2404,17 @@
+ msgid "end of input"
+ msgstr "?????????? ??????????"
+ 
+-#: rcfile_y.y:419
++#: rcfile_y.y:420
+ #, c-format
+ msgid "File %s must be a regular file.\n"
+ msgstr "???????? %s ???????????? ???????? ?????????????? ????????????.\n"
+ 
+-#: rcfile_y.y:429
++#: rcfile_y.y:430
+ #, c-format
+ msgid "File %s must have no more than -rwx--x--- (0710) permissions.\n"
+ msgstr "???????? %s ???????????? ?????????? ???????????????????? -rwx--x--- (0710), ???? ???? ?????????? ????????.\n"
+ 
+-#: rcfile_y.y:441
++#: rcfile_y.y:442
+ #, c-format
+ msgid "File %s must be owned by you.\n"
+ msgstr "???????????????????? ?????????? %s ???????????? ???????? ????.\n"
+@@ -2845,118 +2845,118 @@
+ msgid "connected.\n"
+ msgstr "???????????????????? ??????????????????????.\n"
+ 
+-#: socket.c:660
++#: socket.c:611
+ #, c-format
+ msgid "Issuer Organization: %s\n"
+ msgstr "?????????????????????????? ??????????????????????: %s\n"
+ 
+-#: socket.c:662
++#: socket.c:613
+ msgid "Warning: Issuer Organization Name too long (possibly truncated).\n"
+ msgstr ""
+ "????????????????????????????: ?????? ?????????????????????????? ?????????????????????? ?????????????? ?????????????? (???????????????? "
+ "??????????????????).\n"
+ 
+-#: socket.c:664
++#: socket.c:615
+ msgid "Unknown Organization\n"
+ msgstr "?????????????????????? ??????????????????????\n"
+ 
+-#: socket.c:666
++#: socket.c:617
+ #, c-format
+ msgid "Issuer CommonName: %s\n"
+ msgstr "???????????????????????? ??????: %s\n"
+ 
+-#: socket.c:668
++#: socket.c:619
+ msgid "Warning: Issuer CommonName too long (possibly truncated).\n"
+ msgstr ""
+ "????????????????????????????: ???????????????????????? ?????? ?????????????? ?????????????? (???????????????? ??????????????????).\n"
+ 
+-#: socket.c:670
++#: socket.c:621
+ msgid "Unknown Issuer CommonName\n"
+ msgstr "?????????????????????? ???????????????????????? ??????\n"
+ 
+-#: socket.c:674
++#: socket.c:625
+ #, c-format
+ msgid "Server CommonName: %s\n"
+ msgstr "???????????????????????? ?????? ??????????????: %s\n"
+ 
+-#: socket.c:678
++#: socket.c:629
+ msgid "Bad certificate: Subject CommonName too long!\n"
+ msgstr "???????????????????????? ????????????????????: ?????????? ???????????????? ???????? ?????????????? ??????????????!\n"
+ 
+-#: socket.c:724
++#: socket.c:675
+ #, c-format
+ msgid "Server CommonName mismatch: %s != %s\n"
+ msgstr "???????????????????????? ?????????????????????????? ?????????? ??????????????: %s != %s\n"
+ 
+-#: socket.c:730
++#: socket.c:681
+ msgid "Server name not set, could not verify certificate!\n"
+ msgstr "?????? ?????????????? ???? ??????????????????????, ???????????????????? ?????????????????? ????????????????????!\n"
+ 
+-#: socket.c:735
++#: socket.c:686
+ msgid "Unknown Server CommonName\n"
+ msgstr "?????????????????????? ???????????????????????? ?????? ??????????????\n"
+ 
+-#: socket.c:737
++#: socket.c:688
+ msgid "Server name not specified in certificate!\n"
+ msgstr "?????? ?????????????? ???? ?????????????? ?? ??????????????????????!\n"
+ 
+-#: socket.c:749
++#: socket.c:700
+ msgid "EVP_md5() failed!\n"
+ msgstr "???????? EVP_md5()!\n"
+ 
+-#: socket.c:753
++#: socket.c:704
+ msgid "Out of memory!\n"
+ msgstr "???????????????? ????????????!\n"
+ 
+-#: socket.c:761
++#: socket.c:712
+ msgid "Digest text buffer too small!\n"
+ msgstr "?????????? ???????????????????? ?????????????? ?????????????? ??????!\n"
+ 
+-#: socket.c:767
++#: socket.c:718
+ #, c-format
+ msgid "%s key fingerprint: %s\n"
+ msgstr "?????????????????? ?????????? %s: %s\n"
+ 
+-#: socket.c:771
++#: socket.c:722
+ #, c-format
+ msgid "%s fingerprints match.\n"
+ msgstr "?????????????????? %s ??????????????????.\n"
+ 
+-#: socket.c:773
++#: socket.c:724
+ #, c-format
+ msgid "%s fingerprints do not match!\n"
+ msgstr "?????????????????? %s ???? ??????????????????!\n"
+ 
+-#: socket.c:782
++#: socket.c:733
+ #, c-format
+ msgid "Server certificate verification error: %s\n"
+ msgstr "???????????? ???????????????? ?????????????????????? ??????????????: %s\n"
+ 
+-#: socket.c:788
++#: socket.c:739
+ #, c-format
+ msgid "unknown issuer (first %d characters): %s\n"
+ msgstr "?????????????????????? ?????????????????????????? ?????????????? (???????????? %d ????????????????): %s\n"
+ 
+-#: socket.c:875
++#: socket.c:826
+ msgid "File descriptor out of range for SSL"
+ msgstr "???????????????????? ?????????? ?????? ?????????????????? SSL"
+ 
+-#: socket.c:891
++#: socket.c:842
+ #, c-format
+ msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+ msgstr ""
+ "???????????? ???????????????? ???????????????? SSL '%s', ???????????????????????? ???????????????? ???? ?????????????????? "
+ "(SSLv23).\n"
+ 
+-#: socket.c:964
++#: socket.c:916
+ msgid "Certificate/fingerprint verification was somehow skipped!\n"
+ msgstr "???????????????? ??????????????????????/?????????????????? ???????? ??????-???? ??????????????????!\n"
+ 
+-#: socket.c:1042
++#: socket.c:994
+ msgid "Cygwin socket read retry\n"
+ msgstr "?????????????????? ?????????????? ???????????? ???????????? Cygwin\n"
+ 
+-#: socket.c:1045
++#: socket.c:997
+ msgid "Cygwin socket read retry failed!\n"
+ msgstr "???????? ???????????????????? ???????????? ???????????? Cygwin!\n"
+ 
+@@ -3085,30 +3085,30 @@
+ msgid "discarding new UID list\n"
+ msgstr "?????????????????????????? ?????????? ???????????? UID\n"
+ 
+-#: uid.c:616
++#: uid.c:617
+ msgid "Deleting fetchids file.\n"
+ msgstr "?????????????????? ???????? fetchids.\n"
+ 
+-#: uid.c:618
++#: uid.c:620
+ #, c-format
+ msgid "Error deleting %s: %s\n"
+ msgstr "???????????? ???????????????? %s: %s\n"
+ 
+-#: uid.c:624
++#: uid.c:626
+ msgid "Writing fetchids file.\n"
+ msgstr "???????????????????????? ???????? fetchids.\n"
+ 
+-#: uid.c:643
++#: uid.c:645
+ #, c-format
+ msgid "Error writing to fetchids file %s, old file left in place.\n"
+ msgstr "???????????? ???????????? ?? fetchids-???????? %s, ???????????? ???????? ?????????????? ???? ??????????.\n"
+ 
+-#: uid.c:647
++#: uid.c:649
+ #, c-format
+ msgid "Cannot rename fetchids file %s to %s: %s\n"
+ msgstr "???????????????????? ?????????????????????????? fetchids-???????? %s ?? %s: %s\n"
+ 
+-#: uid.c:651
++#: uid.c:653
+ #, c-format
+ msgid "Cannot open fetchids file %s for writing: %s\n"
+ msgstr "???????????????????? ?????????????? fetchids-???????? %s ?????? ????????????: %s\n"
+
+Modified: branches/BRANCH_6-3/po/sq.po
+===================================================================
+--- branches/BRANCH_6-3/po/sq.po	2008-01-29 13:19:58 UTC (rev 5154)
++++ branches/BRANCH_6-3/po/sq.po	2008-01-31 09:15:53 UTC (rev 5155)
+@@ -7,7 +7,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 6.2.9-rc9\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2007-06-27 11:18+0200\n"
++"POT-Creation-Date: 2008-01-31 10:14+0100\n"
+ "PO-Revision-Date: 2005-11-18 22:25+0200\n"
+ "Last-Translator: Besnik Bleta <besnik at spymac.com>\n"
+ "Language-Team: Albanian <translation-team-sq at lists.sourceforge.net>\n"
+@@ -1709,12 +1709,12 @@
+ msgid "will idle after poll\n"
+ msgstr "do t? rrij? bosh pas vjeljeje\n"
+ 
+-#: imap.c:441 pop3.c:505
++#: imap.c:441 pop3.c:511
+ #, c-format
+ msgid "%s: upgrade to TLS succeeded.\n"
+ msgstr ""
+ 
+-#: imap.c:450 pop3.c:514
++#: imap.c:450 pop3.c:520
+ #, c-format
+ msgid "%s: upgrade to TLS failed.\n"
+ msgstr ""
+@@ -1728,7 +1728,7 @@
+ msgid "Required OTP capability not compiled into fetchmail\n"
+ msgstr "Aft?si e nevojshme OTP e pap?rpiluar tek fetchmail-i\n"
+ 
+-#: imap.c:587 pop3.c:380
++#: imap.c:587 pop3.c:386
+ msgid "Required NTLM capability not compiled into fetchmail\n"
+ msgstr "Aft?si e nevojshme NTML e pap?rpiluar tek fetchmail-i\n"
+ 
+@@ -1784,7 +1784,7 @@
+ msgid "%lu is unseen\n"
+ msgstr "%u ?sht? i pav?rejtur\n"
+ 
+-#: imap.c:897 pop3.c:876
++#: imap.c:897 pop3.c:882
+ #, c-format
+ msgid "%u is first unseen\n"
+ msgstr "%u ?sht? i pari i pav?rejtur\n"
+@@ -1985,7 +1985,7 @@
+ msgid "Could not decode OTP challenge\n"
+ msgstr ""
+ 
+-#: opie.c:64 pop3.c:597
++#: opie.c:64 pop3.c:603
+ msgid "Secret pass phrase: "
+ msgstr "Fraz? pass sekrete: "
+ 
+@@ -2292,81 +2292,81 @@
+ msgid "      --showdots    show progress dots even in logfiles\n"
+ msgstr "      --showdots    shfaq pika p?rparimi edhe n? kartela regjistrimi\n"
+ 
+-#: pop3.c:350
++#: pop3.c:356
+ msgid ""
+ "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
+ "of TOP.\n"
+ msgstr ""
+ 
+-#: pop3.c:449
++#: pop3.c:455
+ msgid "TLS is mandatory for this session, but server refused CAPA command.\n"
+ msgstr ""
+ 
+-#: pop3.c:450
++#: pop3.c:456
+ msgid "The CAPA command is however necessary for TLS.\n"
+ msgstr ""
+ 
+-#: pop3.c:525
++#: pop3.c:531
+ #, c-format
+ msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
+ msgstr ""
+ 
+-#: pop3.c:633
++#: pop3.c:639
+ msgid "We've run out of allowed authenticators and cannot continue.\n"
+ msgstr ""
+ 
+-#: pop3.c:647
++#: pop3.c:653
+ msgid "Required APOP timestamp not found in greeting\n"
+ msgstr "Nuk u gjet vul? kohore e nevojshme APOP n? p?rsh?ndetje\n"
+ 
+-#: pop3.c:656
++#: pop3.c:662
+ msgid "Timestamp syntax error in greeting\n"
+ msgstr "Gabim sintakse vule kohore n? p?rsh?ndetje\n"
+ 
+-#: pop3.c:672
++#: pop3.c:678
+ msgid "Invalid APOP timestamp.\n"
+ msgstr ""
+ 
+-#: pop3.c:696
++#: pop3.c:702
+ msgid "Undefined protocol request in POP3_auth\n"
+ msgstr "K?rkes? protokolli e pap?rcaktuar n? POP3_auth\n"
+ 
+-#: pop3.c:717
++#: pop3.c:723
+ msgid "lock busy!  Is another session active?\n"
+ msgstr ""
+ 
+-#: pop3.c:796
++#: pop3.c:802
+ msgid "Cannot handle UIDL response from upstream server.\n"
+ msgstr ""
+ 
+-#: pop3.c:819
++#: pop3.c:825
+ msgid "Server responded with UID for wrong message.\n"
+ msgstr "Sh?rbyesi u p?rgjigj me UID p?r mesazh t? gabuar.\n"
+ 
+-#: pop3.c:846 pop3.c:1092
++#: pop3.c:852 pop3.c:1098
+ #, fuzzy, c-format
+ msgid "id=%s (num=%d) was deleted, but is still present!\n"
+ msgstr "id=%s (num=%d) qe fshir?, por ?sht? ende i pranish?m!\n"
+ 
+-#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
++#: pop3.c:861 pop3.c:873 pop3.c:1107 pop3.c:1114
+ #, c-format
+ msgid "%u is unseen\n"
+ msgstr "%u ?sht? i pav?rejtur\n"
+ 
+-#: pop3.c:952
++#: pop3.c:958
+ msgid "Messages inserted into list on server. Cannot handle this.\n"
+ msgstr ""
+ "Mesazhe t? futur n? nj? list? te sh?rbyesi. Nuk mund ta b?j dot k?t?.\n"
+ 
+-#: pop3.c:1044
++#: pop3.c:1050
+ msgid "protocol error\n"
+ msgstr "gabim protokolli\n"
+ 
+-#: pop3.c:1060
++#: pop3.c:1066
+ msgid "protocol error while fetching UIDLs\n"
+ msgstr "gabim protokolli gjat? sjelljes s? UIDL-ve\n"
+ 
+-#: pop3.c:1430
++#: pop3.c:1436
+ msgid "Option --folder is not supported with POP3\n"
+ msgstr "Mund?sia --dosje nuk mbulohet me POP3\n"
+ 
+@@ -2402,17 +2402,17 @@
+ msgid "end of input"
+ msgstr "fund futjeje"
+ 
+-#: rcfile_y.y:419
++#: rcfile_y.y:420
+ #, c-format
+ msgid "File %s must be a regular file.\n"
+ msgstr "Kartela %s duhet t? jet? nj? kartel? e rregullt.\n"
+ 
+-#: rcfile_y.y:429
++#: rcfile_y.y:430
+ #, c-format
+ msgid "File %s must have no more than -rwx--x--- (0710) permissions.\n"
+ msgstr "Kartela %s duhet t? ket? jo m? shum? se lejet -rwx--x--- (0710).\n"
+ 
+-#: rcfile_y.y:441
++#: rcfile_y.y:442
+ #, c-format
+ msgid "File %s must be owned by you.\n"
+ msgstr "Kartela %s duhet t? jet? prona juaj.\n"
+@@ -2846,116 +2846,116 @@
+ msgid "connected.\n"
+ msgstr "Lidhja SSL d?shtoi.\n"
+ 
+-#: socket.c:660
++#: socket.c:611
+ #, c-format
+ msgid "Issuer Organization: %s\n"
+ msgstr "Organiz?m L?shues: %s\n"
+ 
+-#: socket.c:662
++#: socket.c:613
+ msgid "Warning: Issuer Organization Name too long (possibly truncated).\n"
+ msgstr "Sinjalizim: Em?r Organizmi L?shues shum? i gjat? (mundet u cungua).\n"
+ 
+-#: socket.c:664
++#: socket.c:615
+ msgid "Unknown Organization\n"
+ msgstr "Organiz?m i Panjohur\n"
+ 
+-#: socket.c:666
++#: socket.c:617
+ #, c-format
+ msgid "Issuer CommonName: %s\n"
+ msgstr "Em?r i Zakonsh?m L?shuesi: %s\n"
+ 
+-#: socket.c:668
++#: socket.c:619
+ msgid "Warning: Issuer CommonName too long (possibly truncated).\n"
+ msgstr ""
+ "Sinjalizim: Em?r i Zakonsh?m L?shues shum? i gjat? (mundet u cungua).\n"
+ 
+-#: socket.c:670
++#: socket.c:621
+ msgid "Unknown Issuer CommonName\n"
+ msgstr "Em?r i Zakonsh?m L?shuesi i Panjohur\n"
+ 
+-#: socket.c:674
++#: socket.c:625
+ #, c-format
+ msgid "Server CommonName: %s\n"
+ msgstr "Em?r i Zakonsh?m Sh?rbyesi: %s\n"
+ 
+-#: socket.c:678
++#: socket.c:629
+ msgid "Bad certificate: Subject CommonName too long!\n"
+ msgstr "D?shmi e gabuar: Em?r i Zakonsh?m Subjekti shum? i gjat?!\n"
+ 
+-#: socket.c:724
++#: socket.c:675
+ #, c-format
+ msgid "Server CommonName mismatch: %s != %s\n"
+ msgstr "Ngat?rrim Emri t? Zakonsh?m Sh?rbyesi: %s != %s\n"
+ 
+-#: socket.c:730
++#: socket.c:681
+ msgid "Server name not set, could not verify certificate!\n"
+ msgstr "Em?r sh?rbyesi i pacaktuar, nuk munda t? verifikoj d?shmin?!\n"
+ 
+-#: socket.c:735
++#: socket.c:686
+ msgid "Unknown Server CommonName\n"
+ msgstr "Em?r i Zakonsh?m Sh?rbyesi I panjohur\n"
+ 
+-#: socket.c:737
++#: socket.c:688
+ msgid "Server name not specified in certificate!\n"
+ msgstr "Em?r sh?rbyesi i pacaktuar n? d?shmi!\n"
+ 
+-#: socket.c:749
++#: socket.c:700
+ msgid "EVP_md5() failed!\n"
+ msgstr "EVP_md5() d?shtoi!\n"
+ 
+-#: socket.c:753
++#: socket.c:704
+ msgid "Out of memory!\n"
+ msgstr "Kujtes? e pamjaftueshme!\n"
+ 
+-#: socket.c:761
++#: socket.c:712
+ msgid "Digest text buffer too small!\n"
+ msgstr "Shtyt?z p?rmbledhjeje tekstesh shum? e vog?l!\n"
+ 
+-#: socket.c:767
++#: socket.c:718
+ #, c-format
+ msgid "%s key fingerprint: %s\n"
+ msgstr "gjurm? gishtash ky?i %s: %s\n"
+ 
+-#: socket.c:771
++#: socket.c:722
+ #, c-format
+ msgid "%s fingerprints match.\n"
+ msgstr "%s gjurmat e gishtave p?rputhen.\n"
+ 
+-#: socket.c:773
++#: socket.c:724
+ #, c-format
+ msgid "%s fingerprints do not match!\n"
+ msgstr "%s gjurmat e gishtave nuk p?rputhen!\n"
+ 
+-#: socket.c:782
++#: socket.c:733
+ #, c-format
+ msgid "Server certificate verification error: %s\n"
+ msgstr "Gabim verifikim d?shmie sh?rbyesi: %s\n"
+ 
+-#: socket.c:788
++#: socket.c:739
+ #, c-format
+ msgid "unknown issuer (first %d characters): %s\n"
+ msgstr "l?shues i panjohur (%d g?rmat e para): %s\n"
+ 
+-#: socket.c:875
++#: socket.c:826
+ msgid "File descriptor out of range for SSL"
+ msgstr "P?rshkrues kartele jasht? intervali p?r SSL"
+ 
+-#: socket.c:891
++#: socket.c:842
+ #, c-format
+ msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+ msgstr ""
+ "Treguar protokoll SSL i pavlefsh?m '%s', po p?rdor t? parazgjedhurin "
+ "(SSLv23).\n"
+ 
+-#: socket.c:964
++#: socket.c:916
+ msgid "Certificate/fingerprint verification was somehow skipped!\n"
+ msgstr "Verifikimi i d?shmis?/gjurm?s s? gishtave pak a shum? u anashkalua!\n"
+ 
+-#: socket.c:1042
++#: socket.c:994
+ msgid "Cygwin socket read retry\n"
+ msgstr "Riprov? p?r lexim prej nj? \"socket\"-i Cygwin\n"
+ 
+-#: socket.c:1045
++#: socket.c:997
+ msgid "Cygwin socket read retry failed!\n"
+ msgstr "Riprova p?r lexim prej nj? \"socket\"-i Cygwin d?shtoi!\n"
+ 
+@@ -3085,31 +3085,31 @@
+ msgid "discarding new UID list\n"
+ msgstr "po hedh tej list? t? re UID-sh\n"
+ 
+-#: uid.c:616
++#: uid.c:617
+ msgid "Deleting fetchids file.\n"
+ msgstr "Po fshij kartel? \"fetchids\".\n"
+ 
+-#: uid.c:618
++#: uid.c:620
+ #, c-format
+ msgid "Error deleting %s: %s\n"
+ msgstr "Gabim n? fshirjen e kartel?s \"%s\": %s\n"
+ 
+-#: uid.c:624
++#: uid.c:626
+ msgid "Writing fetchids file.\n"
+ msgstr "Po shkruaj kartel? \"fetchids\".\n"
+ 
+-#: uid.c:643
++#: uid.c:645
+ #, c-format
+ msgid "Error writing to fetchids file %s, old file left in place.\n"
+ msgstr ""
+ "Gabim gjat? shkrimit te kartela fetchids %s, u la n? vend kartela e vjet?r.\n"
+ 
+-#: uid.c:647
++#: uid.c:649
+ #, c-format
+ msgid "Cannot rename fetchids file %s to %s: %s\n"
+ msgstr "S'riem?rtoj dot kartel?n fetchids %s si %s: %s\n"
+ 
+-#: uid.c:651
++#: uid.c:653
+ #, c-format
+ msgid "Cannot open fetchids file %s for writing: %s\n"
+ msgstr "S'hap dot kartel?n fetchids %s p?r shkrim n? t?: %s\n"
+
+Modified: branches/BRANCH_6-3/po/vi.po
+===================================================================
+--- branches/BRANCH_6-3/po/vi.po	2008-01-29 13:19:58 UTC (rev 5154)
++++ branches/BRANCH_6-3/po/vi.po	2008-01-31 09:15:53 UTC (rev 5155)
+@@ -6,7 +6,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 6.3.8\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2007-06-27 11:18+0200\n"
++"POT-Creation-Date: 2008-01-31 10:14+0100\n"
+ "PO-Revision-Date: 2007-05-28 21:48+0930\n"
+ "Last-Translator: Clytie Siddall <clytie at riverland.net.au>\n"
+ "Language-Team: Vietnamese <vi-VN at googlegroups.com>\n"
+@@ -1670,12 +1670,12 @@
+ msgid "will idle after poll\n"
+ msgstr "s??? ngh??? sau khi th??m d??\n"
+ 
+-#: imap.c:441 pop3.c:505
++#: imap.c:441 pop3.c:511
+ #, c-format
+ msgid "%s: upgrade to TLS succeeded.\n"
+ msgstr "%s: vi???c n??ng c???p l??n TLS ???? th??nh c??ng.\n"
+ 
+-#: imap.c:450 pop3.c:514
++#: imap.c:450 pop3.c:520
+ #, c-format
+ msgid "%s: upgrade to TLS failed.\n"
+ msgstr "%s: vi???c n??ng c???p l??n TLS b??? l???i.\n"
+@@ -1690,7 +1690,7 @@
+ msgid "Required OTP capability not compiled into fetchmail\n"
+ msgstr "Kh??? n??ng OTP c???n thi???t kh??ng ???????c bi??n d???ch v??o fetchmail\n"
+ 
+-#: imap.c:587 pop3.c:380
++#: imap.c:587 pop3.c:386
+ msgid "Required NTLM capability not compiled into fetchmail\n"
+ msgstr "Kh??? n??ng NTLM c???n thi???t kh??ng ???????c bi??n d???ch v??o fetchmail\n"
+ 
+@@ -1743,7 +1743,7 @@
+ msgid "%lu is unseen\n"
+ msgstr "%lu ch??a xem\n"
+ 
+-#: imap.c:897 pop3.c:876
++#: imap.c:897 pop3.c:882
+ #, c-format
+ msgid "%u is first unseen\n"
+ msgstr "%u l?? th?? ?????u ch??a xem\n"
+@@ -1945,7 +1945,7 @@
+ msgid "Could not decode OTP challenge\n"
+ msgstr "Kh??ng th??? gi???i m?? y??u c???u OTP\n"
+ 
+-#: opie.c:64 pop3.c:597
++#: opie.c:64 pop3.c:603
+ msgid "Secret pass phrase: "
+ msgstr "C???m t??? m???t kh???u b?? m???t: "
+ 
+@@ -2269,7 +2269,7 @@
+ msgstr ""
+ "      --showdots    _hi???n c??c ch???m_ ti???n h??nh ngay c??? trong t???p tin ghi l??u\n"
+ 
+-#: pop3.c:350
++#: pop3.c:356
+ msgid ""
+ "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
+ "of TOP.\n"
+@@ -2277,81 +2277,81 @@
+ "C???nh b??o : t??m th???y ?? Maillennium POP3/PROXY server ?? n??n d??ng l???nh RETR "
+ "thay v??o TOP.\n"
+ 
+-#: pop3.c:449
++#: pop3.c:455
+ msgid "TLS is mandatory for this session, but server refused CAPA command.\n"
+ msgstr ""
+ "B???t bu???c ph???i s??? d???ng TLS trong phi??n ch???y n??y m?? tr??nh ph???c v??? ???? t??? ch???i "
+ "l???nh CAPA.\n"
+ 
+-#: pop3.c:450
++#: pop3.c:456
+ msgid "The CAPA command is however necessary for TLS.\n"
+ msgstr "C??n l???nh CAPA c???n thi???t cho TLS.\n"
+ 
+-#: pop3.c:525
++#: pop3.c:531
+ #, c-format
+ msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
+ msgstr ""
+ "%s: vi???c n??ng c???p l??n TLS m???t c??ch c?? h???i ch??? ngh??a b??? l???i n??n th??? ti???p "
+ "t???c.\n"
+ 
+-#: pop3.c:633
++#: pop3.c:639
+ msgid "We've run out of allowed authenticators and cannot continue.\n"
+ msgstr "H???t c??c b??? x??c th???c ???????c ph??p n??n kh??ng th??? ti???p t???c.\n"
+ 
+-#: pop3.c:647
++#: pop3.c:653
+ msgid "Required APOP timestamp not found in greeting\n"
+ msgstr "Kh??ng t??m th???y nh??n th???i gian APOP c???n thi???t trong l???i ch??o m???ng\n"
+ 
+-#: pop3.c:656
++#: pop3.c:662
+ msgid "Timestamp syntax error in greeting\n"
+ msgstr "G???p l???i c?? ph??p nh??n th???i gian trong l???i ch??o m???ng\n"
+ 
+-#: pop3.c:672
++#: pop3.c:678
+ msgid "Invalid APOP timestamp.\n"
+ msgstr "Nh??n gi??? APOP kh??ng h???p l???.\n"
+ 
+-#: pop3.c:696
++#: pop3.c:702
+ msgid "Undefined protocol request in POP3_auth\n"
+ msgstr ""
+ "G???p y??u c???u giao th???c kh??ng ???????c x??c ?????nh trong ?? POP3_auth ?? (x??c th???c)\n"
+ 
+-#: pop3.c:717
++#: pop3.c:723
+ msgid "lock busy!  Is another session active?\n"
+ msgstr "kho?? b???n ! C?? phi??n ch???y kh??c ho???t ?????ng kh??ng?\n"
+ 
+-#: pop3.c:796
++#: pop3.c:802
+ msgid "Cannot handle UIDL response from upstream server.\n"
+ msgstr "Kh??ng th??? x??? l?? ????p ???ng UIDL t??? m??y ph???c v??? ngu???n.\n"
+ 
+-#: pop3.c:819
++#: pop3.c:825
+ msgid "Server responded with UID for wrong message.\n"
+ msgstr "M??y ph???c v??? ???? ????p ???ng UID cho th?? kh??ng ????ng.\n"
+ 
+-#: pop3.c:846 pop3.c:1092
++#: pop3.c:852 pop3.c:1098
+ #, c-format
+ msgid "id=%s (num=%d) was deleted, but is still present!\n"
+ msgstr "id=%s (s???=%d) ???? ???????c xo?? b???, nh??ng c??n c??.\n"
+ 
+-#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
++#: pop3.c:861 pop3.c:873 pop3.c:1107 pop3.c:1114
+ #, c-format
+ msgid "%u is unseen\n"
+ msgstr "%u ch??a xem\n"
+ 
+-#: pop3.c:952
++#: pop3.c:958
+ msgid "Messages inserted into list on server. Cannot handle this.\n"
+ msgstr ""
+ "G???p th?? ???????c ch??n v??o danh s??ch tr??n m??y ph???c v???. Kh??ng th??? x??? l?? tr?????ng h???p "
+ "n??y.\n"
+ 
+-#: pop3.c:1044
++#: pop3.c:1050
+ msgid "protocol error\n"
+ msgstr "l???i giao th???c\n"
+ 
+-#: pop3.c:1060
++#: pop3.c:1066
+ msgid "protocol error while fetching UIDLs\n"
+ msgstr "g???p l???i giao th???c khi l???y c??c UIDL\n"
+ 
+-#: pop3.c:1430
++#: pop3.c:1436
+ msgid "Option --folder is not supported with POP3\n"
+ msgstr "Kh??ng h??? tr??? t??y ch???n ?? --folder ?? (th?? m???c) v???i POP3\n"
+ 
+@@ -2387,18 +2387,18 @@
+ msgid "end of input"
+ msgstr "k???t th??c k???t nh???p"
+ 
+-#: rcfile_y.y:419
++#: rcfile_y.y:420
+ #, c-format
+ msgid "File %s must be a regular file.\n"
+ msgstr "T???p tin %s ph???i l?? m???t t???p tin chu???n.\n"
+ 
+-#: rcfile_y.y:429
++#: rcfile_y.y:430
+ #, c-format
+ msgid "File %s must have no more than -rwx--x--- (0710) permissions.\n"
+ msgstr ""
+ "Kh??ng cho ph??p t???p tin %s c?? quy???n h???n l???n h??n ?? -rws--x--- ?? (0710).\n"
+ 
+-#: rcfile_y.y:441
++#: rcfile_y.y:442
+ #, c-format
+ msgid "File %s must be owned by you.\n"
+ msgstr "T???p tin %s ph???i b??? b???n s??? h???u.\n"
+@@ -2830,114 +2830,114 @@
+ msgid "connected.\n"
+ msgstr "???? k???t n???i.\n"
+ 
+-#: socket.c:660
++#: socket.c:611
+ #, c-format
+ msgid "Issuer Organization: %s\n"
+ msgstr "T??? ch???c ph??t h??nh: %s\n"
+ 
+-#: socket.c:662
++#: socket.c:613
+ msgid "Warning: Issuer Organization Name too long (possibly truncated).\n"
+ msgstr "C???nh b??o : t??n T??? ch???c Ph??t h??nh qu?? d??i (c?? th??? b??? c???t x??n).\n"
+ 
+-#: socket.c:664
++#: socket.c:615
+ msgid "Unknown Organization\n"
+ msgstr "Kh??ng bi???t T??? ch???c\n"
+ 
+-#: socket.c:666
++#: socket.c:617
+ #, c-format
+ msgid "Issuer CommonName: %s\n"
+ msgstr "T??n Chung ph??t h??nh: %s\n"
+ 
+-#: socket.c:668
++#: socket.c:619
+ msgid "Warning: Issuer CommonName too long (possibly truncated).\n"
+ msgstr "C???nh b??o : T??n Chung nh?? ph??t h??nh qu?? d??i (c?? th??? b??? c???t x??n).\n"
+ 
+-#: socket.c:670
++#: socket.c:621
+ msgid "Unknown Issuer CommonName\n"
+ msgstr "Kh??ng bi???t T??n Chung nh?? ph??t h??nh\n"
+ 
+-#: socket.c:674
++#: socket.c:625
+ #, c-format
+ msgid "Server CommonName: %s\n"
+ msgstr "T??n Chung tr??nh ph???c v???: %s\n"
+ 
+-#: socket.c:678
++#: socket.c:629
+ msgid "Bad certificate: Subject CommonName too long!\n"
+ msgstr "Ch???ng nh???n sai: T??n Chung Ch??? ????? qu?? d??i.\n"
+ 
+-#: socket.c:724
++#: socket.c:675
+ #, c-format
+ msgid "Server CommonName mismatch: %s != %s\n"
+ msgstr "T??n Chung m??y ph???c v??? kh??ng kh???p: %s != %s\n"
+ 
+-#: socket.c:730
++#: socket.c:681
+ msgid "Server name not set, could not verify certificate!\n"
+ msgstr "Chpa ?????t t??n m??y ph???c v??? n??n kh??ng th??? th???m tra ch???ng nh???n.\n"
+ 
+-#: socket.c:735
++#: socket.c:686
+ msgid "Unknown Server CommonName\n"
+ msgstr "Kh??ng bi???t T??n Chung m??y ph???c v???\n"
+ 
+-#: socket.c:737
++#: socket.c:688
+ msgid "Server name not specified in certificate!\n"
+ msgstr "Kh??ng x??c ?????nh t??n m??y ph???c v??? trong ch???ng nh???n.\n"
+ 
+-#: socket.c:749
++#: socket.c:700
+ msgid "EVP_md5() failed!\n"
+ msgstr "EVP_md5() b??? l???i.\n"
+ 
+-#: socket.c:753
++#: socket.c:704
+ msgid "Out of memory!\n"
+ msgstr "H???t b??? nh???.\n"
+ 
+-#: socket.c:761
++#: socket.c:712
+ msgid "Digest text buffer too small!\n"
+ msgstr "B??? ?????m digest qu?? nh???.\n"
+ 
+-#: socket.c:767
++#: socket.c:718
+ #, c-format
+ msgid "%s key fingerprint: %s\n"
+ msgstr "V??n tay kho?? %s: %s\n"
+ 
+-#: socket.c:771
++#: socket.c:722
+ #, c-format
+ msgid "%s fingerprints match.\n"
+ msgstr "V??n tay kho?? %s tr??ng.\n"
+ 
+-#: socket.c:773
++#: socket.c:724
+ #, c-format
+ msgid "%s fingerprints do not match!\n"
+ msgstr "V??n tay kho?? %s kh??ng tr??ng.\n"
+ 
+-#: socket.c:782
++#: socket.c:733
+ #, c-format
+ msgid "Server certificate verification error: %s\n"
+ msgstr "L???i th???m tra ch???ng nh???n m??y ph???c v??? : %s\n"
+ 
+-#: socket.c:788
++#: socket.c:739
+ #, c-format
+ msgid "unknown issuer (first %d characters): %s\n"
+ msgstr "kh??ng bi???t nh?? ph??t h??nh (%d k?? t??? ?????u): %s\n"
+ 
+-#: socket.c:875
++#: socket.c:826
+ msgid "File descriptor out of range for SSL"
+ msgstr "B??? m?? t??? t???p tin ??? ngo???i ph???m v??? SSL"
+ 
+-#: socket.c:891
++#: socket.c:842
+ #, c-format
+ msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+ msgstr ""
+ "X??c ?????nh giao th???c SSL kh??ng h???p l??? ?? %s ?? n??n d??ng m???c ?????nh (SSLv23).\n"
+ 
+-#: socket.c:964
++#: socket.c:916
+ msgid "Certificate/fingerprint verification was somehow skipped!\n"
+ msgstr "Vi???c th???m tra ch???ng nh???n/v??n tay b??? b??? qua v?? l?? do n??o.\n"
+ 
+-#: socket.c:1042
++#: socket.c:994
+ msgid "Cygwin socket read retry\n"
+ msgstr "Vi???c c??? l???i ?????c ??? c???m Cygwin\n"
+ 
+-#: socket.c:1045
++#: socket.c:997
+ msgid "Cygwin socket read retry failed!\n"
+ msgstr "Vi???c c??? l???i ?????c ??? c???m Cygwin b??? l???i.\n"
+ 
+@@ -3066,31 +3066,31 @@
+ msgid "discarding new UID list\n"
+ msgstr "??ang h???y danh s??ch UID m???i...\n"
+ 
+-#: uid.c:616
++#: uid.c:617
+ msgid "Deleting fetchids file.\n"
+ msgstr "??ang xo?? b??? t???p tin fetchids (l???y c??c ID)...\n"
+ 
+-#: uid.c:618
++#: uid.c:620
+ #, c-format
+ msgid "Error deleting %s: %s\n"
+ msgstr "G???p l???i khi xo?? b??? %s: %s\n"
+ 
+-#: uid.c:624
++#: uid.c:626
+ msgid "Writing fetchids file.\n"
+ msgstr "??ang ghi t???p tin fetchids (l???y c??c ID)...\n"
+ 
+-#: uid.c:643
++#: uid.c:645
+ #, c-format
+ msgid "Error writing to fetchids file %s, old file left in place.\n"
+ msgstr ""
+ "G???p l???i khi ghi v??o t???p tin fetchids (l???y c??c ID) %s n??n ????? l???i t???p tin c??.\n"
+ 
+-#: uid.c:647
++#: uid.c:649
+ #, c-format
+ msgid "Cannot rename fetchids file %s to %s: %s\n"
+ msgstr "Kh??ng th??? ?????i t??n t???p tin  fetchids (l???y c??c ID) %s th??nh %s: %s\n"
+ 
+-#: uid.c:651
++#: uid.c:653
+ #, c-format
+ msgid "Cannot open fetchids file %s for writing: %s\n"
+ msgstr "Kh??ng th??? m??? t???p tin  fetchids (l???y c??c ID) %s ????? ghi: %s\n"
+
+Modified: branches/BRANCH_6-3/socket.c
+===================================================================
+--- branches/BRANCH_6-3/socket.c	2008-01-29 13:19:58 UTC (rev 5154)
++++ branches/BRANCH_6-3/socket.c	2008-01-31 09:15:53 UTC (rev 5155)
+@@ -415,9 +415,6 @@
+ {
+     char *newline, *bp = buf;
+     int n;
+-#ifdef	FORCE_STUFFING
+-    int maxavailable = 0;
+-#endif
+ #ifdef	SSL_ENABLE
+     SSL *ssl;
+ #endif
+@@ -457,9 +454,6 @@
+ 			(void)SSL_get_error(ssl, n);
+ 			return(-1);
+ 		}
+-#ifdef FORCE_STUFFING
+-		maxavailable = n;
+-#endif
+ 		if( 0 == n ) {
+ 			/* SSL_peek says no data...  Does he mean no data
+ 			or did the connection blow up?  If we got an error
+@@ -503,9 +497,6 @@
+ 	    if ((n = fm_peek(sock, bp, len)) <= 0)
+ #endif
+ 		return (-1);
+-#ifdef FORCE_STUFFING
+-	    maxavailable = n;
+-#endif
+ 	    if ((newline = (char *)memchr(bp, '\n', n)) != NULL)
+ 		n = newline - bp + 1;
+ #ifndef __BEOS__
+@@ -519,46 +510,6 @@
+ 	    (!newline && len);
+     *bp = '\0';
+ 
+-#ifdef FORCE_STUFFING		/* too ugly to live -- besides, there's IMAP */
+-    /* OK, very weird hack coming up here:
+-     * When POP3 servers send us a message, they're supposed to
+-     * terminate the message with a line containing only a dot. To protect
+-     * against lines in the real message that might contain only a dot,
+-     * they're supposed to preface any line that starts with a dot with
+-     * an additional dot, which will be removed on the client side. That
+-     * process, called byte-stuffing (and unstuffing) is really not the
+-     * concern of this low-level routine, ordinarily, but there are some
+-     * POP servers (and maybe IMAP servers too, who knows) that fail to
+-     * do the byte-stuffing, and this routine is the best place to try to
+-     * identify and fix that fault.
+-     *
+-     * Since the DOT line is supposed to come only at the end of a
+-     * message, the implication is that right after we see it, the server
+-     * is supposed to go back to waiting for the next command. There
+-     * isn't supposed to be any more data to read after we see the dot.
+-     * THEREFORE, if we see more data to be read after something that
+-     * looks like the dot line, then probably the server is failing to
+-     * do byte-stuffing. In that case, we'll byte-pack it for them so
+-     * that the higher-level routines see things as hunky-dorey.
+-     * This is not a perfect test or fix by any means (it has an
+-     * obvious race condition, for one thing), but it should at least
+-     * reduce the nastiness that ensues when people don't know how
+-     * to write POP servers.
+-     */
+-    if ((maxavailable > (bp-buf)) &&
+-	    ((((bp-buf) == 3) &&
+-	      (buf[0] == '.') &&
+-	      (buf[1] == '\r') &&
+-	      (buf[2] == '\n')) ||
+-	     (((bp-buf) == 2) &&
+-	      (buf[0] == '.') &&
+-	      (buf[1] == '\n')))) {
+-
+-	memmove(buf+1, buf, (bp-buf)+1);
+-	buf[0] = '.';
+-	bp++;
+-    }
+-#endif /* FORCE_STUFFING */
+     return bp - buf;
+ }
+ 
+
+
+
+From svn at mknod.org  Thu Jan 31 10:19:08 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 31 Jan 2008 03:19:08 -0600 (CST)
+Subject: [fetchmail-svn] r5156 - branches/BRANCH_6-3
+Message-ID: <20080131091908.28F7C6B02D8@mknod.org>
+
+Author: m-a
+Date: 2008-01-31 03:19:07 -0600 (Thu, 31 Jan 2008)
+New Revision: 5156
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+Log:
+Drop dead code under FORCE_STUFFING condition.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2008-01-31 09:15:53 UTC (rev 5155)
++++ branches/BRANCH_6-3/NEWS	2008-01-31 09:19:07 UTC (rev 5156)
+@@ -80,7 +80,8 @@
+ * Removed dead FETCHMAIL_DEBUG code from fetchmail.h that was disabled by 
+   default with no switches in configure to enable it. However, the macro would 
+   have been prone to a symlink attack. Found by Nico Golde.
+-
++* Removed dead FORCE_STUFFING code from socket.c that was disabled by default
++  with no switches in configure to enable it.
+ * Include the typedef for int16 in the #ifndef _AIX in smbencrypt.c (Peter
+   O'Gorman)
+ * Correct check for u_int32_t in configure.ac (seems to be typedef'ed in
+
+
+
+From svn at mknod.org  Thu Jan 31 10:20:11 2008
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 31 Jan 2008 03:20:11 -0600 (CST)
+Subject: [fetchmail-svn] r5157 - branches/BRANCH_6-3
+Message-ID: <20080131092011.ABC476B02D8@mknod.org>
+
+Author: m-a
+Date: 2008-01-31 03:20:11 -0600 (Thu, 31 Jan 2008)
+New Revision: 5157
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+escalate MSG_PEEK
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2008-01-31 09:19:07 UTC (rev 5156)
++++ branches/BRANCH_6-3/TODO.txt	2008-01-31 09:20:11 UTC (rev 5157)
+@@ -17,11 +17,11 @@
+ - Debian Bug#449179, smbutil.c:90: unicodeToString: Assertion `len+1 < sizeof
+   buf' failed, from Stepan Golosunov <stepan at golosunov.pp.ru>
+ - Fix TOCTOU race around prc_filecheck*
++- Get rid of peeking in socket.c? MSG_PEEK seems non-portable and racey.
+ 
+ soon - MAY:
+ - https://bugzilla.novell.com/show_bug.cgi?id=246829 - fetchmail lost some mail
+   (5XX error code in contradiction with manual?)
+-- Fix Cygwin workaround - can we *easily* get rid of MSG_PEEK altogether?
+ 
+ soon - after 6.3.9:
+ - find a solution for the "invalid header" discards message problem
+
+
+

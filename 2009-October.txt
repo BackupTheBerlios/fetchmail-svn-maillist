@@ -1,0 +1,5523 @@
+From svn at mknod.org  Mon Oct  5 21:17:17 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Mon,  5 Oct 2009 14:17:17 -0500
+Subject: [fetchmail-svn] r5436 - branches/BRANCH_6-3
+Message-ID: <20091005191718.1335E21F08D@mknod.org>
+
+Author: m-a
+Date: 2009-10-05 14:17:15 -0500 (Mon, 05 Oct 2009)
+New Revision: 5436
+
+Modified:
+   branches/BRANCH_6-3/Makefile.am
+   branches/BRANCH_6-3/configure.ac
+Log:
+Work around screwed Solaris /bin/sh and go for XPG shells.
+
+Modified: branches/BRANCH_6-3/Makefile.am
+===================================================================
+--- branches/BRANCH_6-3/Makefile.am	2009-09-23 23:19:38 UTC (rev 5435)
++++ branches/BRANCH_6-3/Makefile.am	2009-10-05 19:17:15 UTC (rev 5436)
+@@ -47,7 +47,7 @@
+ check_PROGRAMS=
+ 
+ TESTS=			t.smoke t.validate-xhtml
+-TESTS_ENVIRONMENT=	srcdir="$(srcdir)" LC_ALL=C TZ=UTC SHELL="$(SHELL)"
++TESTS_ENVIRONMENT=	srcdir="$(srcdir)" LC_ALL=C TZ=UTC SHELL="$(SHELL)" $(SHELL)
+ 
+ if NEED_TRIO
+ noinst_LIBRARIES+=	libtrio.a
+@@ -116,8 +116,6 @@
+ mxget_SOURCES=	mxget.c
+ mxget_CFLAGS=	-DSTANDALONE -DHAVE_CONFIG_H -I$(builddir)
+ 
+-# For some losing Unix makes.
+-SHELL = /bin/sh
+ @SET_MAKE@
+ 
+ fetchmail.spec: Makefile.in specgen.sh
+
+Modified: branches/BRANCH_6-3/configure.ac
+===================================================================
+--- branches/BRANCH_6-3/configure.ac	2009-09-23 23:19:38 UTC (rev 5435)
++++ branches/BRANCH_6-3/configure.ac	2009-10-05 19:17:15 UTC (rev 5436)
+@@ -46,6 +46,24 @@
+ dnl need not use this macro.  It is implemented as
+ dnl `AC_SEARCH_LIBS([strerror], [cposix])'
+ 
++dnl check for b0rked Solaris (and other shells) and find one that works
++AC_MSG_CHECKING(for a working shell...)
++for i in /usr/xpg6/bin/sh /usr/xpg4/bin/sh /usr/ccs/bin/sh /bin/sh /usr/bin/sh /bin/ksh /bin/bash /usr/local/bin/bash ; do
++    $i -c 'if ! false ; then echo $(echo ok) ; fi' >config.$$ 2>/dev/null
++    j=`cat config.$$`
++    rm -f config.$$
++    if test "x$j" = "xok" ; then
++        SHELL=$i
++        AC_SUBST(SHELL)
++        break
++    fi
++done
++AC_MSG_RESULT($SHELL)
++if test "x$SHELL" = "x" ; then
++    AC_MSG_ERROR(no SUS compliant shell found - on Solaris, install SUNWxcu4)
++fi
++
++
+ AC_HEADER_STDC
+ AC_HEADER_TIME
+ AC_TYPE_SIZE_T
+
+
+
+From svn at mknod.org  Mon Oct  5 21:17:26 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Mon,  5 Oct 2009 14:17:26 -0500
+Subject: [fetchmail-svn] r5437 - branches/BRANCH_6-3
+Message-ID: <20091005191726.A96E321F08D@mknod.org>
+
+Author: m-a
+Date: 2009-10-05 14:17:25 -0500 (Mon, 05 Oct 2009)
+New Revision: 5437
+
+Modified:
+   branches/BRANCH_6-3/configure.ac
+   branches/BRANCH_6-3/fetchmail.man
+Log:
+Bump version.
+
+Modified: branches/BRANCH_6-3/configure.ac
+===================================================================
+--- branches/BRANCH_6-3/configure.ac	2009-10-05 19:17:15 UTC (rev 5436)
++++ branches/BRANCH_6-3/configure.ac	2009-10-05 19:17:25 UTC (rev 5437)
+@@ -9,7 +9,7 @@
+ dnl
+ 
+ dnl XXX - if bumping version here, check fetchmail.man, too!
+-AC_INIT([fetchmail],[6.3.11],[fetchmail-users at lists.berlios.de])
++AC_INIT([fetchmail],[6.3.12],[fetchmail-users at lists.berlios.de])
+ AC_CONFIG_SRCDIR([fetchmail.h])
+ AC_CONFIG_HEADERS([config.h])
+ AC_CONFIG_LIBOBJ_DIR([.])
+
+Modified: branches/BRANCH_6-3/fetchmail.man
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.man	2009-10-05 19:17:15 UTC (rev 5436)
++++ branches/BRANCH_6-3/fetchmail.man	2009-10-05 19:17:25 UTC (rev 5437)
+@@ -10,7 +10,7 @@
+ .\" Load www macros to process .URL requests, this requires groff:
+ .mso www.tmac
+ .\"
+-.TH fetchmail 1 "fetchmail 6.3.11" "fetchmail" "fetchmail reference manual"
++.TH fetchmail 1 "fetchmail 6.3.12" "fetchmail" "fetchmail reference manual"
+ 
+ .SH NAME
+ fetchmail \- fetch mail from a POP, IMAP, ETRN, or ODMR-capable server
+
+
+
+From svn at mknod.org  Mon Oct  5 21:43:41 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Mon,  5 Oct 2009 14:43:41 -0500
+Subject: [fetchmail-svn] r5438 - branches/BRANCH_6-3/po
+Message-ID: <20091005194341.E36EF21F08D@mknod.org>
+
+Author: m-a
+Date: 2009-10-05 14:43:41 -0500 (Mon, 05 Oct 2009)
+New Revision: 5438
+
+Modified:
+   branches/BRANCH_6-3/po/ca.po
+   branches/BRANCH_6-3/po/cs.po
+   branches/BRANCH_6-3/po/da.po
+   branches/BRANCH_6-3/po/de.po
+   branches/BRANCH_6-3/po/el.po
+   branches/BRANCH_6-3/po/en_GB.po
+   branches/BRANCH_6-3/po/es.po
+   branches/BRANCH_6-3/po/fi.po
+   branches/BRANCH_6-3/po/fr.po
+   branches/BRANCH_6-3/po/gl.po
+   branches/BRANCH_6-3/po/id.po
+   branches/BRANCH_6-3/po/it.po
+   branches/BRANCH_6-3/po/ja.po
+   branches/BRANCH_6-3/po/nl.po
+   branches/BRANCH_6-3/po/pl.po
+   branches/BRANCH_6-3/po/pt_BR.po
+   branches/BRANCH_6-3/po/ru.po
+   branches/BRANCH_6-3/po/sk.po
+   branches/BRANCH_6-3/po/sq.po
+   branches/BRANCH_6-3/po/tr.po
+   branches/BRANCH_6-3/po/vi.po
+   branches/BRANCH_6-3/po/zh_CN.po
+Log:
+Update po/ files for 6.3.12 release.
+
+Modified: branches/BRANCH_6-3/po/ca.po
+===================================================================
+--- branches/BRANCH_6-3/po/ca.po	2009-10-05 19:17:25 UTC (rev 5437)
++++ branches/BRANCH_6-3/po/ca.po	2009-10-05 19:43:41 UTC (rev 5438)
+@@ -7,7 +7,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 6.3.11\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
++"POT-Creation-Date: 2009-08-24 21:16+0200\n"
+ "PO-Revision-Date: 2009-08-06 14:52+0200\n"
+ "Last-Translator: Ernest Adrogu? Calveras <eadrogue at gmx.net>\n"
+ "Language-Team: Catalan <ca at dodds.net>\n"
+@@ -55,8 +55,13 @@
+ msgid "kerberos error %s\n"
+ msgstr "error de kerberos %s\n"
+ 
+-#: driver.c:249 driver.c:254
++#: driver.c:249
+ #, c-format
++msgid "krb5_sendauth: %s [server says '%s'] \n"
++msgstr "krb5_sendauth: %s [el servidor diu: '%s'] \n"
++
++#: driver.c:254
++#, c-format
+ msgid "krb5_sendauth: %s [server says '%*s'] \n"
+ msgstr "krb5_sendauth: %s [el servidor diu: '%*s'] \n"
+ 
+@@ -2817,15 +2822,15 @@
+ "-- \n"
+ "El Dimoni Fetchmail"
+ 
+-#: smtp.c:80
++#: smtp.c:81
+ msgid "ESMTP CRAM-MD5 Authentication...\n"
+ msgstr "Autenticaci? CRAM-MD5 per ESMTP...\n"
+ 
+-#: smtp.c:87 smtp.c:138
++#: smtp.c:87 smtp.c:137
+ msgid "Server rejected the AUTH command.\n"
+ msgstr "El servidor ha rebutjat l'ordre AUTH.\n"
+ 
+-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
++#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
+ msgid "Bad base64 reply from server.\n"
+ msgstr "La resposta en base64 del servidor ?s incorrecta.\n"
+ 
+@@ -2842,7 +2847,7 @@
+ msgid "ESMTP LOGIN Authentication...\n"
+ msgstr "Autenticaci? de LOGIN per ESMTP...\n"
+ 
+-#: smtp.c:339 smtp.c:362
++#: smtp.c:349 smtp.c:377
+ msgid "smtp listener protocol error\n"
+ msgstr "error de protocol del receptor smtp\n"
+ 
+
+Modified: branches/BRANCH_6-3/po/cs.po
+===================================================================
+--- branches/BRANCH_6-3/po/cs.po	2009-10-05 19:17:25 UTC (rev 5437)
++++ branches/BRANCH_6-3/po/cs.po	2009-10-05 19:43:41 UTC (rev 5438)
+@@ -13,7 +13,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 6.3.11\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
++"POT-Creation-Date: 2009-08-24 21:16+0200\n"
+ "PO-Revision-Date: 2009-08-06 11:09+0200\n"
+ "Last-Translator: Petr Pisar <petr.pisar at atlas.cz>\n"
+ "Language-Team: Czech <translation-team-cs at lists.sourceforge.net>\n"
+@@ -59,7 +59,12 @@
+ msgid "kerberos error %s\n"
+ msgstr "chyba kerbera %s\n"
+ 
+-#: driver.c:249 driver.c:254
++#: driver.c:249
++#, fuzzy, c-format
++msgid "krb5_sendauth: %s [server says '%s'] \n"
++msgstr "krb5_sendauth: %s [server ????k?? '%*s'] \n"
++
++#: driver.c:254
+ #, c-format
+ msgid "krb5_sendauth: %s [server says '%*s'] \n"
+ msgstr "krb5_sendauth: %s [server ????k?? '%*s'] \n"
+@@ -2775,15 +2780,15 @@
+ "-- \n"
+ "D??mon Fetchmail"
+ 
+-#: smtp.c:80
++#: smtp.c:81
+ msgid "ESMTP CRAM-MD5 Authentication...\n"
+ msgstr "Autentizace ESMTP CRAM-MD5...\n"
+ 
+-#: smtp.c:87 smtp.c:138
++#: smtp.c:87 smtp.c:137
+ msgid "Server rejected the AUTH command.\n"
+ msgstr "Server odm??tl p????kaz AUTH.\n"
+ 
+-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
++#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
+ msgid "Bad base64 reply from server.\n"
+ msgstr "??patn?? base64 odpov??di od serveru.\n"
+ 
+@@ -2800,7 +2805,7 @@
+ msgid "ESMTP LOGIN Authentication...\n"
+ msgstr "Autentizace ESMTP LOGIN...\n"
+ 
+-#: smtp.c:339 smtp.c:362
++#: smtp.c:349 smtp.c:377
+ msgid "smtp listener protocol error\n"
+ msgstr "chyba protokolu d??mona smtp\n"
+ 
+
+Modified: branches/BRANCH_6-3/po/da.po
+===================================================================
+--- branches/BRANCH_6-3/po/da.po	2009-10-05 19:17:25 UTC (rev 5437)
++++ branches/BRANCH_6-3/po/da.po	2009-10-05 19:43:41 UTC (rev 5438)
+@@ -6,7 +6,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 6.2.4\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
++"POT-Creation-Date: 2009-08-24 21:16+0200\n"
+ "PO-Revision-Date: 2003-09-02 20:21+0200\n"
+ "Last-Translator: Byrial Ole Jensen <byrial at image.dk>\n"
+ "Language-Team: Danish <dansk at klid.dk>\n"
+@@ -51,7 +51,12 @@
+ msgid "kerberos error %s\n"
+ msgstr "kerberosfejl %s\n"
+ 
+-#: driver.c:249 driver.c:254
++#: driver.c:249
++#, fuzzy, c-format
++msgid "krb5_sendauth: %s [server says '%s'] \n"
++msgstr "krb5_sendauth: %s [server siger '%*s']\n"
++
++#: driver.c:254
+ #, c-format
+ msgid "krb5_sendauth: %s [server says '%*s'] \n"
+ msgstr "krb5_sendauth: %s [server siger '%*s']\n"
+@@ -2772,15 +2777,15 @@
+ "--\n"
+ "\t\t\t\tFetchmail Daemonen\n"
+ 
+-#: smtp.c:80
++#: smtp.c:81
+ msgid "ESMTP CRAM-MD5 Authentication...\n"
+ msgstr "ESMTP CRAM-MD5-godkendelse...\n"
+ 
+-#: smtp.c:87 smtp.c:138
++#: smtp.c:87 smtp.c:137
+ msgid "Server rejected the AUTH command.\n"
+ msgstr "Serveren afviste AUTH-kommandoen til godkendelse.\n"
+ 
+-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
++#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
+ msgid "Bad base64 reply from server.\n"
+ msgstr "Fejl i base64-svar fra server.\n"
+ 
+@@ -2797,7 +2802,7 @@
+ msgid "ESMTP LOGIN Authentication...\n"
+ msgstr "ESMTP LOGIN Authentication...\n"
+ 
+-#: smtp.c:339 smtp.c:362
++#: smtp.c:349 smtp.c:377
+ msgid "smtp listener protocol error\n"
+ msgstr "protokolfejl hos SMTP-modtager\n"
+ 
+
+Modified: branches/BRANCH_6-3/po/de.po
+===================================================================
+--- branches/BRANCH_6-3/po/de.po	2009-10-05 19:17:25 UTC (rev 5437)
++++ branches/BRANCH_6-3/po/de.po	2009-10-05 19:43:41 UTC (rev 5438)
+@@ -8,7 +8,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 6.3.10-beta1\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
++"POT-Creation-Date: 2009-08-24 21:16+0200\n"
+ "PO-Revision-Date: 2009-05-26 00:53+0200\n"
+ "Last-Translator: Matthias Andree <matthias.andree at gmx.de>\n"
+ "Language-Team: Deutsch <de at li.org>\n"
+@@ -57,8 +57,13 @@
+ msgid "kerberos error %s\n"
+ msgstr "Kerberos-Fehler %s\n"
+ 
+-#: driver.c:249 driver.c:254
++#: driver.c:249
+ #, c-format
++msgid "krb5_sendauth: %s [server says '%s'] \n"
++msgstr "krb5_sendauth: %s [Server sagt ???%s???] \n"
++
++#: driver.c:254
++#, c-format
+ msgid "krb5_sendauth: %s [server says '%*s'] \n"
+ msgstr "krb5_sendauth: %s [Server sagt ???%*s???] \n"
+ 
+@@ -2805,15 +2810,15 @@
+ "-- \n"
+ "Der Fetchmail-D??mon"
+ 
+-#: smtp.c:80
++#: smtp.c:81
+ msgid "ESMTP CRAM-MD5 Authentication...\n"
+ msgstr "ESMTP-CRAM-MD5-Authentifikation...\n"
+ 
+-#: smtp.c:87 smtp.c:138
++#: smtp.c:87 smtp.c:137
+ msgid "Server rejected the AUTH command.\n"
+ msgstr "Server lehnte AUTH-Befehl ab.\n"
+ 
+-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
++#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
+ msgid "Bad base64 reply from server.\n"
+ msgstr "Ung??ltige base64-Antwort vom Server.\n"
+ 
+@@ -2830,7 +2835,7 @@
+ msgid "ESMTP LOGIN Authentication...\n"
+ msgstr "ESMTP-LOGIN-Authentifikation...\n"
+ 
+-#: smtp.c:339 smtp.c:362
++#: smtp.c:349 smtp.c:377
+ msgid "smtp listener protocol error\n"
+ msgstr "Protokollfehler im SMTP-Server\n"
+ 
+
+Modified: branches/BRANCH_6-3/po/el.po
+===================================================================
+--- branches/BRANCH_6-3/po/el.po	2009-10-05 19:17:25 UTC (rev 5437)
++++ branches/BRANCH_6-3/po/el.po	2009-10-05 19:43:41 UTC (rev 5438)
+@@ -6,7 +6,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 6.2.2\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
++"POT-Creation-Date: 2009-08-24 21:16+0200\n"
+ "PO-Revision-Date: 2003-05-06 01:03+0300\n"
+ "Last-Translator: Dokianakis Theofanis <madf at hellug.gr>\n"
+ "Language-Team: Greek <nls at tux.hellug.gr>\n"
+@@ -55,7 +55,12 @@
+ msgid "kerberos error %s\n"
+ msgstr "?????? kerberos %s\n"
+ 
+-#: driver.c:249 driver.c:254
++#: driver.c:249
++#, fuzzy, c-format
++msgid "krb5_sendauth: %s [server says '%s'] \n"
++msgstr "krb5_sendauth: %s [? ???????????? ???? '%*s'] \n"
++
++#: driver.c:254
+ #, c-format
+ msgid "krb5_sendauth: %s [server says '%*s'] \n"
+ msgstr "krb5_sendauth: %s [? ???????????? ???? '%*s'] \n"
+@@ -2811,15 +2816,15 @@
+ "--\n"
+ "\t\t\t\t? ????????  Fetchmail\n"
+ 
+-#: smtp.c:80
++#: smtp.c:81
+ msgid "ESMTP CRAM-MD5 Authentication...\n"
+ msgstr "????????????? ESMTP CRAM-MD5...\n"
+ 
+-#: smtp.c:87 smtp.c:138
++#: smtp.c:87 smtp.c:137
+ msgid "Server rejected the AUTH command.\n"
+ msgstr "? ???????????? ???????? ??? ?????? AUTH.\n"
+ 
+-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
++#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
+ msgid "Bad base64 reply from server.\n"
+ msgstr "????????? ???????? BASE64 ??? ?? ???????????.\n"
+ 
+@@ -2836,7 +2841,7 @@
+ msgid "ESMTP LOGIN Authentication...\n"
+ msgstr "????????????? ESMTP LOGIN...\n"
+ 
+-#: smtp.c:339 smtp.c:362
++#: smtp.c:349 smtp.c:377
+ msgid "smtp listener protocol error\n"
+ msgstr "?????? ??????????? ??????? smtp\n"
+ 
+
+Modified: branches/BRANCH_6-3/po/en_GB.po
+===================================================================
+--- branches/BRANCH_6-3/po/en_GB.po	2009-10-05 19:17:25 UTC (rev 5437)
++++ branches/BRANCH_6-3/po/en_GB.po	2009-10-05 19:43:41 UTC (rev 5438)
+@@ -9,7 +9,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 6.3.10-beta1\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
++"POT-Creation-Date: 2009-08-24 21:16+0200\n"
+ "PO-Revision-Date: 2009-05-26 18:57+0200\n"
+ "Last-Translator: David Lodge <dave at cirt.net>\n"
+ "Language-Team: English (British) <en_gb at li.org>\n"
+@@ -55,8 +55,13 @@
+ msgid "kerberos error %s\n"
+ msgstr "kerberos error %s\n"
+ 
+-#: driver.c:249 driver.c:254
++#: driver.c:249
+ #, c-format
++msgid "krb5_sendauth: %s [server says '%s'] \n"
++msgstr "krb5_sendauth: %s [server says '%s'] \n"
++
++#: driver.c:254
++#, c-format
+ msgid "krb5_sendauth: %s [server says '%*s'] \n"
+ msgstr "krb5_sendauth: %s [server says '%*s'] \n"
+ 
+@@ -2722,15 +2727,15 @@
+ "-- \n"
+ "The Fetchmail Daemon"
+ 
+-#: smtp.c:80
++#: smtp.c:81
+ msgid "ESMTP CRAM-MD5 Authentication...\n"
+ msgstr "ESMTP CRAM-MD5 Authentication...\n"
+ 
+-#: smtp.c:87 smtp.c:138
++#: smtp.c:87 smtp.c:137
+ msgid "Server rejected the AUTH command.\n"
+ msgstr "Server rejected the AUTH command.\n"
+ 
+-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
++#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
+ msgid "Bad base64 reply from server.\n"
+ msgstr "Bad base64 reply from server.\n"
+ 
+@@ -2747,7 +2752,7 @@
+ msgid "ESMTP LOGIN Authentication...\n"
+ msgstr "ESMTP LOGIN Authentication...\n"
+ 
+-#: smtp.c:339 smtp.c:362
++#: smtp.c:349 smtp.c:377
+ msgid "smtp listener protocol error\n"
+ msgstr "smtp listener protocol error\n"
+ 
+@@ -2850,9 +2855,8 @@
+ msgstr "Bad certificate: Subject CommonName too long!\n"
+ 
+ #: socket.c:644
+-#, fuzzy
+ msgid "Bad certificate: Subject CommonName contains NUL, aborting!\n"
+-msgstr "Bad certificate: Subject CommonName too long!\n"
++msgstr "Bad certificate: Subject CommonName contains NUL, aborting!\n"
+ 
+ #: socket.c:665
+ #, c-format
+@@ -2860,9 +2864,8 @@
+ msgstr ""
+ 
+ #: socket.c:671
+-#, fuzzy
+ msgid "Bad certificate: Subject Alternative Name contains NUL, aborting!\n"
+-msgstr "Bad certificate: Subject CommonName too long!\n"
++msgstr "Bad certificate: Subject Alternative Name contains NUL, aborting!\n"
+ 
+ #: socket.c:699
+ #, c-format
+@@ -2923,7 +2926,7 @@
+ msgstr "File descriptor out of range for SSL"
+ 
+ #: socket.c:867
+-#, fuzzy, c-format
++#, c-format
+ msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+ msgstr "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+ 
+
+Modified: branches/BRANCH_6-3/po/es.po
+===================================================================
+--- branches/BRANCH_6-3/po/es.po	2009-10-05 19:17:25 UTC (rev 5437)
++++ branches/BRANCH_6-3/po/es.po	2009-10-05 19:43:41 UTC (rev 5438)
+@@ -9,7 +9,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 6.3.11\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
++"POT-Creation-Date: 2009-08-24 21:16+0200\n"
+ "PO-Revision-Date: 2009-08-06 20:00+0200\n"
+ "Last-Translator: Francisco Molinero <paco at byasl.com>\n"
+ "Language-Team: Spanish <es at li.org>\n"
+@@ -57,8 +57,13 @@
+ msgid "kerberos error %s\n"
+ msgstr "error de kerberos %s\n"
+ 
+-#: driver.c:249 driver.c:254
++#: driver.c:249
+ #, c-format
++msgid "krb5_sendauth: %s [server says '%s'] \n"
++msgstr "krb5_sendauth: %s [el servidor dice ??%s??] \n"
++
++#: driver.c:254
++#, c-format
+ msgid "krb5_sendauth: %s [server says '%*s'] \n"
+ msgstr "krb5_sendauth: %s [el servidor dice ??%*s??] \n"
+ 
+@@ -2842,15 +2847,15 @@
+ "-- \n"
+ "El demonio de Fetchmail"
+ 
+-#: smtp.c:80
++#: smtp.c:81
+ msgid "ESMTP CRAM-MD5 Authentication...\n"
+ msgstr "Autenticaci??n ESMTP CRAM-MD5...\n"
+ 
+-#: smtp.c:87 smtp.c:138
++#: smtp.c:87 smtp.c:137
+ msgid "Server rejected the AUTH command.\n"
+ msgstr "El servidor rechaz?? la orden AUTH.\n"
+ 
+-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
++#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
+ msgid "Bad base64 reply from server.\n"
+ msgstr "Mala respuesta base64 del servidor.\n"
+ 
+@@ -2867,7 +2872,7 @@
+ msgid "ESMTP LOGIN Authentication...\n"
+ msgstr "Autenticaci??n ESMTP LOGIN...\n"
+ 
+-#: smtp.c:339 smtp.c:362
++#: smtp.c:349 smtp.c:377
+ msgid "smtp listener protocol error\n"
+ msgstr "error de protocolo en el servidor smtp\n"
+ 
+
+Modified: branches/BRANCH_6-3/po/fi.po
+===================================================================
+--- branches/BRANCH_6-3/po/fi.po	2009-10-05 19:17:25 UTC (rev 5437)
++++ branches/BRANCH_6-3/po/fi.po	2009-10-05 19:43:41 UTC (rev 5438)
+@@ -7,7 +7,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 6.3.8\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
++"POT-Creation-Date: 2009-08-24 21:16+0200\n"
+ "PO-Revision-Date: 2007-11-06 01:17+0200\n"
+ "Last-Translator: Lauri Nurmi <lanurmi at iki.fi>\n"
+ "Language-Team: Finnish <translation-team-fi at lists.sourceforge.net>\n"
+@@ -53,7 +53,12 @@
+ msgid "kerberos error %s\n"
+ msgstr "kerberos-virhe %s\n"
+ 
+-#: driver.c:249 driver.c:254
++#: driver.c:249
++#, fuzzy, c-format
++msgid "krb5_sendauth: %s [server says '%s'] \n"
++msgstr "krb5_sendauth: %s [palvelin sanoo ???%*s???] \n"
++
++#: driver.c:254
+ #, c-format
+ msgid "krb5_sendauth: %s [server says '%*s'] \n"
+ msgstr "krb5_sendauth: %s [palvelin sanoo ???%*s???] \n"
+@@ -2674,15 +2679,15 @@
+ "The Fetchmail Daemon"
+ msgstr ""
+ 
+-#: smtp.c:80
++#: smtp.c:81
+ msgid "ESMTP CRAM-MD5 Authentication...\n"
+ msgstr ""
+ 
+-#: smtp.c:87 smtp.c:138
++#: smtp.c:87 smtp.c:137
+ msgid "Server rejected the AUTH command.\n"
+ msgstr ""
+ 
+-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
++#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
+ msgid "Bad base64 reply from server.\n"
+ msgstr ""
+ 
+@@ -2699,7 +2704,7 @@
+ msgid "ESMTP LOGIN Authentication...\n"
+ msgstr ""
+ 
+-#: smtp.c:339 smtp.c:362
++#: smtp.c:349 smtp.c:377
+ msgid "smtp listener protocol error\n"
+ msgstr ""
+ 
+
+Modified: branches/BRANCH_6-3/po/fr.po
+===================================================================
+--- branches/BRANCH_6-3/po/fr.po	2009-10-05 19:17:25 UTC (rev 5437)
++++ branches/BRANCH_6-3/po/fr.po	2009-10-05 19:43:41 UTC (rev 5438)
+@@ -15,7 +15,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 6.2.9-rc9\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
++"POT-Creation-Date: 2009-08-24 21:16+0200\n"
+ "PO-Revision-Date: 2005-12-18 11:50+0100\n"
+ "Last-Translator: Matthias Andree <matthias.andree at gmx.de>\n"
+ "Language-Team: French <traduc at traduc.org>\n"
+@@ -63,8 +63,13 @@
+ msgid "kerberos error %s\n"
+ msgstr "erreur kerberos %s\n"
+ 
+-#: driver.c:249 driver.c:254
++#: driver.c:249
+ #, c-format
++msgid "krb5_sendauth: %s [server says '%s'] \n"
++msgstr "krb5_sendauth: %s  [le serveur indique ??%s??] \n"
++
++#: driver.c:254
++#, c-format
+ msgid "krb5_sendauth: %s [server says '%*s'] \n"
+ msgstr "krb5_sendauth: %s  [le serveur indique ??%*s??] \n"
+ 
+@@ -2831,15 +2836,15 @@
+ "-- \n"
+ "Le D??mon Fetchmail"
+ 
+-#: smtp.c:80
++#: smtp.c:81
+ msgid "ESMTP CRAM-MD5 Authentication...\n"
+ msgstr "Authentification ESMTP CRAM-Md5...\n"
+ 
+-#: smtp.c:87 smtp.c:138
++#: smtp.c:87 smtp.c:137
+ msgid "Server rejected the AUTH command.\n"
+ msgstr "Le serveur a refus?? la commande AUTH.\n"
+ 
+-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
++#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
+ msgid "Bad base64 reply from server.\n"
+ msgstr "Mauvaise r??ponse en base 64 du serveur.\n"
+ 
+@@ -2856,7 +2861,7 @@
+ msgid "ESMTP LOGIN Authentication...\n"
+ msgstr "Autentification ESMTP LOGIN ...\n"
+ 
+-#: smtp.c:339 smtp.c:362
++#: smtp.c:349 smtp.c:377
+ msgid "smtp listener protocol error\n"
+ msgstr "erreur de protocole avec le serveur smtp\n"
+ 
+
+Modified: branches/BRANCH_6-3/po/gl.po
+===================================================================
+--- branches/BRANCH_6-3/po/gl.po	2009-10-05 19:17:25 UTC (rev 5437)
++++ branches/BRANCH_6-3/po/gl.po	2009-10-05 19:43:41 UTC (rev 5438)
+@@ -13,7 +13,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 5.3.6\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
++"POT-Creation-Date: 2009-08-24 21:16+0200\n"
+ "PO-Revision-Date: 2000-04-10 01:26+0200\n"
+ "Last-Translator: Jes?s Bravo ?lvarez <jba at pobox.com>\n"
+ "Language-Team: Galician <gpul-traduccion at ceu.fi.udc.es>\n"
+@@ -58,7 +58,12 @@
+ msgid "kerberos error %s\n"
+ msgstr "erro %s de kerberos\n"
+ 
+-#: driver.c:249 driver.c:254
++#: driver.c:249
++#, fuzzy, c-format
++msgid "krb5_sendauth: %s [server says '%s'] \n"
++msgstr "krb5_sendauth: %s [o servidor di '%*s'] \n"
++
++#: driver.c:254
+ #, c-format
+ msgid "krb5_sendauth: %s [server says '%*s'] \n"
+ msgstr "krb5_sendauth: %s [o servidor di '%*s'] \n"
+@@ -2821,16 +2826,16 @@
+ "The Fetchmail Daemon"
+ msgstr ""
+ 
+-#: smtp.c:80
++#: smtp.c:81
+ #, fuzzy
+ msgid "ESMTP CRAM-MD5 Authentication...\n"
+ msgstr "Autenticaci?n CRAM-MD5 soportada\n"
+ 
+-#: smtp.c:87 smtp.c:138
++#: smtp.c:87 smtp.c:137
+ msgid "Server rejected the AUTH command.\n"
+ msgstr ""
+ 
+-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
++#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
+ msgid "Bad base64 reply from server.\n"
+ msgstr ""
+ 
+@@ -2847,7 +2852,7 @@
+ msgid "ESMTP LOGIN Authentication...\n"
+ msgstr ""
+ 
+-#: smtp.c:339 smtp.c:362
++#: smtp.c:349 smtp.c:377
+ #, fuzzy
+ msgid "smtp listener protocol error\n"
+ msgstr "erro de protocolo\n"
+
+Modified: branches/BRANCH_6-3/po/id.po
+===================================================================
+--- branches/BRANCH_6-3/po/id.po	2009-10-05 19:17:25 UTC (rev 5437)
++++ branches/BRANCH_6-3/po/id.po	2009-10-05 19:43:41 UTC (rev 5438)
+@@ -7,7 +7,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 6.3.10-pre1\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
++"POT-Creation-Date: 2009-08-24 21:16+0200\n"
+ "PO-Revision-Date: 2009-05-27 21:15+0700\n"
+ "Last-Translator: Andhika Padmawan <andhika.padmawan at gmail.com>\n"
+ "Language-Team: Indonesian <translation-team-id at lists.sourceforge.net>\n"
+@@ -53,7 +53,12 @@
+ msgid "kerberos error %s\n"
+ msgstr "galat kerberos %s\n"
+ 
+-#: driver.c:249 driver.c:254
++#: driver.c:249
++#, fuzzy, c-format
++msgid "krb5_sendauth: %s [server says '%s'] \n"
++msgstr "krb5_sendauth: %s [server berkata '%*s'] \n"
++
++#: driver.c:254
+ #, c-format
+ msgid "krb5_sendauth: %s [server says '%*s'] \n"
+ msgstr "krb5_sendauth: %s [server berkata '%*s'] \n"
+@@ -2747,15 +2752,15 @@
+ "-- \n"
+ "Jurik Fetchmail"
+ 
+-#: smtp.c:80
++#: smtp.c:81
+ msgid "ESMTP CRAM-MD5 Authentication...\n"
+ msgstr "Otentikasi ESMTP CRAM-MD5...\n"
+ 
+-#: smtp.c:87 smtp.c:138
++#: smtp.c:87 smtp.c:137
+ msgid "Server rejected the AUTH command.\n"
+ msgstr "Server menolak perintah AUTH.\n"
+ 
+-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
++#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
+ msgid "Bad base64 reply from server.\n"
+ msgstr "Balasan base64 buruk dari server.\n"
+ 
+@@ -2772,7 +2777,7 @@
+ msgid "ESMTP LOGIN Authentication...\n"
+ msgstr "Otentikasi ESMTP LOGIN...\n"
+ 
+-#: smtp.c:339 smtp.c:362
++#: smtp.c:349 smtp.c:377
+ msgid "smtp listener protocol error\n"
+ msgstr "galat protokol pendengar smtp\n"
+ 
+
+Modified: branches/BRANCH_6-3/po/it.po
+===================================================================
+--- branches/BRANCH_6-3/po/it.po	2009-10-05 19:17:25 UTC (rev 5437)
++++ branches/BRANCH_6-3/po/it.po	2009-10-05 19:43:41 UTC (rev 5438)
+@@ -7,7 +7,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail-6.3.9-rc3\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
++"POT-Creation-Date: 2009-08-24 21:16+0200\n"
+ "PO-Revision-Date: 2008-11-22 14:41+0100\n"
+ "Last-Translator: Vincenzo Campanella <vinz65 at gmail.com>\n"
+ "Language-Team: Italian <tp at lists.linux.it>\n"
+@@ -57,8 +57,13 @@
+ msgid "kerberos error %s\n"
+ msgstr "errore di kerberos %s\n"
+ 
+-#: driver.c:249 driver.c:254
++#: driver.c:249
+ #, c-format
++msgid "krb5_sendauth: %s [server says '%s'] \n"
++msgstr "krb5_sendauth: %s [il server ha risposto ??%s??]\n"
++
++#: driver.c:254
++#, c-format
+ msgid "krb5_sendauth: %s [server says '%*s'] \n"
+ msgstr "krb5_sendauth: %s [il server ha risposto ??%*s??]\n"
+ 
+@@ -2883,15 +2888,15 @@
+ "--\n"
+ "Il demone di Fetchmail"
+ 
+-#: smtp.c:80
++#: smtp.c:81
+ msgid "ESMTP CRAM-MD5 Authentication...\n"
+ msgstr "Autenticazione ESMPT CRAM-MD5 in corso\n"
+ 
+-#: smtp.c:87 smtp.c:138
++#: smtp.c:87 smtp.c:137
+ msgid "Server rejected the AUTH command.\n"
+ msgstr "Il server ha rifiutato il comando AUTH.\n"
+ 
+-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
++#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
+ msgid "Bad base64 reply from server.\n"
+ msgstr "Risposta base64 dal server non valida.\n"
+ 
+@@ -2908,7 +2913,7 @@
+ msgid "ESMTP LOGIN Authentication...\n"
+ msgstr "Autenticazione ESMTP LOGIN in corso\n"
+ 
+-#: smtp.c:339 smtp.c:362
++#: smtp.c:349 smtp.c:377
+ msgid "smtp listener protocol error\n"
+ msgstr "errore di protocollo dell'ascoltatore SMTP\n"
+ 
+
+Modified: branches/BRANCH_6-3/po/ja.po
+===================================================================
+--- branches/BRANCH_6-3/po/ja.po	2009-10-05 19:17:25 UTC (rev 5437)
++++ branches/BRANCH_6-3/po/ja.po	2009-10-05 19:43:41 UTC (rev 5438)
+@@ -9,7 +9,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 6.3.11\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
++"POT-Creation-Date: 2009-08-24 21:16+0200\n"
+ "PO-Revision-Date: 2009-08-06 16:55+0700\n"
+ "Last-Translator: Takeshi Hamasaki <hmatrjp at users.sourceforge.jp>\n"
+ "Language-Team: Japanese <translation-team-ja at lists.sourceforge.net>\n"
+@@ -55,7 +55,12 @@
+ msgid "kerberos error %s\n"
+ msgstr "kerberos ????????? : %s\n"
+ 
+-#: driver.c:249 driver.c:254
++#: driver.c:249
++#, fuzzy, c-format
++msgid "krb5_sendauth: %s [server says '%s'] \n"
++msgstr "krb5_sendauth: %s [??????????????????  '%*s']\n"
++
++#: driver.c:254
+ #, c-format
+ msgid "krb5_sendauth: %s [server says '%*s'] \n"
+ msgstr "krb5_sendauth: %s [??????????????????  '%*s']\n"
+@@ -2796,15 +2801,15 @@
+ "-- \n"
+ "Fetchmail ????????????"
+ 
+-#: smtp.c:80
++#: smtp.c:81
+ msgid "ESMTP CRAM-MD5 Authentication...\n"
+ msgstr "ESMTP CRAM-MD5 ????????????????????????????????????????????????...\n"
+ 
+-#: smtp.c:87 smtp.c:138
++#: smtp.c:87 smtp.c:137
+ msgid "Server rejected the AUTH command.\n"
+ msgstr "???????????? AUTH ????????????????????????????????????\n"
+ 
+-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
++#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
+ msgid "Bad base64 reply from server.\n"
+ msgstr "???????????????????????? base64 ???????????????????????????\n"
+ 
+@@ -2821,7 +2826,7 @@
+ msgid "ESMTP LOGIN Authentication...\n"
+ msgstr "ESMTP ??? LOGIN ??????????????????...\n"
+ 
+-#: smtp.c:339 smtp.c:362
++#: smtp.c:349 smtp.c:377
+ msgid "smtp listener protocol error\n"
+ msgstr "SMTP ????????????????????????????????????????????????????????????\n"
+ 
+
+Modified: branches/BRANCH_6-3/po/nl.po
+===================================================================
+--- branches/BRANCH_6-3/po/nl.po	2009-10-05 19:17:25 UTC (rev 5437)
++++ branches/BRANCH_6-3/po/nl.po	2009-10-05 19:43:41 UTC (rev 5438)
+@@ -8,7 +8,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail-6.3.8\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
++"POT-Creation-Date: 2009-08-24 21:16+0200\n"
+ "PO-Revision-Date: 2008-05-16 00:27+0200\n"
+ "Last-Translator: Benno Schulenberg <benno at vertaalt.nl>\n"
+ "Language-Team: Dutch <vertaling at vrijschrift.org>\n"
+@@ -55,7 +55,12 @@
+ msgid "kerberos error %s\n"
+ msgstr "Kerberos-fout %s\n"
+ 
+-#: driver.c:249 driver.c:254
++#: driver.c:249
++#, fuzzy, c-format
++msgid "krb5_sendauth: %s [server says '%s'] \n"
++msgstr "krb5_sendauth(): %s [server zegt '%*s'] \n"
++
++#: driver.c:254
+ #, c-format
+ msgid "krb5_sendauth: %s [server says '%*s'] \n"
+ msgstr "krb5_sendauth(): %s [server zegt '%*s'] \n"
+@@ -2766,15 +2771,15 @@
+ "-- \n"
+ "De Fetchmail-service"
+ 
+-#: smtp.c:80
++#: smtp.c:81
+ msgid "ESMTP CRAM-MD5 Authentication...\n"
+ msgstr "ESMTP CRAM-MD5-authenticatie...\n"
+ 
+-#: smtp.c:87 smtp.c:138
++#: smtp.c:87 smtp.c:137
+ msgid "Server rejected the AUTH command.\n"
+ msgstr "Server heeft AUTH-commando geweigerd.\n"
+ 
+-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
++#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
+ msgid "Bad base64 reply from server.\n"
+ msgstr "Onjuiste Base64-respons van de server.\n"
+ 
+@@ -2791,7 +2796,7 @@
+ msgid "ESMTP LOGIN Authentication...\n"
+ msgstr "ESMTP-LOGIN-authenticatie...\n"
+ 
+-#: smtp.c:339 smtp.c:362
++#: smtp.c:349 smtp.c:377
+ msgid "smtp listener protocol error\n"
+ msgstr "SMTP-programma geeft protocolfout aan\n"
+ 
+
+Modified: branches/BRANCH_6-3/po/pl.po
+===================================================================
+--- branches/BRANCH_6-3/po/pl.po	2009-10-05 19:17:25 UTC (rev 5437)
++++ branches/BRANCH_6-3/po/pl.po	2009-10-05 19:43:41 UTC (rev 5438)
+@@ -9,7 +9,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 6.3.11\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
++"POT-Creation-Date: 2009-08-24 21:16+0200\n"
+ "PO-Revision-Date: 2009-08-06 19:09+0200\n"
+ "Last-Translator: Jakub Bogusz <qboosh at pld-linux.org>\n"
+ "Language-Team: Polish <translation-team-pl at lists.sourceforge.net>\n"
+@@ -56,7 +56,12 @@
+ msgid "kerberos error %s\n"
+ msgstr "b??d Kerberosa: %s\n"
+ 
+-#: driver.c:249 driver.c:254
++#: driver.c:249
++#, fuzzy, c-format
++msgid "krb5_sendauth: %s [server says '%s'] \n"
++msgstr "krb5_sendauth: %s [serwer odpowiedzia? '%*s'] \n"
++
++#: driver.c:254
+ #, c-format
+ msgid "krb5_sendauth: %s [server says '%*s'] \n"
+ msgstr "krb5_sendauth: %s [serwer odpowiedzia? '%*s'] \n"
+@@ -2822,15 +2827,15 @@
+ "-- \n"
+ "Demon Fetchmaila"
+ 
+-#: smtp.c:80
++#: smtp.c:81
+ msgid "ESMTP CRAM-MD5 Authentication...\n"
+ msgstr "Uwierzytelnienie ESMTP CRAM-MD5...\n"
+ 
+-#: smtp.c:87 smtp.c:138
++#: smtp.c:87 smtp.c:137
+ msgid "Server rejected the AUTH command.\n"
+ msgstr "Serwer odrzuci? polecenie AUTH.\n"
+ 
+-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
++#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
+ msgid "Bad base64 reply from server.\n"
+ msgstr "B??dna odpowied? base64 z serwera.\n"
+ 
+@@ -2847,7 +2852,7 @@
+ msgid "ESMTP LOGIN Authentication...\n"
+ msgstr "Uwierzytelnienie ESMTP LOGIN...\n"
+ 
+-#: smtp.c:339 smtp.c:362
++#: smtp.c:349 smtp.c:377
+ msgid "smtp listener protocol error\n"
+ msgstr "b??d protoko?u serwera smtp\n"
+ 
+
+Modified: branches/BRANCH_6-3/po/pt_BR.po
+===================================================================
+--- branches/BRANCH_6-3/po/pt_BR.po	2009-10-05 19:17:25 UTC (rev 5437)
++++ branches/BRANCH_6-3/po/pt_BR.po	2009-10-05 19:43:41 UTC (rev 5438)
+@@ -8,7 +8,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail-5.4.4\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
++"POT-Creation-Date: 2009-08-24 21:16+0200\n"
+ "PO-Revision-Date: 2000-07-28 09:40-03:00\n"
+ "Last-Translator: Marcia Norie Nakaza <norie at conectiva.com.br>\n"
+ "Language-Team: pt_BR <ldp-br at bazar.conectiva.com.br>\n"
+@@ -55,8 +55,13 @@
+ msgid "kerberos error %s\n"
+ msgstr "erro kerberos %s\n"
+ 
+-#: driver.c:249 driver.c:254
++#: driver.c:249
+ #, c-format
++msgid "krb5_sendauth: %s [server says '%s'] \n"
++msgstr "krb5_sendauth: %s [servidor informa '%s'] \n"
++
++#: driver.c:254
++#, c-format
+ msgid "krb5_sendauth: %s [server says '%*s'] \n"
+ msgstr "krb5_sendauth: %s [servidor informa '%*s'] \n"
+ 
+@@ -2833,16 +2838,16 @@
+ "The Fetchmail Daemon"
+ msgstr ""
+ 
+-#: smtp.c:80
++#: smtp.c:81
+ #, fuzzy
+ msgid "ESMTP CRAM-MD5 Authentication...\n"
+ msgstr "Autentica??o CRAM-MD5 ? suportada\n"
+ 
+-#: smtp.c:87 smtp.c:138
++#: smtp.c:87 smtp.c:137
+ msgid "Server rejected the AUTH command.\n"
+ msgstr ""
+ 
+-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
++#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
+ msgid "Bad base64 reply from server.\n"
+ msgstr ""
+ 
+@@ -2859,7 +2864,7 @@
+ msgid "ESMTP LOGIN Authentication...\n"
+ msgstr ""
+ 
+-#: smtp.c:339 smtp.c:362
++#: smtp.c:349 smtp.c:377
+ #, fuzzy
+ msgid "smtp listener protocol error\n"
+ msgstr "erro de protocolo\n"
+
+Modified: branches/BRANCH_6-3/po/ru.po
+===================================================================
+--- branches/BRANCH_6-3/po/ru.po	2009-10-05 19:17:25 UTC (rev 5437)
++++ branches/BRANCH_6-3/po/ru.po	2009-10-05 19:43:41 UTC (rev 5438)
+@@ -7,7 +7,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 6.3.10-pre1\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
++"POT-Creation-Date: 2009-08-24 21:16+0200\n"
+ "PO-Revision-Date: 2009-06-05 14:53+0200\n"
+ "Last-Translator: Pavel Maryanov <acid_jack at ukr.net>\n"
+ "Language-Team: Russian <gnu at mx.ru>\n"
+@@ -54,7 +54,12 @@
+ msgid "kerberos error %s\n"
+ msgstr "???????????? kerberos %s\n"
+ 
+-#: driver.c:249 driver.c:254
++#: driver.c:249
++#, fuzzy, c-format
++msgid "krb5_sendauth: %s [server says '%s'] \n"
++msgstr "krb5_sendauth: %s [???????????? ?????????????? '%*s'] \n"
++
++#: driver.c:254
+ #, c-format
+ msgid "krb5_sendauth: %s [server says '%*s'] \n"
+ msgstr "krb5_sendauth: %s [???????????? ?????????????? '%*s'] \n"
+@@ -2805,15 +2810,15 @@
+ "--\n"
+ "?????????? Fetchmail"
+ 
+-#: smtp.c:80
++#: smtp.c:81
+ msgid "ESMTP CRAM-MD5 Authentication...\n"
+ msgstr "???????????????????????????? ESMTP CRAM-MD5...\n"
+ 
+-#: smtp.c:87 smtp.c:138
++#: smtp.c:87 smtp.c:137
+ msgid "Server rejected the AUTH command.\n"
+ msgstr "???????????? ???????????? ?????????????? AUTH.\n"
+ 
+-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
++#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
+ msgid "Bad base64 reply from server.\n"
+ msgstr "???????????????? ?????????? base64 ?? ??????????????.\n"
+ 
+@@ -2830,7 +2835,7 @@
+ msgid "ESMTP LOGIN Authentication...\n"
+ msgstr "???????????????????????????? ESMTP LOGIN...\n"
+ 
+-#: smtp.c:339 smtp.c:362
++#: smtp.c:349 smtp.c:377
+ msgid "smtp listener protocol error\n"
+ msgstr "???????????? ?????????????????? ?????????????????? smtp\n"
+ 
+
+Modified: branches/BRANCH_6-3/po/sk.po
+===================================================================
+--- branches/BRANCH_6-3/po/sk.po	2009-10-05 19:17:25 UTC (rev 5437)
++++ branches/BRANCH_6-3/po/sk.po	2009-10-05 19:43:41 UTC (rev 5438)
+@@ -7,7 +7,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 6.2.2\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
++"POT-Creation-Date: 2009-08-24 21:16+0200\n"
+ "PO-Revision-Date: 2003-06-12 15:02+00\n"
+ "Last-Translator: Lubos Vitek <lubos_vitek at yahoo.com>\n"
+ "Language-Team: Slovak <sk-i18n at lists.linux.sk>\n"
+@@ -52,7 +52,12 @@
+ msgid "kerberos error %s\n"
+ msgstr "Kerberos-chyba %s\n"
+ 
+-#: driver.c:249 driver.c:254
++#: driver.c:249
++#, fuzzy, c-format
++msgid "krb5_sendauth: %s [server says '%s'] \n"
++msgstr "krb5_sendauth: %s [server odpovedal '%*s'] \n"
++
++#: driver.c:254
+ #, c-format
+ msgid "krb5_sendauth: %s [server says '%*s'] \n"
+ msgstr "krb5_sendauth: %s [server odpovedal '%*s'] \n"
+@@ -2772,15 +2777,15 @@
+ "The Fetchmail Daemon"
+ msgstr ""
+ 
+-#: smtp.c:80
++#: smtp.c:81
+ msgid "ESMTP CRAM-MD5 Authentication...\n"
+ msgstr ""
+ 
+-#: smtp.c:87 smtp.c:138
++#: smtp.c:87 smtp.c:137
+ msgid "Server rejected the AUTH command.\n"
+ msgstr ""
+ 
+-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
++#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
+ msgid "Bad base64 reply from server.\n"
+ msgstr ""
+ 
+@@ -2797,7 +2802,7 @@
+ msgid "ESMTP LOGIN Authentication...\n"
+ msgstr ""
+ 
+-#: smtp.c:339 smtp.c:362
++#: smtp.c:349 smtp.c:377
+ msgid "smtp listener protocol error\n"
+ msgstr ""
+ 
+
+Modified: branches/BRANCH_6-3/po/sq.po
+===================================================================
+--- branches/BRANCH_6-3/po/sq.po	2009-10-05 19:17:25 UTC (rev 5437)
++++ branches/BRANCH_6-3/po/sq.po	2009-10-05 19:43:41 UTC (rev 5438)
+@@ -6,7 +6,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail-6.3.8\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
++"POT-Creation-Date: 2009-08-24 21:16+0200\n"
+ "PO-Revision-Date: 2008-02-29 00:24+0200\n"
+ "Last-Translator: Besnik Bleta <besnik at programeshqip.org>\n"
+ "Language-Team: Albanian <translation-team-sq at lists.sourceforge.net>\n"
+@@ -53,7 +53,12 @@
+ msgid "kerberos error %s\n"
+ msgstr "gabim kerberos %s\n"
+ 
+-#: driver.c:249 driver.c:254
++#: driver.c:249
++#, fuzzy, c-format
++msgid "krb5_sendauth: %s [server says '%s'] \n"
++msgstr "krb5_sendauth: %s [sh??rbyesi thot?? '%*s'] \n"
++
++#: driver.c:254
+ #, c-format
+ msgid "krb5_sendauth: %s [server says '%*s'] \n"
+ msgstr "krb5_sendauth: %s [sh??rbyesi thot?? '%*s'] \n"
+@@ -2808,15 +2813,15 @@
+ "-- \n"
+ "Demoni Fetchmail"
+ 
+-#: smtp.c:80
++#: smtp.c:81
+ msgid "ESMTP CRAM-MD5 Authentication...\n"
+ msgstr "Mir??fillt??sim ESMTP CRAM-MD5...\n"
+ 
+-#: smtp.c:87 smtp.c:138
++#: smtp.c:87 smtp.c:137
+ msgid "Server rejected the AUTH command.\n"
+ msgstr "Sh??rbyesi hodhi posht?? urdhrin AUTH.\n"
+ 
+-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
++#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
+ msgid "Bad base64 reply from server.\n"
+ msgstr "P??rgjigje base64 e gabuar prej sh??rbyesit.\n"
+ 
+@@ -2833,7 +2838,7 @@
+ msgid "ESMTP LOGIN Authentication...\n"
+ msgstr "Mir??fillt??sim ESMTP LOGIN...\n"
+ 
+-#: smtp.c:339 smtp.c:362
++#: smtp.c:349 smtp.c:377
+ msgid "smtp listener protocol error\n"
+ msgstr "gabim protokolli d??gjuesi smtp\n"
+ 
+
+Modified: branches/BRANCH_6-3/po/tr.po
+===================================================================
+--- branches/BRANCH_6-3/po/tr.po	2009-10-05 19:17:25 UTC (rev 5437)
++++ branches/BRANCH_6-3/po/tr.po	2009-10-05 19:43:41 UTC (rev 5438)
+@@ -6,7 +6,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 6.2.5\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2009-08-18 13:45+0200\n"
++"POT-Creation-Date: 2009-08-24 21:16+0200\n"
+ "PO-Revision-Date: 2003-10-17 17:27+0200\n"
+ "Last-Translator: Engin G?nd?z <engin at ripe.net>\n"
+ "Language-Team: Turkish <gnu-tr-u12a at lists.sourceforge.net>\n"
+@@ -53,7 +53,12 @@
+ msgid "kerberos error %s\n"
+ msgstr "kerberos hatas? %s\n"
+ 
+-#: driver.c:249 driver.c:254
++#: driver.c:249
++#, fuzzy, c-format
++msgid "krb5_sendauth: %s [server says '%s'] \n"
++msgstr "krb5_sendauth: %s [sunucu '%*s' diyor] \n"
++
++#: driver.c:254
+ #, c-format
+ msgid "krb5_sendauth: %s [server says '%*s'] \n"
+ msgstr "krb5_sendauth: %s [sunucu '%*s' diyor] \n"
+@@ -2869,15 +2874,15 @@
+ "--\n"
+ "\t\t\t\tFetchmail Daemon'u\n"
+ 
+-#: smtp.c:80
++#: smtp.c:81
+ msgid "ESMTP CRAM-MD5 Authentication...\n"
+ msgstr "ESMTP CRAM-Md5 Kimlik kan?tlamas?...\n"
+ 
+-#: smtp.c:87 smtp.c:138
++#: smtp.c:87 smtp.c:137
+ msgid "Server rejected the AUTH command.\n"
+ msgstr "Sunucu AUTH komutunu reddetti.\n"
+ 
+-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
++#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
+ msgid "Bad base64 reply from server.\n"
+ msgstr "Sunucudan ge?ersiz base64 yan?t?.\n"
+ 
+@@ -2894,7 +2899,7 @@
+ msgid "ESMTP LOGIN Authentication...\n"
+ msgstr "ESMTP LOGIN Kimlik kan?tlamas?...\n"
+ 
+-#: smtp.c:339 smtp.c:362
++#: smtp.c:349 smtp.c:377
+ msgid "smtp listener protocol error\n"
+ msgstr "smtp dinleyicisi protokol hatas?\n"
+ 
+
+Modified: branches/BRANCH_6-3/po/vi.po
+===================================================================
+--- branches/BRANCH_6-3/po/vi.po	2009-10-05 19:17:25 UTC (rev 5437)
++++ branches/BRANCH_6-3/po/vi.po	2009-10-05 19:43:41 UTC (rev 5438)
+@@ -7,7 +7,7 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 6.3.11\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2009-08-06 01:21+0200\n"
++"POT-Creation-Date: 2009-08-24 21:16+0200\n"
+ "PO-Revision-Date: 2009-09-18 23:16+0930\n"
+ "Last-Translator: Clytie Siddall <clytie at riverland.net.au>\n"
+ "Language-Team: Vietnamese <vi-VN at googlegroups.com>\n"
+@@ -33,12 +33,14 @@
+ #: checkalias.c:203
+ #, c-format
+ msgid "nameserver failure while looking for '%s' during poll of %s: %s\n"
+-msgstr "tr??nh ph???c v??? t??n th???t b???i trong khi t??m ?? %s ??  trong vi???c th??m d?? %s: %s\n"
++msgstr ""
++"tr??nh ph???c v??? t??n th???t b???i trong khi t??m ?? %s ??  trong vi???c th??m d?? %s: %s\n"
+ 
+ #: checkalias.c:228
+ #, c-format
+ msgid "nameserver failure while looking for `%s' during poll of %s.\n"
+-msgstr "tr??nh ph???c v??? t??n th???t b???i trong khi t??m ?? %s ??  trong vi???c th??m d?? %s.\n"
++msgstr ""
++"tr??nh ph???c v??? t??n th???t b???i trong khi t??m ?? %s ??  trong vi???c th??m d?? %s.\n"
+ 
+ #: cram.c:95
+ msgid "could not decode BASE64 challenge\n"
+@@ -54,7 +56,12 @@
+ msgid "kerberos error %s\n"
+ msgstr "l???i kerberos %s\n"
+ 
+-#: driver.c:249 driver.c:254
++#: driver.c:249
++#, fuzzy, c-format
++msgid "krb5_sendauth: %s [server says '%s'] \n"
++msgstr "krb5_sendauth: %s [tr??nh ph???c v??? n??i ?? %*s ??]\n"
++
++#: driver.c:254
+ #, c-format
+ msgid "krb5_sendauth: %s [server says '%*s'] \n"
+ msgstr "krb5_sendauth: %s [tr??nh ph???c v??? n??i ?? %*s ??]\n"
+@@ -66,7 +73,8 @@
+ #: driver.c:339
+ #, c-format
+ msgid "The following oversized messages were deleted on server %s account %s:"
+-msgstr "Nh???ng th?? qu?? l???n theo ????y ???? b??? xo?? b??? tr??n m??y ph???c v??? %s t??i kho???n %s:"
++msgstr ""
++"Nh???ng th?? qu?? l???n theo ????y ???? b??? xo?? b??? tr??n m??y ph???c v??? %s t??i kho???n %s:"
+ 
+ #: driver.c:343
+ #, c-format
+@@ -130,7 +138,8 @@
+ 
+ #: driver.c:751
+ #, c-format
+-msgid "message %s@%s:%d was not the expected length (%d actual != %d expected)\n"
++msgid ""
++"message %s@%s:%d was not the expected length (%d actual != %d expected)\n"
+ msgstr "th?? %s@%s:%d kh??ng c?? ????? d??i ???? ng??? (%d th???t != %d ???? ng???)\n"
+ 
+ #: driver.c:783
+@@ -148,7 +157,8 @@
+ #: driver.c:828
+ #, c-format
+ msgid "fetchlimit %d reached; %d message left on server %s account %s\n"
+-msgid_plural "fetchlimit %d reached; %d messages left on server %s account %s\n"
++msgid_plural ""
++"fetchlimit %d reached; %d messages left on server %s account %s\n"
+ msgstr[0] "t???i h???n l???y %d; %d th?? c??n l???i tr??n m??y ph???c v??? %s t??i kho???n %s\n"
+ 
+ #: driver.c:885
+@@ -182,7 +192,9 @@
+ 
+ #: driver.c:916
+ #, c-format
+-msgid "Fetchmail saw more than %d timeouts while attempting to get mail from %s@%s.\n"
++msgid ""
++"Fetchmail saw more than %d timeouts while attempting to get mail from %s@%"
++"s.\n"
+ msgstr "Fetchmail th???y h??n %d vi???c qu?? gi??? trong khi c??? l???y th?? t??? %s@%s.\n"
+ 
+ #: driver.c:920
+@@ -194,7 +206,9 @@
+ "\n"
+ "Fetchmail won't poll this mailbox again until you restart it.\n"
+ msgstr ""
+-"C?? th??? ngh??a l?? tr??nh ph???c v??? th?? b??? t???c, ho???c tr??nh ph???c v??? SMTP kh??ng l???i tho??t, ho???c t???p tin h??p th?? tr??n m??y ph???c v??? ???? b??? h???ng do l???i tr??nh ph???c v???. B???n c?? th??? ch???y l???nh ?? fetchmail -v -v ?? ????? ch???n ??o??n v???n ????? n??y.\n"
++"C?? th??? ngh??a l?? tr??nh ph???c v??? th?? b??? t???c, ho???c tr??nh ph???c v??? SMTP kh??ng l???i "
++"tho??t, ho???c t???p tin h??p th?? tr??n m??y ph???c v??? ???? b??? h???ng do l???i tr??nh ph???c "
++"v???. B???n c?? th??? ch???y l???nh ?? fetchmail -v -v ?? ????? ch???n ??o??n v???n ????? n??y.\n"
+ "\n"
+ "Fetchmail s??? kh??ng th??m d?? h???p th?? n??y cho ?????n khi b???n kh???i ?????ng n??.\n"
+ 
+@@ -509,7 +523,8 @@
+ msgid ""
+ "%s: The NULLMAILER_FLAGS environment variable is set.\n"
+ "This is dangerous as it can make nullmailer-inject or nullmailer's\n"
+-"sendmail wrapper tamper with your From:, Message-ID: or Return-Path: headers.\n"
++"sendmail wrapper tamper with your From:, Message-ID: or Return-Path: "
++"headers.\n"
+ "Try \"env NULLMAILER_FLAGS= %s YOUR ARGUMENTS HERE\"\n"
+ "%s: Abort.\n"
+ msgstr ""
+@@ -538,12 +553,14 @@
+ 
+ #: env.c:170
+ msgid "Cannot find my own host in hosts database to qualify it!\n"
+-msgstr "Kh??ng t??m th???y m??y m??nh trong c?? s??? d??? li???u m??y ????? th??m ????? kh??? n??ng v??o n??.\n"
++msgstr ""
++"Kh??ng t??m th???y m??y m??nh trong c?? s??? d??? li???u m??y ????? th??m ????? kh??? n??ng v??o n??.\n"
+ 
+ #: env.c:174
+ msgid ""
+ "Trying to continue with unqualified hostname.\n"
+-"DO NOT report broken Received: headers, HELO/EHLO lines or similar problems!\n"
++"DO NOT report broken Received: headers, HELO/EHLO lines or similar "
++"problems!\n"
+ "DO repair your /etc/hosts, DNS, NIS or LDAP instead.\n"
+ msgstr ""
+ "??ang c??? ti???p t???c v???i t??n m??y kh??ng c?? ????? kh??? n??ng.\n"
+@@ -618,12 +635,14 @@
+ #: fetchmail.c:137
+ msgid ""
+ "Copyright (C) 2002, 2003 Eric S. Raymond\n"
+-"Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham Wilson\n"
++"Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham "
++"Wilson\n"
+ "Copyright (C) 2005 - 2006 Sunil Shetye\n"
+ "Copyright (C) 2005 - 2009 Matthias Andree\n"
+ msgstr ""
+ "T??c quy???n ?? n??m 2002, 2003 c???a Eric S. Raymond\n"
+-"T??c quy???n ?? n??m 2004 c???a Matthias Andree, Eric S. Raymond, Robert F. Funk, Graham Wilson\n"
++"T??c quy???n ?? n??m 2004 c???a Matthias Andree, Eric S. Raymond, Robert F. Funk, "
++"Graham Wilson\n"
+ "T??c quy???n ?? n??m 2005-2006 c???a Sunil Shetye\n"
+ "T??c quy???n ?? n??m 2005-2009 c???a Matthias Andree\n"
+ 
+@@ -680,7 +699,8 @@
+ #: fetchmail.c:448
+ #, c-format
+ msgid "fetchmail: error killing %s fetchmail at %d; bailing out.\n"
+-msgstr "fetchmail: g???p l???i khi bu???c k???t th??c c???a fetchmail %s t???i %d n??n h???y b???.\n"
++msgstr ""
++"fetchmail: g???p l???i khi bu???c k???t th??c c???a fetchmail %s t???i %d n??n h???y b???.\n"
+ 
+ #: fetchmail.c:449 fetchmail.c:458
+ msgid "background"
+@@ -696,13 +716,20 @@
+ msgstr "fetchmail: fetchmail %s t???i %d ???????c bu???c k???t th??c.\n"
+ 
+ #: fetchmail.c:480
+-msgid "fetchmail: can't check mail while another fetchmail to same host is running.\n"
+-msgstr "fetchmail: kh??ng th??? ki???m tra c?? th?? m???i trong khi m???t th??? hi???n fetchmail kh??c ??ang ch???y t???i c??ng m???t m??y.\n"
++msgid ""
++"fetchmail: can't check mail while another fetchmail to same host is "
++"running.\n"
++msgstr ""
++"fetchmail: kh??ng th??? ki???m tra c?? th?? m???i trong khi m???t th??? hi???n fetchmail "
++"kh??c ??ang ch???y t???i c??ng m???t m??y.\n"
+ 
+ #: fetchmail.c:486
+ #, c-format
+-msgid "fetchmail: can't poll specified hosts with another fetchmail running at %d.\n"
+-msgstr "fetchmail: kh??ng th??? th??m d?? c??c m??y ???? x??c ?????nh khi c?? th??? hi???n fetchmail kh??c ch???y t???i %d\n"
++msgid ""
++"fetchmail: can't poll specified hosts with another fetchmail running at %d.\n"
++msgstr ""
++"fetchmail: kh??ng th??? th??m d?? c??c m??y ???? x??c ?????nh khi c?? th??? hi???n fetchmail "
++"kh??c ch???y t???i %d\n"
+ 
+ #: fetchmail.c:493
+ #, c-format
+@@ -710,8 +737,11 @@
+ msgstr "fetchmail: m???t th??? hi???n fetchmail c???nh g???n kh??c ??ang ch???y t???i %d.\n"
+ 
+ #: fetchmail.c:503
+-msgid "fetchmail: can't accept options while a background fetchmail is running.\n"
+-msgstr "fetchmail: kh??ng th??? ch???p nh???n t??y ch???n trong khi m???t th??? hi???n fetchmail n???n ??ang ch???y.\n"
++msgid ""
++"fetchmail: can't accept options while a background fetchmail is running.\n"
++msgstr ""
++"fetchmail: kh??ng th??? ch???p nh???n t??y ch???n trong khi m???t th??? hi???n fetchmail n???n "
++"??ang ch???y.\n"
+ 
+ #: fetchmail.c:509
+ #, c-format
+@@ -749,7 +779,9 @@
+ 
+ #: fetchmail.c:606
+ msgid "fetchmail: Warning: syslog and logfile are set. Check both for logs!\n"
+-msgstr "fetchmail: c???nh b??o : c??? syslog (b???n ghi h??? th???ng) l???n logfile (t???p tin ghi l??u) ?????u ???? ???????c ?????t. H??y ki???m tra c??? hai t??m t???p tin ghi l??u.\n"
++msgstr ""
++"fetchmail: c???nh b??o : c??? syslog (b???n ghi h??? th???ng) l???n logfile (t???p tin ghi "
++"l??u) ?????u ???? ???????c ?????t. H??y ki???m tra c??? hai t??m t???p tin ghi l??u.\n"
+ 
+ #: fetchmail.c:625
+ msgid "--check mode enabled, not fetching mail\n"
+@@ -776,7 +808,8 @@
+ #: fetchmail.c:714
+ #, c-format
+ msgid "poll of %s skipped (failed authentication or too many timeouts)\n"
+-msgstr "vi???c th??m d?? %s b??? b??? qua (x??c th???c ???? th???t b???i ho???c qu?? gi??? qu?? nhi???u l???n)\n"
++msgstr ""
++"vi???c th??m d?? %s b??? b??? qua (x??c th???c ???? th???t b???i ho???c qu?? gi??? qu?? nhi???u l???n)\n"
+ 
+ #: fetchmail.c:726
+ #, c-format
+@@ -884,7 +917,8 @@
+ 
+ #: fetchmail.c:1102
+ msgid "fetchmail: Error: multiple \"defaults\" records in config file.\n"
+-msgstr "fetchmail: l???i : g???p nhi???u m???c ghi ?? m???c ?????nh ?? trong t???p tin c???u h??nh.\n"
++msgstr ""
++"fetchmail: l???i : g???p nhi???u m???c ghi ?? m???c ?????nh ?? trong t???p tin c???u h??nh.\n"
+ 
+ #: fetchmail.c:1224
+ msgid "SSL support is not compiled in.\n"
+@@ -892,11 +926,13 @@
+ 
+ #: fetchmail.c:1231
+ msgid "KERBEROS v4 support is configured, but not compiled in.\n"
+-msgstr "Kh??? n??ng h??? tr??? KERBEROS v4 ???? ???????c c???u h??nh c??n ch??a ???????c bi??n d???ch v??o.\n"
++msgstr ""
++"Kh??? n??ng h??? tr??? KERBEROS v4 ???? ???????c c???u h??nh c??n ch??a ???????c bi??n d???ch v??o.\n"
+ 
+ #: fetchmail.c:1237
+ msgid "KERBEROS v5 support is configured, but not compiled in.\n"
+-msgstr "Kh??? n??ng h??? tr??? KERBEROS v5 ???? ???????c c???u h??nh c??n ch??a ???????c bi??n d???ch v??o.\n"
++msgstr ""
++"Kh??? n??ng h??? tr??? KERBEROS v5 ???? ???????c c???u h??nh c??n ch??a ???????c bi??n d???ch v??o.\n"
+ 
+ #: fetchmail.c:1243
+ msgid "GSSAPI support is configured, but not compiled in.\n"
+@@ -904,8 +940,11 @@
+ 
+ #: fetchmail.c:1273
+ #, c-format
+-msgid "fetchmail: warning: no DNS available to check multidrop fetches from %s\n"
+-msgstr "fetchmail: c???nh b??o : kh??ng c?? DNS s???n s??ng ????? ki???m tra vi???c l???y ??a th??? t??? %s\n"
++msgid ""
++"fetchmail: warning: no DNS available to check multidrop fetches from %s\n"
++msgstr ""
++"fetchmail: c???nh b??o : kh??ng c?? DNS s???n s??ng ????? ki???m tra vi???c l???y ??a th??? t??? %"
++"s\n"
+ 
+ #: fetchmail.c:1284
+ #, c-format
+@@ -914,17 +953,25 @@
+ 
+ #: fetchmail.c:1285
+ msgid "warning: Do not ask for support if all mail goes to postmaster!\n"
+-msgstr "c???nh b??o : ?????ng y??u c???u s??? h??? tr??? n???u m???i th?? ???????c ph??t cho postmaster (gi??m ?????c s??? b??u ??i???n).\n"
++msgstr ""
++"c???nh b??o : ?????ng y??u c???u s??? h??? tr??? n???u m???i th?? ???????c ph??t cho postmaster (gi??m "
++"?????c s??? b??u ??i???n).\n"
+ 
+ #: fetchmail.c:1302
+ #, c-format
+-msgid "fetchmail: %s configuration invalid, specify positive port number for service or port\n"
+-msgstr "fetchmail: c???u h??nh %s kh??ng h???p l???; h??y x??c ?????nh s??? hi???u c???ng d????ng cho d???ch v??? hay c???ng\n"
++msgid ""
++"fetchmail: %s configuration invalid, specify positive port number for "
++"service or port\n"
++msgstr ""
++"fetchmail: c???u h??nh %s kh??ng h???p l???; h??y x??c ?????nh s??? hi???u c???ng d????ng cho "
++"d???ch v??? hay c???ng\n"
+ 
+ #: fetchmail.c:1309
+ #, c-format
+ msgid "fetchmail: %s configuration invalid, RPOP requires a privileged port\n"
+-msgstr "fetchmail: c???u h??nh %s kh??ng h???p l???; RPOP c???n thi???t m???t c???ng c?? quy???n ?????c bi???t\n"
++msgstr ""
++"fetchmail: c???u h??nh %s kh??ng h???p l???; RPOP c???n thi???t m???t c???ng c?? quy???n ?????c "
++"bi???t\n"
+ 
+ #: fetchmail.c:1327
+ #, c-format
+@@ -933,7 +980,9 @@
+ 
+ #: fetchmail.c:1341
+ msgid "Both fetchall and keep on in daemon or idle mode is a mistake!\n"
+-msgstr "Vi???c ch???y fetchall (l???y h???t) c??ng v???i ti???p t???c trong ch??? ????? tr??nh n???n l?? tr?????ng h???p x???u.\n"
++msgstr ""
++"Vi???c ch???y fetchall (l???y h???t) c??ng v???i ti???p t???c trong ch??? ????? tr??nh n???n l?? "
++"tr?????ng h???p x???u.\n"
+ 
+ #: fetchmail.c:1366
+ #, c-format
+@@ -991,15 +1040,18 @@
+ 
+ #: fetchmail.c:1541
+ msgid "Progress messages will be logged via syslog\n"
+-msgstr "C??c th??ng ??i???p ti???n h??nh s??? ???????c ghi l??u b???ng syslog (b???n ghi h??? th???ng)\n"
++msgstr ""
++"C??c th??ng ??i???p ti???n h??nh s??? ???????c ghi l??u b???ng syslog (b???n ghi h??? th???ng)\n"
+ 
+ #: fetchmail.c:1544
+ msgid "Fetchmail will masquerade and will not generate Received\n"
+-msgstr "Fetchmail s??? gi??? trang v?? s??? kh??ng t???o ra d??ng ?????u ?? Received ?? (???? nh???n)\n"
++msgstr ""
++"Fetchmail s??? gi??? trang v?? s??? kh??ng t???o ra d??ng ?????u ?? Received ?? (???? nh???n)\n"
+ 
+ #: fetchmail.c:1546
+ msgid "Fetchmail will show progress dots even in logfiles.\n"
+-msgstr "Fetchmail s??? hi???n th??? c??c ch???m ti???n h??nh ngay c??? trong t???p tin ghi l??u.\n"
++msgstr ""
++"Fetchmail s??? hi???n th??? c??c ch???m ti???n h??nh ngay c??? trong t???p tin ghi l??u.\n"
+ 
+ #: fetchmail.c:1548
+ #, c-format
+@@ -1197,31 +1249,45 @@
+ 
+ #: fetchmail.c:1691
+ msgid "  Fetched messages will not be kept on the server (--keep off).\n"
+-msgstr "  C??c th?? ???? l???y s??? kh??ng ???????c gi??? l???i tr??n m??y ph???c v??? (?? --keep ?? t???t).\n"
++msgstr ""
++"  C??c th?? ???? l???y s??? kh??ng ???????c gi??? l???i tr??n m??y ph???c v??? (?? --keep ?? t???t).\n"
+ 
+ #: fetchmail.c:1693
+ msgid "  Old messages will be flushed before message retrieval (--flush on).\n"
+ msgstr "  C??c th?? c?? s??? ???????c xo?? s???ch tr?????c khi l???y th?? (?? --flush ?? b???t).\n"
+ 
+ #: fetchmail.c:1694
+-msgid "  Old messages will not be flushed before message retrieval (--flush off).\n"
+-msgstr "  C??c th?? c?? s??? kh??ng ???????c xo?? s???ch tr?????c khi l???y th?? (?? --flush ?? t???t).\n"
++msgid ""
++"  Old messages will not be flushed before message retrieval (--flush off).\n"
++msgstr ""
++"  C??c th?? c?? s??? kh??ng ???????c xo?? s???ch tr?????c khi l???y th?? (?? --flush ?? t???t).\n"
+ 
+ #: fetchmail.c:1696
+-msgid "  Oversized messages will be flushed before message retrieval (--limitflush on).\n"
+-msgstr "  C??c th?? qu?? l???n s??? ???????c xo?? s???ch tr?????c khi l???y th?? (?? --limitflush ?? b???t).\n"
++msgid ""
++"  Oversized messages will be flushed before message retrieval (--limitflush "
++"on).\n"
++msgstr ""
++"  C??c th?? qu?? l???n s??? ???????c xo?? s???ch tr?????c khi l???y th?? (?? --limitflush ?? b???t).\n"
+ 
+ #: fetchmail.c:1697
+-msgid "  Oversized messages will not be flushed before message retrieval (--limitflush off).\n"
+-msgstr "  C??c th?? qu?? l???n s??? kh??ng ???????c xo?? s???ch tr?????c khi l???y th?? (?? --limitflush ?? t???t).\n"
++msgid ""
++"  Oversized messages will not be flushed before message retrieval (--"
++"limitflush off).\n"
++msgstr ""
++"  C??c th?? qu?? l???n s??? kh??ng ???????c xo?? s???ch tr?????c khi l???y th?? (?? --limitflush ?? "
++"t???t).\n"
+ 
+ #: fetchmail.c:1699
+ msgid "  Rewrite of server-local addresses is enabled (--norewrite off).\n"
+-msgstr "  Kh??? n??ng ghi l???i c??c ?????a ch??? c???c b??? v???i m??y ph???c v??? ???? ???????c b???t (?? --norewrite ?? t???t).\n"
++msgstr ""
++"  Kh??? n??ng ghi l???i c??c ?????a ch??? c???c b??? v???i m??y ph???c v??? ???? ???????c b???t (?? --"
++"norewrite ?? t???t).\n"
+ 
+ #: fetchmail.c:1700
+ msgid "  Rewrite of server-local addresses is disabled (--norewrite on).\n"
+-msgstr "  Kh??? n??ng ghi l???i c??c ?????a ch??? c???c b??? v???i m??y ph???c v??? ???? ???????c t???t (?? --norewrite ?? b???t).\n"
++msgstr ""
++"  Kh??? n??ng ghi l???i c??c ?????a ch??? c???c b??? v???i m??y ph???c v??? ???? ???????c t???t (?? --"
++"norewrite ?? b???t).\n"
+ 
+ #: fetchmail.c:1702
+ msgid "  Carriage-return stripping is enabled (stripcr on).\n"
+@@ -1240,12 +1306,18 @@
+ msgstr "  Vi???c bu???c k?? t??? v??? ?????u d??ng ???? ???????c t???t (?? forcecr ?? t???t).\n"
+ 
+ #: fetchmail.c:1708
+-msgid "  Interpretation of Content-Transfer-Encoding is disabled (pass8bits on).\n"
+-msgstr "  Kh??? n??ng gi???i th??ch Content-Transfer-Encoding (c??ch m?? ho?? n???i dung ???????c truy???n) ???? ???????c t???t (?? pass8bits ?? b???t).\n"
++msgid ""
++"  Interpretation of Content-Transfer-Encoding is disabled (pass8bits on).\n"
++msgstr ""
++"  Kh??? n??ng gi???i th??ch Content-Transfer-Encoding (c??ch m?? ho?? n???i dung ???????c "
++"truy???n) ???? ???????c t???t (?? pass8bits ?? b???t).\n"
+ 
+ #: fetchmail.c:1709
+-msgid "  Interpretation of Content-Transfer-Encoding is enabled (pass8bits off).\n"
+-msgstr "  Kh??? n??ng gi???i th??ch Content-Transfer-Encoding (c??ch m?? ho?? n???i dung ???????c truy???n) ???? ???????c b???t (?? pass8bits ?? t???t).\n"
++msgid ""
++"  Interpretation of Content-Transfer-Encoding is enabled (pass8bits off).\n"
++msgstr ""
++"  Kh??? n??ng gi???i th??ch Content-Transfer-Encoding (c??ch m?? ho?? n???i dung ???????c "
++"truy???n) ???? ???????c b???t (?? pass8bits ?? t???t).\n"
+ 
+ #: fetchmail.c:1711
+ msgid "  MIME decoding is enabled (mimedecode on).\n"
+@@ -1273,11 +1345,13 @@
+ 
+ #: fetchmail.c:1720
+ msgid "  Delivered-To lines will be discarded (dropdelivered on)\n"
+-msgstr "  C??c d??ng Delivered-To (???????c ph??t cho) s??? ???????c h???y (?? dropdelivered ?? b???t).\n"
++msgstr ""
++"  C??c d??ng Delivered-To (???????c ph??t cho) s??? ???????c h???y (?? dropdelivered ?? b???t).\n"
+ 
+ #: fetchmail.c:1721
+ msgid "  Delivered-To lines will be kept (dropdelivered off)\n"
+-msgstr "  C??c d??ng Delivered-To (???????c ph??t cho) s??? ???????c gi??? (?? dropdelivered ?? t???t).\n"
++msgstr ""
++"  C??c d??ng Delivered-To (???????c ph??t cho) s??? ???????c gi??? (?? dropdelivered ?? t???t).\n"
+ 
+ #: fetchmail.c:1725
+ #, c-format
+@@ -1317,16 +1391,20 @@
+ 
+ #: fetchmail.c:1748
+ msgid "  Do binary search of UIDs during each poll (--fastuidl 1).\n"
+-msgstr "  T??m ki???m nh??? ph??n c??c UID trong khi m???i vi???c th??m d?? (?? --fastuidl ?? 1).\n"
++msgstr ""
++"  T??m ki???m nh??? ph??n c??c UID trong khi m???i vi???c th??m d?? (?? --fastuidl ?? 1).\n"
+ 
+ #: fetchmail.c:1750
+ #, c-format
+ msgid "  Do binary search of UIDs during %d out of %d polls (--fastuidl %d).\n"
+-msgstr "  T??m ki???m nh??? ph??n c??c UID trong khi %d tr??n %d vi???c th??m d?? (?? --fastuidl ?? %d).\n"
++msgstr ""
++"  T??m ki???m nh??? ph??n c??c UID trong khi %d tr??n %d vi???c th??m d?? (?? --fastuidl ?? "
++"%d).\n"
+ 
+ #: fetchmail.c:1753
+ msgid "   Do linear search of UIDs during each poll (--fastuidl 0).\n"
+-msgstr "   T??m ki???m tuy???n c??c UID trong khi m???i vi???c th??m d?? (?? --fastuidl ?? 0).\n"
++msgstr ""
++"   T??m ki???m tuy???n c??c UID trong khi m???i vi???c th??m d?? (?? --fastuidl ?? 0).\n"
+ 
+ #: fetchmail.c:1755
+ #, c-format
+@@ -1340,7 +1418,9 @@
+ #: fetchmail.c:1761
+ #, c-format
+ msgid "  Deletion interval between expunges forced to %d (--expunge %d).\n"
+-msgstr "  Kho???ng xo?? b??? gi???a hai l???n xo?? h???n ???? ???????c bu???c th??nh %d (?? --expunge ?? %d).\n"
++msgstr ""
++"  Kho???ng xo?? b??? gi???a hai l???n xo?? h???n ???? ???????c bu???c th??nh %d (?? --expunge ?? %"
++"d).\n"
+ 
+ #: fetchmail.c:1763
+ msgid "  No forced expunges (--expunge 0).\n"
+@@ -1432,8 +1512,10 @@
+ msgstr "  Kh??? n??ng tra t??m DNS cho ?????a ch??? ??a th??? ???? ???????c t???t.\n"
+ 
+ #: fetchmail.c:1866
+-msgid "  Server aliases will be compared with multidrop addresses by IP address.\n"
+-msgstr "  B?? danh m??y ph???c v??? s??? ???????c so s??nh v???i ?????a ch??? ??a th??? theo ?????a ch??? IP.\n"
++msgid ""
++"  Server aliases will be compared with multidrop addresses by IP address.\n"
++msgstr ""
++"  B?? danh m??y ph???c v??? s??? ???????c so s??nh v???i ?????a ch??? ??a th??? theo ?????a ch??? IP.\n"
+ 
+ #: fetchmail.c:1868
+ msgid "  Server aliases will be compared with multidrop addresses by name.\n"
+@@ -1523,7 +1605,8 @@
+ msgid ""
+ "  No poll trace information will be added to the Received header.\n"
+ ".\n"
+-msgstr "  Kh??ng c?? th??ng tin v???t th??m d?? s??? ???????c th??m v??o d??ng ?????u ?? Received ??.\n"
++msgstr ""
++"  Kh??ng c?? th??ng tin v???t th??m d?? s??? ???????c th??m v??o d??ng ?????u ?? Received ??.\n"
+ 
+ #: fetchmail.c:1952
+ #, c-format
+@@ -1628,7 +1711,8 @@
+ #: imap.c:459
+ #, c-format
+ msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
+-msgstr "%s: vi???c n??ng c???p l??n TLS m???t c??ch c?? h???i ch??? ngh??a b??? l???i n??n th??? ti???p t???c\n"
++msgstr ""
++"%s: vi???c n??ng c???p l??n TLS m???t c??ch c?? h???i ch??? ngh??a b??? l???i n??n th??? ti???p t???c\n"
+ 
+ #: imap.c:579
+ msgid "Required OTP capability not compiled into fetchmail\n"
+@@ -1640,7 +1724,8 @@
+ 
+ #: imap.c:610
+ msgid "Required LOGIN capability not supported by server\n"
+-msgstr "Kh??? n??ng LOGIN (????ng nh???p) c???n thi???t kh??ng ???????c h??? tr??? b???i m??y ph???c v???\n"
++msgstr ""
++"Kh??? n??ng LOGIN (????ng nh???p) c???n thi???t kh??ng ???????c h??? tr??? b???i m??y ph???c v???\n"
+ 
+ #: imap.c:676
+ #, c-format
+@@ -1692,8 +1777,11 @@
+ msgstr "%u l?? th?? ?????u ch??a xem\n"
+ 
+ #: imap.c:1002
+-msgid "Warning: ignoring bogus data for message sizes returned by the server.\n"
+-msgstr "C???nh b??o : ??ang b??? qua d??? li???u gi??? v??? k??ch c??? c??c th?? b??? m??y ph???c v??? tr??? v???.\n"
++msgid ""
++"Warning: ignoring bogus data for message sizes returned by the server.\n"
++msgstr ""
++"C???nh b??o : ??ang b??? qua d??? li???u gi??? v??? k??ch c??? c??c th?? b??? m??y ph???c v??? tr??? "
++"v???.\n"
+ 
+ #: interface.c:256
+ msgid "Unable to open kvm interface. Make sure fetchmail is SGID kmem."
+@@ -1962,32 +2050,41 @@
+ msgstr "  -L, --logfile     x??c ?????nh t??n _t???p tin ghi l??u_\n"
+ 
+ #: options.c:613
+-msgid "      --syslog      use syslog(3) for most messages when running as a daemon\n"
++msgid ""
++"      --syslog      use syslog(3) for most messages when running as a "
++"daemon\n"
+ msgstr ""
+-"      --syslog      d??ng syslog(3) (b???n ghi h??? th???ng) ????? ghi l??u ph???n l???n th??ng ??i???p\n"
++"      --syslog      d??ng syslog(3) (b???n ghi h??? th???ng) ????? ghi l??u ph???n l???n "
++"th??ng ??i???p\n"
+ "\t\t\t\ttrong khi ch???y l?? tr??nh n???n\n"
+ 
+ #: options.c:614
+ msgid "      --invisible   don't write Received & enable host spoofing\n"
+ msgstr ""
+-"      --invisible   kh??ng ghi Received (d??ng ?????u ???? nh???n) v?? b???t kh??? n??ng ???n m??y ????ng)\n"
++"      --invisible   kh??ng ghi Received (d??ng ?????u ???? nh???n) v?? b???t kh??? n??ng ???n "
++"m??y ????ng)\n"
+ "\t\t\t\t(_v?? h??nh_)\n"
+ 
+ #: options.c:615
+ msgid "  -f, --fetchmailrc specify alternate run control file\n"
+-msgstr "  -f, --fetchmailrc \t\tx??c ?????nh t???p tin _??i???u khi???n ch???y_ (rc) xen k???\n"
++msgstr ""
++"  -f, --fetchmailrc \t\tx??c ?????nh t???p tin _??i???u khi???n ch???y_ (rc) xen k???\n"
+ 
+ #: options.c:616
+ msgid "  -i, --idfile      specify alternate UIDs file\n"
+-msgstr "  -i, --idfile      x??c ?????nh _t???p tin nh???n di???n_ ng?????i d??ng (UID) xen k???\n"
++msgstr ""
++"  -i, --idfile      x??c ?????nh _t???p tin nh???n di???n_ ng?????i d??ng (UID) xen k???\n"
+ 
+ #: options.c:617
+ msgid "      --pidfile     specify alternate PID (lock) file\n"
+-msgstr "      --pidfile     x??c ?????nh _t???p tin nh???n di???n ti???n tr??nh_ (PID) (kho??) xen k???\n"
++msgstr ""
++"      --pidfile     x??c ?????nh _t???p tin nh???n di???n ti???n tr??nh_ (PID) (kho??) xen "
++"k???\n"
+ 
+ #: options.c:618
+ msgid "      --postmaster  specify recipient of last resort\n"
+-msgstr "      --postmaster  x??c ?????nh ng?????i nh???n cu???i c??ng (_gi??m ?????c s??? b??u ??i???n_)\n"
++msgstr ""
++"      --postmaster  x??c ?????nh ng?????i nh???n cu???i c??ng (_gi??m ?????c s??? b??u ??i???n_)\n"
+ 
+ #: options.c:619
+ msgid "      --nobounce    redirect bounces from user to postmaster.\n"
+@@ -1996,12 +2093,18 @@
+ "\t\t\t\tsang gi??m ?????c s??? b??u ??i???n (_kh??ng n???y_)\n"
+ 
+ #: options.c:620
+-msgid "      --nosoftbounce fetchmail deletes permanently undeliverable messages.\n"
+-msgstr "      --nosoftbounce fetchmail xo?? b??? m???i th?? kh??ng th??? ph??t ???????c (b???n b???).\n"
++msgid ""
++"      --nosoftbounce fetchmail deletes permanently undeliverable messages.\n"
++msgstr ""
++"      --nosoftbounce fetchmail xo?? b??? m???i th?? kh??ng th??? ph??t ???????c (b???n b???).\n"
+ 
+ #: options.c:621
+-msgid "      --softbounce  keep permanently undeliverable messages on server (default).\n"
+-msgstr "      --softbounce  gi??? tr??n m??y ph???c v??? m???i th?? kh??ng th??? ph??t ???????c (b???n b???). ????y l?? ???ng x??? m???c ?????nh.\n"
++msgid ""
++"      --softbounce  keep permanently undeliverable messages on server "
++"(default).\n"
++msgstr ""
++"      --softbounce  gi??? tr??n m??y ph???c v??? m???i th?? kh??ng th??? ph??t ???????c (b???n "
++"b???). ????y l?? ???ng x??? m???c ?????nh.\n"
+ 
+ #: options.c:623
+ msgid "  -I, --interface   interface required specification\n"
+@@ -2025,18 +2128,24 @@
+ 
+ #: options.c:630
+ msgid "      --sslcertck   do strict server certificate check (recommended)\n"
+-msgstr "      --sslcertck   _ki???m tra_ ch???t ch??? _ch???ng nh???n SSL_ m??y ph???c v??? (khuy??n d??ng)\n"
++msgstr ""
++"      --sslcertck   _ki???m tra_ ch???t ch??? _ch???ng nh???n SSL_ m??y ph???c v??? (khuy??n "
++"d??ng)\n"
+ 
+ #: options.c:631
+ msgid "      --sslcertpath path to ssl certificates\n"
+ msgstr "      --sslcertpath \t_???????ng d???n ?????n c??c ch???ng nh???n SSL_\n"
+ 
+ #: options.c:632
+-msgid "      --sslcommonname  expect this CommonName from server (discouraged)\n"
+-msgstr "      --sslcommonname  ?????i CommonName n??y ?????n t??? m??y ph???c v??? (b??? ph???n ?????i)\n"
++msgid ""
++"      --sslcommonname  expect this CommonName from server (discouraged)\n"
++msgstr ""
++"      --sslcommonname  ?????i CommonName n??y ?????n t??? m??y ph???c v??? (b??? ph???n ?????i)\n"
+ 
+ #: options.c:633
+-msgid "      --sslfingerprint fingerprint that must match that of the server's cert.\n"
++msgid ""
++"      --sslfingerprint fingerprint that must match that of the server's "
++"cert.\n"
+ msgstr ""
+ "      --sslfingerprint \t_v??n tay SSL_ ph???i kh???p ??i???u trong ch???ng nh???n\n"
+ "\t\t\t\t\t\tc???a m??y ph???c v???\n"
+@@ -2047,15 +2156,19 @@
+ 
+ #: options.c:636
+ msgid "      --plugin      specify external command to open connection\n"
+-msgstr "      --plugin      x??c ?????nh l???nh b??n ngo??i ????? m??? k???t n???i (_b??? c???m ph??t_)\n"
++msgstr ""
++"      --plugin      x??c ?????nh l???nh b??n ngo??i ????? m??? k???t n???i (_b??? c???m ph??t_)\n"
+ 
+ #: options.c:637
+ msgid "      --plugout     specify external command to open smtp connection\n"
+-msgstr "      --plugout     x??c ?????nh l???nh b??n ngo??i ????? m??? k???t n???i SMTP (_b??? k??o ph??t_)\n"
++msgstr ""
++"      --plugout     x??c ?????nh l???nh b??n ngo??i ????? m??? k???t n???i SMTP (_b??? k??o "
++"ph??t_)\n"
+ 
+ #: options.c:639
+ msgid "  -p, --protocol    specify retrieval protocol (see man page)\n"
+-msgstr "  -p, --protocol    x??c ?????nh _giao th???c_ l???y th?? (xem trang h?????ng d???n)\n"
++msgstr ""
++"  -p, --protocol    x??c ?????nh _giao th???c_ l???y th?? (xem trang h?????ng d???n)\n"
+ 
+ #: options.c:640
+ msgid "  -U, --uidl        force the use of UIDLs (pop3 only)\n"
+@@ -2063,11 +2176,16 @@
+ 
+ #: options.c:641
+ msgid "      --port        TCP port to connect to (obsolete, use --service)\n"
+-msgstr "      --port        _c???ng_ TCP n??i c???n k???t n???i (qu?? c??, h??y d??ng ?? --service ??)\n"
++msgstr ""
++"      --port        _c???ng_ TCP n??i c???n k???t n???i (qu?? c??, h??y d??ng ?? --service "
++"??)\n"
+ 
+ #: options.c:642
+-msgid "  -P, --service     TCP service to connect to (can be numeric TCP port)\n"
+-msgstr "  -P, --service     _d???ch v???_ TCP n??i c???n k???t n???i (c?? th??? c?? d???ng c???ng TCP s???)\n"
++msgid ""
++"  -P, --service     TCP service to connect to (can be numeric TCP port)\n"
++msgstr ""
++"  -P, --service     _d???ch v???_ TCP n??i c???n k???t n???i (c?? th??? c?? d???ng c???ng TCP "
++"s???)\n"
+ 
+ #: options.c:643
+ msgid "      --auth        authentication type (password/kerberos/ssh/otp)\n"
+@@ -2084,7 +2202,8 @@
+ #: options.c:646
+ msgid "  -Q, --qvirtual    prefix to remove from local user id\n"
+ msgstr ""
+-"  -Q, --qvirtual    ti???n t??? c???n g??? b??? ra m?? nh???n di???n ng?????i d??ng (UID) c???c b???\n"
++"  -Q, --qvirtual    ti???n t??? c???n g??? b??? ra m?? nh???n di???n ng?????i d??ng (UID) c???c "
++"b???\n"
+ "\t\t\t\t(_q ???o_)\n"
+ 
+ #: options.c:647
+@@ -2127,7 +2246,8 @@
+ 
+ #: options.c:657
+ msgid "  -l, --limit       don't fetch messages over given size\n"
+-msgstr "  -l, --limit       kh??ng l???y th?? n??o l???n h??n k??ch c??? ????a ra (_h???n ch???_)\n"
++msgstr ""
++"  -l, --limit       kh??ng l???y th?? n??o l???n h??n k??ch c??? ????a ra (_h???n ch???_)\n"
+ 
+ #: options.c:658
+ msgid "  -w, --warnings    interval between warning mail notification\n"
+@@ -2139,7 +2259,8 @@
+ 
+ #: options.c:661
+ msgid "      --fetchdomains fetch mail for specified domains\n"
+-msgstr "      --fetchdomains \t_l???y_ th?? ch??? cho _nh???ng mi???n_ ???? x??c ?????nh n??y\n"
++msgstr ""
++"      --fetchdomains \t_l???y_ th?? ch??? cho _nh???ng mi???n_ ???? x??c ?????nh n??y\n"
+ 
+ #: options.c:662
+ msgid "  -D, --smtpaddress set SMTP delivery domain to use\n"
+@@ -2159,7 +2280,8 @@
+ 
+ #: options.c:666
+ msgid "  -B, --fetchlimit  set fetch limit for server connections\n"
+-msgstr "  -B, --fetchlimit  \t?????t _h???n ch??? l???y_ th?? cho s??? k???t n???i m??y ph???c v???\n"
++msgstr ""
++"  -B, --fetchlimit  \t?????t _h???n ch??? l???y_ th?? cho s??? k???t n???i m??y ph???c v???\n"
+ 
+ #: options.c:667
+ msgid "      --fetchsizelimit set fetch message size limit\n"
+@@ -2171,7 +2293,8 @@
+ 
+ #: options.c:669
+ msgid "  -e, --expunge     set max deletions between expunges\n"
+-msgstr "  -e, --expunge     ?????t s??? th?? ???? xo?? b??? t???i ??a gi???a hai l???n _xo?? h???n_\n"
++msgstr ""
++"  -e, --expunge     ?????t s??? th?? ???? xo?? b??? t???i ??a gi???a hai l???n _xo?? h???n_\n"
+ 
+ #: options.c:670
+ msgid "  -m, --mda         set MDA to use for forwarding\n"
+@@ -2191,15 +2314,22 @@
+ 
+ #: options.c:674
+ msgid "      --showdots    show progress dots even in logfiles\n"
+-msgstr "      --showdots    _hi???n c??c ch???m_ ti???n h??nh ngay c??? trong t???p tin ghi l??u\n"
++msgstr ""
++"      --showdots    _hi???n c??c ch???m_ ti???n h??nh ngay c??? trong t???p tin ghi l??u\n"
+ 
+ #: pop3.c:355
+-msgid "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead of TOP.\n"
+-msgstr "C???nh b??o : t??m th???y ?? Maillennium POP3/PROXY server ?? n??n d??ng l???nh RETR thay v??o TOP.\n"
++msgid ""
++"Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
++"of TOP.\n"
++msgstr ""
++"C???nh b??o : t??m th???y ?? Maillennium POP3/PROXY server ?? n??n d??ng l???nh RETR thay "
++"v??o TOP.\n"
+ 
+ #: pop3.c:454
+ msgid "TLS is mandatory for this session, but server refused CAPA command.\n"
+-msgstr "B???t bu???c ph???i s??? d???ng TLS trong phi??n ch???y n??y m?? tr??nh ph???c v??? ???? t??? ch???i l???nh CAPA.\n"
++msgstr ""
++"B???t bu???c ph???i s??? d???ng TLS trong phi??n ch???y n??y m?? tr??nh ph???c v??? ???? t??? ch???i "
++"l???nh CAPA.\n"
+ 
+ #: pop3.c:455
+ msgid "The CAPA command is however necessary for TLS.\n"
+@@ -2208,7 +2338,9 @@
+ #: pop3.c:538
+ #, c-format
+ msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
+-msgstr "%s: vi???c n??ng c???p l??n TLS m???t c??ch c?? h???i ch??? ngh??a b??? l???i n??n th??? ti???p t???c.\n"
++msgstr ""
++"%s: vi???c n??ng c???p l??n TLS m???t c??ch c?? h???i ch??? ngh??a b??? l???i n??n th??? ti???p "
++"t???c.\n"
+ 
+ #: pop3.c:646
+ msgid "We've run out of allowed authenticators and cannot continue.\n"
+@@ -2228,7 +2360,8 @@
+ 
+ #: pop3.c:709
+ msgid "Undefined protocol request in POP3_auth\n"
+-msgstr "G???p y??u c???u giao th???c kh??ng ???????c x??c ?????nh trong ?? POP3_auth ?? (x??c th???c)\n"
++msgstr ""
++"G???p y??u c???u giao th???c kh??ng ???????c x??c ?????nh trong ?? POP3_auth ?? (x??c th???c)\n"
+ 
+ #: pop3.c:730
+ msgid "lock busy!  Is another session active?\n"
+@@ -2254,7 +2387,9 @@
+ 
+ #: pop3.c:965
+ msgid "Messages inserted into list on server. Cannot handle this.\n"
+-msgstr "G???p th?? ???????c ch??n v??o danh s??ch tr??n m??y ph???c v???. Kh??ng th??? x??? l?? tr?????ng h???p n??y.\n"
++msgstr ""
++"G???p th?? ???????c ch??n v??o danh s??ch tr??n m??y ph???c v???. Kh??ng th??? x??? l?? tr?????ng h???p "
++"n??y.\n"
+ 
+ #: pop3.c:1057
+ msgid "protocol error\n"
+@@ -2277,12 +2412,20 @@
+ msgstr "Ch??a b???t SDPS."
+ 
+ #: rcfile_y.y:215
+-msgid "fetchmail: interface option is only supported under Linux (without IPv6) and FreeBSD\n"
+-msgstr "fetchmail: t??y ch???n giao di???n ch??? ???????c h??? tr??? d?????i LInux (kh??ng c?? IPv6) v?? FreeBSD (ki???u UNIX)\n"
++msgid ""
++"fetchmail: interface option is only supported under Linux (without IPv6) and "
++"FreeBSD\n"
++msgstr ""
++"fetchmail: t??y ch???n giao di???n ch??? ???????c h??? tr??? d?????i LInux (kh??ng c?? IPv6) v?? "
++"FreeBSD (ki???u UNIX)\n"
+ 
+ #: rcfile_y.y:222
+-msgid "fetchmail: monitor option is only supported under Linux (without IPv6) and FreeBSD\n"
+-msgstr "fetchmail: t??y ch???n theo d??i ch??? ???????c h??? tr??? d?????i LInux (kh??ng c?? IPv6) v?? FreeBSD (ki???u UNIX)\n"
++msgid ""
++"fetchmail: monitor option is only supported under Linux (without IPv6) and "
++"FreeBSD\n"
++msgstr ""
++"fetchmail: t??y ch???n theo d??i ch??? ???????c h??? tr??? d?????i LInux (kh??ng c?? IPv6) v?? "
++"FreeBSD (ki???u UNIX)\n"
+ 
+ #: rcfile_y.y:335
+ msgid "SSL is not enabled"
+@@ -2613,8 +2756,11 @@
+ 
+ #: sink.c:1373
+ #, c-format
+-msgid "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
+-msgstr "L??? : vi???c pclose MDA ???? tr??? l???i %d v?? s??? hi???u l???i %d/%s n??n kh??ng th??? x??? l?? t???i %s:%d\n"
++msgid ""
++"Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
++msgstr ""
++"L??? : vi???c pclose MDA ???? tr??? l???i %d v?? s??? hi???u l???i %d/%s n??n kh??ng th??? x??? l?? "
++"t???i %s:%d\n"
+ 
+ #: sink.c:1395
+ msgid "Message termination or close of BSMTP file failed\n"
+@@ -2641,15 +2787,15 @@
+ "-- \n"
+ "Tr??nh n???n Fetchmail"
+ 
+-#: smtp.c:80
++#: smtp.c:81
+ msgid "ESMTP CRAM-MD5 Authentication...\n"
+ msgstr "X??c th???c CRAM-MD5 ESMTP...\n"
+ 
+-#: smtp.c:87 smtp.c:138
++#: smtp.c:87 smtp.c:137
+ msgid "Server rejected the AUTH command.\n"
+ msgstr "M??y ph???c v??? ???? t??? ch???i l???nh AUTH.\n"
+ 
+-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
++#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
+ msgid "Bad base64 reply from server.\n"
+ msgstr "Nh???n tr??? l???i base64 sai t??? m??y ph???c v???.\n"
+ 
+@@ -2666,7 +2812,7 @@
+ msgid "ESMTP LOGIN Authentication...\n"
+ msgstr "X??c th???c LOGIN ESMTP...\n"
+ 
+-#: smtp.c:339 smtp.c:362
++#: smtp.c:349 smtp.c:377
+ msgid "smtp listener protocol error\n"
+ msgstr "l???i giao th???c b??? l???ng nghe SMTP\n"
+ 
+@@ -2703,7 +2849,9 @@
+ 
+ #: socket.c:289
+ msgid "Try adding the --service option (see also FAQ item R12).\n"
+-msgstr "H??y c??? th??m t??y ch???n ?? --service ?? (d???ch v???) (xem c??ng m???c FAQ [H???i ????p] R12).\n"
++msgstr ""
++"H??y c??? th??m t??y ch???n ?? --service ?? (d???ch v???) (xem c??ng m???c FAQ [H???i ????p] "
++"R12).\n"
+ 
+ #: socket.c:300 socket.c:303
+ #, c-format
+@@ -2764,95 +2912,97 @@
+ msgid "Server CommonName: %s\n"
+ msgstr "T??n Chung tr??nh ph???c v???: %s\n"
+ 
+-#: socket.c:637
++#: socket.c:638
+ msgid "Bad certificate: Subject CommonName too long!\n"
+ msgstr "Ch???ng nh???n sai: T??n Chung Ch??? ????? qu?? d??i.\n"
+ 
+-#: socket.c:643
++#: socket.c:644
+ msgid "Bad certificate: Subject CommonName contains NUL, aborting!\n"
+ msgstr "Ch???ng nh???n sai: T??n Chung Ch??? ????? ch???a NUL (v?? gi?? tr???) n??n h???y b???.\n"
+ 
+-#: socket.c:664
++#: socket.c:665
+ #, c-format
+ msgid "Subject Alternative Name: %s\n"
+ msgstr "T??n Thay th??? Ch??? ?????: %s\n"
+ 
+-#: socket.c:670
++#: socket.c:671
+ msgid "Bad certificate: Subject Alternative Name contains NUL, aborting!\n"
+-msgstr "Ch???ng nh???n sai: T??n Thay th??? Ch??? ????? ch???a NUL (v?? gi?? tr???) n??n h???y b???.\n"
++msgstr ""
++"Ch???ng nh???n sai: T??n Thay th??? Ch??? ????? ch???a NUL (v?? gi?? tr???) n??n h???y b???.\n"
+ 
+-#: socket.c:698
++#: socket.c:699
+ #, c-format
+ msgid "Server CommonName mismatch: %s != %s\n"
+ msgstr "T??n Chung m??y ph???c v??? kh??ng kh???p: %s != %s\n"
+ 
+-#: socket.c:705
++#: socket.c:706
+ msgid "Server name not set, could not verify certificate!\n"
+ msgstr "Chpa ?????t t??n m??y ph???c v??? n??n kh??ng th??? th???m tra ch???ng nh???n.\n"
+ 
+-#: socket.c:710
++#: socket.c:711
+ msgid "Unknown Server CommonName\n"
+ msgstr "Kh??ng bi???t T??n Chung m??y ph???c v???\n"
+ 
+-#: socket.c:712
++#: socket.c:713
+ msgid "Server name not specified in certificate!\n"
+ msgstr "Kh??ng x??c ?????nh t??n m??y ph???c v??? trong ch???ng nh???n.\n"
+ 
+-#: socket.c:724
++#: socket.c:725
+ msgid "EVP_md5() failed!\n"
+ msgstr "EVP_md5() b??? l???i.\n"
+ 
+-#: socket.c:728
++#: socket.c:729
+ msgid "Out of memory!\n"
+ msgstr "H???t b??? nh???.\n"
+ 
+-#: socket.c:736
++#: socket.c:737
+ msgid "Digest text buffer too small!\n"
+ msgstr "B??? ?????m digest qu?? nh???.\n"
+ 
+-#: socket.c:742
++#: socket.c:743
+ #, c-format
+ msgid "%s key fingerprint: %s\n"
+ msgstr "V??n tay kho?? %s: %s\n"
+ 
+-#: socket.c:746
++#: socket.c:747
+ #, c-format
+ msgid "%s fingerprints match.\n"
+ msgstr "V??n tay kho?? %s tr??ng.\n"
+ 
+-#: socket.c:748
++#: socket.c:749
+ #, c-format
+ msgid "%s fingerprints do not match!\n"
+ msgstr "V??n tay kho?? %s kh??ng tr??ng.\n"
+ 
+-#: socket.c:757
++#: socket.c:758
+ #, c-format
+ msgid "Server certificate verification error: %s\n"
+ msgstr "L???i th???m tra ch???ng nh???n m??y ph???c v??? : %s\n"
+ 
+-#: socket.c:763
++#: socket.c:764
+ #, c-format
+ msgid "unknown issuer (first %d characters): %s\n"
+ msgstr "kh??ng bi???t nh?? ph??t h??nh (%d k?? t??? ?????u): %s\n"
+ 
+-#: socket.c:850
++#: socket.c:851
+ msgid "File descriptor out of range for SSL"
+ msgstr "B??? m?? t??? t???p tin ??? ngo???i ph???m v??? SSL"
+ 
+-#: socket.c:866
++#: socket.c:867
+ #, c-format
+ msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+-msgstr "X??c ?????nh giao th???c SSL kh??ng h???p l??? ?? %s ?? n??n d??ng m???c ?????nh (SSLv23).\n"
++msgstr ""
++"X??c ?????nh giao th???c SSL kh??ng h???p l??? ?? %s ?? n??n d??ng m???c ?????nh (SSLv23).\n"
+ 
+-#: socket.c:942
++#: socket.c:943
+ msgid "Certificate/fingerprint verification was somehow skipped!\n"
+ msgstr "Vi???c th???m tra ch???ng nh???n/v??n tay b??? b??? qua v?? l?? do n??o.\n"
+ 
+-#: socket.c:1020
++#: socket.c:1021
+ msgid "Cygwin socket read retry\n"
+ msgstr "Vi???c c??? l???i ?????c ??? c???m Cygwin\n"
+ 
+-#: socket.c:1023
++#: socket.c:1024
+ msgid "Cygwin socket read retry failed!\n"
+ msgstr "Vi???c c??? l???i ?????c ??? c???m Cygwin b??? l???i.\n"
+ 
+@@ -2993,7 +3143,8 @@
+ #: uid.c:645
+ #, c-format
+ msgid "Error writing to fetchids file %s, old file left in place.\n"
+-msgstr "G???p l???i khi ghi v??o t???p tin fetchids (l???y c??c ID) %s n??n ????? l???i t???p tin c??.\n"
++msgstr ""
++"G???p l???i khi ghi v??o t???p tin fetchids (l???y c??c ID) %s n??n ????? l???i t???p tin c??.\n"
+ 
+ #: uid.c:649
+ #, c-format
+
+Modified: branches/BRANCH_6-3/po/zh_CN.po
+===================================================================
+--- branches/BRANCH_6-3/po/zh_CN.po	2009-10-05 19:17:25 UTC (rev 5437)
++++ branches/BRANCH_6-3/po/zh_CN.po	2009-10-05 19:43:41 UTC (rev 5438)
+@@ -8,10 +8,11 @@
+ msgstr ""
+ "Project-Id-Version: fetchmail 6.3.11\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+-"POT-Creation-Date: 2009-08-06 01:21+0200\n"
++"POT-Creation-Date: 2009-08-24 21:16+0200\n"
+ "PO-Revision-Date: 2009-09-23 15:42??????????????????\n"
+ "Last-Translator: Ji ZhengYu <zhengyuji at gmail.com>\n"
+-"Language-Team: Chinese (simplified) <translation-team-zh-cn at lists.sourceforge.net>\n"
++"Language-Team: Chinese (simplified) <translation-team-zh-cn at lists."
++"sourceforge.net>\n"
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+@@ -54,7 +55,12 @@
+ msgid "kerberos error %s\n"
+ msgstr "kerberos ?????????????????? %s\n"
+ 
+-#: driver.c:249 driver.c:254
++#: driver.c:249
++#, fuzzy, c-format
++msgid "krb5_sendauth: %s [server says '%s'] \n"
++msgstr "krb5_sendauth: %s [ ??????????????? ???%*s???]\n"
++
++#: driver.c:254
+ #, c-format
+ msgid "krb5_sendauth: %s [server says '%*s'] \n"
+ msgstr "krb5_sendauth: %s [ ??????????????? ???%*s???]\n"
+@@ -130,7 +136,8 @@
+ 
+ #: driver.c:751
+ #, c-format
+-msgid "message %s@%s:%d was not the expected length (%d actual != %d expected)\n"
++msgid ""
++"message %s@%s:%d was not the expected length (%d actual != %d expected)\n"
+ msgstr "%s@%s:%d ????????????????????? (?????? %d ??????!= ???????????? %d ??????)\n"
+ 
+ #: driver.c:783
+@@ -148,7 +155,8 @@
+ #: driver.c:828
+ #, c-format
+ msgid "fetchlimit %d reached; %d message left on server %s account %s\n"
+-msgid_plural "fetchlimit %d reached; %d messages left on server %s account %s\n"
++msgid_plural ""
++"fetchlimit %d reached; %d messages left on server %s account %s\n"
+ msgstr[0] "?????????????????? %d???%d ???????????????????????? %s ????????? %s\n"
+ 
+ #: driver.c:885
+@@ -182,7 +190,9 @@
+ 
+ #: driver.c:916
+ #, c-format
+-msgid "Fetchmail saw more than %d timeouts while attempting to get mail from %s@%s.\n"
++msgid ""
++"Fetchmail saw more than %d timeouts while attempting to get mail from %s@%"
++"s.\n"
+ msgstr "Fetchmail ????????? %2$s@%3$s ??????????????????????????? %1$d ????????????\n"
+ 
+ #: driver.c:920
+@@ -507,7 +517,8 @@
+ msgid ""
+ "%s: The NULLMAILER_FLAGS environment variable is set.\n"
+ "This is dangerous as it can make nullmailer-inject or nullmailer's\n"
+-"sendmail wrapper tamper with your From:, Message-ID: or Return-Path: headers.\n"
++"sendmail wrapper tamper with your From:, Message-ID: or Return-Path: "
++"headers.\n"
+ "Try \"env NULLMAILER_FLAGS= %s YOUR ARGUMENTS HERE\"\n"
+ "%s: Abort.\n"
+ msgstr ""
+@@ -539,7 +550,8 @@
+ #: env.c:174
+ msgid ""
+ "Trying to continue with unqualified hostname.\n"
+-"DO NOT report broken Received: headers, HELO/EHLO lines or similar problems!\n"
++"DO NOT report broken Received: headers, HELO/EHLO lines or similar "
++"problems!\n"
+ "DO repair your /etc/hosts, DNS, NIS or LDAP instead.\n"
+ msgstr ""
+ "???????????????????????????????????????????????????\n"
+@@ -613,12 +625,14 @@
+ #: fetchmail.c:137
+ msgid ""
+ "Copyright (C) 2002, 2003 Eric S. Raymond\n"
+-"Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham Wilson\n"
++"Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham "
++"Wilson\n"
+ "Copyright (C) 2005 - 2006 Sunil Shetye\n"
+ "Copyright (C) 2005 - 2009 Matthias Andree\n"
+ msgstr ""
+ "???????????? (C) 2002, 2003 Eric S. Raymond\n"
+-"???????????? (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham Wilson\n"
++"???????????? (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham "
++"Wilson\n"
+ "???????????? (C) 2005 - 2006 Sunil Shetye\n"
+ "???????????? (C) 2005 - 2009 Matthias Andree\n"
+ 
+@@ -690,13 +704,17 @@
+ msgstr "fetchmail: %s fetchmail ????????? %d ??????\n"
+ 
+ #: fetchmail.c:480
+-msgid "fetchmail: can't check mail while another fetchmail to same host is running.\n"
++msgid ""
++"fetchmail: can't check mail while another fetchmail to same host is "
++"running.\n"
+ msgstr "fetchmail: ???????????? fetchmail ????????????????????????????????????????????????\n"
+ 
+ #: fetchmail.c:486
+ #, c-format
+-msgid "fetchmail: can't poll specified hosts with another fetchmail running at %d.\n"
+-msgstr "fetchmail: ???????????? fetchmail ????????? %d ?????????????????????????????????????????????\n"
++msgid ""
++"fetchmail: can't poll specified hosts with another fetchmail running at %d.\n"
++msgstr ""
++"fetchmail: ???????????? fetchmail ????????? %d ?????????????????????????????????????????????\n"
+ 
+ #: fetchmail.c:493
+ #, c-format
+@@ -704,7 +722,8 @@
+ msgstr "fetchmail: ??????????????? fetchmail ????????? %d ???????????????\n"
+ 
+ #: fetchmail.c:503
+-msgid "fetchmail: can't accept options while a background fetchmail is running.\n"
++msgid ""
++"fetchmail: can't accept options while a background fetchmail is running.\n"
+ msgstr "fetchmail: ????????? fetchmail ?????????????????????????????????\n"
+ 
+ #: fetchmail.c:509
+@@ -899,7 +918,8 @@
+ 
+ #: fetchmail.c:1273
+ #, c-format
+-msgid "fetchmail: warning: no DNS available to check multidrop fetches from %s\n"
++msgid ""
++"fetchmail: warning: no DNS available to check multidrop fetches from %s\n"
+ msgstr "fetchmail: ??????: ???????????? DNS ??????????????? %s ???????????????\n"
+ 
+ #: fetchmail.c:1284
+@@ -913,7 +933,9 @@
+ 
+ #: fetchmail.c:1302
+ #, c-format
+-msgid "fetchmail: %s configuration invalid, specify positive port number for service or port\n"
++msgid ""
++"fetchmail: %s configuration invalid, specify positive port number for "
++"service or port\n"
+ msgstr "fetchmail: %s ?????????????????????????????????????????????????????????\n"
+ 
+ #: fetchmail.c:1309
+@@ -1199,15 +1221,20 @@
+ msgstr " ????????????????????????????????????(--flush ??????).\n"
+ 
+ #: fetchmail.c:1694
+-msgid "  Old messages will not be flushed before message retrieval (--flush off).\n"
++msgid ""
++"  Old messages will not be flushed before message retrieval (--flush off).\n"
+ msgstr " ???????????????????????????????????????(--flush ??????).\n"
+ 
+ #: fetchmail.c:1696
+-msgid "  Oversized messages will be flushed before message retrieval (--limitflush on).\n"
++msgid ""
++"  Oversized messages will be flushed before message retrieval (--limitflush "
++"on).\n"
+ msgstr " ?????????????????????????????????(--limitflush ??????).\n"
+ 
+ #: fetchmail.c:1697
+-msgid "  Oversized messages will not be flushed before message retrieval (--limitflush off).\n"
++msgid ""
++"  Oversized messages will not be flushed before message retrieval (--"
++"limitflush off).\n"
+ msgstr " ????????????????????????????????????(--limitflush ??????).\n"
+ 
+ #: fetchmail.c:1699
+@@ -1235,11 +1262,13 @@
+ msgstr " ????????????????????????????????????(forcecr ??????).\n"
+ 
+ #: fetchmail.c:1708
+-msgid "  Interpretation of Content-Transfer-Encoding is disabled (pass8bits on).\n"
++msgid ""
++"  Interpretation of Content-Transfer-Encoding is disabled (pass8bits on).\n"
+ msgstr " ?????? Content-Transfer-Encoding (pass8bits ??????).\n"
+ 
+ #: fetchmail.c:1709
+-msgid "  Interpretation of Content-Transfer-Encoding is enabled (pass8bits off).\n"
++msgid ""
++"  Interpretation of Content-Transfer-Encoding is enabled (pass8bits off).\n"
+ msgstr " ????????? Content-Transfer-Encoding (pass8bits ??????).\n"
+ 
+ #: fetchmail.c:1711
+@@ -1428,7 +1457,8 @@
+ msgstr " ?????? DNS ?????????????????????\n"
+ 
+ #: fetchmail.c:1866
+-msgid "  Server aliases will be compared with multidrop addresses by IP address.\n"
++msgid ""
++"  Server aliases will be compared with multidrop addresses by IP address.\n"
+ msgstr " ????????????????????? IP ?????????????????????????????????\n"
+ 
+ #: fetchmail.c:1868
+@@ -1690,7 +1720,8 @@
+ msgstr "%u ?????????????????????\n"
+ 
+ #: imap.c:1002
+-msgid "Warning: ignoring bogus data for message sizes returned by the server.\n"
++msgid ""
++"Warning: ignoring bogus data for message sizes returned by the server.\n"
+ msgstr "??????: ??????????????????????????????????????????????????????\n"
+ 
+ #: interface.c:256
+@@ -1960,7 +1991,9 @@
+ msgstr " -L, --logfile\t?????????????????????\n"
+ 
+ #: options.c:613
+-msgid "      --syslog      use syslog(3) for most messages when running as a daemon\n"
++msgid ""
++"      --syslog      use syslog(3) for most messages when running as a "
++"daemon\n"
+ msgstr " --syslog\t??????????????????????????? syslog(3) ?????????????????????\n"
+ 
+ #: options.c:614
+@@ -1988,11 +2021,14 @@
+ msgstr " --nobounce\t???????????????????????????????????????????????????\n"
+ 
+ #: options.c:620
+-msgid "      --nosoftbounce fetchmail deletes permanently undeliverable messages.\n"
++msgid ""
++"      --nosoftbounce fetchmail deletes permanently undeliverable messages.\n"
+ msgstr "      --nosoftbounce\t??? fetchmail ????????????????????????????????????\n"
+ 
+ #: options.c:621
+-msgid "      --softbounce  keep permanently undeliverable messages on server (default).\n"
++msgid ""
++"      --softbounce  keep permanently undeliverable messages on server "
++"(default).\n"
+ msgstr "      --softbounce\t???????????????????????????????????????????????????(??????)???\n"
+ 
+ #: options.c:623
+@@ -2024,11 +2060,14 @@
+ msgstr " --sslcertpath\tssl ????????????\n"
+ 
+ #: options.c:632
+-msgid "      --sslcommonname  expect this CommonName from server (discouraged)\n"
++msgid ""
++"      --sslcommonname  expect this CommonName from server (discouraged)\n"
+ msgstr " --sslcommonname\t???????????????????????? (?????????)\n"
+ 
+ #: options.c:633
+-msgid "      --sslfingerprint fingerprint that must match that of the server's cert.\n"
++msgid ""
++"      --sslfingerprint fingerprint that must match that of the server's "
++"cert.\n"
+ msgstr " --sslfingerprint\t???????????????????????????????????????????????????????????????\n"
+ 
+ #: options.c:634
+@@ -2056,7 +2095,8 @@
+ msgstr " --port\t???????????? TCP ??????(??????????????? --service)\n"
+ 
+ #: options.c:642
+-msgid "  -P, --service     TCP service to connect to (can be numeric TCP port)\n"
++msgid ""
++"  -P, --service     TCP service to connect to (can be numeric TCP port)\n"
+ msgstr " -P, --service\t???????????? TCP ??????(????????? TCP ????????????????????????)\n"
+ 
+ #: options.c:643
+@@ -2180,7 +2220,9 @@
+ msgstr " --showdots\t?????????????????????????????????????????????(???????????????)\n"
+ 
+ #: pop3.c:355
+-msgid "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead of TOP.\n"
++msgid ""
++"Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
++"of TOP.\n"
+ msgstr "??????: ????????? POP3 ???????????????????????? RETR ???????????? TOP???\n"
+ 
+ #: pop3.c:454
+@@ -2263,11 +2305,15 @@
+ msgstr "SDPS ?????????"
+ 
+ #: rcfile_y.y:215
+-msgid "fetchmail: interface option is only supported under Linux (without IPv6) and FreeBSD\n"
++msgid ""
++"fetchmail: interface option is only supported under Linux (without IPv6) and "
++"FreeBSD\n"
+ msgstr "fetchmail: interface ???????????? Linux(??? IPv6)??? FreeBSD ??????\n"
+ 
+ #: rcfile_y.y:222
+-msgid "fetchmail: monitor option is only supported under Linux (without IPv6) and FreeBSD\n"
++msgid ""
++"fetchmail: monitor option is only supported under Linux (without IPv6) and "
++"FreeBSD\n"
+ msgstr "fetchmail: monitor ???????????? Linux(??? IPv6)??? FreeBSD ??????\n"
+ 
+ #: rcfile_y.y:335
+@@ -2599,7 +2645,8 @@
+ 
+ #: sink.c:1373
+ #, c-format
+-msgid "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
++msgid ""
++"Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
+ msgstr "??????: MDA pclose ?????? %d ??? errno ??? %d/%s?????? %s:%d ????????????\n"
+ 
+ #: sink.c:1395
+@@ -2627,15 +2674,15 @@
+ "-- \n"
+ "Fetchmail ????????????"
+ 
+-#: smtp.c:80
++#: smtp.c:81
+ msgid "ESMTP CRAM-MD5 Authentication...\n"
+ msgstr "ESMTP CRAM-MD5 ??????...\n"
+ 
+-#: smtp.c:87 smtp.c:138
++#: smtp.c:87 smtp.c:137
+ msgid "Server rejected the AUTH command.\n"
+ msgstr "??????????????? AUTH ?????????\n"
+ 
+-#: smtp.c:95 smtp.c:145 smtp.c:155 smtp.c:161
++#: smtp.c:95 smtp.c:144 smtp.c:153 smtp.c:159
+ msgid "Bad base64 reply from server.\n"
+ msgstr "??????????????????????????? base64 ?????????\n"
+ 
+@@ -2652,7 +2699,7 @@
+ msgid "ESMTP LOGIN Authentication...\n"
+ msgstr "ESMTP LOGIN ??????...\n"
+ 
+-#: smtp.c:339 smtp.c:362
++#: smtp.c:349 smtp.c:377
+ msgid "smtp listener protocol error\n"
+ msgstr "smtp ???????????????\n"
+ 
+@@ -2750,95 +2797,95 @@
+ msgid "Server CommonName: %s\n"
+ msgstr "????????????: %s\n"
+ 
+-#: socket.c:637
++#: socket.c:638
+ msgid "Bad certificate: Subject CommonName too long!\n"
+ msgstr "????????????: ??????????????????!\n"
+ 
+-#: socket.c:643
++#: socket.c:644
+ msgid "Bad certificate: Subject CommonName contains NUL, aborting!\n"
+ msgstr "????????????: ???????????????????????? NUL ??????????????????\n"
+ 
+-#: socket.c:664
++#: socket.c:665
+ #, c-format
+ msgid "Subject Alternative Name: %s\n"
+ msgstr "??????????????????: %s\n"
+ 
+-#: socket.c:670
++#: socket.c:671
+ msgid "Bad certificate: Subject Alternative Name contains NUL, aborting!\n"
+ msgstr "????????????: ???????????????????????? NUL ??????????????????\n"
+ 
+-#: socket.c:698
++#: socket.c:699
+ #, c-format
+ msgid "Server CommonName mismatch: %s != %s\n"
+ msgstr "?????????????????????: %s != %s\n"
+ 
+-#: socket.c:705
++#: socket.c:706
+ msgid "Server name not set, could not verify certificate!\n"
+ msgstr "????????????????????????????????????????????????\n"
+ 
+-#: socket.c:710
++#: socket.c:711
+ msgid "Unknown Server CommonName\n"
+ msgstr "?????????????????????\n"
+ 
+-#: socket.c:712
++#: socket.c:713
+ msgid "Server name not specified in certificate!\n"
+ msgstr "???????????????????????????????????????\n"
+ 
+-#: socket.c:724
++#: socket.c:725
+ msgid "EVP_md5() failed!\n"
+ msgstr "EVP_md5() ?????????\n"
+ 
+-#: socket.c:728
++#: socket.c:729
+ msgid "Out of memory!\n"
+ msgstr "???????????????\n"
+ 
+-#: socket.c:736
++#: socket.c:737
+ msgid "Digest text buffer too small!\n"
+ msgstr "Digest ????????????????????????\n"
+ 
+-#: socket.c:742
++#: socket.c:743
+ #, c-format
+ msgid "%s key fingerprint: %s\n"
+ msgstr "%s ????????????: %s\n"
+ 
+-#: socket.c:746
++#: socket.c:747
+ #, c-format
+ msgid "%s fingerprints match.\n"
+ msgstr "%s ???????????????\n"
+ 
+-#: socket.c:748
++#: socket.c:749
+ #, c-format
+ msgid "%s fingerprints do not match!\n"
+ msgstr "%s ??????????????????\n"
+ 
+-#: socket.c:757
++#: socket.c:758
+ #, c-format
+ msgid "Server certificate verification error: %s\n"
+ msgstr "???????????????????????????: %s\n"
+ 
+-#: socket.c:763
++#: socket.c:764
+ #, c-format
+ msgid "unknown issuer (first %d characters): %s\n"
+ msgstr "?????????????????????(??? %d ?????????): %s\n"
+ 
+-#: socket.c:850
++#: socket.c:851
+ msgid "File descriptor out of range for SSL"
+ msgstr "????????????????????? SSL ?????????"
+ 
+-#: socket.c:866
++#: socket.c:867
+ #, c-format
+ msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+ msgstr "?????????????????? SSL ?????? ???%s???????????????????????????(SSLv23)?????????\n"
+ 
+-#: socket.c:942
++#: socket.c:943
+ msgid "Certificate/fingerprint verification was somehow skipped!\n"
+ msgstr "??????(??????)?????????????????????????????????\n"
+ 
+-#: socket.c:1020
++#: socket.c:1021
+ msgid "Cygwin socket read retry\n"
+ msgstr "???????????? Cygwin ??????\n"
+ 
+-#: socket.c:1023
++#: socket.c:1024
+ msgid "Cygwin socket read retry failed!\n"
+ msgstr "???????????? Cygwin ???????????????\n"
+ 
+
+
+
+From svn at mknod.org  Mon Oct  5 21:48:28 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Mon,  5 Oct 2009 14:48:28 -0500
+Subject: [fetchmail-svn] r5439 - branches/BRANCH_6-3
+Message-ID: <20091005194828.AFD1B21F08D@mknod.org>
+
+Author: m-a
+Date: 2009-10-05 14:48:27 -0500 (Mon, 05 Oct 2009)
+New Revision: 5439
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/RELEASEVERSIONS
+Log:
+Release 6.3.12.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-10-05 19:43:41 UTC (rev 5438)
++++ branches/BRANCH_6-3/NEWS	2009-10-05 19:48:27 UTC (rev 5439)
+@@ -21,8 +21,6 @@
+ * POP2 is obsolete, support will be removed from a future fetchmail version.
+ * RPOP is obsolete, support will be removed from a future fetchmail release.
+ * --sslcertck will become a default setting in a future fetchmail version.
+-* --sslfingerprint may be removed from a future fetchmail version, because it's
+-  just too easily abused to create a false sense of security.
+ * The multidrop To/Cc guessing code along with the fragile duplicate suppressor
+   is deprecated and may be removed from a future release.
+ * The "envelope Received" option may be removed from a future release, because
+@@ -49,7 +47,7 @@
+ 
+ --------------------------------------------------------------------------------
+ 
+-fetchmail 6.3.12 (released XXXX-XX-XX - not yet):
++fetchmail 6.3.12 (released 2009-10-05):
+ 
+ # REGRESSION FIXES
+ * The CVS-2009-2666 fix in fetchmail release 6.3.11 caused a free() of
+
+Modified: branches/BRANCH_6-3/RELEASEVERSIONS
+===================================================================
+--- branches/BRANCH_6-3/RELEASEVERSIONS	2009-10-05 19:43:41 UTC (rev 5438)
++++ branches/BRANCH_6-3/RELEASEVERSIONS	2009-10-05 19:48:27 UTC (rev 5439)
+@@ -1,6 +1,7 @@
+ SVN release - fetchmail release    - release manager
+ ====================================================
+               SORT_BY (release)
++r5439       - 6.3.12   (2009-10-05) - MA
+ r5398       - 6.3.11   (2009-08-06) - MA
+ r5373       - 6.3.10   (2009-07-02) - MA
+ r5248       - 6.3.9    (2008-11-16) - MA
+
+
+
+From svn at mknod.org  Mon Oct  5 21:49:05 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Mon,  5 Oct 2009 14:49:05 -0500
+Subject: [fetchmail-svn] r5440 - tags
+Message-ID: <20091005194905.C3A7921F08D@mknod.org>
+
+Author: m-a
+Date: 2009-10-05 14:49:05 -0500 (Mon, 05 Oct 2009)
+New Revision: 5440
+
+Added:
+   tags/RELEASE_6-3-12/
+Log:
+Tagging fetchmail 6.3.12.
+
+
+
+From svn at mknod.org  Mon Oct  5 22:07:17 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Mon,  5 Oct 2009 15:07:17 -0500
+Subject: [fetchmail-svn] r5441 - branches/BRANCH_6-3/website
+Message-ID: <20091005200717.F337721F08D@mknod.org>
+
+Author: m-a
+Date: 2009-10-05 15:07:17 -0500 (Mon, 05 Oct 2009)
+New Revision: 5441
+
+Modified:
+   branches/BRANCH_6-3/website/index.html
+Log:
+Put 6.3.12 on front page.
+
+Modified: branches/BRANCH_6-3/website/index.html
+===================================================================
+--- branches/BRANCH_6-3/website/index.html	2009-10-05 19:49:05 UTC (rev 5440)
++++ branches/BRANCH_6-3/website/index.html	2009-10-05 20:07:17 UTC (rev 5441)
+@@ -15,7 +15,7 @@
+ <table width="100%" cellpadding="0" summary="Canned page header">
+ <tr>
+ <td>Fetchmail</td>
+-<td align="right"><!-- update date -->2009-08-06</td>
++<td align="right"><!-- update date -->2009-10-05</td>
+ </tr>
+ </table>
+ </div>
+@@ -41,13 +41,13 @@
+ <h1>Fetchmail</h1>
+ 
+ <div style="background-color:#c0ffc0;color:#000000;">
+-    <h1>NEWS: FETCHMAIL 6.3.11 RELEASE</h1>
+-    <p>On 2009-08-06, <a
+-	href="http://developer.berlios.de/project/showfiles.php?group_id=1824">fetchmail-6.3.11
+-	has been released (this is the download link),</a> fixing
+-    the security bug in the SSL/TLS certificate verification
+-    CVE-2009-2666. It is a recommended security update for all users. <a
+-	href="http://developer.berlios.de/project/shownotes.php?group_id=1824&amp;release_id=16574">Click
++    <h1>NEWS: FETCHMAIL 6.3.12 RELEASE</h1>
++    <p>On 2009-10-05, <a
++	href="http://developer.berlios.de/project/showfiles.php?group_id=1824">fetchmail-6.3.12
++	has been released (this is the download link),</a> fixing a
++    regression in the 6.3.11 security fix and updating translations.
++    It is a recommended update for all users. <a
++	href="http://developer.berlios.de/project/shownotes.php?group_id=1824&amp;release_id=16791">Click
+ 	here to see the change details.</a>
+     </p>
+ </div>
+
+
+
+From svn at mknod.org  Wed Oct 21 00:27:28 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Tue, 20 Oct 2009 17:27:28 -0500
+Subject: [fetchmail-svn] r5442 - branches/BRANCH_6-3/po
+Message-ID: <20091020222728.47A7F21F092@mknod.org>
+
+Author: m-a
+Date: 2009-10-20 17:27:27 -0500 (Tue, 20 Oct 2009)
+New Revision: 5442
+
+Modified:
+   branches/BRANCH_6-3/po/cs.po
+   branches/BRANCH_6-3/po/da.po
+   branches/BRANCH_6-3/po/el.po
+   branches/BRANCH_6-3/po/es.po
+   branches/BRANCH_6-3/po/id.po
+   branches/BRANCH_6-3/po/ja.po
+   branches/BRANCH_6-3/po/pl.po
+   branches/BRANCH_6-3/po/ru.po
+   branches/BRANCH_6-3/po/sk.po
+   branches/BRANCH_6-3/po/sq.po
+   branches/BRANCH_6-3/po/tr.po
+   branches/BRANCH_6-3/po/vi.po
+   branches/BRANCH_6-3/po/zh_CN.po
+Log:
+Language updates from translation project. Skipping Dutch for obvious mistranslation (Subject: is not to be translated.)
+
+Modified: branches/BRANCH_6-3/po/cs.po
+===================================================================
+--- branches/BRANCH_6-3/po/cs.po	2009-10-05 20:07:17 UTC (rev 5441)
++++ branches/BRANCH_6-3/po/cs.po	2009-10-20 22:27:27 UTC (rev 5442)
+@@ -11,10 +11,10 @@
+ #
+ msgid ""
+ msgstr ""
+-"Project-Id-Version: fetchmail 6.3.11\n"
++"Project-Id-Version: fetchmail 6.3.12\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+ "POT-Creation-Date: 2009-08-24 21:16+0200\n"
+-"PO-Revision-Date: 2009-08-06 11:09+0200\n"
++"PO-Revision-Date: 2009-10-06 09:18+0200\n"
+ "Last-Translator: Petr Pisar <petr.pisar at atlas.cz>\n"
+ "Language-Team: Czech <translation-team-cs at lists.sourceforge.net>\n"
+ "MIME-Version: 1.0\n"
+@@ -60,14 +60,14 @@
+ msgstr "chyba kerbera %s\n"
+ 
+ #: driver.c:249
+-#, fuzzy, c-format
++#, c-format
+ msgid "krb5_sendauth: %s [server says '%s'] \n"
+-msgstr "krb5_sendauth: %s [server ????k?? '%*s'] \n"
++msgstr "krb5_sendauth: %s [server ????k?? ???%s???] \n"
+ 
+ #: driver.c:254
+ #, c-format
+ msgid "krb5_sendauth: %s [server says '%*s'] \n"
+-msgstr "krb5_sendauth: %s [server ????k?? '%*s'] \n"
++msgstr "krb5_sendauth: %s [server ????k?? ???%*s???] \n"
+ 
+ # XXX: This is e-mail header as literal. Dont't touch "Subject: " header name.
+ #: driver.c:335
+
+Modified: branches/BRANCH_6-3/po/da.po
+===================================================================
+--- branches/BRANCH_6-3/po/da.po	2009-10-05 20:07:17 UTC (rev 5441)
++++ branches/BRANCH_6-3/po/da.po	2009-10-20 22:27:27 UTC (rev 5442)
+@@ -2980,7 +2980,7 @@
+ msgstr "Fildeskriptor har forkert v?rdi til SSL"
+ 
+ #: socket.c:867
+-#, fuzzy, c-format
++#, c-format
+ msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+ msgstr "Ugyldig SSL-protokol '%s' specificeret, bruger SSLv23.\n"
+ 
+@@ -3101,7 +3101,7 @@
+ #: uid.c:517 uid.c:569
+ #, fuzzy, c-format
+ msgid "Merged UID list from %s:"
+-msgstr "Ny UID-liste fra %s:"
++msgstr "Gammel UID-liste fra %s:"
+ 
+ #: uid.c:519
+ #, c-format
+@@ -3157,9 +3157,6 @@
+ msgid "realloc failed\n"
+ msgstr "realloc mislykkedes\n"
+ 
+-#~ msgid "message delimiter found while scanning headers\n"
+-#~ msgstr "brev afsluttet under l?sningen af brevhovedet\n"
+-
+ #~ msgid ""
+ #~ "Subject: Fetchmail oversized-messages warning.\n"
+ #~ "\n"
+@@ -3274,5 +3271,8 @@
+ #~ msgid "fetchmail: illegal address length received for host %s\n"
+ #~ msgstr "fetchmail: ulovlig adressel?ngde modtaget for v?rt %s\n"
+ 
++#~ msgid "message delimiter found while scanning headers\n"
++#~ msgstr "brev afsluttet under l?sningen af brevhovedet\n"
++
+ #~ msgid "lstat: %s: %s\n"
+ #~ msgstr "lstat: %s: %s\n"
+
+Modified: branches/BRANCH_6-3/po/el.po
+===================================================================
+--- branches/BRANCH_6-3/po/el.po	2009-10-05 20:07:17 UTC (rev 5441)
++++ branches/BRANCH_6-3/po/el.po	2009-10-20 22:27:27 UTC (rev 5442)
+@@ -3022,7 +3022,7 @@
+ msgstr "? ??????????? ??????? ????? ???????? ??? ?? SSL"
+ 
+ #: socket.c:867
+-#, fuzzy, c-format
++#, c-format
+ msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+ msgstr "??????????? ????? ?????????? SSL '%s', ????? ?? ??????? (SSLv23).\n"
+ 
+@@ -3139,7 +3139,7 @@
+ #: uid.c:517 uid.c:569
+ #, fuzzy, c-format
+ msgid "Merged UID list from %s:"
+-msgstr "??? ????? UID ??? %s:"
++msgstr "????? ????? UID ??? %s:"
+ 
+ #: uid.c:519
+ #, c-format
+@@ -3195,9 +3195,6 @@
+ msgid "realloc failed\n"
+ msgstr "??????? ?? realloc\n"
+ 
+-#~ msgid "message delimiter found while scanning headers\n"
+-#~ msgstr "??????? ????????? ????????? ???? ??? ?????? ????????????\n"
+-
+ #~ msgid ""
+ #~ "Subject: Fetchmail oversized-messages warning.\n"
+ #~ "\n"
+@@ -3312,5 +3309,8 @@
+ #~ msgid "fetchmail: illegal address length received for host %s\n"
+ #~ msgstr "fetchmail: ???? ????????? ?????? ?????????? ??? ?? ?????????? %s\n"
+ 
++#~ msgid "message delimiter found while scanning headers\n"
++#~ msgstr "??????? ????????? ????????? ???? ??? ?????? ????????????\n"
++
+ #~ msgid "lstat: %s: %s\n"
+ #~ msgstr "lstat: %s: %s\n"
+
+Modified: branches/BRANCH_6-3/po/es.po
+===================================================================
+--- branches/BRANCH_6-3/po/es.po	2009-10-05 20:07:17 UTC (rev 5441)
++++ branches/BRANCH_6-3/po/es.po	2009-10-20 22:27:27 UTC (rev 5442)
+@@ -7,10 +7,10 @@
+ #
+ msgid ""
+ msgstr ""
+-"Project-Id-Version: fetchmail 6.3.11\n"
++"Project-Id-Version: fetchmail 6.3.12\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+ "POT-Creation-Date: 2009-08-24 21:16+0200\n"
+-"PO-Revision-Date: 2009-08-06 20:00+0200\n"
++"PO-Revision-Date: 2009-10-06 19:04+0200\n"
+ "Last-Translator: Francisco Molinero <paco at byasl.com>\n"
+ "Language-Team: Spanish <es at li.org>\n"
+ "MIME-Version: 1.0\n"
+
+Modified: branches/BRANCH_6-3/po/id.po
+===================================================================
+--- branches/BRANCH_6-3/po/id.po	2009-10-05 20:07:17 UTC (rev 5441)
++++ branches/BRANCH_6-3/po/id.po	2009-10-20 22:27:27 UTC (rev 5442)
+@@ -1,14 +1,14 @@
+ # Indonesian translations for fetchmail package.
+ # Copyright (C) 2008 Eric S. Raymond (msgids)
+ # This file is distributed under the same license as the fetchmail package.
+-# Andhika Padmawan <andhika.padmawan at gmail.com>, 2008.
++# Andhika Padmawan <andhika.padmawan at gmail.com>, 2009.
+ #
+ msgid ""
+ msgstr ""
+-"Project-Id-Version: fetchmail 6.3.10-pre1\n"
++"Project-Id-Version: fetchmail 6.3.12\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+ "POT-Creation-Date: 2009-08-24 21:16+0200\n"
+-"PO-Revision-Date: 2009-05-27 21:15+0700\n"
++"PO-Revision-Date: 2009-10-08 11:51-0400\n"
+ "Last-Translator: Andhika Padmawan <andhika.padmawan at gmail.com>\n"
+ "Language-Team: Indonesian <translation-team-id at lists.sourceforge.net>\n"
+ "MIME-Version: 1.0\n"
+@@ -54,9 +54,9 @@
+ msgstr "galat kerberos %s\n"
+ 
+ #: driver.c:249
+-#, fuzzy, c-format
++#, c-format
+ msgid "krb5_sendauth: %s [server says '%s'] \n"
+-msgstr "krb5_sendauth: %s [server berkata '%*s'] \n"
++msgstr "krb5_sendauth: %s [server berkata '%s'] \n"
+ 
+ #: driver.c:254
+ #, c-format
+@@ -2883,19 +2883,17 @@
+ msgstr "Sertifikat buruk: NamaUmum Subjek terlalu panjang!\n"
+ 
+ #: socket.c:644
+-#, fuzzy
+ msgid "Bad certificate: Subject CommonName contains NUL, aborting!\n"
+-msgstr "Sertifikat buruk: NamaUmum Subjek terlalu panjang!\n"
++msgstr "Sertifikat buruk: NamaUmum Subjek berisi NUL, membatalkan!\n"
+ 
+ #: socket.c:665
+ #, c-format
+ msgid "Subject Alternative Name: %s\n"
+-msgstr ""
++msgstr "Nama Alternatif Subjek: %s\n"
+ 
+ #: socket.c:671
+-#, fuzzy
+ msgid "Bad certificate: Subject Alternative Name contains NUL, aborting!\n"
+-msgstr "Sertifikat buruk: NamaUmum Subjek terlalu panjang!\n"
++msgstr "Sertifikat buruk: Nama Alternatif Subjek berisi NUL, membatalkan!\n"
+ 
+ #: socket.c:699
+ #, c-format
+@@ -2956,7 +2954,7 @@
+ msgstr "Penjelas berkas di luar jangkauan untuk SSL."
+ 
+ #: socket.c:867
+-#, fuzzy, c-format
++#, c-format
+ msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+ msgstr ""
+ "Protokol SSL tidak sah '%s' ditentukan, menggunakan standar (SSLv23).\n"
+
+Modified: branches/BRANCH_6-3/po/ja.po
+===================================================================
+--- branches/BRANCH_6-3/po/ja.po	2009-10-05 20:07:17 UTC (rev 5441)
++++ branches/BRANCH_6-3/po/ja.po	2009-10-20 22:27:27 UTC (rev 5442)
+@@ -7,10 +7,10 @@
+ #
+ msgid ""
+ msgstr ""
+-"Project-Id-Version: fetchmail 6.3.11\n"
++"Project-Id-Version: fetchmail 6.3.12\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+ "POT-Creation-Date: 2009-08-24 21:16+0200\n"
+-"PO-Revision-Date: 2009-08-06 16:55+0700\n"
++"PO-Revision-Date: 2009-10-06 13:54+0700\n"
+ "Last-Translator: Takeshi Hamasaki <hmatrjp at users.sourceforge.jp>\n"
+ "Language-Team: Japanese <translation-team-ja at lists.sourceforge.net>\n"
+ "MIME-Version: 1.0\n"
+@@ -56,14 +56,14 @@
+ msgstr "kerberos ????????? : %s\n"
+ 
+ #: driver.c:249
+-#, fuzzy, c-format
++#, c-format
+ msgid "krb5_sendauth: %s [server says '%s'] \n"
+-msgstr "krb5_sendauth: %s [??????????????????  '%*s']\n"
++msgstr "krb5_sendauth: %s [??????????????????  '%s'] \n"
+ 
+ #: driver.c:254
+ #, c-format
+ msgid "krb5_sendauth: %s [server says '%*s'] \n"
+-msgstr "krb5_sendauth: %s [??????????????????  '%*s']\n"
++msgstr "krb5_sendauth: %s [??????????????????  '%*s'] \n"
+ 
+ #: driver.c:335
+ msgid "Subject: Fetchmail oversized-messages warning"
+
+Modified: branches/BRANCH_6-3/po/pl.po
+===================================================================
+--- branches/BRANCH_6-3/po/pl.po	2009-10-05 20:07:17 UTC (rev 5441)
++++ branches/BRANCH_6-3/po/pl.po	2009-10-20 22:27:27 UTC (rev 5442)
+@@ -7,10 +7,10 @@
+ #
+ msgid ""
+ msgstr ""
+-"Project-Id-Version: fetchmail 6.3.11\n"
++"Project-Id-Version: fetchmail 6.3.12\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+ "POT-Creation-Date: 2009-08-24 21:16+0200\n"
+-"PO-Revision-Date: 2009-08-06 19:09+0200\n"
++"PO-Revision-Date: 2009-10-06 17:39+0200\n"
+ "Last-Translator: Jakub Bogusz <qboosh at pld-linux.org>\n"
+ "Language-Team: Polish <translation-team-pl at lists.sourceforge.net>\n"
+ "MIME-Version: 1.0\n"
+@@ -57,9 +57,9 @@
+ msgstr "b??d Kerberosa: %s\n"
+ 
+ #: driver.c:249
+-#, fuzzy, c-format
++#, c-format
+ msgid "krb5_sendauth: %s [server says '%s'] \n"
+-msgstr "krb5_sendauth: %s [serwer odpowiedzia? '%*s'] \n"
++msgstr "krb5_sendauth: %s [serwer odpowiedzia? '%s'] \n"
+ 
+ #: driver.c:254
+ #, c-format
+
+Modified: branches/BRANCH_6-3/po/ru.po
+===================================================================
+--- branches/BRANCH_6-3/po/ru.po	2009-10-05 20:07:17 UTC (rev 5441)
++++ branches/BRANCH_6-3/po/ru.po	2009-10-20 22:27:27 UTC (rev 5442)
+@@ -3014,7 +3014,7 @@
+ msgstr "???????????????????? ?????????? ?????? ?????????????????? SSL"
+ 
+ #: socket.c:867
+-#, fuzzy, c-format
++#, c-format
+ msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+ msgstr ""
+ "???????????? ???????????????? ???????????????? SSL '%s', ???????????????????????? ???????????????? ???? ?????????????????? "
+
+Modified: branches/BRANCH_6-3/po/sk.po
+===================================================================
+--- branches/BRANCH_6-3/po/sk.po	2009-10-05 20:07:17 UTC (rev 5441)
++++ branches/BRANCH_6-3/po/sk.po	2009-10-20 22:27:27 UTC (rev 5442)
+@@ -2978,9 +2978,9 @@
+ msgstr ""
+ 
+ #: socket.c:867
+-#, fuzzy, c-format
++#, c-format
+ msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+-msgstr "?pecifikovan? neplatn? protokol `%s'.\n"
++msgstr ""
+ 
+ #: socket.c:943
+ msgid "Certificate/fingerprint verification was somehow skipped!\n"
+@@ -3098,7 +3098,7 @@
+ #: uid.c:517 uid.c:569
+ #, fuzzy, c-format
+ msgid "Merged UID list from %s:"
+-msgstr "Nov? zoznam UID z %s:"
++msgstr "Star? zoznam UID z %s:"
+ 
+ #: uid.c:519
+ #, c-format
+@@ -3154,9 +3154,6 @@
+ msgid "realloc failed\n"
+ msgstr "realloc zlyhal\n"
+ 
+-#~ msgid "message delimiter found while scanning headers\n"
+-#~ msgstr "odde?ova? spr?vy n?jden? pri prezeran? z?hlav?\n"
+-
+ #~ msgid ""
+ #~ "Subject: Fetchmail oversized-messages warning.\n"
+ #~ "\n"
+@@ -3253,5 +3250,8 @@
+ #~ msgid "fetchmail: network security support is disabled\n"
+ #~ msgstr "fetchmail: podpora sie?ovej bezpe?nosti je zak?zan?\n"
+ 
++#~ msgid "message delimiter found while scanning headers\n"
++#~ msgstr "odde?ova? spr?vy n?jden? pri prezeran? z?hlav?\n"
++
+ #~ msgid "lstat: %s: %s\n"
+ #~ msgstr "lstat: %s: %s\n"
+
+Modified: branches/BRANCH_6-3/po/sq.po
+===================================================================
+--- branches/BRANCH_6-3/po/sq.po	2009-10-05 20:07:17 UTC (rev 5441)
++++ branches/BRANCH_6-3/po/sq.po	2009-10-20 22:27:27 UTC (rev 5442)
+@@ -3018,7 +3018,7 @@
+ msgstr "P??rshkrues kartele jasht?? intervali p??r SSL"
+ 
+ #: socket.c:867
+-#, fuzzy, c-format
++#, c-format
+ msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+ msgstr ""
+ "Treguar protokoll SSL i pavlefsh??m '%s', po p??rdor t?? parazgjedhurin "
+
+Modified: branches/BRANCH_6-3/po/tr.po
+===================================================================
+--- branches/BRANCH_6-3/po/tr.po	2009-10-05 20:07:17 UTC (rev 5441)
++++ branches/BRANCH_6-3/po/tr.po	2009-10-20 22:27:27 UTC (rev 5442)
+@@ -3079,7 +3079,7 @@
+ msgstr "Dosya belirteci SSL i?in s?n?rlar d???nda"
+ 
+ #: socket.c:867
+-#, fuzzy, c-format
++#, c-format
+ msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+ msgstr ""
+ "Ge?ersiz SSL protokol? '%s' belirtildi, ?ntan?ml? olan kullan?l?yor "
+@@ -3260,10 +3260,6 @@
+ msgid "realloc failed\n"
+ msgstr "realloc ba?ar?s?z oldu\n"
+ 
+-# delimiter = s?n?r belirteci  (Sankur'un s?zl???nden)
+-#~ msgid "message delimiter found while scanning headers\n"
+-#~ msgstr "ba?l?klar taran?rken ileti s?n?r belirteci bulundu\n"
+-
+ #~ msgid ""
+ #~ "Subject: Fetchmail oversized-messages warning.\n"
+ #~ "\n"
+@@ -3392,6 +3388,10 @@
+ #~ msgid "fetchmail: illegal address length received for host %s\n"
+ #~ msgstr "fetchmail: %s makinesi i?in ge?ersiz adres uzunlu?u al?nd?\n"
+ 
++# delimiter = s?n?r belirteci  (Sankur'un s?zl???nden)
++#~ msgid "message delimiter found while scanning headers\n"
++#~ msgstr "ba?l?klar taran?rken ileti s?n?r belirteci bulundu\n"
++
+ #~ msgid "lstat: %s: %s\n"
+ #~ msgstr "lstat: %s: %s\n"
+ 
+
+Modified: branches/BRANCH_6-3/po/vi.po
+===================================================================
+--- branches/BRANCH_6-3/po/vi.po	2009-10-05 20:07:17 UTC (rev 5441)
++++ branches/BRANCH_6-3/po/vi.po	2009-10-20 22:27:27 UTC (rev 5442)
+@@ -5,10 +5,10 @@
+ #
+ msgid ""
+ msgstr ""
+-"Project-Id-Version: fetchmail 6.3.11\n"
++"Project-Id-Version: fetchmail 6.3.12\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+ "POT-Creation-Date: 2009-08-24 21:16+0200\n"
+-"PO-Revision-Date: 2009-09-18 23:16+0930\n"
++"PO-Revision-Date: 2009-10-06 18:13+0930\n"
+ "Last-Translator: Clytie Siddall <clytie at riverland.net.au>\n"
+ "Language-Team: Vietnamese <vi-VN at googlegroups.com>\n"
+ "MIME-Version: 1.0\n"
+@@ -57,9 +57,9 @@
+ msgstr "l???i kerberos %s\n"
+ 
+ #: driver.c:249
+-#, fuzzy, c-format
++#, c-format
+ msgid "krb5_sendauth: %s [server says '%s'] \n"
+-msgstr "krb5_sendauth: %s [tr??nh ph???c v??? n??i ?? %*s ??]\n"
++msgstr "krb5_sendauth: %s [tr??nh ph???c v??? n??i ?? %s ??]\n"
+ 
+ #: driver.c:254
+ #, c-format
+
+Modified: branches/BRANCH_6-3/po/zh_CN.po
+===================================================================
+--- branches/BRANCH_6-3/po/zh_CN.po	2009-10-05 20:07:17 UTC (rev 5441)
++++ branches/BRANCH_6-3/po/zh_CN.po	2009-10-20 22:27:27 UTC (rev 5442)
+@@ -6,10 +6,10 @@
+ #
+ msgid ""
+ msgstr ""
+-"Project-Id-Version: fetchmail 6.3.11\n"
++"Project-Id-Version: fetchmail 6.3.12\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+ "POT-Creation-Date: 2009-08-24 21:16+0200\n"
+-"PO-Revision-Date: 2009-09-23 15:42??????????????????\n"
++"PO-Revision-Date: 2009-10-12 11:45??????????????????\n"
+ "Last-Translator: Ji ZhengYu <zhengyuji at gmail.com>\n"
+ "Language-Team: Chinese (simplified) <translation-team-zh-cn at lists."
+ "sourceforge.net>\n"
+@@ -3045,6 +3045,3 @@
+ #: xmalloc.c:47
+ msgid "realloc failed\n"
+ msgstr "realloc ??????\n"
+-
+-#~ msgid "message delimiter found while scanning headers\n"
+-#~ msgstr "???????????????????????????????????????\n"
+
+
+
+From svn at mknod.org  Wed Oct 21 09:14:11 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Wed, 21 Oct 2009 02:14:11 -0500
+Subject: [fetchmail-svn] r5443 - branches/BRANCH_6-3/po
+Message-ID: <20091021071411.1FC4921F093@mknod.org>
+
+Author: m-a
+Date: 2009-10-21 02:14:10 -0500 (Wed, 21 Oct 2009)
+New Revision: 5443
+
+Modified:
+   branches/BRANCH_6-3/po/nl.po
+Log:
+Updated Dutch translation courtesy of Erwin Poeze.
+
+Modified: branches/BRANCH_6-3/po/nl.po
+===================================================================
+--- branches/BRANCH_6-3/po/nl.po	2009-10-20 22:27:27 UTC (rev 5442)
++++ branches/BRANCH_6-3/po/nl.po	2009-10-21 07:14:10 UTC (rev 5443)
+@@ -1,21 +1,21 @@
+ # Dutch translations for fetchmail.
+-# Copyright (C) 2007 Eric S. Raymond (msgids)
++# Copyright (C) 2008 Eric S. Raymond (msgids)
+ # This file is distributed under the same license as the fetchmail package.
+ #
+ # Tony Vroon <tony at vroon.org>, 2003.
+ # Benno Schulenberg <benno at vertaalt.nl>, 2008.
++# Erwin Poeze <erwin.poeze at gmail.com>, 2009
+ msgid ""
+ msgstr ""
+-"Project-Id-Version: fetchmail-6.3.8\n"
++"Project-Id-Version: fetchmail-6.3.12\n"
+ "Report-Msgid-Bugs-To: fetchmail-devel at lists.berlios.de\n"
+ "POT-Creation-Date: 2009-08-24 21:16+0200\n"
+-"PO-Revision-Date: 2008-05-16 00:27+0200\n"
+-"Last-Translator: Benno Schulenberg <benno at vertaalt.nl>\n"
++"PO-Revision-Date: 2009-10-21 08:33+0100\n"
++"Last-Translator: Erwin Poeze <erwin.poeze at gmail.com>\n"
+ "Language-Team: Dutch <vertaling at vrijschrift.org>\n"
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+-"X-Generator: KBabel 1.11.4\n"
+ "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+ 
+ #: checkalias.c:179
+@@ -56,9 +56,9 @@
+ msgstr "Kerberos-fout %s\n"
+ 
+ #: driver.c:249
+-#, fuzzy, c-format
++#, c-format
+ msgid "krb5_sendauth: %s [server says '%s'] \n"
+-msgstr "krb5_sendauth(): %s [server zegt '%*s'] \n"
++msgstr "krb5_sendauth(): %s [server zegt '%s'] \n"
+ 
+ #: driver.c:254
+ #, c-format
+@@ -67,7 +67,7 @@
+ 
+ #: driver.c:335
+ msgid "Subject: Fetchmail oversized-messages warning"
+-msgstr "Subject: Fetchmail-waarschuwing -- te grote berichten"
++msgstr "Subject: fetchmail-waarschuwing -- te grote berichten"
+ 
+ #: driver.c:339
+ #, c-format
+@@ -222,9 +222,9 @@
+ "Fetchmail blijft van deze mailbox af tot u het programma herstart.\n"
+ 
+ #: driver.c:946
+-#, fuzzy, c-format
++#, c-format
+ msgid "pre-connection command terminated with signal %d\n"
+-msgstr "pre-verbindingscommando is mislukt met aflsuitwaarde %d\n"
++msgstr "pre-verbindingscommando is mislukt met afsluitwaarde %d\n"
+ 
+ #: driver.c:949
+ #, c-format
+@@ -252,7 +252,7 @@
+ 
+ #: driver.c:1084
+ msgid "Subject: Fetchmail unreachable-server warning."
+-msgstr "Subject: Fetchmail-waarschuwing -- onbereikbare server."
++msgstr "Subject: fetchmail-waarschuwing -- onbereikbare server."
+ 
+ #: driver.c:1086
+ #, c-format
+@@ -261,7 +261,7 @@
+ 
+ #: driver.c:1114
+ msgid "SSL connection failed.\n"
+-msgstr "SSL-connectie is mislukt.\n"
++msgstr "SSL-verbinding is mislukt.\n"
+ 
+ #: driver.c:1167
+ #, c-format
+@@ -285,7 +285,7 @@
+ #: driver.c:1200
+ #, c-format
+ msgid "Subject: fetchmail authentication failed on %s@%s"
+-msgstr "Subject: Fetchmail-aanmelding is mislukt voor %s@%s"
++msgstr "Subject: fetchmail-aanmelding is mislukt voor %s@%s"
+ 
+ #: driver.c:1204
+ #, c-format
+@@ -316,8 +316,8 @@
+ "is restored."
+ msgstr ""
+ "\n"
+-"Als echter uw login-gegevens zijn veranderd nadat u de fetchmail-service\n"
+-"startte, dan moet u de fetchmail-service stoppen, de configuratie wijzigen,\n"
++"Als echter uw logingegevens zijn veranderd nadat u de fetchmail-service\n"
++"startte, dan moet u de fetchmail-service stoppen, de configuratie wijzigen\n"
+ "en dan de service herstarten.\n"
+ "\n"
+ "Fetchmail blijft draaien en probeert de aanmelding elke ronde opnieuw.\n"
+@@ -360,7 +360,7 @@
+ #: driver.c:1275
+ #, c-format
+ msgid "Subject: fetchmail authentication OK on %s@%s"
+-msgstr "Subject: Fetchmail-aanmelding is geslaagd voor %s@%s"
++msgstr "Subject: fetchmail-aanmelding is geslaagd voor %s@%s"
+ 
+ #: driver.c:1279
+ #, c-format
+@@ -480,7 +480,7 @@
+ msgstr "%s fout tijdens het ophalen van %s@%s\n"
+ 
+ #: driver.c:1583
+-#, fuzzy, c-format
++#, c-format
+ msgid "post-connection command terminated with signal %d\n"
+ msgstr "na-verbindingscommando is mislukt met afsluitwaarde %d\n"
+ 
+@@ -525,7 +525,7 @@
+ "Dit is gevaarlijk, qmail-inject of de sendmail-wrapper van qmail zouden\n"
+ "je From: en/of Message-ID: headers kunnen verpesten.\n"
+ "Probeer \"env QMAILINJECT= %s JOUW PARAMETERS HIER\"\n"
+-"%s: Gestopt.\n"
++"%s: Stoppen.\n"
+ 
+ #: env.c:71
+ #, c-format
+@@ -537,17 +537,17 @@
+ "Try \"env NULLMAILER_FLAGS= %s YOUR ARGUMENTS HERE\"\n"
+ "%s: Abort.\n"
+ msgstr ""
+-"%s:?De?NULLMAILER_FLAGS?shell-variable?is toegekend.\n"
+-"Dit?is?gevaarlijk,?nullmailer-inject?of?de?sendmail-"
+-"wrapper?van?nullmailer?zouden\n"
+-"je?From:?en/of?Message-ID:?headers?kunnen?verpesten.\n"
+-"Probeer?\"env?NULLMAILER_FLAGS=?%s?JOUW?PARAMETERS?HIER\"\n"
+-"%s:?Gestopt.\n"
++"%s: De NULLMAILER_FLAGS shell-variable is toegekend.\n"
++"Dit is gevaarlijk, nullmailer-inject of de sendmail-wrapper van nullmailer "
++"zouden\n"
++"je From: en/of Message-ID: headers kunnen verpesten.\n"
++"Probeer \"env NULLMAILER_FLAGS= %s JOUW?PARAMETERS HIER\"\n"
++"%s: Stoppen.\n"
+ 
+ #: env.c:83
+ #, c-format
+ msgid "%s: You don't exist.  Go away.\n"
+-msgstr "%s: U bestaat niet.  Ga weg.\n"
++msgstr "%s: U bestaat niet. Ga weg.\n"
+ 
+ #: env.c:145
+ #, c-format
+@@ -562,6 +562,8 @@
+ #: env.c:170
+ msgid "Cannot find my own host in hosts database to qualify it!\n"
+ msgstr ""
++"Kan mijn eigen host niet in de hostsdatabase vinden om deze te "
++"kwalificeren!\n"
+ 
+ #: env.c:174
+ msgid ""
+@@ -570,6 +572,10 @@
+ "problems!\n"
+ "DO repair your /etc/hosts, DNS, NIS or LDAP instead.\n"
+ msgstr ""
++"Probeert door te gaan met een niet gekwalificeerde hostname.\n"
++"Rapporteer GEEN misvormde berichten: koppen, HELO/EHLO-regels of "
++"soortgelijke problemen!\n"
++"Repareer in plaats daarvan uw /etc/hosts, NDS, NIS of LDAP.\n"
+ 
+ #: etrn.c:49 odmr.c:60
+ #, c-format
+@@ -636,7 +642,6 @@
+ msgstr "Optie '--check' is niet mogelijk met ETRN\n"
+ 
+ #: fetchmail.c:137
+-#, fuzzy
+ msgid ""
+ "Copyright (C) 2002, 2003 Eric S. Raymond\n"
+ "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham "
+@@ -647,8 +652,8 @@
+ "Copyright (C) 2002, 2003 Eric S. Raymond\n"
+ "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham "
+ "Wilson\n"
+-"Copyright (C) 2005-2006 Sunil Shetye\n"
+-"Copyright (C) 2005-2007 Matthias Andree\n"
++"Copyright (C) 2005 - 2006 Sunil Shetye\n"
++"Copyright (C) 2005 - 2009 Matthias Andree\n"
+ 
+ #: fetchmail.c:142
+ msgid ""
+@@ -768,7 +773,7 @@
+ 
+ #: fetchmail.c:582
+ msgid "fetchmail: Cannot detach into background. Aborting.\n"
+-msgstr "fetchmail: Kan niet naar de achtergrond gaan.  Gestopt.\n"
++msgstr "fetchmail: Kan niet naar de achtergrond gaan. Gestopt.\n"
+ 
+ #: fetchmail.c:586
+ #, c-format
+@@ -788,7 +793,7 @@
+ 
+ #: fetchmail.c:625
+ msgid "--check mode enabled, not fetching mail\n"
+-msgstr ""
++msgstr "--controlemodus ingeschakeld, geen e-mailontvangst\n"
+ 
+ #: fetchmail.c:647
+ #, c-format
+@@ -950,11 +955,13 @@
+ #: fetchmail.c:1284
+ #, c-format
+ msgid "warning: multidrop for %s requires envelope option!\n"
+-msgstr ""
++msgstr "waarschuwing: multidrop van %s vereist envelopoptie!\n"
+ 
+ #: fetchmail.c:1285
+ msgid "warning: Do not ask for support if all mail goes to postmaster!\n"
+ msgstr ""
++"waarschuwing: vraag niet om ondersteuning als alle e-mail naar postmaster "
++"gaat!\n"
+ 
+ #: fetchmail.c:1302
+ #, c-format
+@@ -1064,15 +1071,16 @@
+ msgstr "Fetchmail zal foutmeldingen naar de afzender sturen.\n"
+ 
+ #: fetchmail.c:1557
+-#, fuzzy
+ msgid "Fetchmail will treat permanent errors as permanent (drop messsages).\n"
+ msgstr ""
+-"Fetchmail zal onjuist geadresseerde multidrop-berichten doorsturen naar %s.\n"
++"Fetchmail zal definitieve foutmeldingen als definitief afhandelen (berichten "
++"verwijderen).\n"
+ 
+ #: fetchmail.c:1559
+-#, fuzzy
+ msgid "Fetchmail will treat permanent errors as temporary (keep messages).\n"
+-msgstr "Fetchmail zal foutmeldingen naar de afzender sturen.\n"
++msgstr ""
++"Fetchmail zal definitieve foutmeldingen als tijdelijk afhandelen (berichten "
++"behouden).\n"
+ 
+ #: fetchmail.c:1566
+ #, c-format
+@@ -1187,9 +1195,9 @@
+ msgstr "  Versleuteling van-eindpunt-tot-eindpunt wordt aangenomen.\n"
+ 
+ #: fetchmail.c:1650
+-#, fuzzy, c-format
++#, c-format
+ msgid "  Mail service principal is: %s\n"
+-msgstr "  Mail-service principal is: %s\n"
++msgstr "  Belangrijkste mailservice is: %s\n"
+ 
+ #: fetchmail.c:1653
+ msgid "  SSL encrypted sessions enabled.\n"
+@@ -1210,14 +1218,14 @@
+ msgstr "  Map voor vertrouwde SSL-certificaten: %s\n"
+ 
+ #: fetchmail.c:1662
+-#, fuzzy, c-format
++#, c-format
+ msgid "  SSL server CommonName: %s\n"
+-msgstr "Gewone servernaam: %s\n"
++msgstr "  CommonName SLL-server: %s\n"
+ 
+ #: fetchmail.c:1664
+ #, c-format
+ msgid "  SSL key fingerprint (checked against the server key): %s\n"
+-msgstr "  SSL-sleutel-afdruk (geverifieerd tegenover server-sleutel): %s\n"
++msgstr "  SSL-sleutelafdruk (geverifieerd tegenover serversleutel): %s\n"
+ 
+ #: fetchmail.c:1667
+ #, c-format
+@@ -1286,13 +1294,13 @@
+ #: fetchmail.c:1699
+ msgid "  Rewrite of server-local addresses is enabled (--norewrite off).\n"
+ msgstr ""
+-"  Herschrijven van lokale server-adressen is ingeschakeld ('--norewrite "
++"  Herschrijven van lokale serveradressen is ingeschakeld ('--norewrite "
+ "off').\n"
+ 
+ #: fetchmail.c:1700
+ msgid "  Rewrite of server-local addresses is disabled (--norewrite on).\n"
+ msgstr ""
+-"  Herschrijven van lokale server-adressen is uitgeschakeld ('--norewrite "
++"  Herschrijven van lokale serveradressen is uitgeschakeld ('--norewrite "
+ "on').\n"
+ 
+ #: fetchmail.c:1702
+@@ -1416,14 +1424,13 @@
+ "0').\n"
+ 
+ #: fetchmail.c:1755
+-#, fuzzy, c-format
++#, c-format
+ msgid "  SMTP message batch limit is %d.\n"
+-msgstr "  SMTP bericht-stapel limiet is %d.\n"
++msgstr "  Limiet SMTP-berichtenbatch is %d.\n"
+ 
+ #: fetchmail.c:1757
+-#, fuzzy
+ msgid "  No SMTP message batch limit (--batchlimit 0).\n"
+-msgstr "  Er is geen SMTP bericht-stapel limiet (--batchlimit 0).\n"
++msgstr "  Er is geen limiet voor SMTP-berichtenbatch (--batchlimit 0).\n"
+ 
+ #: fetchmail.c:1761
+ #, c-format
+@@ -1480,7 +1487,7 @@
+ #: fetchmail.c:1821
+ #, c-format
+ msgid "  Server connection will be brought up with \"%s\".\n"
+-msgstr "  Server connectie wordt tot stand gebracht met \"%s\".\n"
++msgstr "  Serververbinding wordt tot stand gebracht met \"%s\".\n"
+ 
+ #: fetchmail.c:1824
+ msgid "  No pre-connection command.\n"
+@@ -1489,7 +1496,7 @@
+ #: fetchmail.c:1826
+ #, c-format
+ msgid "  Server connection will be taken down with \"%s\".\n"
+-msgstr "  Server connectie wordt verbroken met \"%s\".\n"
++msgstr "  Serververbinding wordt verbroken met \"%s\".\n"
+ 
+ #: fetchmail.c:1829
+ msgid "  No post-connection command.\n"
+@@ -1501,11 +1508,11 @@
+ 
+ #: fetchmail.c:1842
+ msgid "  Multi-drop mode: "
+-msgstr "  Multi-drop mode: "
++msgstr "  Multi-drop modus: "
+ 
+ #: fetchmail.c:1844
+ msgid "  Single-drop mode: "
+-msgstr "  Single-drop mode: "
++msgstr "  Single-drop modus: "
+ 
+ #: fetchmail.c:1846
+ #, c-format
+@@ -1541,12 +1548,12 @@
+ #: fetchmail.c:1874
+ #, c-format
+ msgid "  Envelope header is assumed to be: %s\n"
+-msgstr "  Envelop-header is aangenomen als zijnde: %s\n"
++msgstr "  Envelopkoppen is aangenomen als zijnde: %s\n"
+ 
+ #: fetchmail.c:1877
+ #, c-format
+ msgid "  Number of envelope headers to be skipped over: %d\n"
+-msgstr "  Aantal over te slaan envelop-headers: %d\n"
++msgstr "  Aantal over te slaan envelopkoppen: %d\n"
+ 
+ #: fetchmail.c:1880
+ #, c-format
+@@ -1577,7 +1584,7 @@
+ #: fetchmail.c:1913
+ #, c-format
+ msgid "  Polling loop will monitor %s.\n"
+-msgstr "  Ophaal-lus monitort %s.\n"
++msgstr "  Ophaallus monitort %s.\n"
+ 
+ #: fetchmail.c:1915
+ msgid "  No monitor interface specified.\n"
+@@ -1586,7 +1593,7 @@
+ #: fetchmail.c:1919
+ #, c-format
+ msgid "  Server connections will be made via plugin %s (--plugin %s).\n"
+-msgstr "  Server-connecties worden gelegd via plugin %s ('--plugin %s').\n"
++msgstr "  Serverconnecties worden gelegd via plugin %s ('--plugin %s').\n"
+ 
+ #: fetchmail.c:1921
+ msgid "  No plugin command specified.\n"
+@@ -1613,19 +1620,19 @@
+ 
+ #: fetchmail.c:1947
+ msgid "  Poll trace information will be added to the Received header.\n"
+-msgstr "  Poll trace informatie wordt toegevoegd aan de Received header.\n"
++msgstr "  Poll-trace-informatie wordt toegevoegd aan de Received-header.\n"
+ 
+ #: fetchmail.c:1949
+ msgid ""
+ "  No poll trace information will be added to the Received header.\n"
+ ".\n"
+ msgstr ""
+-"  Er wordt geen poll trace informatie aan de Received header toegevoegd.\n"
++"  Er wordt geen poll-trace-informatie aan de Received-header toegevoegd.\n"
+ 
+ #: fetchmail.c:1952
+ #, c-format
+ msgid "  Pass-through properties \"%s\".\n"
+-msgstr "  Doorvoer-eigenschappen \"%s\".\n"
++msgstr "  Doorvoereigenschappen \"%s\".\n"
+ 
+ #: getpass.c:71
+ msgid "ERROR: no support for getpassword() routine\n"
+@@ -1642,16 +1649,16 @@
+ #: gssapi.c:66
+ #, c-format
+ msgid "Couldn't get service name for [%s]\n"
+-msgstr "Kan geen service-naam vinden voor [%s]\n"
++msgstr "Kan geen servicenaam vinden voor [%s]\n"
+ 
+ #: gssapi.c:72
+ #, c-format
+ msgid "Using service name [%s]\n"
+-msgstr "Service-naam [%s] wordt gebruikt\n"
++msgstr "Servicenaam [%s] wordt gebruikt\n"
+ 
+ #: gssapi.c:89
+ msgid "Sending credentials\n"
+-msgstr "Versturen van login-gegevens\n"
++msgstr "Versturen van logingegevens\n"
+ 
+ #: gssapi.c:107
+ msgid "Error exchanging credentials\n"
+@@ -1740,10 +1747,9 @@
+ msgstr "Benodigde LOGIN-mogelijkheid wordt niet door server ondersteund\n"
+ 
+ #: imap.c:676
+-#, fuzzy, c-format
++#, c-format
+ msgid "mail expunge mismatch (%d actual != %d expected)\n"
+-msgstr ""
+-"bericht %s@%s:%d was niet van de verwachte lengte (was %d != verwachtte %d)\n"
++msgstr "bericht-expunge komt niet overeen (is %d, waar %d verwacht)\n"
+ 
+ #: imap.c:782 imap.c:841
+ msgid "re-poll failed\n"
+@@ -1795,16 +1801,16 @@
+ #: imap.c:1002
+ msgid ""
+ "Warning: ignoring bogus data for message sizes returned by the server.\n"
+-msgstr ""
++msgstr "Waarschuwing: server geeft onzinnige berichtgrootten terug.\n"
+ 
+ #: interface.c:256
+ msgid "Unable to open kvm interface. Make sure fetchmail is SGID kmem."
+-msgstr "Kan kvm-interface niet openen.  Controleer of fetchmail SGID-kmem is."
++msgstr "Kan kvm-interface niet openen. Controleer of fetchmail SGID-kmem is."
+ 
+ #: interface.c:396
+ #, c-format
+ msgid "Unable to parse interface name from %s"
+-msgstr "Kan interface-naam van %s niet verwerken"
++msgstr "Kan interfacenaam van %s niet verwerken"
+ 
+ #: interface.c:418
+ msgid "get_ifinfo: sysctl (iflist estimate) failed"
+@@ -1835,15 +1841,15 @@
+ 
+ #: interface.c:589
+ msgid "missing IP interface address\n"
+-msgstr "IP-interface-adres is niet gevonden\n"
++msgstr "IP-interfaceadres is niet gevonden\n"
+ 
+ #: interface.c:605
+ msgid "invalid IP interface address\n"
+-msgstr "ongeldig IP-interface-adres\n"
++msgstr "ongeldig IP-interfaceadres\n"
+ 
+ #: interface.c:611
+ msgid "invalid IP interface mask\n"
+-msgstr "ongeldig IP-interface-masker\n"
++msgstr "ongeldig IP-interfacemasker\n"
+ 
+ #: interface.c:650
+ #, c-format
+@@ -1928,7 +1934,7 @@
+ #: odmr.c:66
+ #, c-format
+ msgid "%s's SMTP listener does not support ATRN\n"
+-msgstr "%s's SMTP-programma ondersteund geen ATRN\n"
++msgstr "%s's SMTP-programma ondersteunt geen ATRN\n"
+ 
+ #: odmr.c:104
+ msgid "Turnaround now...\n"
+@@ -1981,7 +1987,7 @@
+ 
+ #: opie.c:42
+ msgid "server recv fatal\n"
+-msgstr ""
++msgstr "server recv is mislukt\n"
+ 
+ #: opie.c:56
+ msgid "Could not decode OTP challenge\n"
+@@ -1994,7 +2000,7 @@
+ #: options.c:172 options.c:216
+ #, c-format
+ msgid "String '%s' is not a valid number string.\n"
+-msgstr "String '%s' is geen geldige numerieke string.\n"
++msgstr "String '%s' is geen geldige numerieke tekenreeks.\n"
+ 
+ #: options.c:181
+ #, c-format
+@@ -2104,12 +2110,16 @@
+ msgid ""
+ "      --nosoftbounce fetchmail deletes permanently undeliverable messages.\n"
+ msgstr ""
++"      --nosoftbounce fetchmail verwijdert definitief niet-bestelbare "
++"berichten.\n"
+ 
+ #: options.c:621
+ msgid ""
+ "      --softbounce  keep permanently undeliverable messages on server "
+ "(default).\n"
+ msgstr ""
++"      --softbounce  definitief onbestelbare berichten op de server behouden "
++"(standaard).\n"
+ 
+ #: options.c:623
+ msgid "  -I, --interface   interface required specification\n"
+@@ -2121,11 +2131,11 @@
+ 
+ #: options.c:627
+ msgid "      --ssl         enable ssl encrypted session\n"
+-msgstr "      --ssl        SSL-beveiligde sessies inschakelen\n"
++msgstr "      --ssl         SSL-beveiligde sessies inschakelen\n"
+ 
+ #: options.c:628
+ msgid "      --sslkey      ssl private key file\n"
+-msgstr "     --sslkey      bestand met SSL-priv?sleutels\n"
++msgstr "      --sslkey      bestand met SSL-priv?sleutels\n"
+ 
+ #: options.c:629
+ msgid "      --sslcert     ssl client certificate\n"
+@@ -2144,12 +2154,15 @@
+ msgid ""
+ "      --sslcommonname  expect this CommonName from server (discouraged)\n"
+ msgstr ""
++"      --sslcommonname  verwacht deze CommonName van server (afgeraden)\n"
+ 
+ #: options.c:633
+ msgid ""
+ "      --sslfingerprint fingerprint that must match that of the server's "
+ "cert.\n"
+ msgstr ""
++"      --sslfingerprint fingerprint dat overeen moet komen met het "
++"servercertificaat.\n"
+ 
+ #: options.c:634
+ msgid "      --sslproto    force ssl protocol (SSL2/SSL3/TLS1)\n"
+@@ -2192,7 +2205,7 @@
+ 
+ #: options.c:645
+ msgid "  -E, --envelope    envelope address header\n"
+-msgstr "  -E, --envelope    envelop-adres-header\n"
++msgstr "  -E, --envelope    envelopadreskop\n"
+ 
+ #: options.c:646
+ msgid "  -Q, --qvirtual    prefix to remove from local user id\n"
+@@ -2310,14 +2323,17 @@
+ "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
+ "of TOP.\n"
+ msgstr ""
++"Waarschuwing: \"Maillennium POP3/PROXY server\" gevonden, gebruik RETR-"
++"commando in plaats van TOP.\n"
+ 
+ #: pop3.c:454
+ msgid "TLS is mandatory for this session, but server refused CAPA command.\n"
+ msgstr ""
++"TLS is verplicht voor deze sessie, maar de server weigert CAPA-opdracht.\n"
+ 
+ #: pop3.c:455
+ msgid "The CAPA command is however necessary for TLS.\n"
+-msgstr ""
++msgstr "De CAPA-opdracht is echter nodig voor TLS.\n"
+ 
+ #: pop3.c:538
+ #, c-format
+@@ -2327,6 +2343,8 @@
+ #: pop3.c:646
+ msgid "We've run out of allowed authenticators and cannot continue.\n"
+ msgstr ""
++"Het maximum aantal toegestane authenticators is bereikt, kan niet verder "
++"gaan.\n"
+ 
+ #: pop3.c:660
+ msgid "Required APOP timestamp not found in greeting\n"
+@@ -2350,11 +2368,11 @@
+ 
+ #: pop3.c:809
+ msgid "Cannot handle UIDL response from upstream server.\n"
+-msgstr ""
++msgstr "UIDL-respons van upstreamserver kan niet worden verwerkt.\n"
+ 
+ #: pop3.c:832
+ msgid "Server responded with UID for wrong message.\n"
+-msgstr ""
++msgstr "Server reageerde met UID voor verkeerd bericht.\n"
+ 
+ #: pop3.c:859 pop3.c:1105
+ #, c-format
+@@ -2423,11 +2441,11 @@
+ msgstr "Bestand %s moet een regulier bestand zijn.\n"
+ 
+ #: rcfile_y.y:433
+-#, fuzzy, c-format
++#, c-format
+ msgid "File %s must have no more than -rwx------ (0700) permissions.\n"
+ msgstr ""
+-"Bestandspermissies op %s mogen niet minder strak zijn dan -rwx--x--- "
+-"(0710).\n"
++"Bestandspermissies op %s mogen niet minder stringent zijn dan -rwx------ "
++"(0700).\n"
+ 
+ #: rcfile_y.y:445
+ #, c-format
+@@ -2439,9 +2457,9 @@
+ msgstr "Onbekende systeemfout"
+ 
+ #: report.c:92
+-#, fuzzy, c-format
++#, c-format
+ msgid "%s (log message incomplete)\n"
+-msgstr "%s (log-entry niet compleet)"
++msgstr "%s (log-entry niet compleet)\n"
+ 
+ #: rfc822.c:76
+ #, c-format
+@@ -2486,7 +2504,7 @@
+ #: rpa.c:199
+ #, c-format
+ msgid "Service timestamp %s\n"
+-msgstr "Service tijdstempel %s\n"
++msgstr "Service-tijdstempel %s\n"
+ 
+ #: rpa.c:204
+ msgid "RPA token 2 length error\n"
+@@ -2531,12 +2549,12 @@
+ #: rpa.c:297
+ #, c-format
+ msgid "RPA User Authentication length error: %d\n"
+-msgstr "RPA gebruikersidentificatie: onjuiste lengte: %d\n"
++msgstr "RPA-gebruikersidentificatie: onjuiste lengte: %d\n"
+ 
+ #: rpa.c:302
+ #, c-format
+ msgid "RPA Session key length error: %d\n"
+-msgstr "RPA Sessie-sleutel: onjuiste lengte: %d\n"
++msgstr "RPA-sessiesleutel: onjuiste lengte: %d\n"
+ 
+ #: rpa.c:308
+ msgid "RPA _service_ auth fail. Spoof server?\n"
+@@ -2548,7 +2566,7 @@
+ 
+ #: rpa.c:344
+ msgid "RPA authorisation complete\n"
+-msgstr "RPA authorisatie voltooid\n"
++msgstr "RPA-authorisatie voltooid\n"
+ 
+ #: rpa.c:371
+ msgid "Get response\n"
+@@ -2646,7 +2664,7 @@
+ #: sink.c:220
+ #, c-format
+ msgid "forwarding to %s\n"
+-msgstr "forwarden naar %s\n"
++msgstr "doorsturen naar %s\n"
+ 
+ #: sink.c:306
+ msgid "SMTP: (bounce-message body)\n"
+@@ -2669,7 +2687,7 @@
+ 
+ #: sink.c:550
+ msgid "SMTP server requires STARTTLS, keeping message.\n"
+-msgstr ""
++msgstr "SMTP-server vereist STARTTLS, bericht behouden.\n"
+ 
+ #: sink.c:730
+ #, c-format
+@@ -2702,7 +2720,7 @@
+ #: sink.c:1061
+ #, c-format
+ msgid "no address matches; forwarding to %s.\n"
+-msgstr "geen adres komt overeen; forwarden naar %s.\n"
++msgstr "geen adres komt overeen; doorsturen naar %s.\n"
+ 
+ #: sink.c:1217
+ #, c-format
+@@ -2743,7 +2761,7 @@
+ msgid ""
+ "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
+ msgstr ""
+-"VreemdRaar: pclose() van MDA gaf %d terug en foutcode %d/%s;\n"
++"Vreemd: pclose() van MDA gaf %d terug en foutcode %d/%s;\n"
+ "kan dit niet verwerken, op %s:%d\n"
+ 
+ #: sink.c:1395
+@@ -2901,19 +2919,17 @@
+ msgstr "Ongeldig certificaat: Subject CN is te lang!\n"
+ 
+ #: socket.c:644
+-#, fuzzy
+ msgid "Bad certificate: Subject CommonName contains NUL, aborting!\n"
+-msgstr "Ongeldig certificaat: Subject CN is te lang!\n"
++msgstr "Ongeldig certificaat: Subject CommonNane bevat NUL, afbreken!\n"
+ 
+ #: socket.c:665
+ #, c-format
+ msgid "Subject Alternative Name: %s\n"
+-msgstr ""
++msgstr "Subject Alternative Name: %s\n"
+ 
+ #: socket.c:671
+-#, fuzzy
+ msgid "Bad certificate: Subject Alternative Name contains NUL, aborting!\n"
+-msgstr "Ongeldig certificaat: Subject CN is te lang!\n"
++msgstr "Ongeldig certificaat: Subject Alternative Name bevat NUL, afbreken!\n"
+ 
+ #: socket.c:699
+ #, c-format
+@@ -2942,7 +2958,7 @@
+ 
+ #: socket.c:737
+ msgid "Digest text buffer too small!\n"
+-msgstr "Tekstbuffer voor digest is te klein!\n"
++msgstr "Tekstbuffer voor controlegetal is te klein!\n"
+ 
+ #: socket.c:743
+ #, c-format
+@@ -2974,7 +2990,7 @@
+ msgstr "Bestandsdescriptor valt buiten bereik voor SSL"
+ 
+ #: socket.c:867
+-#, fuzzy, c-format
++#, c-format
+ msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+ msgstr ""
+ "Ongeldig SSL-protocol '%s' opgegeven; standaard (SSLv23) wordt gebruikt.\n"
+@@ -3006,7 +3022,7 @@
+ #: transact.c:154
+ #, c-format
+ msgid "passed through %s matching %s\n"
+-msgstr ""
++msgstr "via %s overeenkomend met %s\n"
+ 
+ #: transact.c:224
+ #, c-format
+
+
+
+From svn at mknod.org  Wed Oct 21 09:21:08 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Wed, 21 Oct 2009 02:21:08 -0500
+Subject: [fetchmail-svn] r5444 - branches/BRANCH_6-3
+Message-ID: <20091021072108.A1F8321F093@mknod.org>
+
+Author: m-a
+Date: 2009-10-21 02:21:08 -0500 (Wed, 21 Oct 2009)
+New Revision: 5444
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+Log:
+Credit translators
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-10-21 07:14:10 UTC (rev 5443)
++++ branches/BRANCH_6-3/NEWS	2009-10-21 07:21:08 UTC (rev 5444)
+@@ -47,6 +47,19 @@
+ 
+ --------------------------------------------------------------------------------
+ 
++fetchmail 6.3.13 (not yet released):
++
++# TRANSLATION UPDATES
++* [cs]    Czech, by Petr Pisar
++* [zh_CN] Chinese (simplified), by Ji ZhengYu
++* [nl]    Dutch, by Erwin Poeze
++* [id]    Indonesian, by Andhika Padmawan
++* [ja]    Japanese, by Takeshi Hamasaki
++* [pl]    Polish, by Jakub Bogusz
++* [es]    Spanish (Castilian), by Franciso Molinero
++* [vi]    Vietnamese, by Clytie Siddall
++
++
+ fetchmail 6.3.12 (released 2009-10-05):
+ 
+ # REGRESSION FIXES
+
+
+
+From svn at mknod.org  Wed Oct 28 17:24:23 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Wed, 28 Oct 2009 11:24:23 -0500
+Subject: [fetchmail-svn] r5445 - branches/BRANCH_6-3
+Message-ID: <20091028162423.A6AF321F095@mknod.org>
+
+Author: m-a
+Date: 2009-10-28 11:24:23 -0500 (Wed, 28 Oct 2009)
+New Revision: 5445
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/smtp.c
+Log:
+Regression fix for multiline SMTP bugfix. Reported by Thomas Jarosch.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-10-21 07:21:08 UTC (rev 5444)
++++ branches/BRANCH_6-3/NEWS	2009-10-28 16:24:23 UTC (rev 5445)
+@@ -49,6 +49,12 @@
+ 
+ fetchmail 6.3.13 (not yet released):
+ 
++# REGRESSION FIXES
++* The multiline SMTP error fix in release 6.3.12 caused fetchmail to lose
++  message codes 400..599 and treat all of these as temporary error. This would
++  cause messages to be left on the server even if softbounce was turned off.
++  Reported by Thomas Jarosch.
++
+ # TRANSLATION UPDATES
+ * [cs]    Czech, by Petr Pisar
+ * [zh_CN] Chinese (simplified), by Ji ZhengYu
+
+Modified: branches/BRANCH_6-3/smtp.c
+===================================================================
+--- branches/BRANCH_6-3/smtp.c	2009-10-21 07:21:08 UTC (rev 5444)
++++ branches/BRANCH_6-3/smtp.c	2009-10-28 16:24:23 UTC (rev 5445)
+@@ -352,16 +352,16 @@
+ 
+ 	last_smtp_ok = time((time_t *) NULL);
+ 
++	strlcat(smtp_response, reply,  sizeof(smtp_response));
++
+ 	if (strchr("123", reply[0])
+ 		&& isdigit((unsigned char)reply[1])
+ 		&& isdigit((unsigned char)reply[2])
+ 		&& strchr(" ", reply[3])) /* matches space and \0 */ {
+-	    strlcat(smtp_response, reply, sizeof(smtp_response));
+ 	    return SM_OK;
+ 	} else if (reply[3] != '-')
+ 	    return SM_ERROR;
+ 
+-	strlcat(smtp_response, reply,  sizeof(smtp_response));
+ 	strlcat(smtp_response, "\r\n", sizeof(smtp_response));
+ 
+ 	/* set an alarm for smtp ok */
+
+
+
+From svn at mknod.org  Fri Oct 30 03:23:23 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 29 Oct 2009 21:23:23 -0500
+Subject: [fetchmail-svn] r5446 - in branches/BRANCH_6-3/dist-tools: . shipper
+Message-ID: <20091030022323.DFB8321F096@mknod.org>
+
+Author: m-a
+Date: 2009-10-29 21:23:23 -0500 (Thu, 29 Oct 2009)
+New Revision: 5446
+
+Removed:
+   branches/BRANCH_6-3/dist-tools/growthplot
+   branches/BRANCH_6-3/dist-tools/indexgen.sh
+   branches/BRANCH_6-3/dist-tools/listsize
+   branches/BRANCH_6-3/dist-tools/timeplot
+   branches/BRANCH_6-3/dist-tools/timeseries
+   branches/BRANCH_6-3/dist-tools/upload
+   branches/BRANCH_6-3/dist-tools/uploadfaq
+Modified:
+   branches/BRANCH_6-3/dist-tools/getstats.py
+   branches/BRANCH_6-3/dist-tools/makerelease
+   branches/BRANCH_6-3/dist-tools/shipper/buildrpms
+Log:
+Clean up dist-tools, remove or update.
+
+Modified: branches/BRANCH_6-3/dist-tools/getstats.py
+===================================================================
+--- branches/BRANCH_6-3/dist-tools/getstats.py	2009-10-28 16:24:23 UTC (rev 5445)
++++ branches/BRANCH_6-3/dist-tools/getstats.py	2009-10-30 02:23:23 UTC (rev 5446)
+@@ -7,21 +7,22 @@
+ # Get version and date
+ date = commands.getoutput("LC_TIME=C date -u")
+ pid = os.getpid()
+-# this is a fast variant using the base of the current working directory
+-# (ignores uncommitted modifications)
+-if os.system("svn export -q -rBASE . /tmp/getstats.%d" % pid):
++if True:
++    # this is a fast variant using the base of the current working directory
++    # (ignores uncommitted modifications)
++    cmd = "svn export -q -rBASE . /tmp/getstats.%d" % pid
++else:
++    #  this is a slower variant that may export the whole tree across
++    #  the net
++    cmd = "svn export -rCOMMITTED . /tmp/getstats.%d" % pid
++
++if os.system(cmd):
+     print "SVN FAILED"
+     os.exit(1)
+-# this is a slower variant that may export the whole tree across the net
+-#os.system("svn export -rCOMMITTED . /tmp/getstats.%d" % pid)
++
+ ln = commands.getoutput("cat /tmp/getstats.%d/*.[chly] 2>/dev/null | wc -l" % pid)
+ os.system("rm -rf /tmp/getstats.%d" % pid)
+-vers = commands.getoutput("sed -n -e '/AC_INIT/s/AC_INIT(\[.*\],\[\\(.*\\)\])/\\1/p' <configure.ac")
++vers = commands.getoutput("sed -n -e '/AC_INIT/s/AC_INIT(\\[.\\+\\],\\[\\(.*\\)\\],.*)/\\1/p' <configure.ac")
+ print "fetchmail-" + vers + " (" + date + "), " + string.strip(ln) + " lines:"
+ 
+-# Use local listsize command to grab list statistics
+-#friends = commands.getoutput("listsize friends").strip()
+-#announce = commands.getoutput("listsize announce").strip()
+-#print "There are %s people on fetchmail-friends and %s on fetchmail-announce."% (friends, announce)
+-
+-# getstats.py
++# end of getstats.py
+
+Deleted: branches/BRANCH_6-3/dist-tools/growthplot
+===================================================================
+--- branches/BRANCH_6-3/dist-tools/growthplot	2009-10-28 16:24:23 UTC (rev 5445)
++++ branches/BRANCH_6-3/dist-tools/growthplot	2009-10-30 02:23:23 UTC (rev 5446)
+@@ -1,114 +0,0 @@
+-#!/bin/sh
+-#
+-# growthplot -- plot the fetchmail project's growth as a function of time
+-#
+-
+-PATH="$PATH:.:./dist-tools"; export PATH
+-
+-tmp=/tmp/fetchmail-growthplot.$$
+-mkdir $tmp
+-
+-# Get data from the NEWS file
+-timeseries >$tmp/growthplot$$
+-grep "^[0-9]" $tmp/growthplot$$ >$tmp/growthnumbers$$
+-grep "^[0-9.]*.[05].0	" $tmp/growthplot$$ >$tmp/growthmajors$$
+-sed '/^4.2.9/,$d' <$tmp/growthnumbers$$ >$tmp/growthannounce$$
+-
+-# gnuplot line styles.  These occasionally change (like beteween 3.5 and 3.7);
+-# use "echo 'set terminal png; test' | gnuplot | display -" to check.
+-blue_boxes=3
+-green_crosses=2
+-cyan_diamonds=37	# Once purple triangles, but we can't do that anymore
+-brown_triangles=23
+-
+-cat >$tmp/growthimage$$ <<EOF
+-set title "Fetchmail project growth history"
+-set xlabel 'Days since baseline'
+-set ylabel 'Participants'
+-set y2label 'Lines of code'
+-set ytics nomirror
+-set y2tics
+-set tics out
+-set autoscale y
+-set y2range [5000:50000]
+-set key bottom right box
+-set terminal png
+-
+-EOF
+-
+-# OK, now write the event labels
+-(
+-	count=0
+-	lastday=0
+-        breakheight=510
+-	while read version legend
+-	do
+-		if [ "$version" = '%' ]
+-		then
+-			echo "# Associate $lastday to '$legend'"
+-			count=$((count+1))
+-		        lastday=$(($lastday-5))
+-			endy=$((breakheight+50+count*50))
+-			if ((endy>lasttotal))
+-			then
+-			    # Label over curve hanging right, arrow down
+-			    arrowhead=$((lasttotal+50))
+-			    echo "set label '$legend' at $lastday-10, $endy+15"
+-			else
+-			    # Label under curve hanging left, arrow up
+-			    arrowhead=$((lasttotal-5))
+-			    strlen=`python -c "print len('$legend')"`
+-			    lablen=$((strlen*22))
+-			    echo "set label '$legend' at $lastday-$lablen+10, $endy-15"
+-			fi
+-			echo set arrow \
+-				from $lastday, $endy \
+-				to $lastday, $arrowhead \
+-				head
+-		else
+-			set -- $legend
+-			size=$1 
+-			friends=$2
+-			announce=$3
+-			total=$4
+-			days=$5 
+-			date=$6
+-			lastday=$days
+-			lasttotal=$total
+-		fi
+-	done
+-) <$tmp/growthplot$$ >>$tmp/growthimage$$ 
+-
+-# OK, now write the major-release labels
+-(
+-	while read version size friends announce total days date
+-	do
+-	    echo "set arrow from $days, $total - 55 to $days, $total - 15 head"
+-	    echo "set label '$version' at $days - 5, $total - 65"
+-	done
+-) <$tmp/growthmajors$$ >>$tmp/growthimage$$ 
+-
+-cat >>$tmp/growthimage$$ <<EOF
+-plot [] [0:] '$tmp/growthnumbers$$' using 6:5 \
+-		title "Both lists" with points $blue_boxes, \
+-     '$tmp/growthannounce$$' using 6:4 \
+-		title "fetchmail-announce" with points $cyan_diamonds, \
+-     '$tmp/growthannounce$$' using 6:3 \
+-		title "fetchmail-friends" with points $green_crosses, \
+-     '$tmp/growthnumbers$$' using 6:2 axes x1y2 \
+-		title "Lines of code" with points $brown_triangles
+-EOF
+-
+-gnuplot $tmp/growthimage$$ >growth.png
+-
+-rm -f $tmp/growth*
+-rmdir $tmp
+-
+-# growthplot ends here
+-
+-
+-
+-
+-
+-
+-
+
+Deleted: branches/BRANCH_6-3/dist-tools/indexgen.sh
+===================================================================
+--- branches/BRANCH_6-3/dist-tools/indexgen.sh	2009-10-28 16:24:23 UTC (rev 5445)
++++ branches/BRANCH_6-3/dist-tools/indexgen.sh	2009-10-30 02:23:23 UTC (rev 5446)
+@@ -1,389 +0,0 @@
+-#!/bin/sh
+-#
+-# indexgen.sh -- generate current version of fetchmail home page.
+-#
+-echo "This script is hopelessly out of date. Abort." >&2
+-exit 1
+-
+-goldvers="6.2.0"
+-goldname="6.2.0"
+-version=`sed -n <Makefile.in "/VERSION *= */s/VERSION *= *\([^ 	]*\)/\1/p"`
+-date=`date "+%d %b %Y"`
+-
+-set -- `timeseries | grep -v "[%#]" | head -1`
+-subscribers=$4
+-make fetchmail
+-set -- `ls -ks fetchmail`
+-fetchmailsize=$1
+-set -- `(cd /lib; ls libc-*)`
+-glibc=`echo $1 | sed 's/libc-\(.*\)\.so/\1/'`
+-glibc="glibc-$glibc"
+-
+-rm -f index.html
+-
+-# Compute MD5 checksums for security audit
+-rm -f checksums
+-for file in fetchmail-$version.tar.gz fetchmail-$version-1.*.rpm
+-do 
+-    md5sum $file >>checksums
+-done
+-
+-if [ $version != $goldvers ]
+-then
+-    for file in fetchmail-$goldvers.tar.gz fetchmail-$goldvers-1.*.rpm 
+-    do
+-	md5sum $file | sed -e "s: .*/:  :" >>checksums
+-    done
+-fi
+-
+-# Cryptographically sign checksums 
+-gpg --clearsign checksums
+-mv checksums.asc checksums
+-
+-cat >index.html <<EOF
+-<?xml version="1.0" encoding="ISO-8859-1"?>
+-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+-<html xmlns="http://www.w3.org/1999/xhtml">
+-<head>
+-<link rev="made" href="mailto:esr at snark.thyrsus.com" />
+-<link rel="stylesheet" href="/~esr/sitestyle.css" type="text/css"/>
+-<meta name="description" content="Home page of the fetchmail project" />
+-<meta name="keywords" content="" />
+-<meta name="MSSmartTagsPreventParsing" content="TRUE" />
+-<title>The fetchmail home page</title>
+-</head>
+-<body>
+-
+-<div id="Header">
+-<table width="100%" cellpadding="0" summary="Canned page header">
+-<tr>
+-<td>The fetchmail home page</td>
+-<td align="right">$date</td>
+-</tr>
+-</table>
+-</div>
+-
+-<div id="Menu">
+-	<hr/>
+-	<a href="/~esr" title="My home page">Home Page</a><br />
+-	<a href="/~esr/sitemap.html" title="Map of the site">Site Map</a><br />
+-	<a href="/~esr/software.html" title="Software I maintain">Software</a><br />
+-	<a href="/~esr/projects.html" title="My projects">Projects</a><br />
+-	<a href="/~esr/faqs/" title="My FAQ documents">HOWTOs</a><br />
+-	<a href="/~esr/writings/" title="Essays and ruminations">Essays</a><br />
+-	<a href="/~esr/personal.html" title="Portrait of the author">Personal</a><br />
+-	<a href="http://www.ibiblio.org/esrblog/">Weblog</a><br/>	
+-	<a href="/~esr/netfreedom/">Freedom!</a><br />
+-	<a href="/~esr/guns/">Firearms!</a><br />
+-	<hr/>
+-</div>
+-
+-<div id="Content">
+-
+-<h1>The fetchmail Home Page</h1>
+-</center>
+-
+-<p><b>Note: if you are a stranded fetchmail.com user, we're sorry but
+-we have nothing to do with that site and cannot help you.  It's just an
+-unfortunate coincidence of names.</b></p>
+-
+-<h1>What fetchmail does:</h1>
+-
+-<p>Fetchmail is a full-featured, robust, well-documented
+-remote-mail retrieval and forwarding utility intended to be used over
+-on-demand TCP/IP links (such as SLIP or PPP connections). It supports
+-every remote-mail protocol now in use on the Internet: POP2, POP3,
+-RPOP, APOP, KPOP, all flavors of <a
+-href="http://www.imap.org">IMAP</a>, ETRN, and ODMR. It can even
+-support IPv6 and IPSEC.</p>
+-
+-<p>Fetchmail retrieves mail from remote mail servers and forwards it via
+-SMTP, so it can then be read by normal mail user agents such as <a
+-href="http://www.mutt.org/">mutt</a>, elm(1) or BSD Mail.
+-It allows all your system MTA's filtering, forwarding, and aliasing
+-facilities to work just as they would on normal mail.</p>
+-
+-<p>Fetchmail offers better security than any other Unix remote-mail
+-client.  It supports APOP, KPOP, OTP, Compuserve RPA, Microsoft NTLM,
+-and IMAP RFC1731 encrypted authentication methods including CRAM-MD5
+-to avoid sending passwords en clair. It can be configured to support
+-end-to-end encryption via tunneling with <a
+-href="http://www.openssh.com/">ssh, the Secure Shell</a>.</p>
+-
+-<p>Fetchmail can be used as a POP/IMAP-to-SMTP gateway for an entire DNS
+-domain, collecting mail from a single drop box on an ISP and
+-SMTP-forwarding it based on header addresses. (We don't really
+-recommend this, though, as it may lose important envelope-header
+-information.  ETRN or a UUCP connection is better.)</p>
+-
+-<p>Fetchmail can be started automatically and silently as a system daemon
+-at boot time.  When running in this mode with a short poll interval,
+-it is pretty hard for anyone to tell that the incoming mail link is
+-not a full-time "push" connection.</p>
+-
+-<p>Fetchmail is easy to configure.  You can edit its dotfile directly, or
+-use the interactive GUI configurator (fetchmailconf) supplied with the
+-fetchmail distribution.  It is also directly supported in linuxconf
+-versions 1.16r8 and later.</p>
+-
+-<p>Fetchmail is fast and lightweight.  It packs all its standard
+-features (POP3, IMAP, and ETRN support) in ${fetchmailsize}K of core on a
+-Pentium under Linux.</p>
+-
+-<p>Fetchmail is <a href="http://www.opensource.org">open-source</a>
+-software.  The openness of the sources is your strongest possible
+-assurance of quality and reliability.</p>
+-
+-<h1>Where to find out more about fetchmail:</h1>
+-
+-<p>See the <a href="fetchmail-features.html">Fetchmail Feature List</a> for more
+-about what fetchmail does.</p>
+-
+-<p>See the on-line <a href="fetchmail-man.html">manual page</a> for
+-basics.</p>
+-
+-<p>See the <a href="fetchmail-FAQ.html">HTML Fetchmail FAQ</a> for
+-troubleshooting help.</p>
+-
+-<p>See the <a href="design-notes.html">Fetchmail Design Notes</a>
+-for discussion of some of the design choices in fetchmail.</p>
+-
+-<p>See the project's <a href="todo.html">To-Do list</a> for indications
+-of known problems and requested features.</p>
+-
+-<h1>How to get fetchmail:</h1>
+-
+-<p>You can get any of the following leading-edge resources here:</p>
+-<ul>
+-<li> <a href="fetchmail-$version.tar.gz">
+-	Gzipped source archive of fetchmail $version</a>
+-<li> <a href="fetchmail-$version-1.i386.rpm">
+-	Intel binary RPM of fetchmail $version (uses $glibc)</a>
+-<li> <a href="fetchmail-$version-1.src.rpm">
+-	Source RPM of fetchmail $version</a>
+-</ul>
+-
+-<p>MD5 <a href="checksums">checksums</a> are available for these files; the
+-checksum file is cryptographically signed and can be verified with the
+-command:</p>
+-
+-<pre>
+-gpg --verify checksums
+-</pre>
+-
+-EOF
+-
+-if [ $version != $goldvers ]
+-then
+-    cat >>index.html <<EOF
+-
+-<p>Or you can get the last \`gold' version, $goldname:</p>
+-<ul>
+-<li> <a href="fetchmail-$goldvers.tar.gz">
+-	Gzipped source archive of fetchmail $goldname</a>
+-<li> <a href="fetchmail-$goldvers-1.i386.rpm">
+-	Intel binary RPM of fetchmail $goldname (uses glibc)</a>
+-<li> <a href="fetchmail-$goldvers-1.alpha.rpm">
+-	Alpha binary RPM of fetchmail $goldname (uses glibc)</a>
+-<li> <a href="fetchmail-$goldvers-1.src.rpm">
+-	Source RPM of fetchmail $goldname</a>
+-</ul>
+-
+-<p>The <a href="fetchmail-$goldvers.tar.gz.asc">detached GPG
+-signature</a> for the binary tarball can be used to check it for
+-correctness, with the command</p>
+-
+-<pre>
+-gpg --verify fetchmail-$goldvers.tar.gz.asc fetchmail-$goldvers.tar.gz
+-</pre>
+-
+-<p>For differences between the leading-edge $version and gold $goldname versions,
+-see the distribution <a href="NEWS">NEWS</a> file.</p>
+-EOF
+-fi
+-
+-cat >>index.html <<EOF
+-<p>(Note that the binary RPMs don't have the POP2, OTP, IPv6, Kerberos,
+-GSSAPI, Compuserve RPA, Microsoft NTLM, or GNU gettext
+-internationalization support compiled in.  To get any of these you
+-will have to build from sources.)</p>
+-
+-<p>The latest version of fetchmail is also carried in the 
+-<a href="http://metalab.unc.edu/pub/Linux/system/mail/pop/!INDEX.html">
+-Metalab remote mail tools directory</a>.</p>
+-
+-<h1>Getting help with fetchmail:</h1>
+-
+-<p>There is a fetchmail-friends list for people who want to discuss
+-fixes and improvements in fetchmail and help co-develop it.  It's a
+-MailMan list, which you can sign up for at <a
+-href="http://lists.ccil.org/mailman/listinfo/fetchmail-friends">
+-fetchmail-friends at ccil.org</a>.  There is also an announcements-only
+-list, <a
+-href="http://lists.ccil.org/mailman/listinfo/fetchmail-announce">
+-fetchmail-announce at lists.ccil.org</a>.</p>
+-
+-<p>Note: before submitting a question to the list, <strong>please read
+-the <a href="fetchmail-FAQ.html">FAQ</a></strong> (especially item <a
+-href="fetchmail-FAQ.html#G3">G3</a> on how to report bugs).  We
+-tend to get the same three newbie questions over and over again.  The
+-FAQ covers them like a blanket.</p>
+-
+-<p>Fetchmail was written and is maintained by <a
+-href="../index.html">Eric S. Raymond</a>.  There are some designated
+-backup maintainers (<a href="mailto:rfunk at funknet.net">Rob Funk</a>, <a
+-href="http://www.dallas.net/~fox/">David DeSimone aka Fuzzy Fox</a>,
+-<a href="mailto:imdave at mcs.net">Dave Bodenstab</a> and <a 
+-href="mailto:shetye at bombay.retortsoft.com">Sunil Shetye</a>).  Other backup
+-maintainers may be added in the future, in order to ensure continued
+-support should Eric S.  Raymond drop permanently off the net for any
+-reason.</p>
+-
+-<h1>You can help improve fetchmail:</h1>
+-
+-<p>I welcome your code contributions.  But even if you don't write code,
+-you can help fetchmail improve.</p>
+-
+-<p>If you administer a site that runs a post-office server, you may be
+-able help improve fetchmail by lending me a test account on your site.
+-Note that I do not need a shell account for this purpose, just a 
+-maildrop.  Nor am I interested in collecting maildrops per se --
+-what I'm collecting is different <em>kinds of servers</em>.</p>
+-
+-<p>Before each release, I run a test harness that sends date-stamped 
+-test mail to each site on my regression-test list, then tries to
+-retrieve it.  Please take a look at my <a href="testservers.html">
+-list of test servers</a>.  If you can lend me an account on a kind
+-of server that is <em>not</em> already on this list, please do.</p>
+-
+-<h1>Who uses fetchmail:</h1>
+-
+-<p>Fetchmail entered full production status with the 2.0.0 version in
+-November 1996 after about five months of evolution from the ancestral
+-<code>popclient</code> utility. It has since come into extremely wide use
+-in the Internet/Unix/Linux community.  The Red Hat, Debian and
+-Suse Linux distributions and their derivatives all include it.  A
+-customized version is used at Whole Earth 'Lectronic Link. Several
+-large ISPs are known to recommend it to Unix-using SLIP and PPP
+-customers.</p>
+-
+-<p>Somewhere around a thousand people have participated on the fetchmail
+-beta lists (at time of current release there were $subscribers on the
+-friends and announce lists).  While it's hard to count the users of
+-open-source software, we can estimate based on (a) population figures
+-at the WELL and other known fetchmail sites, (b) the size of the
+-Linux-using ISP customer base, and (c) the volume of fetchmail-related
+-talk on USENET.  These estimates suggest that daily fetchmail users
+-number well into the hundreds of thousands, and possibly over a million.</p>
+-
+-<h1>The sociology of fetchmail:</h1>
+-
+-<p>The fetchmail development project was a sociological experiment as well
+-as a technical effort.  I ran it as a test of some theories about why the
+-Linux development model works.</p>
+-
+-<p>I wrote a paper, <a
+-href="http://www.catb.org/~esr/writings/cathedral-bazaar/">The
+-Cathedral And The Bazaar</a>, about these theories and the project.
+-I developed the line of analysis it suggested in two later essays.
+-These papers became quite popular and (to my continuing astonishment) may
+-have actually helped change the world.  Chase the title link, above,
+-for links to all three papers.</p>
+-
+-<p>I have done some analysis on the information in the project NEWS file.
+-You can view a <a href="history.html">statistical history</a> showing
+-levels of participation and release frequency over time.</p>
+-
+-<h1>Recent releases and where fetchmail is going:</h1>
+-
+-<p>Fetchmail is now sufficiently stable and effective that I'm getting
+-very little pressure to fix things or add features.  Development has
+-slowed way down, release frequency has dropped off, and we're
+-basically in maintainance mode.</p>
+-
+-<p>Major changes or additions therefore seem unlikely until there are
+-significant changes in or additions to the related protocol RFCs.</p>
+-
+-<h1>Where you can use fetchmail:</h1>
+-
+-<p>The fetchmail code was developed under Linux, but has also been
+-extensively tested under 4.4BSD, SunOS, Solaris, AIX, and NEXTSTEP.  It
+-should be readily portable to other Unix variants (it requires only
+-POSIX plus BSD sockets, and uses GNU autoconf).</p>
+-
+-<p>Fetchmail is supported only for Unix by its official maintainers.
+-However, it is reported to build and run correctly under BeOS,
+-AmigaOS, Rhapsody, and QNX as well.  There is a CygWin port.</p>
+-
+-<h1>Related resources:</h1>
+-
+-<p>Jochen Hayek is developing a set of
+-<a href="http://www.ACM.org/~Jochen_Hayek/JHimap_utils/">
+-IMAP tools in Python</a> that read your .fetchmailrc file and are
+-designed to work with fetchmail.   Jochen's tools can report selected
+-header lines, or move incoming messages to named mailboxes based on
+-the contents of headers.</p>
+-
+-<p>Donncha O Caoihm has written a Perl script called 
+-<a href="http://cork.linux.ie/projects/install-sendmail/">install-sendmail</a>
+-that assists you in installing sendmail and fetchmail together.</p>
+-
+-<p>Peter Hawkins has written a script called <a
+-href="http://linux.cudeso.be/linuxdoc/gotmail.php">gotmail</a> that
+-can retrieve Hotmail. Another script, <a
+-href="http://yosucker.sourceforge.net">yosucker</a>, can retrieve
+-Yahoo webmail.</p>
+-
+-<p>There's a program called
+-<http://mailfilter.sourceforge.net/'>mailfilter</a> which can be used
+-to do span filtering, that works particularly well called from fetchmail's
+-<code>preconnect</code> directive,</p>
+-
+-<p>A hacker identifying himself simply as \`Steines' has written a
+-filter which rewrites the to-line with a line which only includes
+-receipients for a given domain and renames the old to-line. It also
+-rewrites the domain-part of addresses if the offical domain is
+-different from the local domain. You can find it <a 
+-href="http://www.steines.com/mailf/">here</a>.</p>
+-
+-<h1>Fetchmail's funniest fan letter:</h1>
+-
+-<a href="funny.html">This letter</a> still cracks me up whenever I reread it. 
+-
+-<h1>The fetchmail button:</h1>
+-
+-<p>If you use fetchmail and like it, here's a nifty fetchmail button you
+-can put on your web page:</p>
+-
+-<center><img src="fetchmail.png" alt="fetchmail logo" /></center>
+-
+-<p>Thanks to <a href="http://www.gl.umbc.edu/~smatus1/">Steve
+-Matuszek</a> for the graphic design.  The hand in the button (and the
+-larger top-of-page graphic) was actually derived from a color scan of
+-the fetchmail author's hand.</p>
+-
+-<h1>Fetchmail mirror sites:</h1>
+-
+-<p>There is a FTP mirror of the current sources and RPMs in Japan at
+-<a href="ftp://ftp.win.ne.jp/pub/network/mail/fetchmail">
+-ftp://ftp.win.ne.jp/pub/network/mail/fetchmail</a>.
+-
+-<h1>Reviews and Awards</h1>
+-
+-<p>Fetchmail was DaveCentral's Best Of Linux winner for
+-<a href="http://linux.davecentral.com/bol_19990630.html">June 30 1999</a>.</p>
+-
+-<p>Fetchmail was a five-star Editor's Pick at Softlandindia.</p>
+-
+-</div>
+-
+-</body>
+-</html>
+-EOF
+-
+-# The following sets edit modes for GNU EMACS
+-# Local Variables:
+-# mode:html
+-# truncate-lines:t
+-# End:
+
+Deleted: branches/BRANCH_6-3/dist-tools/listsize
+===================================================================
+--- branches/BRANCH_6-3/dist-tools/listsize	2009-10-28 16:24:23 UTC (rev 5445)
++++ branches/BRANCH_6-3/dist-tools/listsize	2009-10-30 02:23:23 UTC (rev 5446)
+@@ -1,36 +0,0 @@
+-#!/bin/sh
+-#
+-# Mine list sizes from MailMan web interfaces
+-#
+-# * Must set environment variable FETCHMAIL_LIST_PASS to list admin password
+-
+-project="fetchmail"
+-admin="http://lists.berlios.de/mailman/admin"
+-adminpw=$FETCHMAIL_LIST_PASS
+-
+-list="$1"
+-if [ ! "$list" ]; then
+-	echo "Usage: $0 list" 1>&2
+-	exit 1
+-fi
+-case "$list" in
+-$project-*)
+-	# already gave us the full name, e.g. fetchmail-announce
+-	;;
+-*)
+-	# only gave us the last part of the name, e.g. announce
+-	list="$project-$list"
+-	;;
+-esac
+-
+-hexpw=`echo "$adminpw" | od -t x1 -w64 | sed -e 's/^[0-9]*//' -e '/^ *$/d' -e 's/ /%/g'`
+-umask 077
+-tmp="/tmp/$project-$list.listsize.$$"
+-# First get the login cookie...
+-curl -s -D "$tmp" "$admin/${list}?adminpw=$hexpw" >/dev/null
+-# Second gets the actual stat
+-curl -s -b "$tmp" "$admin/${list}/members" \
+-	| sed -n '/.*>(\([0-9][0-9]*\) members total.*/s//\1/p'
+-rm -f "$tmp"
+-# end
+-
+
+Modified: branches/BRANCH_6-3/dist-tools/makerelease
+===================================================================
+--- branches/BRANCH_6-3/dist-tools/makerelease	2009-10-28 16:24:23 UTC (rev 5445)
++++ branches/BRANCH_6-3/dist-tools/makerelease	2009-10-30 02:23:23 UTC (rev 5446)
+@@ -5,11 +5,10 @@
+ # in RELEASE_NOTES
+ #
+ use POSIX qw(strftime);
+-$timezone = strftime('%z', localtime) || "-0500";
+ $tmp = $ENV{TMPDIR} || $ENV{TMP} || $ENV{TEMP} || "/tmp";
+ 
+ $project = "fetchmail";
+-$svnrepos = "https://decoy.wox.org/svn/$project";
++$svnrepos = "http://mknod.org/svn/$project";
+ $website = "http://developer.berlios.de/projects/$project";
+ $mailfrom = "<$project-devel-owner\@lists.berlios.de> (Fetchmail Development Team)";
+ 
+@@ -38,7 +37,7 @@
+ 
+ # extract version from source
+ $version=`grep 'AC_INIT' configure.ac`;
+-$version =~ /AC_INIT\([^,]*,\[?([0-9.rc-]+)\]?\)/;
++$version =~ /AC_INIT\([^,]*,\[?([0-9.rc-]+)\]?\,.*\)/;
+ $version = $1;
+ die "cannot determine version" unless defined $1;
+ $tag = "RELEASE_$version";
+@@ -61,11 +60,13 @@
+     $oldtag = $versions[0];
+ }
+ 
+-$ENV{PATH} .= ":./dist-tools:./dist-tools/shipper:.";
++$pwd = `pwd`; chomp $pwd;
+ 
++$ENV{PATH} .= ":$pwd/dist-tools:$pwd/dist-tools/shipper";
++
+ print "Building $version release, tag $tag, previous tag $oldtag\n";
+ 
+-if (-d autom4te.cache) {
++if (-d "autom4te.cache") {
+     system("rm -rf autom4te.cache")
+ 	and die "Failure in removing autom4te.cache";
+ }
+@@ -74,22 +75,13 @@
+ 	die("Failure in regenerating autoconf files\n");
+ }
+ 
+-if (system("./configure && make clean && make -C po update-po && make clean")) {
+-	die("Failure in translation-file rebuild\n");
+-}
+-
+ print "### Test-building the software...\n";
+-if (system("./configure && make clean && make distcheck")) {
++if (system("mkdir -p autobuild && cd autobuild && ../configure -C --silent && make -s clean && make distcheck")) {
+ 	die("Compilation failure\n");
+ }
+ 
+-print "### Building the distribution...\n";
+-if (system("make dist $null")) {
+-	die("Distribution-build failure\n");
+-}
+-
+ print "### Building the RPMs...\n";
+-if (system("buildrpms $project-${version}.tar.gz $null")) {
++if (system("cd autobuild && cp ../fetchmail.xpm . && buildrpms $project-${version}.tar.bz2 $null")) {
+ 	die("RPM-build failure\n");
+ }
+ 
+@@ -100,10 +92,10 @@
+ Subject: The $version release of $project is available
+ 
+ The $version release of $project is now available at the usual locations,
+-including <URL:$website>.
++including <$website>.
+ 
+ The source archive is available at:
+-<URL:$website/$project-${version}.tar.gz>
++<$website/$project-${version}.tar.gz>
+ 
+ Here are the release notes:
+ 
+@@ -152,25 +144,12 @@
+ 	    ." -n -D 'diff between $oldver and $version' -m 'text/plain' -e 7bit -f $tmp/$project.DIFFS.$$"
+ 	    ." -o ANNOUNCE.EMAIL";
+ } else {
+-	rename("$tmp/$project.PREAMBLE.$$", "ANNOUNCE.EMAIL");
++	system(mv, "$tmp/$project.PREAMBLE.$$", "ANNOUNCE.EMAIL");
+ }
+-#system("chown esr ANNOUNCE.EMAIL");
+-#chmod(0700, "ANNOUNCE.EMAIL");
+ 
+ #unlink("$tmp/$project.PREAMBLE.$$");
+ unlink("$tmp/$project.DIFFS.$$");
+ 
+-print "Building index page...\n";
+-system("rm -f index.html; indexgen.sh");
+-
+-if (-r "testsites") {
+-	print "Building test server list...\n";
+-	system("rm -f testservers.html; testservers-gen.sh >testservers.html");
+-}
+-
+-print "Making activity graph...";
+-system "growthplot";
+-
+ print "Done\n";
+ 
+ # makerelease ends here
+
+Modified: branches/BRANCH_6-3/dist-tools/shipper/buildrpms
+===================================================================
+--- branches/BRANCH_6-3/dist-tools/shipper/buildrpms	2009-10-28 16:24:23 UTC (rev 5445)
++++ branches/BRANCH_6-3/dist-tools/shipper/buildrpms	2009-10-30 02:23:23 UTC (rev 5446)
+@@ -24,6 +24,8 @@
+ echo "%_topdir $TMPDIR" >"$MACROFILE"
+ echo "%_topdir $TMPDIR" >"$MACROFILE"
+ 
++ARCH=--target=$(uname -m)
++
+ #  build RPMs
+ rpmbuild --rcfile "$RCFILE" $ARCH -ta $TARBALL \
+ || rpm --rcfile "$RCFILE" $ARCH -ta $TARBALL
+@@ -31,9 +33,9 @@
+ 
+ if [ $status = '0' ]
+ then
+-    # copy RPMs to this directory
+-    cp "$TMPDIR"/RPMS/*/*.rpm .
+-    cp "$TMPDIR"/SRPMS/*.rpm .
++    # move RPMs to this directory
++    mv "$TMPDIR"/RPMS/*/*.rpm .
++    mv "$TMPDIR"/SRPMS/*.rpm .
+ fi
+ 
+ #  clean up build directory
+
+Deleted: branches/BRANCH_6-3/dist-tools/timeplot
+===================================================================
+--- branches/BRANCH_6-3/dist-tools/timeplot	2009-10-28 16:24:23 UTC (rev 5445)
++++ branches/BRANCH_6-3/dist-tools/timeplot	2009-10-30 02:23:23 UTC (rev 5446)
+@@ -1,40 +0,0 @@
+-#!/bin/sh
+-#
+-# timeplot -- plot data on fetchmail release intervals
+-#
+-# 
+-
+-# Get data from the NEWS file
+-timeseries | awk >/tmp/timeplot$$ '
+-START	{maxdiff = 0;}
+-/^[#%]/	{next;}
+-	{days[count++] = $6;}
+-END	{
+-		for (i = 0; i < count-1; i++)
+-		{
+-			diffs[i] = days[i] - days[i + 1];
+-			if (maxdiff < diffs[i])
+-				maxdiff = diffs[i];
+-		}
+-		for (i = 0; i <= maxdiff; i++)
+-			freq[i] = 0;
+-		for (i = 0; i < count - 1; i++)
+-		{
+-			freq[diffs[i]]++;
+-		}
+-		for (i = 0; i <= maxdiff; i++)
+-			printf("%d	%d\n", i, freq[i]);
+-	}
+-'
+-
+-gnuplot >time.png - <<EOF
+-set xlabel "Release interval (days)"
+-set ylabel "Interval frequency"
+-plot '/tmp/timeplot$$' using 1:2 \
+-	title "Release interval frequency"
+-pause 9999
+-EOF
+-
+-rm -f /tmp/time*
+-
+-# timeplot ends here
+
+Deleted: branches/BRANCH_6-3/dist-tools/timeseries
+===================================================================
+--- branches/BRANCH_6-3/dist-tools/timeseries	2009-10-28 16:24:23 UTC (rev 5445)
++++ branches/BRANCH_6-3/dist-tools/timeseries	2009-10-30 02:23:23 UTC (rev 5446)
+@@ -1,101 +0,0 @@
+-#!/usr/bin/perl
+-#
+-# Extract information on the fetchmail project size from the NEWS file
+-#
+-# Note: this only works if you have a news file from 5.1.1 or later --
+-# I didn't patch the code sizes into NEWS until then.
+-#
+-my($release, $date, $jdate);
+-
+-%month_offsets = (
+-	"Jan",   0,
+-	"Feb",   31,
+-	"Mar",   59,
+-	"Apr",   90,
+-	"May",   120,
+-	"Jun",   151,
+-	"Jul",   181,
+-	"Aug",   212,
+-	"Sep",   243,
+-	"Oct",   273,
+-	"Nov",   304,
+-	"Dec",   334,
+-);
+-
+-
+-sub day_offset
+-{
+-    my($datestring) = @_;
+-    my($wday, $month, $day, $time, $zone, $year) = split(' ', $datestring);
+-    my($jdate);
+-
+-    # We don't deal with leap years here because the baseline day is after
+-    # the last leap year (1996) and there's a long time before the next
+-    # one (2004).
+-    $jdate = ($year - 1996) * 365;
+-
+-    $jdate += $month_offsets{$month};
+-
+-    $jdate += ($day - 1);
+-
+-    # Baseline day for the size data was Fri Oct 25 23:02:26 EDT 1996 
+-    $jdate -= 297;
+-
+-    return($jdate);
+-}
+-
+-open(NEWS, "NEWS");
+-$timestamp = `date`;
+-chop $timestamp;
+-$release = "unknown";
+-$lines = "unknown";
+-$date = "unknown";
+-$jdate = "unknown";
+-print <<EOF;
+-# Population data from fetchmail NEWS file, as of $timestamp.
+-#
+-# Output other than pass-through % lines is tab-separated fields.
+-# Field 1: release ID
+-# Field 2: count of source lines under version control 
+-# Field 3: count of fetchmail-friends subscribers
+-# Field 4: count of fetchmail-announce subscribers
+-# Field 5: total subscribers to both lists
+-# Field 6: date of release (days since first datum)
+-# Field 7: date of release (RFC822 date format)
+-#
+-EOF
+-while ($_ = <NEWS>)
+-{
+-    my($sum);
+-
+-    if (/^%/) {
+-	print $_;
+-    }
+-    elsif (/^fetchmail-([^ ]*) \(([^)]+)\)(, [0-9]* lines)?:/) {
+-	$release = $1;
+-	$date = $2;
+-	$jdate = &day_offset($date);
+-	if ($3) {
+-	    $lines = substr($3, 2, length($3) - 8);
+-	} else {
+-	    $lines = 'na'
+-	}
+-    }
+-    elsif (/There are ([0-9]*) people on fetchmail-friends and ([0-9]*) on fetchmail-announce/) {
+-	$sum = $1 + $2;
+-	print "${release}\t${lines}\t$1\t$2\t${sum}\t${jdate}\t${date}\n";
+-	$release = "unknown";
+-	$date = "unknown";
+-    }
+-    elsif (/There are ([0-9]*) people on the fetchmail-friends list./) {
+-	print "$release\t${lines}\t$1\t0\t$1\t$jdate\t$date\n";
+-	$release = "unknown";
+-	$date = "unknown";
+-    }
+-}
+-
+-# end
+-
+-
+-
+-
+
+Deleted: branches/BRANCH_6-3/dist-tools/upload
+===================================================================
+--- branches/BRANCH_6-3/dist-tools/upload	2009-10-28 16:24:23 UTC (rev 5445)
++++ branches/BRANCH_6-3/dist-tools/upload	2009-10-30 02:23:23 UTC (rev 5446)
+@@ -1,26 +0,0 @@
+-#!/bin/sh
+-
+-version=`sed -n '/VERSION *= *\(.*\)/s//\1/p' <Makefile`
+-echo "Uploading fetchmail version ${version}"
+-
+-if [ $* ]
+-then
+-    ../upload $*
+-else
+-
+-echo "Beginning web upload..."
+-# First, copy to primary website
+-dest=esr@${WWWHOST}:${WWWDIR}/fetchmail
+-scp fetchmail-${version}.tar.gz.asc $dest
+-#scp funny.html $dest
+-#scp fetchmail.png $dest
+-#scp bighand.png $dest
+-scp growth.png $dest
+-scp timeseries $dest
+-scp growthplot $dest
+-scp checksums $dest
+-# shipper does the rest.
+-rm -f ANNOUNCE.FRESHMEAT
+-shipper
+-
+-
+
+Deleted: branches/BRANCH_6-3/dist-tools/uploadfaq
+===================================================================
+--- branches/BRANCH_6-3/dist-tools/uploadfaq	2009-10-28 16:24:23 UTC (rev 5445)
++++ branches/BRANCH_6-3/dist-tools/uploadfaq	2009-10-30 02:23:23 UTC (rev 5446)
+@@ -1,27 +0,0 @@
+-#!/bin/sh
+-
+-echo >&2 "this script $0 is outdated. Abort."
+-exit 1
+-
+-version=`sed -n '/VERSION *= *\(.*\)/s//\1/p' <Makefile`
+-echo "Uploading fetchmail version ${version} FAQ"
+-
+-if [ $* ]
+-then
+-    ../upload $*
+-else
+-    lftp <<EOF
+-# First, copy to primary website
+-open ${WWWHOST}
+-cd ${WWWDIR}/fetchmail
+-put fetchmail-FAQ.html
+-close
+-
+-# Next, upload to the ftp site
+-open locke.ccil.org
+-cd ~ftp/pub/esr/fetchmail
+-put FAQ
+-close
+-EOF
+-    echo "fetchmail FAQ uploaded"
+-fi
+
+
+
+From svn at mknod.org  Fri Oct 30 03:24:08 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 29 Oct 2009 21:24:08 -0500
+Subject: [fetchmail-svn] r5447 - branches/BRANCH_6-3
+Message-ID: <20091030022408.9423F21F096@mknod.org>
+
+Author: m-a
+Date: 2009-10-29 21:24:08 -0500 (Thu, 29 Oct 2009)
+New Revision: 5447
+
+Modified:
+   branches/BRANCH_6-3/Makefile.am
+Log:
+Ship fetchmail.xpm file.
+
+Modified: branches/BRANCH_6-3/Makefile.am
+===================================================================
+--- branches/BRANCH_6-3/Makefile.am	2009-10-30 02:23:23 UTC (rev 5446)
++++ branches/BRANCH_6-3/Makefile.am	2009-10-30 02:24:08 UTC (rev 5447)
+@@ -140,7 +140,9 @@
+ # extra directories to ship
+ distdirs = rh-config contrib beos
+ 
+-EXTRA_DIST+=	$(DISTDOCS) fetchmail.spec $(distdirs) ucs/README.svn \
++EXTRA_DIST+=	$(DISTDOCS) $(distdirs) \
++		ucs/README.svn \
++		fetchmail.spec fetchmail.xpm \
+ 		trio/CHANGES trio/README \
+ 		strlcpy.3 bighand.png \
+ 		m4/codeset.m4 \
+
+
+
+From svn at mknod.org  Fri Oct 30 03:24:28 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 29 Oct 2009 21:24:28 -0500
+Subject: [fetchmail-svn] r5448 - branches/BRANCH_6-3
+Message-ID: <20091030022428.2BD9821F096@mknod.org>
+
+Author: m-a
+Date: 2009-10-29 21:24:27 -0500 (Thu, 29 Oct 2009)
+New Revision: 5448
+
+Modified:
+   branches/BRANCH_6-3/specgen.sh
+Log:
+Drop obsolete --without-included-gettext ./configure option from .spec.
+
+Modified: branches/BRANCH_6-3/specgen.sh
+===================================================================
+--- branches/BRANCH_6-3/specgen.sh	2009-10-30 02:24:08 UTC (rev 5447)
++++ branches/BRANCH_6-3/specgen.sh	2009-10-30 02:24:27 UTC (rev 5448)
+@@ -192,7 +192,7 @@
+ %setup -q $setupargs
+ 
+ %build
+-%configure --without-included-gettext --without-kerberos --with-ssl
++%configure --without-kerberos --with-ssl
+ make
+ 
+ %install
+
+
+
+From svn at mknod.org  Fri Oct 30 03:25:18 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 29 Oct 2009 21:25:18 -0500
+Subject: [fetchmail-svn] r5449 - in branches/BRANCH_6-3: . website
+Message-ID: <20091030022518.B899021F096@mknod.org>
+
+Author: m-a
+Date: 2009-10-29 21:25:18 -0500 (Thu, 29 Oct 2009)
+New Revision: 5449
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/RELEASE-INSTRUCTIONS
+   branches/BRANCH_6-3/RELEASEVERSIONS
+   branches/BRANCH_6-3/configure.ac
+   branches/BRANCH_6-3/fetchmail.man
+   branches/BRANCH_6-3/website/index.html
+Log:
+Release 6.3.13.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-10-30 02:24:27 UTC (rev 5448)
++++ branches/BRANCH_6-3/NEWS	2009-10-30 02:25:18 UTC (rev 5449)
+@@ -47,7 +47,7 @@
+ 
+ --------------------------------------------------------------------------------
+ 
+-fetchmail 6.3.13 (not yet released):
++fetchmail 6.3.13 (released 2009-10-30, 25333 LoC):
+ 
+ # REGRESSION FIXES
+ * The multiline SMTP error fix in release 6.3.12 caused fetchmail to lose
+@@ -85,6 +85,7 @@
+   BerliOS Bug #16134.
+ * Report multiline SMTP errors properly, reported by Earl Chew; fixes Debian Bug
+   #569899, reported by Akihiro Terasaki.
++  Note: This fix introduced a regression, fixed in 6.3.13.
+ * Replace control characters in SMTP replies by '?'.
+ * Fetchmailconf: Fix descriptions for smtpaddress and smtpname options;
+   smtpaddress is for RCPT TO, not MAIL FROM. Found by Gerard Seibert.
+
+Modified: branches/BRANCH_6-3/RELEASE-INSTRUCTIONS
+===================================================================
+--- branches/BRANCH_6-3/RELEASE-INSTRUCTIONS	2009-10-30 02:24:27 UTC (rev 5448)
++++ branches/BRANCH_6-3/RELEASE-INSTRUCTIONS	2009-10-30 02:25:18 UTC (rev 5449)
+@@ -1,10 +1,21 @@
+ To do a release:
+ 
+-1. Torture-test the code against the list of test sites usuing the
+-   torturetest script.
++- Update NEWS, configure.ac, and fetchmail.man, with release number & date.
+ 
+-2. Check in all files to RCS with an appropriate release label.
++- Run "perl dist-tools/makerelease" - this entails "make distcheck" and
++  RPM building.
+ 
+-3. Run "makerelease" is root.  Read the script to see what it generates.
++- Commit all files to the VCS.
+ 
+-4. Run "upload" as yourself.
++- Tag the new release and record the revision in RELEASE-VERSIONS
++
++- Upload sig and tarball to ~/public_html/fetchmail/ and edit index.html
++  for the new files, NEWS, and the new release and last update.
++
++- Upload sig and tarball to ftp.berlios.de:/incoming/ and release
++
++- Upload lsm and tarball to Ibiblio
++
++- Update the fetchmail website for version and last update, commit, and upload.
++
++- Announce on freshmeat.
+
+Modified: branches/BRANCH_6-3/RELEASEVERSIONS
+===================================================================
+--- branches/BRANCH_6-3/RELEASEVERSIONS	2009-10-30 02:24:27 UTC (rev 5448)
++++ branches/BRANCH_6-3/RELEASEVERSIONS	2009-10-30 02:25:18 UTC (rev 5449)
+@@ -1,6 +1,7 @@
+ SVN release - fetchmail release    - release manager
+ ====================================================
+               SORT_BY (release)
++r5450       - 6.3.13   (2009-10-30) - MA
+ r5439       - 6.3.12   (2009-10-05) - MA
+ r5398       - 6.3.11   (2009-08-06) - MA
+ r5373       - 6.3.10   (2009-07-02) - MA
+
+Modified: branches/BRANCH_6-3/configure.ac
+===================================================================
+--- branches/BRANCH_6-3/configure.ac	2009-10-30 02:24:27 UTC (rev 5448)
++++ branches/BRANCH_6-3/configure.ac	2009-10-30 02:25:18 UTC (rev 5449)
+@@ -9,7 +9,7 @@
+ dnl
+ 
+ dnl XXX - if bumping version here, check fetchmail.man, too!
+-AC_INIT([fetchmail],[6.3.12],[fetchmail-users at lists.berlios.de])
++AC_INIT([fetchmail],[6.3.13],[fetchmail-users at lists.berlios.de])
+ AC_CONFIG_SRCDIR([fetchmail.h])
+ AC_CONFIG_HEADERS([config.h])
+ AC_CONFIG_LIBOBJ_DIR([.])
+
+Modified: branches/BRANCH_6-3/fetchmail.man
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.man	2009-10-30 02:24:27 UTC (rev 5448)
++++ branches/BRANCH_6-3/fetchmail.man	2009-10-30 02:25:18 UTC (rev 5449)
+@@ -10,7 +10,7 @@
+ .\" Load www macros to process .URL requests, this requires groff:
+ .mso www.tmac
+ .\"
+-.TH fetchmail 1 "fetchmail 6.3.12" "fetchmail" "fetchmail reference manual"
++.TH fetchmail 1 "fetchmail 6.3.13" "fetchmail" "fetchmail reference manual"
+ 
+ .SH NAME
+ fetchmail \- fetch mail from a POP, IMAP, ETRN, or ODMR-capable server
+
+Modified: branches/BRANCH_6-3/website/index.html
+===================================================================
+--- branches/BRANCH_6-3/website/index.html	2009-10-30 02:24:27 UTC (rev 5448)
++++ branches/BRANCH_6-3/website/index.html	2009-10-30 02:25:18 UTC (rev 5449)
+@@ -15,7 +15,7 @@
+ <table width="100%" cellpadding="0" summary="Canned page header">
+ <tr>
+ <td>Fetchmail</td>
+-<td align="right"><!-- update date -->2009-10-05</td>
++<td align="right"><!-- update date -->2009-10-30</td>
+ </tr>
+ </table>
+ </div>
+@@ -41,11 +41,11 @@
+ <h1>Fetchmail</h1>
+ 
+ <div style="background-color:#c0ffc0;color:#000000;">
+-    <h1>NEWS: FETCHMAIL 6.3.12 RELEASE</h1>
+-    <p>On 2009-10-05, <a
+-	href="http://developer.berlios.de/project/showfiles.php?group_id=1824">fetchmail-6.3.12
++    <h1>NEWS: FETCHMAIL 6.3.13 RELEASE</h1>
++    <p>On 2009-10-30, <a
++	href="http://developer.berlios.de/project/showfiles.php?group_id=1824">fetchmail-6.3.13
+ 	has been released (this is the download link),</a> fixing a
+-    regression in the 6.3.11 security fix and updating translations.
++    regression in the 6.3.12 SMTP multiline fix and updating translations.
+     It is a recommended update for all users. <a
+ 	href="http://developer.berlios.de/project/shownotes.php?group_id=1824&amp;release_id=16791">Click
+ 	here to see the change details.</a>
+
+
+
+From svn at mknod.org  Fri Oct 30 03:25:48 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 29 Oct 2009 21:25:48 -0500
+Subject: [fetchmail-svn] r5450 - tags
+Message-ID: <20091030022548.9850D21F096@mknod.org>
+
+Author: m-a
+Date: 2009-10-29 21:25:48 -0500 (Thu, 29 Oct 2009)
+New Revision: 5450
+
+Added:
+   tags/RELEASE_6-3-13/
+Log:
+Tagging release 6.3.13.
+
+
+
+From svn at mknod.org  Fri Oct 30 03:53:44 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 29 Oct 2009 21:53:44 -0500
+Subject: [fetchmail-svn] r5451 - branches/BRANCH_6-3/website/host-scripts
+Message-ID: <20091030025344.4EC4C21F096@mknod.org>
+
+Author: m-a
+Date: 2009-10-29 21:53:43 -0500 (Thu, 29 Oct 2009)
+New Revision: 5451
+
+Modified:
+   branches/BRANCH_6-3/website/host-scripts/upload-website.sh
+Log:
+Update upload script, use local public_html stagingl.
+
+Modified: branches/BRANCH_6-3/website/host-scripts/upload-website.sh
+===================================================================
+--- branches/BRANCH_6-3/website/host-scripts/upload-website.sh	2009-10-30 02:25:48 UTC (rev 5450)
++++ branches/BRANCH_6-3/website/host-scripts/upload-website.sh	2009-10-30 02:53:43 UTC (rev 5451)
+@@ -32,15 +32,19 @@
+     "$BERLIOS_LOGIN at shell.berlios.de:/home/groups/fetchmail/htdocs/" &
+ pids="$pids $!"
+ 
+-echo "==>  Uploading website (rsync) to TU Dortmund"
++echo "==>  Uploading website (rsync) to local"
+ rsync \
+     --chmod=ug=rwX,o=rX,Dg=s --perms \
+     --copy-links --times --checksum --verbose \
+     --exclude host-scripts \
+     --exclude .svn --exclude '*~' --exclude '#*#' \
+     * \
+-    ma at fat-tony.dt.e-technik.uni-dortmund.de:public_html/fetchmail/info/ &
++    $HOME/public_html/fetchmail/info/ &
+ pids="$pids $!"
+ 
+ wait $pids
++
++echo "==>  Synchronizing web dir."
++synchome.sh
++
+ echo "==>  Done; check rsync output above for success."
+
+
+
+From svn at mknod.org  Fri Oct 30 03:53:58 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 29 Oct 2009 21:53:58 -0500
+Subject: [fetchmail-svn] r5452 - branches/BRANCH_6-3/website
+Message-ID: <20091030025358.EB6A321F096@mknod.org>
+
+Author: m-a
+Date: 2009-10-29 21:53:58 -0500 (Thu, 29 Oct 2009)
+New Revision: 5452
+
+Modified:
+   branches/BRANCH_6-3/website/index.html
+Log:
+Fix link to release notes.
+
+Modified: branches/BRANCH_6-3/website/index.html
+===================================================================
+--- branches/BRANCH_6-3/website/index.html	2009-10-30 02:53:43 UTC (rev 5451)
++++ branches/BRANCH_6-3/website/index.html	2009-10-30 02:53:58 UTC (rev 5452)
+@@ -47,7 +47,7 @@
+ 	has been released (this is the download link),</a> fixing a
+     regression in the 6.3.12 SMTP multiline fix and updating translations.
+     It is a recommended update for all users. <a
+-	href="http://developer.berlios.de/project/shownotes.php?group_id=1824&amp;release_id=16791">Click
++	href="http://developer.berlios.de/project/shownotes.php?group_id=1824&amp;release_id=16867">Click
+ 	here to see the change details.</a>
+     </p>
+ </div>
+
+
+
+From svn at mknod.org  Fri Oct 30 03:54:34 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 29 Oct 2009 21:54:34 -0500
+Subject: [fetchmail-svn] r5453 - branches/BRANCH_6-3
+Message-ID: <20091030025434.5925F21F096@mknod.org>
+
+Author: m-a
+Date: 2009-10-29 21:54:34 -0500 (Thu, 29 Oct 2009)
+New Revision: 5453
+
+Modified:
+   branches/BRANCH_6-3/RELEASE-INSTRUCTIONS
+Log:
+Mention ibiblio paths, and need to update release_id on website.
+
+Modified: branches/BRANCH_6-3/RELEASE-INSTRUCTIONS
+===================================================================
+--- branches/BRANCH_6-3/RELEASE-INSTRUCTIONS	2009-10-30 02:53:58 UTC (rev 5452)
++++ branches/BRANCH_6-3/RELEASE-INSTRUCTIONS	2009-10-30 02:54:34 UTC (rev 5453)
+@@ -14,8 +14,9 @@
+ 
+ - Upload sig and tarball to ftp.berlios.de:/incoming/ and release
+ 
+-- Upload lsm and tarball to Ibiblio
++- Upload lsm and tarball to ibiblio.org:/incoming/linux/
+ 
+-- Update the fetchmail website for version and last update, commit, and upload.
++- Update the fetchmail website for version, link to release nodes
++  (update release_id) and last update, commit, and upload.
+ 
+ - Announce on freshmeat.
+
+
+
+From svn at mknod.org  Fri Oct 30 11:00:10 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Fri, 30 Oct 2009 05:00:10 -0500
+Subject: [fetchmail-svn] r5454 - branches/BRANCH_6-3
+Message-ID: <20091030100010.A5C3A21F09F@mknod.org>
+
+Author: m-a
+Date: 2009-10-30 05:00:10 -0500 (Fri, 30 Oct 2009)
+New Revision: 5454
+
+Modified:
+   branches/BRANCH_6-3/configure.ac
+Log:
+Fix CPPFLAGS for GSSAPI compiles.
+
+Modified: branches/BRANCH_6-3/configure.ac
+===================================================================
+--- branches/BRANCH_6-3/configure.ac	2009-10-30 02:54:34 UTC (rev 5453)
++++ branches/BRANCH_6-3/configure.ac	2009-10-30 10:00:10 UTC (rev 5454)
+@@ -889,7 +889,7 @@
+   fi
+   AC_DEFINE(GSSAPI,1,Define if you want GSSAPI authentication)
+   if test "$with_gssapi" != yes ; then
+-    CPPFLAGS="$CPPFLAGS-I$with_gssapi/include"
++    CPPFLAGS="$CPPFLAGS -I$with_gssapi/include"
+   fi
+   AC_CHECK_HEADERS(gss.h gssapi.h gssapi/gssapi.h gssapi/gssapi_generic.h)
+   if test "$ac_cv_header_gssapi_h" = "yes"; then
+
+
+

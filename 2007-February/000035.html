@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5042 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2007-February/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5042%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20070224101157.928F2218013%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000034.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5042 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5042%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20070224101157.928F2218013%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5042 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Sat Feb 24 11:11:57 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000034.html">[fetchmail-svn] r5041 - branches/BRANCH_6-3
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#35">[ date ]</a>
+              <a href="thread.html#35">[ thread ]</a>
+              <a href="subject.html#35">[ subject ]</a>
+              <a href="author.html#35">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2007-02-24 04:11:57 -0600 (Sat, 24 Feb 2007)
+New Revision: 5042
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/sink.c
+Log:
+Back out --smtp list from bouncing. Sunil reports that this may require AUTH or other precautions, as it's relaying to the outside.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2007-02-21 21:29:57 UTC (rev 5041)
++++ branches/BRANCH_6-3/NEWS	2007-02-24 10:11:57 UTC (rev 5042)
+@@ -44,10 +44,8 @@
+ 
+ fetchmail 6.3.8 (not yet released):
+ 
+-# BUG FIXES (LONG-STANDING BUGS):
++# BUG FIXES:
+ * Fix pluralization of oversized-message warning mails.
+-* Fetchmail now iterates over the --smtp[host] list when bouncing and not in
+-  --lmtp mode. Reported by Christian Kurz, Debian Bug #150137.
+ 
+ # KNOWN BUGS AND WORKAROUNDS:
+   (this section floats upwards through the NEWS file so it stays with the
+
+Modified: branches/BRANCH_6-3/sink.c
+===================================================================
+--- branches/BRANCH_6-3/sink.c	2007-02-21 21:29:57 UTC (rev 5041)
++++ branches/BRANCH_6-3/sink.c	2007-02-24 10:11:57 UTC (rev 5042)
+@@ -258,7 +258,6 @@
+     char daemon_name[15 + HOSTLEN] = &quot;MAILER-DAEMON@&quot;;
+     char boundary[BUFSIZ], *bounce_to;
+     int sock;
+-    struct idlist *ish;
+     static char *fqdn_of_host = NULL;
+     const char *md1 = &quot;MAILER-DAEMON&quot;, *md2 = &quot;MAILER-DAEMON@&quot;;
+ 
+@@ -277,37 +276,10 @@
+ 					lose the NDN here */
+     strlcat(daemon_name, fqdn_of_host, sizeof(daemon_name));
+ 
+-    /* XXX FIXME: we blindly assume that any host on our smtphunt list
+-     * and offers SMTP will accept our bounce; however, in global lmtp
+-     * mode we'll just try localhost instead. */
+     /* we need only SMTP for this purpose */
+-    sock = -1;
+-    if (ctl-&gt;smtphunt &amp;&amp; ctl-&gt;listener == SMTP_MODE) {
+-	for (ish = ctl-&gt;smtphunt ; ish; ish = ish-&gt;next) {
+-	    char *x = xstrdup(ish-&gt;id), *y, *port;
+-
+-	    /* skip over LMTP entries */
+-	    if (x[0] == '/') {
+-		free(x);
+-		continue;
+-	    }
+-
+-	    if ((y = strrchr(x, '/'))) {
+-		*y = '\0';
+-		port = y + 1;
+-	    } else {
+-		port = SMTP_PORT;
+-	    }
+-	    sock = SockOpen(x, port, NULL, &amp;ai1);
+-	    free(x);
+-	    if (sock != -1)
+-		break;
+-	}
+-    } else {
+-	sock = SockOpen(&quot;localhost&quot;, SMTP_PORT, NULL, &amp;ai1);
+-    }
+-
+-    if (sock == -1)
++    /* XXX FIXME: hardcoding localhost is nonsense if smtphost can be
++     * configured */
++    if ((sock = SockOpen(&quot;localhost&quot;, SMTP_PORT, NULL, &amp;ai1)) == -1)
+ 	return(FALSE);
+ 
+     if (SMTP_ok(sock, SMTP_MODE) != SM_OK)
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000034.html">[fetchmail-svn] r5041 - branches/BRANCH_6-3
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#35">[ date ]</a>
+              <a href="thread.html#35">[ thread ]</a>
+              <a href="subject.html#35">[ subject ]</a>
+              <a href="author.html#35">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

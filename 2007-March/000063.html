@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5070 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2007-March/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5070%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20070329222126.29828218095%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000062.html">
+   <LINK REL="Next"  HREF="000064.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5070 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5070%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20070329222126.29828218095%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5070 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Fri Mar 30 00:21:26 CEST 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000062.html">[fetchmail-svn] r5069 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000064.html">[fetchmail-svn] r5071 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#63">[ date ]</a>
+              <a href="thread.html#63">[ thread ]</a>
+              <a href="subject.html#63">[ subject ]</a>
+              <a href="author.html#63">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2007-03-29 17:21:25 -0500 (Thu, 29 Mar 2007)
+New Revision: 5070
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/sink.c
+Log:
+Do not crash with a null pointer dereference when opening the BSMTP file 
+fails. Improve error checking and reporting. Reported by Reto Schttel, 
+Debian Bug#416625. Fix based on a patch by Nico Golde.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2007-03-28 20:10:52 UTC (rev 5069)
++++ branches/BRANCH_6-3/NEWS	2007-03-29 22:21:25 UTC (rev 5070)
+@@ -74,6 +74,9 @@
+   Reported by Nico Golde.
+ * If SOCKS support was compiled in, add 'socks' to the feature_options Python
+   list emitted in --configdump. Reported by Rob MacGregor.
++* Do not crash with a null pointer dereference when opening the BSMTP file 
++  fails. Improve error checking and reporting. Reported by Reto Sch&#252;ttel,
++  Debian Bug#416625. Fix based on a patch by Nico Golde.
+ 
+ # DOCUMENTATION:
+ * Extend --mda documentation, discourage use of qmail-inject.
+
+Modified: branches/BRANCH_6-3/sink.c
+===================================================================
+--- branches/BRANCH_6-3/sink.c	2007-03-28 20:10:52 UTC (rev 5069)
++++ branches/BRANCH_6-3/sink.c	2007-03-29 22:21:25 UTC (rev 5070)
+@@ -708,6 +708,12 @@
+     else
+ 	sinkfp = fopen(ctl-&gt;bsmtp, &quot;a&quot;);
+ 
++    if (!sinkfp || ferror(sinkfp)) {
++	report(stderr, GT_(&quot;BSMTP file open failed: %s\n&quot;), 
++		strerror(errno));
++        return(PS_BSMTP);
++    }
++
+     /* see the ap computation under the SMTP branch */
+     need_anglebrs = (msg-&gt;return_path[0] != '&lt;');
+     fprintf(sinkfp,
+@@ -747,9 +753,9 @@
+ 
+     fputs(&quot;DATA\r\n&quot;, sinkfp);
+ 
+-    if (ferror(sinkfp))
++    if (fflush(sinkfp) || ferror(sinkfp))
+     {
+-	report(stderr, GT_(&quot;BSMTP file open or preamble write failed\n&quot;));
++	report(stderr, GT_(&quot;BSMTP preamble write failed.\n&quot;));
+ 	return(PS_BSMTP);
+     }
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000062.html">[fetchmail-svn] r5069 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000064.html">[fetchmail-svn] r5071 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#63">[ date ]</a>
+              <a href="thread.html#63">[ thread ]</a>
+              <a href="subject.html#63">[ subject ]</a>
+              <a href="author.html#63">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5043 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2007-March/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5043%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20070302000344.ABA7121800C%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000037.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5043 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5043%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20070302000344.ABA7121800C%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5043 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Fri Mar  2 01:03:44 CET 2007</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000037.html">[fetchmail-svn] r5044 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#36">[ date ]</a>
+              <a href="thread.html#36">[ thread ]</a>
+              <a href="subject.html#36">[ subject ]</a>
+              <a href="author.html#36">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2007-03-01 18:03:43 -0600 (Thu, 01 Mar 2007)
+New Revision: 5043
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/fetchmail.man
+Log:
+Fix manual page: --sslcheck -&gt; --sslcertck, and do not set trailing
+&quot;recommended:&quot; in bold. Debian Bug #413059, reported by Rafal Czlonka.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2007-02-24 10:11:57 UTC (rev 5042)
++++ branches/BRANCH_6-3/NEWS	2007-03-02 00:03:43 UTC (rev 5043)
+@@ -46,6 +46,8 @@
+ 
+ # BUG FIXES:
+ * Fix pluralization of oversized-message warning mails.
++* Fix manual page: --sslcheck -&gt; --sslcertck, and do not set trailing 
++  &quot;recommended:&quot; in bold. Debian Bug #413059, reported by Rafal Czlonka.
+ 
+ # KNOWN BUGS AND WORKAROUNDS:
+   (this section floats upwards through the NEWS file so it stays with the
+
+Modified: branches/BRANCH_6-3/fetchmail.man
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.man	2007-02-24 10:11:57 UTC (rev 5042)
++++ branches/BRANCH_6-3/fetchmail.man	2007-03-02 00:03:43 UTC (rev 5043)
+@@ -1062,18 +1062,19 @@
+ command line or sslcertck run control file option should be used to
+ force strict certificate checking - see below.
+ .PP
+-.B \-\-sslcheck recommended:
+-When connecting to an SSL or TLS encrypted server, the server presents a certificate
+-to the client for validation.  The certificate is checked to verify that
+-the common name in the certificate matches the name of the server being
+-contacted and that the effective and expiration dates in the certificate
+-indicate that it is currently valid.  If any of these checks fail, a warning
+-message is printed, but the connection continues.  The server certificate
+-does not need to be signed by any specific Certifying Authority and may
+-be a &quot;self-signed&quot; certificate. If the \-\-sslcertck command line option
+-or sslcertck run control file option is used, fetchmail will instead
+-abort if any of these checks fail. Use of the sslcertck or \-\-sslcertck
+-option is advised.
++.B \-\-sslcertck
++recommended: When connecting to an SSL or TLS encrypted server, the 
++server presents a certificate to the client for validation.  The 
++certificate is checked to verify that the common name in the certificate 
++matches the name of the server being contacted and that the effective 
++and expiration dates in the certificate indicate that it is currently 
++valid.  If any of these checks fail, a warning message is printed, but 
++the connection continues.  The server certificate does not need to be 
++signed by any specific Certifying Authority and may be a &quot;self-signed&quot; 
++certificate. If the \-\-sslcertck command line option or sslcertck run 
++control file option is used, fetchmail will instead abort if any of 
++these checks fail. Use of the sslcertck or \-\-sslcertck option is 
++advised.
+ .PP
+ Some SSL encrypted servers may request a client side certificate.  A client
+ side public SSL certificate and private SSL key may be specified.  If
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000037.html">[fetchmail-svn] r5044 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#36">[ date ]</a>
+              <a href="thread.html#36">[ thread ]</a>
+              <a href="subject.html#36">[ subject ]</a>
+              <a href="author.html#36">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

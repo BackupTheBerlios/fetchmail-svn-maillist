@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5308 - in branches/BRANCH_6-3: . contrib
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-May/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5308%20-%20in%20branches/BRANCH_6-3%3A%20.%20contrib&In-Reply-To=%3C20090524112546.9801C21EF4D%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000321.html">
+   <LINK REL="Next"  HREF="000323.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5308 - in branches/BRANCH_6-3: . contrib</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5308%20-%20in%20branches/BRANCH_6-3%3A%20.%20contrib&In-Reply-To=%3C20090524112546.9801C21EF4D%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5308 - in branches/BRANCH_6-3: . contrib">svn at mknod.org
+       </A><BR>
+    <I>Sun May 24 13:25:46 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000321.html">[fetchmail-svn] r5307 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000323.html">[fetchmail-svn] r5309 - branches/BRANCH_6-3/contrib
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#322">[ date ]</a>
+              <a href="thread.html#322">[ thread ]</a>
+              <a href="subject.html#322">[ subject ]</a>
+              <a href="author.html#322">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-05-24 06:25:46 -0500 (Sun, 24 May 2009)
+New Revision: 5308
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/contrib/fetchsetup
+Log:
+Fix bashism ($UID). Debian Bug#530081.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-05-24 11:10:43 UTC (rev 5307)
++++ branches/BRANCH_6-3/NEWS	2009-05-24 11:25:46 UTC (rev 5308)
+@@ -70,6 +70,9 @@
+ * Make the comparison of the SSL fingerprints case insensitive, to
+   ease its use. Suggested by Daniel Richard G.
+ 
++# CHANGES TO CONTRIB
++* Fix bashism in contrib/fetchsetup. Fixes Debian Bug#530081.
++
+ # DOCUMENTATION
+ * Some parts of the the manual page were revised for clarity, accuracy, and
+   updated recommendations (particularly SSL/TLS) and formatting conventions from
+
+Modified: branches/BRANCH_6-3/contrib/fetchsetup
+===================================================================
+--- branches/BRANCH_6-3/contrib/fetchsetup	2009-05-24 11:10:43 UTC (rev 5307)
++++ branches/BRANCH_6-3/contrib/fetchsetup	2009-05-24 11:25:46 UTC (rev 5308)
+@@ -12,12 +12,12 @@
+ EOF
+ }
+ 
+-if [ ! &quot;$UID&quot; = &quot;0&quot; ]; then
+ echo &quot;[$LOGNAME] You need to be [root] to run this script.&quot;
+ echo &quot;You could login: root&quot;
+ echo &quot;You could also try one of these: # sudo fetchsetup&quot;
+ echo &quot;                                 # su -c fetchsetup&quot;
+ exit 1
++if [ &quot;$(id -ur)&quot; != &quot;0&quot; ]; then
+ fi
+ 
+ MSG
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000321.html">[fetchmail-svn] r5307 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000323.html">[fetchmail-svn] r5309 - branches/BRANCH_6-3/contrib
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#322">[ date ]</a>
+              <a href="thread.html#322">[ thread ]</a>
+              <a href="subject.html#322">[ subject ]</a>
+              <a href="author.html#322">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

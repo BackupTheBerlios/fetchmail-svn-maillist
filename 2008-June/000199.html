@@ -1,0 +1,202 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5210 - in branches/BRANCH_6-3: . contrib
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2008-June/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5210%20-%20in%20branches/BRANCH_6-3%3A%20.%20contrib&In-Reply-To=%3C20080628225208.13EA86B0122%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000197.html">
+   <LINK REL="Next"  HREF="000200.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5210 - in branches/BRANCH_6-3: . contrib</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5210%20-%20in%20branches/BRANCH_6-3%3A%20.%20contrib&In-Reply-To=%3C20080628225208.13EA86B0122%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5210 - in branches/BRANCH_6-3: . contrib">svn at mknod.org
+       </A><BR>
+    <I>Sun Jun 29 00:52:08 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000197.html">[fetchmail-svn] r5209 - branches/BRANCH_6-3/website
+</A></li>
+        <LI>Next message: <A HREF="000200.html">[fetchmail-svn] r5211 - in branches/BRANCH_6-3: . po
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#199">[ date ]</a>
+              <a href="thread.html#199">[ thread ]</a>
+              <a href="subject.html#199">[ subject ]</a>
+              <a href="author.html#199">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2008-06-28 17:52:07 -0500 (Sat, 28 Jun 2008)
+New Revision: 5210
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/contrib/delete-later
+Log:
+Change CRLF to LF in contrib/delete-later. Reported by Petr Uzel.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2008-06-24 13:31:10 UTC (rev 5209)
++++ branches/BRANCH_6-3/NEWS	2008-06-28 22:52:07 UTC (rev 5210)
+@@ -115,6 +115,7 @@
+ * Add sslcommonname option (rcfile and commandline) as a way to work around
+   misconfigured upstream SSL servers that use the wrong certificate name. It
+   specifies which CommonName fetchmail expects and logs. (Daniel Richard G.)
++* Changed CRLF to LF line endings in contrib/delete-later (reporter: Petr Uzel)
+ 
+ # DOCUMENTATION:
+ * Add fetchmail-SA-2007-02.txt and fetchmail-SA-2008-01.txt.
+
+Modified: branches/BRANCH_6-3/contrib/delete-later
+===================================================================
+--- branches/BRANCH_6-3/contrib/delete-later	2008-06-24 13:31:10 UTC (rev 5209)
++++ branches/BRANCH_6-3/contrib/delete-later	2008-06-28 22:52:07 UTC (rev 5210)
+@@ -1,56 +1,56 @@
+-#!/usr/bin/expect -f
+-
+-# MySQL database connection settings
+-set CRDB_host     localhost
+-set CRDB_DB       test
+-set CRDB_username root
+-set CRDB_password root
+-
+-# set eiter one to 1 for verbose output
+-log_user 0
+-set comments 0
+-
+-package require mysqltcl
+-
+-# connect to MySQL database
+-set handle [::mysql::connect -host $CRDB_host -user $CRDB_username -password $CRDB_password]
+-
+-# get server/usernames to clean up
+-set userlist [::mysql::sel $handle &quot;SELECT UserID, server, username, password, retaindays from $CRDB_DB.fetchmail_user&quot; -flatlist]
+-
+-# loop through all users in database
+-foreach {userid server username password days} $userlist {
+-  if {$comments==1} { send_user &quot;\r\nWorking on accound #$userid\r\n*******************************\r\n&quot; }
+-  eval spawn telnet -l fetchmail_cleanup $server 110
+-  expect &quot;ready&quot;
+-  send &quot;USER $username\r&quot;
+-  expect &quot;password&quot;
+-  send &quot;PASS $password\r&quot;
+-  expect &quot;OK&quot;
+-  send &quot;STAT\r&quot;
+-  expect &quot;+OK &quot;
+-  expect -re &quot;\[0-9]* &quot;
+-  set anz $expect_out(0,string)
+-  if {$comments==1} { send_user &quot;message count: $anz \r\n&quot; }
+-  set i 0
+-  while { $i &lt; $anz } {
+-    incr i
+-    send &quot;UIDL $i\r&quot;
+-    expect -re &quot;\\\+OK $i \(.*\)\r&quot;
+-    set uid $expect_out(1,string)
+-    ::mysql::exec $handle &quot;insert ignore into $CRDB_DB.fetchmail values ($userid,'$uid',now());&quot;
+-    set age [::mysql::sel $handle &quot;SELECT DATEDIFF(now(),Fetchdate) from $CRDB_DB.fetchmail where UserID=$userid and UID='$uid'&quot; -list]
+-    if {$comments==1} { send_user &quot;Message #$i: UID: $uid , age: $age \r\n&quot; }
+-    if {$age &gt; $days} {
+-      send &quot;DELE $i\r&quot;
+-      expect &quot;deleted&quot;
+-      if {$comments==1} { send_user &quot;Message $i deleted.\r\n&quot; }
+-    }
+-  }
+-  send &quot;quit\r&quot;
+-  expect &quot;signing off&quot;
+-  ::mysql::exec $handle &quot;delete from $CRDB_DB.fetchmail where DATEDIFF(now(),Fetchdate)&gt;($days*2) and UserID=$userid;&quot;
+-}
+-::mysql::close $handle
+-exit
+-
++#!/usr/bin/expect -f
++
++# MySQL database connection settings
++set CRDB_host     localhost
++set CRDB_DB       test
++set CRDB_username root
++set CRDB_password root
++
++# set eiter one to 1 for verbose output
++log_user 0
++set comments 0
++
++package require mysqltcl
++
++# connect to MySQL database
++set handle [::mysql::connect -host $CRDB_host -user $CRDB_username -password $CRDB_password]
++
++# get server/usernames to clean up
++set userlist [::mysql::sel $handle &quot;SELECT UserID, server, username, password, retaindays from $CRDB_DB.fetchmail_user&quot; -flatlist]
++
++# loop through all users in database
++foreach {userid server username password days} $userlist {
++  if {$comments==1} { send_user &quot;\r\nWorking on accound #$userid\r\n*******************************\r\n&quot; }
++  eval spawn telnet -l fetchmail_cleanup $server 110
++  expect &quot;ready&quot;
++  send &quot;USER $username\r&quot;
++  expect &quot;password&quot;
++  send &quot;PASS $password\r&quot;
++  expect &quot;OK&quot;
++  send &quot;STAT\r&quot;
++  expect &quot;+OK &quot;
++  expect -re &quot;\[0-9]* &quot;
++  set anz $expect_out(0,string)
++  if {$comments==1} { send_user &quot;message count: $anz \r\n&quot; }
++  set i 0
++  while { $i &lt; $anz } {
++    incr i
++    send &quot;UIDL $i\r&quot;
++    expect -re &quot;\\\+OK $i \(.*\)\r&quot;
++    set uid $expect_out(1,string)
++    ::mysql::exec $handle &quot;insert ignore into $CRDB_DB.fetchmail values ($userid,'$uid',now());&quot;
++    set age [::mysql::sel $handle &quot;SELECT DATEDIFF(now(),Fetchdate) from $CRDB_DB.fetchmail where UserID=$userid and UID='$uid'&quot; -list]
++    if {$comments==1} { send_user &quot;Message #$i: UID: $uid , age: $age \r\n&quot; }
++    if {$age &gt; $days} {
++      send &quot;DELE $i\r&quot;
++      expect &quot;deleted&quot;
++      if {$comments==1} { send_user &quot;Message $i deleted.\r\n&quot; }
++    }
++  }
++  send &quot;quit\r&quot;
++  expect &quot;signing off&quot;
++  ::mysql::exec $handle &quot;delete from $CRDB_DB.fetchmail where DATEDIFF(now(),Fetchdate)&gt;($days*2) and UserID=$userid;&quot;
++}
++::mysql::close $handle
++exit
++
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000197.html">[fetchmail-svn] r5209 - branches/BRANCH_6-3/website
+</A></li>
+	<LI>Next message: <A HREF="000200.html">[fetchmail-svn] r5211 - in branches/BRANCH_6-3: . po
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#199">[ date ]</a>
+              <a href="thread.html#199">[ thread ]</a>
+              <a href="subject.html#199">[ subject ]</a>
+              <a href="author.html#199">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

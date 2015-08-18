@@ -1,0 +1,1022 @@
+From svn at mknod.org  Thu Jan  4 21:26:30 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu,  4 Jan 2007 14:26:30 -0600 (CST)
+Subject: [fetchmail-svn] r5005 - branches/BRANCH_6-3
+Message-ID: <20070104202630.8A34C218001@mknod.org>
+
+Author: m-a
+Date: 2007-01-04 14:26:29 -0600 (Thu, 04 Jan 2007)
+New Revision: 5005
+
+Modified:
+   branches/BRANCH_6-3/
+   branches/BRANCH_6-3/NEWS
+Log:
+ r5008 at balu:  mandree | 2007-01-04 00:24:58 +0100
+ Revise general and 6.3.6 sections for clarity.
+
+
+
+Property changes on: branches/BRANCH_6-3
+___________________________________________________________________
+Name: svk:merge
+   + fbb42c1a-5c77-f34b-9454-e29eadb441c6:/local/fetchmail_6-3:5008
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2006-12-30 15:38:42 UTC (rev 5004)
++++ branches/BRANCH_6-3/NEWS	2007-01-04 20:26:29 UTC (rev 5005)
+@@ -8,72 +8,76 @@
+ Abbreviations in parentheses are the maintainers who committed the respective
+ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
+ 
+-# DEPRECATED FEATURES AND MAJOR INCOMPATIBLE CHANGE ADVANCE WARNINGS
++# ADVANCE WARNING OF FEATURES TO BE REMOVED OR CHANGED IN FUTURE VERSIONS
++(There are no plans to remove these features from a 6.3.X release, but they may
++be removed from a 6.4.0 or newer release.)
+ * The MX and host alias DNS lookups that fetchmail performs in multidrop mode
+-  are obsolete, deprecated and may be removed from a future fetchmail version.
+-  They have never supported IPv6 (including IPv6-mapped IPv4) anyhow.
++  are based on assumptions that are rarely met in practice, somewhat defective,
++  deprecated and may be removed from a future fetchmail version.  They have
++  never supported IPv6 (including IPv6-mapped IPv4).
+   Non-DNS based alias keywords such as "aka" will remain in fetchmail.
+ * The monitor and interface options may be removed from a future fetchmail
+-  version as they are not sufficiently portable.
+-* POP2 is obsolete.
+-  Support for POP2 may be removed from a future fetchmail version.
+-* RPOP is obsolete, support may be removed from a future fetchmail release.
+-* --sslcertck may become a default setting in a future fetchmail version.
++  version as they are not reasonably portable.
++* POP2 is obsolete, support will be removed from a future fetchmail version.
++* RPOP is obsolete, support will be removed from a future fetchmail release.
++* --sslcertck will become a default setting in a future fetchmail version.
+ * The multidrop To/Cc guessing code along with the fragile duplicate suppressor
+   is deprecated and may be removed from a future release.
+ * The "envelope Received" option may be removed from a future release, because
+   the Received header was never meant to be machine-readable, the format varies
+   widely, and various other differences in behavior make parsing Received an
+-  unreliable undertaking. The enveloper option as such will remain though, in
++  unreliable undertaking. The envelope option as such will remain though, in
+   order to support Delivered-To, X-Envelope-To, X-Original-To and similar.
+   See also <http://home.pages.de/~mandree/mail/multidrop>.
+-* The --enable-fallback (fall back to MDA if MTA unavailable) may be removed
+-  from a future fetchmail release.
++* The --enable-fallback (fall back to MDA if MTA unavailable) will be removed
++  from a future fetchmail release, because it makes fetchmail's behavior
++  inconsistent and confusing.
+ * The "protocol auto" default inside fetchmail may be removed from a future
+   fetchmail release. Explicit configuration of the protocol is recommended.
+ * Kerberos IV support may be removed from a future fetchmail release.
+-* SIGHUP wakeup may be removed from a future fetchmail release and cause it
+-  to terminate.
++* SIGHUP wakeup support may be removed from a future fetchmail release and
++  cause fetchmail to terminate - it was broken for many years.
+ * Support for operating systems that are not sufficiently POSIX compliant may be
+   removed or operation on such systems may be suboptimal for future releases.
+ 
+ --------------------------------------------------------------------------------
+ 
+-fetchmail 6.3.6 (not yet released):
++fetchmail 6.3.6 (released 2007-01-04):
+ 
+-# SECURITY FIXES (CHANGE BEHAVIOUR):
++# SECURITY FIXES:
+ * CVE-2006-5867, fetchmail-SA-2006-02.txt:
+-  Password disclosure vulnerability. This has several aspects:
++  Password disclosure vulnerability fixed. This has several aspects:
+ 
+   - Fetchmail now implies sslproto 'tls1' if the sslfingerprint or sslcertck
+-    options are used, but ssl is not, to be sure that there is a certificate to
+-    check against.
++    options are used and the ssl option is not used, in order to be sure that
++    fetchmail gets a certificate from the mail server.
+ 
+   - Fetchmail breaks the connection if the TLS negotiation (or verification, if
+-    requested) fails with sslproto 'tls1' (also applies if this is implicit).
++    requested) fails with sslproto 'tls1', sslfingerprint or sslcheck enabled.
+ 
+-  - POP3 connections ignored STLS altogether in many circumstances, because
+-    fetchmail did not probe server capabilities for all values of "auth" - see
+-    fetchmail-SA-2006-02.txt for details.
++  - POP3 connections now use STLS reliably. They used to ignore STLS altogether
++    for serveral values of the "auth" option, when fetchmail forget to probe
++    server capabilities - see fetchmail-SA-2006-02.txt for details.
+ 
+-  - POP3 connections could retry USER/PASS authentication even if strong
+-    challenge-response schemes such as CRAM-MD5 had explicitly been requested,
+-    if these were not advertised in the CAPA response.
++  - POP3 connections will no longer fall back USER/PASS authentication if
++    strong challenge-response authenticators such as CRAM-MD5 are configured
++    but the server does not advertise these in its CAPA response.
+ 
+   - POP2 is obsolete and does not support STLS or anything beyond password-based
+-    authentication. The attempt to use STLS or strong authenticators causes
++    authentication. The attempt to use STLS or strong authenticators now causes
+     connection abort.
+ 
+-  Configurations using --ssl --sslcertck however have been semi-safe in that
+-  they would not expose the password over the wire.
++  Configurations using both ssl and sslcertck however have been semi-safe in
++  that they would send the password in the clear. The USER/PASS fallback
++  problem however applies to these too, so that the password was only change on
++  trustworthy servers.
+ 
+-# SECURITY FIX:
+ * CVE-2006-5974, fetchmail-SA-2006-03.txt:
+-  Repair regression in 6.3.5 that crashes fetchmail when a message with invalid
+-  headers is found while fetchmail's mda option is in use. BerliOS bugs #9364,
+-  #9412, #9449. Stack backtrace provided by Neil Hoggarth - thanks.
++  Repairs a regression in 6.3.5 that crashes fetchmail when a message with
++  invalid headers is found while fetchmail's mda option is in use. BerliOS bugs
++  #9364, #9412, #9449. Stack backtrace provided by Neil Hoggarth - thanks.
+ 
+-# REGRESSION FIXES:
++# REGRESSION FIXES (recently introduced bugs)
+ * Repair --logfile, broken in 6.3.5. BerliOS Bug #9059,
+   reported by Brian Harring.
+ * Repair --user, broken in 6.3.5 (as a side effect of the authenticate external
+@@ -82,32 +86,33 @@
+   name.  Debian Bug #400950, reported by Jorgen Schaefer <forcer at debian.org>.
+ 
+ # BUG FIXES (long-standing bugs):
+-* POP3: Probe capabilities when Kerberos V5 is enabled so that we can actually
+-  try to use it.
+-* RPOP: The password is now shrouded in the local logs.
+-* Robustness: If a stale lockfile cannot be deleted, truncate it to avoid
+-  trouble later if the PID is recycled by a non-fetchmail process.
+-* Detect /etc/resolv.conf changes: On systems that have res_search(), assume we
+-  also have res_init() and call it (suggested by Ulrich Drepper, glibc bug
+-  #3675) in order to make libc or libresolv reread the resolver configuration at
+-  the beginning of a poll cycle.  This is important when fetchmail is in daemon
+-  mode and /etc/resolv.conf is changed later by dhcpcd, dhclient, pppd, openvpn
+-  or other ip-up/ipchange scripts.  Should fix Debian Bug#389270, Bug#391698.
+-* Fix crash on systems that do not provide strdup(), the crash happens only in
+-  out-of-memory conditions when fetchmail cannot proceed anyways.  Patch by
+-  Andreas Krennmair.
+-* When HOME and FETCHMAILHOME are unset, be sure to copy user database
+-  information, so it is not trashed later. Patch by Jim Correia.
++* RPOP: used to log the password locally rather than an asterisk as the other
++  protocols do. The password is now shrouded in the local logs.
++* POP3: Probes capabilities now when Kerberos V5 is enabled, so that we can
++  actually detect if the server supports it.
++* Robustness: If a stale lockfile cannot be deleted, truncate it so that
++  fetchmail doesn't later believe itself to be running if the PID is recycled
++  by a non-fetchmail process.
++* DNS: Detect /etc/resolv.conf changes: On systems that have res_search(),
++  assume we also have res_init() and call it (suggested by Ulrich Drepper,
++  glibc bug #3675) in order to make libc or libresolv reread the resolver
++  configuration at the beginning of a poll cycle.  This is important when
++  fetchmail is in daemon mode and /etc/resolv.conf is changed later by dhcpcd,
++  dhclient, pppd, openvpn or other ip-up/ipchange scripts.  Should fix Debian
++  Bug#389270, Bug#391698.
++* Robustness: Fix crash on systems that do not provide strdup(), the crash
++  happens only in out-of-memory conditions when fetchmail cannot proceed
++  anyways.  Patch by Andreas Krennmair.
++* Robustness: When HOME and FETCHMAILHOME are unset, be sure to copy user
++  database information, so it is not trashed later. Patch by Jim Correia.
+ 
+ # CHANGES:
+-* Remove excess no-op strcpy() after strdup() found by Andreas Krennmair.
+-* Remove handling for PS_TRUNCATED (code 27), which was never returned.
+-* Improve handling of IMAP IDLE, some servers do not reset their time counters
+-  after sending information asynchronously. Patch by Sunil Shetye, after report
+-  from Andrew Baumann.
+-* When requesting Kerberos V4, V5 or GSSAPI, complain and exit with syntax error
+-  if any of these requested features has not been compiled in. This is to fail
+-  early and with precise error message. Reported by Isaac Wilcox.
++* Workaround: Improve handling of IMAP IDLE, some servers do not reset their
++  time counters after sending information asynchronously. Patch by Sunil
++  Shetye, after report from Andrew Baumann.
++* Usability: When requesting Kerberos or GSSAPI, complain and exit with syntax
++  error if any of these requested features has not been compiled in.  This is
++  to fail early and with precise error message. Reported by Isaac Wilcox.
+ * --version will now add +KRB4 or +KRB5 if Kerberos v4 or v5, respectively, have
+   been compiled in. Reported missing by Isaac Wilcox.
+ 
+@@ -115,6 +120,9 @@
+ * New en_GB (British English) translation by David Lodge.
+ * Update Japanese (Takeshi Hamasaki), Polish (Jakub Bogusz), Russian (Pavel
+   Maryanov) and Vietnamese (Clytie Siddall) translations.
++! Note that not all these translations are complete -- this isn't the
++  translators' fault though, but due to delays at the BerliOS hosting site and
++  the translation project handlers. You may see a few untranslated messages.
+ 
+ # DOCUMENTATION:
+ * Dropped exit status 15 from manual page, it's not used by fetchmail.
+@@ -122,15 +130,16 @@
+ * Documented exit codes 24 - 29 as internal.
+ 
+ # KNOWN BUGS AND WORKAROUNDS:
+-  (this section floats upwards through the NEWS to be on top of the list)
++  (this section floats upwards through the NEWS file so it stays with the
++  current release information)
+ * fetchmail does not handle messages without Message-ID header well
+   (See sourceforge.net bug #780933)
+-* Sun Workshop 6 (SPARC) is known to miscompile the lexer in 64-bit mode.
+-  Either compile 32-bit code or use GCC to compile 64-bit fetchmail.
+-  Note that fetchmail doesn't take advantage of 64-bit code anyways,
+-  so compiling 32-bit SPARC code should be fine.
+-* fetchmail expects Received: headers in a particular format when parsing
+-  envelopes.
++* Sun Workshop 6 (SPARC) is known to miscompile the configuration file lexer in
++  64-bit mode.  Either compile 32-bit code or use GCC to compile 64-bit
++  fetchmail.  Note that fetchmail doesn't take advantage of 64-bit code,
++  so compiling 32-bit SPARC code should not cause any difficulties.
++* fetchmail expects Received: headers in a particular, but undocumented, format
++  when parsing envelopes.
+ * fetchmail does not track pending deletes over crashes
+ * the command line interface is a bit narrow-minded sometimes, for instance,
+   fetchmail -s doesn't work with a running daemon
+
+
+
+From svn at mknod.org  Thu Jan  4 21:32:27 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu,  4 Jan 2007 14:32:27 -0600 (CST)
+Subject: [fetchmail-svn] r5006 - branches/BRANCH_6-3
+Message-ID: <20070104203227.D1C35218001@mknod.org>
+
+Author: m-a
+Date: 2007-01-04 14:32:27 -0600 (Thu, 04 Jan 2007)
+New Revision: 5006
+
+Modified:
+   branches/BRANCH_6-3/
+   branches/BRANCH_6-3/fetchmail-SA-2006-02.txt
+   branches/BRANCH_6-3/fetchmail-SA-2006-03.txt
+Log:
+ r5009 at balu:  mandree | 2007-01-04 00:25:10 +0100
+ Update.
+
+
+
+Property changes on: branches/BRANCH_6-3
+___________________________________________________________________
+Name: svk:merge
+   - fbb42c1a-5c77-f34b-9454-e29eadb441c6:/local/fetchmail_6-3:5008
+   + fbb42c1a-5c77-f34b-9454-e29eadb441c6:/local/fetchmail_6-3:5009
+
+Modified: branches/BRANCH_6-3/fetchmail-SA-2006-02.txt
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-SA-2006-02.txt	2007-01-04 20:26:29 UTC (rev 5005)
++++ branches/BRANCH_6-3/fetchmail-SA-2006-02.txt	2007-01-04 20:32:27 UTC (rev 5006)
+@@ -3,8 +3,8 @@
+ Topics:		fetchmail cannot enforce TLS
+ 
+ Author:		Matthias Andree
+-Version:	XXX
+-Announced:	2006-11-XX
++Version:	1.0
++Announced:	2007-01-04
+ Type:		secret information disclosure
+ Impact:		fetchmail can expose cleartext password over unsecure link
+ 		fetchmail may not detect man in the middle attacks
+@@ -17,7 +17,7 @@
+ Affects:	fetchmail releases <= 6.3.5
+ 		fetchmail release candidates 6.3.6-rc1, -rc2, -rc3
+ 
+-Not affected:	fetchmail release candidate 6.3.6-rc4
++Not affected:	fetchmail release candidates 6.3.6-rc4, -rc5
+ 		fetchmail release 6.3.6
+ 
+ Corrected:	2006-11-26 fetchmail 6.3.6-rc4
+@@ -29,6 +29,7 @@
+ 2006-11-16	v0.01 internal review draft
+ 2006-11-26	v0.02 revise failure cases, workaround, add acknowledgments
+ 2006-11-27	v0.03 add more vulnerabilities
++2006-01-04	v1.0  ready for release
+ 
+ 
+ 1. Background
+@@ -101,7 +102,7 @@
+ A. Copyright, License and Warranty
+ ==================================
+ 
+-(C) Copyright 2006 by Matthias Andree, <matthias.andree at gmx.de>.
++(C) Copyright 2007 by Matthias Andree, <matthias.andree at gmx.de>.
+ Some rights reserved.
+ 
+ This work is licensed under the Creative Commons
+
+Modified: branches/BRANCH_6-3/fetchmail-SA-2006-03.txt
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-SA-2006-03.txt	2007-01-04 20:26:29 UTC (rev 5005)
++++ branches/BRANCH_6-3/fetchmail-SA-2006-03.txt	2007-01-04 20:32:27 UTC (rev 5006)
+@@ -1,10 +1,10 @@
+ fetchmail-SA-2006-03: crash when refusing message delivered through MDA
+ 
+-Topics:		fetchmail crashes when refusing a message to an MDA
++Topics:		fetchmail crashes when refusing a message bound for an MDA
+ 
+ Author:		Matthias Andree
+ Version:	1.0
+-Announced:	2006-11-XX
++Announced:	2007-01-04
+ Type:		denial of service
+ Impact:		fetchmail aborts prematurely
+ Danger:		low
+@@ -24,7 +24,8 @@
+ 0. Release history
+ ==================
+ 
+-2006-11-19	internal review draft
++2006-11-19 -	internal review draft
++2007-01-04 1.0	 ready for release
+ 
+ 
+ 1. Background
+@@ -66,7 +67,7 @@
+ A. Copyright, License and Warranty
+ ==================================
+ 
+-(C) Copyright 2006 by Matthias Andree, <matthias.andree at gmx.de>.
++(C) Copyright 2007 by Matthias Andree, <matthias.andree at gmx.de>.
+ Some rights reserved.
+ 
+ This work is licensed under the Creative Commons
+
+
+
+From svn at mknod.org  Thu Jan  4 21:33:55 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu,  4 Jan 2007 14:33:55 -0600 (CST)
+Subject: [fetchmail-svn] r5007 - branches/BRANCH_6-3
+Message-ID: <20070104203355.AB0E8218001@mknod.org>
+
+Author: m-a
+Date: 2007-01-04 14:33:55 -0600 (Thu, 04 Jan 2007)
+New Revision: 5007
+
+Modified:
+   branches/BRANCH_6-3/
+   branches/BRANCH_6-3/configure.ac
+Log:
+ r5010 at balu:  mandree | 2007-01-04 00:25:36 +0100
+ Bump version and revise header comments.
+
+
+
+Property changes on: branches/BRANCH_6-3
+___________________________________________________________________
+Name: svk:merge
+   - fbb42c1a-5c77-f34b-9454-e29eadb441c6:/local/fetchmail_6-3:5009
+   + fbb42c1a-5c77-f34b-9454-e29eadb441c6:/local/fetchmail_6-3:5010
+
+Modified: branches/BRANCH_6-3/configure.ac
+===================================================================
+--- branches/BRANCH_6-3/configure.ac	2007-01-04 20:32:27 UTC (rev 5006)
++++ branches/BRANCH_6-3/configure.ac	2007-01-04 20:33:55 UTC (rev 5007)
+@@ -1,11 +1,14 @@
+ dnl Autoconfigure input file for fetchmail
+-dnl Eric S. Raymond <esr at thyrsus.com>
+-dnl Matthias Andree <matthias.andree at gmx.de>
+-dnl
++#
++# Fetchmail automatic configuration support
++#
++# Eric S. Raymond <esr at thyrsus.com>
++# 2004 - 2007 Matthias Andree <matthias.andree at gmx.de>
++#
+ dnl Process this file with autoconf to produce a configure script.
+ dnl
+ 
+-AC_INIT([fetchmail],[6.3.6-rc5],[fetchmail-users at lists.berlios.de])
++AC_INIT([fetchmail],[6.3.6],[fetchmail-users at lists.berlios.de])
+ AC_CONFIG_SRCDIR([fetchmail.h])
+ AC_CONFIG_HEADERS([config.h])
+ AC_CONFIG_LIBOBJ_DIR([.])
+
+
+
+From svn at mknod.org  Fri Jan  5 22:28:47 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Fri,  5 Jan 2007 15:28:47 -0600 (CST)
+Subject: [fetchmail-svn] r5008 - branches/BRANCH_6-3
+Message-ID: <20070105212847.52149218001@mknod.org>
+
+Author: m-a
+Date: 2007-01-05 15:28:46 -0600 (Fri, 05 Jan 2007)
+New Revision: 5008
+
+Modified:
+   branches/BRANCH_6-3/Makefile.am
+Log:
+Don't leave busted fetchmail-FAQ.pdf behind.
+
+Modified: branches/BRANCH_6-3/Makefile.am
+===================================================================
+--- branches/BRANCH_6-3/Makefile.am	2007-01-04 20:33:55 UTC (rev 5007)
++++ branches/BRANCH_6-3/Makefile.am	2007-01-05 21:28:46 UTC (rev 5008)
+@@ -156,7 +156,7 @@
+ 
+ fetchmail-FAQ.pdf: fetchmail-FAQ.html fetchmail-FAQ.book bighand.png
+ 	$(AWK) '/^[ \t]*<h1/ {sec++; } {if (sec < 2 || sec > 3) print $0;}' <$(srcdir)/fetchmail-FAQ.html >fetchmail-FAQ-print.html
+-	htmldoc --logoimage $(srcdir)/bighand.png --batch $(srcdir)/fetchmail-FAQ.book
++	htmldoc --logoimage $(srcdir)/bighand.png --batch $(srcdir)/fetchmail-FAQ.book || { rm -f $@ ; exit 1 ; }
+ 	rm -f fetchmail-FAQ-print.html
+ 
+ FEATURES: fetchmail-features.html $(srcdir)/dist-tools/html2txt
+
+
+
+From svn at mknod.org  Fri Jan  5 22:38:06 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Fri,  5 Jan 2007 15:38:06 -0600 (CST)
+Subject: [fetchmail-svn] r5009 - branches/BRANCH_6-3
+Message-ID: <20070105213806.D90AD218001@mknod.org>
+
+Author: m-a
+Date: 2007-01-05 15:38:06 -0600 (Fri, 05 Jan 2007)
+New Revision: 5009
+
+Modified:
+   branches/BRANCH_6-3/fetchmail-FAQ.book
+Log:
+Use --no-strict so PDF build doesn't fail because of unresolvable external links.
+
+Modified: branches/BRANCH_6-3/fetchmail-FAQ.book
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-FAQ.book	2007-01-05 21:28:46 UTC (rev 5008)
++++ branches/BRANCH_6-3/fetchmail-FAQ.book	2007-01-05 21:38:06 UTC (rev 5009)
+@@ -1,3 +1,3 @@
+ #HTMLDOC 1.8.24 Open Source
+--t pdf14 -f fetchmail-FAQ.pdf --book --toclevels 2 --no-numbered --toctitle "Table of Contents" --title --linkstyle underline --size A4 --left 1.00in --right 0.50in --top 0.50in --bottom 0.50in --header .tl --footer h.1 --nup 1 --tocheader .tl --tocfooter ..i --duplex --portrait --color --no-pscommands --no-xrxcomments --compression=9 --jpeg=0 --fontsize 10.5 --fontspacing 1.2 --headingfont Helvetica --bodyfont Times --headfootsize 10.5 --headfootfont Times-Bold --charset iso-8859-1 --links --no-embedfonts --pagemode document --pagelayout single --firstpage p1 --pageeffect none --pageduration 10 --effectduration 1.0 --encryption --permissions print --permissions no-modify --permissions copy --permissions annotate  --owner-password ""  --user-password "" --browserwidth 680 --strict --linkcolor blue
++-t pdf14 -f fetchmail-FAQ.pdf --book --toclevels 2 --no-numbered --toctitle "Table of Contents" --title --linkstyle underline --size A4 --left 1.00in --right 0.50in --top 0.50in --bottom 0.50in --header .tl --footer h.1 --nup 1 --tocheader .tl --tocfooter ..i --duplex --portrait --color --no-pscommands --no-xrxcomments --compression=9 --jpeg=0 --fontsize 10.5 --fontspacing 1.2 --headingfont Helvetica --bodyfont Times --headfootsize 10.5 --headfootfont Times-Bold --charset iso-8859-1 --links --no-embedfonts --pagemode document --pagelayout single --firstpage p1 --pageeffect none --pageduration 10 --effectduration 1.0 --encryption --permissions print --permissions no-modify --permissions copy --permissions annotate  --owner-password ""  --user-password "" --browserwidth 680 --no-strict --linkcolor blue
+ fetchmail-FAQ-print.html
+
+
+
+From svn at mknod.org  Fri Jan  5 22:45:14 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Fri,  5 Jan 2007 15:45:14 -0600 (CST)
+Subject: [fetchmail-svn] r5010 - tags
+Message-ID: <20070105214514.157C9218001@mknod.org>
+
+Author: m-a
+Date: 2007-01-05 15:45:13 -0600 (Fri, 05 Jan 2007)
+New Revision: 5010
+
+Added:
+   tags/RELEASE_6-3-6/
+Log:
+Tagging fetchmail 6.3.6.
+
+Copied: tags/RELEASE_6-3-6 (from rev 5009, branches/BRANCH_6-3)
+
+
+
+From svn at mknod.org  Fri Jan  5 22:45:54 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Fri,  5 Jan 2007 15:45:54 -0600 (CST)
+Subject: [fetchmail-svn] r5011 - branches/BRANCH_6-3
+Message-ID: <20070105214554.8F382218001@mknod.org>
+
+Author: m-a
+Date: 2007-01-05 15:45:54 -0600 (Fri, 05 Jan 2007)
+New Revision: 5011
+
+Modified:
+   branches/BRANCH_6-3/RELEASEVERSIONS
+Log:
+Track r5010 as 6.3.6 release.
+
+Modified: branches/BRANCH_6-3/RELEASEVERSIONS
+===================================================================
+--- branches/BRANCH_6-3/RELEASEVERSIONS	2007-01-05 21:45:13 UTC (rev 5010)
++++ branches/BRANCH_6-3/RELEASEVERSIONS	2007-01-05 21:45:54 UTC (rev 5011)
+@@ -1,5 +1,6 @@
+ SVN release - fetchmail release
+ ================================
++r5010       - 6.3.6 (2007-01-05)
+ r4921       - 6.3.5 (2006-10-09)
+ r4802       - 6.3.4 (2006-04-14)
+ r4760       - 6.3.3 (2006-03-31)
+
+
+
+From svn at mknod.org  Sat Jan  6 00:11:39 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Fri,  5 Jan 2007 17:11:39 -0600 (CST)
+Subject: [fetchmail-svn] r5012 - branches/BRANCH_6-3
+Message-ID: <20070105231139.7D49B218001@mknod.org>
+
+Author: m-a
+Date: 2007-01-05 17:11:39 -0600 (Fri, 05 Jan 2007)
+New Revision: 5012
+
+Modified:
+   branches/BRANCH_6-3/
+Log:
+ r6392 at balu:  mandree | 2007-01-06 00:11:21 +0100
+ Ignore ylwrap.
+
+
+
+Property changes on: branches/BRANCH_6-3
+___________________________________________________________________
+Name: svn:ignore
+   - ABOUT-NLS
+aclocal.m4
+autom4te.cache
+build*
+compile
+config.guess
+config.h.in
+config.rpath
+config.sub
+configure
+cscope.out
+depcomp
+install-sh
+Makefile.in
+missing
+mkinstalldirs
+py-compile
+tags
+
+   + ABOUT-NLS
+aclocal.m4
+autom4te.cache
+build*
+compile
+config.guess
+config.h.in
+config.rpath
+config.sub
+configure
+cscope.out
+depcomp
+install-sh
+Makefile.in
+missing
+mkinstalldirs
+py-compile
+tags
+ylwrap
+Name: svk:merge
+   - fbb42c1a-5c77-f34b-9454-e29eadb441c6:/local/fetchmail_6-3:5010
+   + fbb42c1a-5c77-f34b-9454-e29eadb441c6:/local/fetchmail_6-3:6392
+
+
+
+From svn at mknod.org  Sat Jan  6 02:33:46 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Fri,  5 Jan 2007 19:33:46 -0600 (CST)
+Subject: [fetchmail-svn] r5013 - branches/BRANCH_6-3
+Message-ID: <20070106013346.38805218001@mknod.org>
+
+Author: m-a
+Date: 2007-01-05 19:33:46 -0600 (Fri, 05 Jan 2007)
+New Revision: 5013
+
+Modified:
+   branches/BRANCH_6-3/
+   branches/BRANCH_6-3/TODO.txt
+Log:
+ r6394 at balu:  mandree | 2007-01-06 02:33:35 +0100
+ Update.
+
+
+
+Property changes on: branches/BRANCH_6-3
+___________________________________________________________________
+Name: svk:merge
+   - fbb42c1a-5c77-f34b-9454-e29eadb441c6:/local/fetchmail_6-3:6392
+   + fbb42c1a-5c77-f34b-9454-e29eadb441c6:/local/fetchmail_6-3:6394
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2007-01-05 23:11:39 UTC (rev 5012)
++++ branches/BRANCH_6-3/TODO.txt	2007-01-06 01:33:46 UTC (rev 5013)
+@@ -1,4 +1,7 @@
+ 6.3.7:
++- integrate Isaac Wilcox's test rig
++- look at Tony Earnshaw's .spec file
++- revisit BerliOS patches
+ - see if "AUTH SSH" can be made to work for POP3
+ - more SMTP/LMTP error detail on message rejections even outside verbose mode.
+   Ian D. Allen, fetchmail-users. Two messages with examples.
+
+
+
+From svn at mknod.org  Sat Jan  6 09:45:20 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Sat,  6 Jan 2007 02:45:20 -0600 (CST)
+Subject: [fetchmail-svn] r5014 - branches/BRANCH_6-3
+Message-ID: <20070106084520.3EB9221800C@mknod.org>
+
+Author: m-a
+Date: 2007-01-06 02:45:19 -0600 (Sat, 06 Jan 2007)
+New Revision: 5014
+
+Modified:
+   branches/BRANCH_6-3/
+   branches/BRANCH_6-3/NEWS
+Log:
+ r6396 at balu:  mandree | 2007-01-06 09:45:01 +0100
+ Fix typo, only change -> only safe.
+
+
+
+Property changes on: branches/BRANCH_6-3
+___________________________________________________________________
+Name: svk:merge
+   - fbb42c1a-5c77-f34b-9454-e29eadb441c6:/local/fetchmail_6-3:6394
+   + fbb42c1a-5c77-f34b-9454-e29eadb441c6:/local/fetchmail_6-3:6396
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2007-01-06 01:33:46 UTC (rev 5013)
++++ branches/BRANCH_6-3/NEWS	2007-01-06 08:45:19 UTC (rev 5014)
+@@ -69,7 +69,7 @@
+ 
+   Configurations using both ssl and sslcertck however have been semi-safe in
+   that they would send the password in the clear. The USER/PASS fallback
+-  problem however applies to these too, so that the password was only change on
++  problem however applies to these too, so that the password was only safe on
+   trustworthy servers.
+ 
+ * CVE-2006-5974, fetchmail-SA-2006-03.txt:
+
+
+
+From svn at mknod.org  Wed Jan 10 01:12:57 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Tue,  9 Jan 2007 18:12:57 -0600 (CST)
+Subject: [fetchmail-svn] r5015 - branches/BRANCH_6-3
+Message-ID: <20070110001257.DCFC5218001@mknod.org>
+
+Author: m-a
+Date: 2007-01-09 18:12:56 -0600 (Tue, 09 Jan 2007)
+New Revision: 5015
+
+Modified:
+   branches/BRANCH_6-3/fetchmail.c
+Log:
+Update Copyright.
+
+Modified: branches/BRANCH_6-3/fetchmail.c
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.c	2007-01-06 08:45:19 UTC (rev 5014)
++++ branches/BRANCH_6-3/fetchmail.c	2007-01-10 00:12:56 UTC (rev 5015)
+@@ -136,7 +136,8 @@
+ static void printcopyright(FILE *fp) {
+ 	fprintf(fp, GT_("Copyright (C) 2002, 2003 Eric S. Raymond\n"
+ 		   "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Rob F. Funk, Graham Wilson\n"
+-		   "Copyright (C) 2005-2006 Matthias Andree, Sunil Shetye\n"
++		   "Copyright (C) 2005-2006 Sunil Shetye\n"
++		   "Copyright (C) 2005-2007 Matthias Andree\n"
+ 		   ));
+ 	fprintf(fp, GT_("Fetchmail comes with ABSOLUTELY NO WARRANTY. This is free software, and you\n"
+ 		   "are welcome to redistribute it under certain conditions. For details,\n"
+
+
+
+From svn at mknod.org  Sun Jan 14 20:14:47 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Sun, 14 Jan 2007 13:14:47 -0600 (CST)
+Subject: [fetchmail-svn] r5016 - branches/BRANCH_6-3
+Message-ID: <20070114191447.E7834218001@mknod.org>
+
+Author: m-a
+Date: 2007-01-14 13:14:47 -0600 (Sun, 14 Jan 2007)
+New Revision: 5016
+
+Added:
+   branches/BRANCH_6-3/IDEAS.txt
+Log:
+Add ideas.
+
+Added: branches/BRANCH_6-3/IDEAS.txt
+===================================================================
+--- branches/BRANCH_6-3/IDEAS.txt	2007-01-10 00:12:56 UTC (rev 5015)
++++ branches/BRANCH_6-3/IDEAS.txt	2007-01-14 19:14:47 UTC (rev 5016)
+@@ -0,0 +1,7 @@
++Unless otherwise noted, these are Matthias Andree's ideas:
++
++- robustness: supervise fetch tasks so that crashes don't bring down
++  unrelated services
++
++- robustness: reorder messages so that "blocking" messages are fetched
++  last in order to obtain self-healing properties
+
+
+
+From svn at mknod.org  Sun Jan 14 21:17:18 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Sun, 14 Jan 2007 14:17:18 -0600 (CST)
+Subject: [fetchmail-svn] r5017 - branches/BRANCH_6-3/contrib
+Message-ID: <20070114201718.918E8218001@mknod.org>
+
+Author: m-a
+Date: 2007-01-14 14:17:17 -0600 (Sun, 14 Jan 2007)
+New Revision: 5017
+
+Added:
+   branches/BRANCH_6-3/contrib/fetchmail.logrotate
+Modified:
+   branches/BRANCH_6-3/contrib/README
+Log:
+Add Daniel Leidert's fetchmail.logrotate sample.
+Ask him for a license, he wanted a permit-all kind of license.
+Also give a short introduction.
+
+Modified: branches/BRANCH_6-3/contrib/README
+===================================================================
+--- branches/BRANCH_6-3/contrib/README	2007-01-14 19:14:47 UTC (rev 5016)
++++ branches/BRANCH_6-3/contrib/README	2007-01-14 20:17:17 UTC (rev 5017)
+@@ -1,24 +1,28 @@
+-These are scripts to help you running fetchmail in special situations. 
+-Note: you're on your own using these -- I don't really understand them,
+-I'm just passing them along.
+-								--esr
++These are scripts or configuration snippets to help you running
++fetchmail in special situations.
+ 
+-0*.html:
++Note: you're on your own using these -- the fetchmail team undertakes no
++efforts in understanding them, they are just passing them along.
++								--esr, ma
++
++This file is currently unsorted. Use your pager's search function when
++looking for the description of a particular file in this directory.  --ma
++
++### 0*.html:
+ Messages from the archives of the old fetchmail-friends mailing list,
+ for off-line reading.
+ 
+-maildaemon:
+-
++### maildaemon:
+ Larry Fahnoe wrote this for driving fetchmail from cron.  It may be useful if
+ you want to force a PPP link up and then poll for mail at specified times.
+ I have rearranged it slightly to make it easier to configure.
+ 
+-novell:
++### novell:
+ 
+ Some mail from Dan Newcombe describing how to write a procmail rule that
+ will domainify Novell server names.
+ 
+-login & logout:
++### login & logout:
+ 
+ These are intended to help if you typically have multiple logins active.
+ Here's the script composer's original README:
+@@ -51,18 +55,18 @@
+     /usr/bin/fetchmail -q > /dev/null 2>&1
+ fi
+ 
+-ip-up:
++### ip-up:
+ 
+ A note from James Stevens about using fetchmail in an ip-up script without
+ disabling timeouts.
+ 
+-runfetchmail:
++### runfetchmail:
+ 
+ A shellscript front end for fetchmail that mails you various statistics on
+ the downloaded mail and the state of your folders.  A good example of what
+ you can do with your own front end.
+ 
+-fetchspool:
++### fetchspool:
+ 
+ If you find that the speed of forwarding to port 25 is limited by the
+ SMTP listener's speed, it may make sense to locally spool all the mail
+@@ -70,14 +74,14 @@
+ This shellscript aims to do exactly that.  It would be smarter to
+ figure out why sendmail is slow, however.
+ 
+-fetchsetup:
++### fetchsetup:
+ 
+ This is a shell script for creating a $HOME/.fetchmailrc file, it will ask
+ you some questions and based on your answers it will create a .fetchmailrc
+ file, fetchsetup is linux specific so it may not work on another operating
+ system.
+ 
+-mailqueue.pl:
++### mailqueue.pl:
+ 
+ This script will connect to your isp (if not already connected),
+ send any outgoing mail and retrieve any incoming mail.  If this
+@@ -85,28 +89,31 @@
+ when it is done.  By Bill Adams, <bill at evil.inetarena.com>.  The
+ latest version is carried at <http://evil.inetarena.com/>.
+ 
+-redhat_rc:
++### redhat_rc:
+ 
+ A fetchmail boot-time init file compatible with RedHat 5.1.  It leaves
+ fetchmail in background to get messages when you connect to your ISP.
+ The invoked fetchmail expects to find its configuration in
+ /etc/fetchmailrc, and must include the proper "interface" directive.
+ 
+-debian_rc:
++### debian_rc:
+ 
+ A fetchmail boot-time init file compatible with Debian.  It leaves
+ fetchmail in background to get messages when you connect to your ISP.
+ The invoked fetchmail expects to find its configuration in
+ /root/.fetchmailrc, and must include the proper "interface" directive.
+ 
+-start_dynamic_ppp:
++Matthias Andree adds: note that current Debian packages (as of January
++2007) ship with their own init files.
+ 
++### start_dynamic_ppp:
++
+ An admittedly scratchy ip-up script that Ryan Murray wrote to cope with
+ dynamic PPP addressing.  Will need some customizing.
+ 
+ 	http://www.inetarena.com/~badams/linux/programs/mailqueue.pl
+ 
+-getfetchmail:
++### getfetchmail:
+ 
+ Here's a script that gets Eric's most recent fetchmail source rpm,
+ downloads it and (if the rpm's not broken) rebuilds it.
+@@ -122,18 +129,18 @@
+ The script as written works on bash 2.  By John Summerfield
+ <summer at os2.ami.com.au>.
+ 
+-zsh-completion:
++### zsh-completion:
+ 
+ These commands set up command completion for fetchmail under zsh.
+ Jay Kominek <jay.kominek at colorado.edu>.
+ 
+-getmail/gotmail:
++### getmail/gotmail:
+ 
+ These scripts are front ends for fetchmail in daemon mode that can gather
+ log statistics and generate text or HTML reports.  See README.getmail for
+ details.  Scripts by Thomas Nesges <ThomaNesges at TNT-Computer.de>.
+ 
+-fetchmaildistrib:
++### fetchmaildistrib:
+ 
+ This script resolves the issue where the sysadmin polls for mail with fetchmail
+ only at set intervals, but where a user wishes to see his email right
+@@ -142,45 +149,51 @@
+ script is run to distribute the stuff into all user's ~/.fetchmailrc
+ files.
+ 
+-multidrop:
++### multidrop:
+ 
+ Martijn Lievaart's sendmail hacks to make multidrop reliable.
+ 
+-domino:
++### domino:
+ 
+ Gustavo Chaves <gustavo at cpqd.com.br> wrote this script to deal with 
+ the boundary-mismatch bug in Domino (see FAQ item X5).  If you use
+ this with --mda, the broken boundaries will be fixed and the result
+ passed to procmail.
+ 
+-toprocmail:
++### toprocmail:
+ 
+ John Lim Eng Hooi <jleh at mail.com> wrote this script, yet another 
+ mda plugin, to be used with fetchmail in foreground mode.  It displays
+ some header lines to stdout in color, passing them (and the rest of the
+ message content) to procmail.
+ 
+-preauth-harness:
++### preauth-harness:
+ 
+ Emmanuel Dreyfus's Perl test script for exercising IMAP PREAUTH
+ connections.  You'll have to patch in your username and password.
+ 
+-sm-hybrid:
++### sm-hybrid:
+ 
+ Peter 'Rattacresh' Backes sent this patch to improve the behavior of 
+ sendmail 8.11.0 with multidrop.
+ 
+-fetchmailnochda.pl
++### fetchmailnochda.pl
+ 
+ Watchdog script to check whether fetchmail is working in daemon mode.
+ 
+-mold-remover.py
++### mold-remover.py
+ 
+ A short python script to remove old read mail from a pop3 mailserver.
+ Dovetails with fetchmail with keep option.
+ Run it as a cron job...
+ 
+-PopDel.py
++### PopDel.py
+ 
+ PopDel stands for Pop Delete; this program deletes selected email from a
+ pop mail server. (By Richard Harris, improved by Joshua Crawford.)
++
++### fetchmail.logrotate (added 2007-01-14, --ma)
++
++A logrotate configuration file developped by Daniel Leidert for Debian,
++when he wanted to use /var/log/fetchmail instead of the usual syslog.
++It probably needs to be adjusted for use on other systems.
+
+Added: branches/BRANCH_6-3/contrib/fetchmail.logrotate
+===================================================================
+--- branches/BRANCH_6-3/contrib/fetchmail.logrotate	2007-01-14 19:14:47 UTC (rev 5016)
++++ branches/BRANCH_6-3/contrib/fetchmail.logrotate	2007-01-14 20:17:17 UTC (rev 5017)
+@@ -0,0 +1,56 @@
++# fetchmail.logrotate
++#
++# This is an example logrotate configuration file, editing required
++# before use. It is useful if you have fetchmail logging to a separate
++# file, /var/log/fetchmail as shown below.
++#
++# This file has been written for Debian Linux systems.
++#
++# Other systems will probably require adjustments, such as: how
++# often to rotate, how many files to retain, how to name them, if
++# compression is desired, which user and group the file should be
++# created with, and where the .pid file is. Check the logrotate
++# documentation for details.
++#                                        --Matthias Andree, 2007-01-14
++# ----------------------------------------------------------------------
++# The following license applies to the remainder of this file:
++#
++# Copyright (c) 2007 Daniel Leidert <daniel.leidert at wgdd.de>
++#
++# Permission is hereby granted, free of charge, to any person obtaining
++# a copy of this software and associated documentation files (the
++# "Software"), to deal in the Software without restriction, including
++# without limitation the rights to use, copy, modify, merge, publish,
++# distribute, sublicense, and/or sell copies of the Software, and to
++# permit persons to whom the Software is furnished to do so, subject to
++# the following conditions:
++#
++# The above copyright notice and this permission notice shall be
++# included in all copies or substantial portions of the Software.
++#
++# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
++# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
++# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
++# CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
++# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
++# SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++
++/var/log/fetchmail {
++    weekly
++    rotate 5
++    compress
++    missingok
++    notifempty
++    create 640 fetchmail root
++    sharedscripts
++    postrotate
++        if [ -f /var/run/fetchmail/fetchmail.pid ]; then \
++            if [ -x /usr/sbin/invoke-rc.d ]; then \
++                invoke-rc.d fetchmail restart > /dev/null; \
++            else \
++                /etc/init.d/fetchmail restart > /dev/null; \
++            fi; \
++        fi;
++    endscript
++}
+
+
+
+From svn at mknod.org  Wed Jan 17 20:24:14 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Wed, 17 Jan 2007 13:24:14 -0600 (CST)
+Subject: [fetchmail-svn] r5018 - branches/BRANCH_6-3
+Message-ID: <20070117192414.4A540218001@mknod.org>
+
+Author: m-a
+Date: 2007-01-17 13:24:13 -0600 (Wed, 17 Jan 2007)
+New Revision: 5018
+
+Modified:
+   branches/BRANCH_6-3/configure.ac
+Log:
+Add a few comments around Python detection.
+
+Modified: branches/BRANCH_6-3/configure.ac
+===================================================================
+--- branches/BRANCH_6-3/configure.ac	2007-01-14 20:17:17 UTC (rev 5017)
++++ branches/BRANCH_6-3/configure.ac	2007-01-17 19:24:13 UTC (rev 5018)
+@@ -27,6 +27,11 @@
+ )
+ 
+ dnl python is optional
++#
++# you can pass PYTHON=: in environment or on the command line
++# to disable python detection and continue without building/installing
++# fetchmail.conf -- be sure to check README.packaging, too!
++#
+ AM_PATH_PYTHON(2.0,,AC_MSG_WARN([Disabling fetchmailconf: python 2.0 or greater not found]))
+ AM_CONDITIONAL([HAVE_PYTHON], [test "$PYTHON" != :])
+ 
+
+
+

@@ -1,0 +1,345 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5389 - in branches/BRANCH_6-3: . po
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-August/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5389%20-%20in%20branches/BRANCH_6-3%3A%20.%20po&In-Reply-To=%3C20090804092711.38BE021F140%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000450.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5389 - in branches/BRANCH_6-3: . po</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5389%20-%20in%20branches/BRANCH_6-3%3A%20.%20po&In-Reply-To=%3C20090804092711.38BE021F140%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5389 - in branches/BRANCH_6-3: . po">svn at mknod.org
+       </A><BR>
+    <I>Tue Aug  4 11:27:11 CEST 2009</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000450.html">[fetchmail-svn] r5390 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#449">[ date ]</a>
+              <a href="thread.html#449">[ thread ]</a>
+              <a href="subject.html#449">[ subject ]</a>
+              <a href="author.html#449">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-08-04 04:27:10 -0500 (Tue, 04 Aug 2009)
+New Revision: 5389
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/po/de.po
+   branches/BRANCH_6-3/socket.c
+Log:
+Abort verification if Subject CommonName/AltName contains NUL.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-07-16 19:50:12 UTC (rev 5388)
++++ branches/BRANCH_6-3/NEWS	2009-08-04 09:27:10 UTC (rev 5389)
+@@ -51,6 +51,11 @@
+ 
+ fetchmail 6.3.11 (released XXXX-XX-XX - i. e. not yet):
+ 
++# SECURITY BUGFIXES
++* Fetchmail checks the Subject CommonName and Subject AltName X.509 certificate
++  fields for embedded NUL characters and aborts certificate verification to
++  counter recent SSL certificate verification attacks. Untested.
++
+ # BUGFIXES
+ * Remove the spurious message &quot;message delimiter found while scanning headers&quot;.
+   RFC-5322 syntax states that the delimiter is part of the body, and the body is
+
+Modified: branches/BRANCH_6-3/po/de.po
+===================================================================
+--- branches/BRANCH_6-3/po/de.po	2009-07-16 19:50:12 UTC (rev 5388)
++++ branches/BRANCH_6-3/po/de.po	2009-08-04 09:27:10 UTC (rev 5389)
+@@ -8,7 +8,7 @@
+ msgstr &quot;&quot;
+ &quot;Project-Id-Version: fetchmail 6.3.10-beta1\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2009-07-02 21:34+0200\n&quot;
++&quot;POT-Creation-Date: 2009-08-04 11:24+0200\n&quot;
+ &quot;PO-Revision-Date: 2009-05-26 00:53+0200\n&quot;
+ &quot;Last-Translator: Matthias Andree &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">matthias.andree at gmx.de</A>&gt;\n&quot;
+ &quot;Language-Team: Deutsch &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">de at li.org</A>&gt;\n&quot;
+@@ -2935,79 +2935,93 @@
+ msgid &quot;Bad certificate: Subject CommonName too long!\n&quot;
+ msgstr &quot;Ung&#252;ltiges Zertifikat: Server-CommonName zu lang!\n&quot;
+ 
+-#: socket.c:678
++#: socket.c:638
++msgid &quot;Bad certificate: Subject CommonName contains NUL, aborting!\n&quot;
++msgstr &quot;Ung&#252;ltiges Zertifikat: Subject-CommonName enth&#228;lt NUL, breche ab!\n&quot;
++
++#: socket.c:661
++msgid &quot;Bad certificate: Subject Alternative Name contains NUL, aborting!\n&quot;
++msgstr &quot;&quot;
++&quot;Ung&#252;ltiges Zertifikat: Subject-Alternative-Name enth&#228;lt NUL, breche ab!\n&quot;
++
++#: socket.c:666
+ #, c-format
++msgid &quot;Subject Alternative Name: %s\n&quot;
++msgstr &quot;\&quot;Subject Alternative Name\&quot;: %s\n&quot;
++
++#: socket.c:691
++#, c-format
+ msgid &quot;Server CommonName mismatch: %s != %s\n&quot;
+ msgstr &quot;Server-CommonName stimmt nicht &#252;berein: %s != %s\n&quot;
+ 
+-#: socket.c:684
++#: socket.c:697
+ msgid &quot;Server name not set, could not verify certificate!\n&quot;
+ msgstr &quot;Server-Name nicht gesetzt, konnte Zertifikat nicht verifizieren!\n&quot;
+ 
+-#: socket.c:689
++#: socket.c:702
+ msgid &quot;Unknown Server CommonName\n&quot;
+ msgstr &quot;Unbekannter Server-CommonName\n&quot;
+ 
+-#: socket.c:691
++#: socket.c:704
+ msgid &quot;Server name not specified in certificate!\n&quot;
+ msgstr &quot;Server-Name nicht in Zertifikat spezifiziert!\n&quot;
+ 
+-#: socket.c:703
++#: socket.c:716
+ msgid &quot;EVP_md5() failed!\n&quot;
+ msgstr &quot;EVP_md5() fehlgeschlagen!\n&quot;
+ 
+-#: socket.c:707
++#: socket.c:720
+ msgid &quot;Out of memory!\n&quot;
+ msgstr &quot;Kein Speicher mehr frei!\n&quot;
+ 
+-#: socket.c:715
++#: socket.c:728
+ msgid &quot;Digest text buffer too small!\n&quot;
+ msgstr &quot;Textpuffer f&#252;r Digest zu klein!\n&quot;
+ 
+-#: socket.c:721
++#: socket.c:734
+ #, c-format
+ msgid &quot;%s key fingerprint: %s\n&quot;
+ msgstr &quot;%s-Schl&#252;ssel-Fingerabdruck: %s\n&quot;
+ 
+-#: socket.c:725
++#: socket.c:738
+ #, c-format
+ msgid &quot;%s fingerprints match.\n&quot;
+ msgstr &quot;%s-Fingerabdr&#252;cke stimmen &#252;berein.\n&quot;
+ 
+-#: socket.c:727
++#: socket.c:740
+ #, c-format
+ msgid &quot;%s fingerprints do not match!\n&quot;
+ msgstr &quot;%s-Fingerabdr&#252;cke stimmen nicht &#252;berein!\n&quot;
+ 
+-#: socket.c:736
++#: socket.c:749
+ #, c-format
+ msgid &quot;Server certificate verification error: %s\n&quot;
+ msgstr &quot;Fehler bei Server-Zertifikat-&#220;berpr&#252;fung: %s\n&quot;
+ 
+-#: socket.c:742
++#: socket.c:755
+ #, c-format
+ msgid &quot;unknown issuer (first %d characters): %s\n&quot;
+ msgstr &quot;unbekannter Herausgeber (erste %d Zeichen): %s\n&quot;
+ 
+-#: socket.c:829
++#: socket.c:842
+ msgid &quot;File descriptor out of range for SSL&quot;
+ msgstr &quot;Datei-Deskriptor au&#223;erhalb des Bereichs f&#252;r SSL&quot;
+ 
+-#: socket.c:845
++#: socket.c:858
+ #, c-format
+ msgid &quot;Invalid SSL protocol '%s' specified, using default (SSLv23).\n&quot;
+ msgstr &quot;&quot;
+ &quot;Ung&#252;ltiges SSL-Protokoll &#8222;%s&#8220; angegeben, benutze Voreinstellung (SSLv23).\n&quot;
+ 
+-#: socket.c:921
++#: socket.c:934
+ msgid &quot;Certificate/fingerprint verification was somehow skipped!\n&quot;
+ msgstr &quot;Zertifikat-/Fingerabdruck-&#220;berpr&#252;fung wurde irgendwie &#252;bersprungen!\n&quot;
+ 
+-#: socket.c:999
++#: socket.c:1012
+ msgid &quot;Cygwin socket read retry\n&quot;
+ msgstr &quot;Cygwin-Socket-Lese-Wiederholung\n&quot;
+ 
+-#: socket.c:1002
++#: socket.c:1015
+ msgid &quot;Cygwin socket read retry failed!\n&quot;
+ msgstr &quot;Cygwin-Socket-Lese-Wiederholung fehlgeschlagen!\n&quot;
+ 
+@@ -3054,50 +3068,46 @@
+ msgid &quot;found Received address `%s'\n&quot;
+ msgstr &quot;&#8222;Received&#8220;-Adresse &#8222;%s&#8220; gefunden\n&quot;
+ 
+-#: transact.c:566
+-msgid &quot;message delimiter found while scanning headers\n&quot;
+-msgstr &quot;Nachrichtentrenner gefunden beim Scannen der Kopfzeilen\n&quot;
+-
+-#: transact.c:597
++#: transact.c:592
+ msgid &quot;incorrect header line found while scanning headers\n&quot;
+ msgstr &quot;inkorrekte Kopfzeile gefunden beim Scannen der Kopfzeilen\n&quot;
+ 
+-#: transact.c:599
++#: transact.c:594
+ #, c-format
+ msgid &quot;line: %s&quot;
+ msgstr &quot;Zeile: %s&quot;
+ 
+-#: transact.c:1138
++#: transact.c:1133
+ #, c-format
+ msgid &quot;no local matches, forwarding to %s\n&quot;
+ msgstr &quot;keine lokalen &#220;bereinstimmungen, Weiterleitung an %s\n&quot;
+ 
+-#: transact.c:1153
++#: transact.c:1148
+ msgid &quot;forwarding and deletion suppressed due to DNS errors\n&quot;
+ msgstr &quot;Weiterleiten und L&#246;schen wegen DNS-Fehlern unterdr&#252;ckt\n&quot;
+ 
+-#: transact.c:1263
++#: transact.c:1258
+ msgid &quot;writing RFC822 msgblk.headers\n&quot;
+ msgstr &quot;schreibe RFC822 msgblk.headers\n&quot;
+ 
+-#: transact.c:1282
++#: transact.c:1277
+ msgid &quot;no recipient addresses matched declared local names&quot;
+ msgstr &quot;keine Empf&#228;ngeradresse stimmt mit deklarierten lokalen Namen &#252;berein&quot;
+ 
+-#: transact.c:1289
++#: transact.c:1284
+ #, c-format
+ msgid &quot;recipient address %s didn't match any local name&quot;
+ msgstr &quot;Empf&#228;ngeradresse %s stimmt mit keinem lokalen Namen &#252;berein&quot;
+ 
+-#: transact.c:1298
++#: transact.c:1293
+ msgid &quot;message has embedded NULs&quot;
+ msgstr &quot;Nachricht hat eingebettete NUL-Zeichen&quot;
+ 
+-#: transact.c:1306
++#: transact.c:1301
+ msgid &quot;SMTP listener rejected local recipient addresses: &quot;
+ msgstr &quot;SMTP-Server lehnte Adressen mit lokalem Empf&#228;nger ab: &quot;
+ 
+-#: transact.c:1445
++#: transact.c:1440
+ msgid &quot;error writing message text\n&quot;
+ msgstr &quot;Fehler beim Schreiben des Nachrichtentextes\n&quot;
+ 
+@@ -3172,3 +3182,6 @@
+ #: xmalloc.c:47
+ msgid &quot;realloc failed\n&quot;
+ msgstr &quot;realloc fehlgeschlagen\n&quot;
++
++#~ msgid &quot;message delimiter found while scanning headers\n&quot;
++#~ msgstr &quot;Nachrichtentrenner gefunden beim Scannen der Kopfzeilen\n&quot;
+
+Modified: branches/BRANCH_6-3/socket.c
+===================================================================
+--- branches/BRANCH_6-3/socket.c	2009-07-16 19:50:12 UTC (rev 5388)
++++ branches/BRANCH_6-3/socket.c	2009-08-04 09:27:10 UTC (rev 5389)
+@@ -608,7 +608,7 @@
+ 
+ 	if (depth == 0 &amp;&amp; !_depth0ck) {
+ 		_depth0ck = 1;
+-		
++
+ 		if (outlevel &gt;= O_VERBOSE) {
+ 			if ((i = X509_NAME_get_text_by_NID(issuer, NID_organizationName, buf, sizeof(buf))) != -1) {
+ 				report(stdout, GT_(&quot;Issuer Organization: %s\n&quot;), buf);
+@@ -632,6 +632,12 @@
+ 				report(stderr, GT_(&quot;Bad certificate: Subject CommonName too long!\n&quot;));
+ 				return (0);
+ 			}
++			if ((size_t)i &gt; strlen(buf)) {
++				/* Name contains embedded NUL characters, so we complain. This is likely
++				 * a certificate spoofing attack. */
++				report(stderr, GT_(&quot;Bad certificate: Subject CommonName contains NUL, aborting!\n&quot;));
++				return 0;
++			}
+ 			if (_ssl_server_cname != NULL) {
+ 				char *p1 = buf;
+ 				char *p2 = _ssl_server_cname;
+@@ -643,14 +649,21 @@
+ 				 * first find a match among alternative names */
+ 				gens = (STACK_OF(GENERAL_NAME) *)X509_get_ext_d2i(x509_cert, NID_subject_alt_name, NULL, NULL);
+ 				if (gens) {
+-					int i, r;
+-					for (i = 0, r = sk_GENERAL_NAME_num(gens); i &lt; r; ++i) {
+-						const GENERAL_NAME *gn = sk_GENERAL_NAME_value(gens, i);
++					int j, r;
++					for (j = 0, r = sk_GENERAL_NAME_num(gens); j &lt; r; ++j) {
++						const GENERAL_NAME *gn = sk_GENERAL_NAME_value(gens, j);
+ 						if (gn-&gt;type == GEN_DNS) {
+ 							char *p1 = (char *)gn-&gt;d.ia5-&gt;data;
+ 							char *p2 = _ssl_server_cname;
++							/* Name contains embedded NUL characters, so we complain. This
++							 * is likely a certificate spoofing attack. */
++							if ((size_t)gn-&gt;d.ia5-&gt;length != strlen(p1)) {
++								report(stderr, GT_(&quot;Bad certificate: Subject Alternative Name contains NUL, aborting!\n&quot;));
++								sk_GENERAL_NAME_free(gens);
++								return 0;
++							}
+ 							if (outlevel &gt;= O_VERBOSE)
+-								report(stderr, &quot;Subject Alternative Name: %s\n&quot;, p1);
++								report(stdout, GT_(&quot;Subject Alternative Name: %s\n&quot;), p1);
+ 							if (*p1 == '*') {
+ 								++p1;
+ 								n = strlen(p2) - strlen(p1);
+@@ -669,9 +682,9 @@
+ 					n = strlen(p2) - strlen(p1);
+ 					if (n &gt;= 0)
+ 						p2 += n;
+-				}	
++				}
+ 				if (0 == strcasecmp(p1, p2)) {
+-				  matched = 1;
++					matched = 1;
+ 				}
+ 				if (!matched) {
+ 					report(stderr,
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000450.html">[fetchmail-svn] r5390 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#449">[ date ]</a>
+              <a href="thread.html#449">[ thread ]</a>
+              <a href="subject.html#449">[ subject ]</a>
+              <a href="author.html#449">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

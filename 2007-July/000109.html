@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5119 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2007-July/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5119%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20070729093623.4D991630002%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000108.html">
+   <LINK REL="Next"  HREF="000110.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5119 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5119%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20070729093623.4D991630002%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5119 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Sun Jul 29 11:36:23 CEST 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000108.html">[fetchmail-svn] r5118 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000110.html">[fetchmail-svn] r5120 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#109">[ date ]</a>
+              <a href="thread.html#109">[ thread ]</a>
+              <a href="subject.html#109">[ subject ]</a>
+              <a href="author.html#109">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2007-07-29 04:36:23 -0500 (Sun, 29 Jul 2007)
+New Revision: 5119
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/sink.c
+Log:
+Fix long-standing (since r2215/v4.6.8) crash on NULL pointer dereference
+when the local SMTP listener rejects a warning message of fetchmail's.
+Report and suggested fix by Earl Chew.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2007-07-29 09:18:19 UTC (rev 5118)
++++ branches/BRANCH_6-3/NEWS	2007-07-29 09:36:23 UTC (rev 5119)
+@@ -44,6 +44,14 @@
+ 
+ fetchmail 6.3.9 (not yet released):
+ 
++# CRITICAL BUG FIX:
++* When fetchmail tries to inject a warning message it created itself, and the
++  message is refused by the SMTP listener, fetchmail dereferences a NULL
++  pointer and crashes. Report and fix by Earl Chew.
++  This bug was apparently introduced on 1998-11-27 when the bouncemail facility
++  was modularized by ESR. The bug made then its appearance in fetchmail release
++  4.6.8.
++
+ # BUG FIXES:
+ * The configure script will additionally check for 'dn_skipname', to fix build
+   failures with &#181;Clibc. The new check still recognizes the resolver libraries on
+
+Modified: branches/BRANCH_6-3/sink.c
+===================================================================
+--- branches/BRANCH_6-3/sink.c	2007-07-29 09:18:19 UTC (rev 5118)
++++ branches/BRANCH_6-3/sink.c	2007-07-29 09:36:23 UTC (rev 5119)
+@@ -262,7 +262,7 @@
+     const char *md1 = &quot;MAILER-DAEMON&quot;, *md2 = &quot;MAILER-DAEMON@&quot;;
+ 
+     /* don't bounce in reply to undeliverable bounces */
+-    if (!msg-&gt;return_path[0] ||
++    if (!msg || !msg-&gt;return_path[0] ||
+ 	strcmp(msg-&gt;return_path, &quot;&lt;&gt;&quot;) == 0 ||
+ 	strcasecmp(msg-&gt;return_path, md1) == 0 ||
+ 	strncasecmp(msg-&gt;return_path, md2, strlen(md2)) == 0)
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000108.html">[fetchmail-svn] r5118 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000110.html">[fetchmail-svn] r5120 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#109">[ date ]</a>
+              <a href="thread.html#109">[ thread ]</a>
+              <a href="subject.html#109">[ subject ]</a>
+              <a href="author.html#109">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

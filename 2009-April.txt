@@ -1,0 +1,964 @@
+From svn at mknod.org  Thu Apr  9 22:46:39 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu,  9 Apr 2009 15:46:39 -0500
+Subject: [fetchmail-svn] r5267 - branches/BRANCH_6-3
+Message-ID: <20090409204640.1A0E321F02B@mknod.org>
+
+Author: m-a
+Date: 2009-04-09 15:46:39 -0500 (Thu, 09 Apr 2009)
+New Revision: 5267
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/driver.c
+   branches/BRANCH_6-3/fetchmail.man
+Log:
+Fix pre-/post-connect error/signal reporting.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-02-18 13:28:33 UTC (rev 5266)
++++ branches/BRANCH_6-3/NEWS	2009-04-09 20:46:39 UTC (rev 5267)
+@@ -48,6 +48,10 @@
+ 
+ fetchmail 6.3.10 (not yet released):
+ 
++# INCOMPATIBLE BUGFIXES
++* Use PS_PROTOCOL (4) rather than PS_SYNTAX (5) exit status when a pre- or
++  post-connect command fails.
++
+ # BUGFIXES
+ * Fix misuse of canonical autoconf target as _TARGET when it should have been
+   _HOST. Report and patch courtesy of Diego E. "Flameeyes" Petten?.
+@@ -56,6 +60,8 @@
+   Michelle Konzack, Debian Bug#508667.
+ * Do not overlap source and destination fields in snprintf() in interface.c.
+   Courtesy of Nico Golde, Debian.
++* When a pre- or post-connect command fails, now report the exit status or
++  termination signal properly through sys/wait.h macros.
+ 
+ # CHANGES
+ * Make the comparison of the SSL fingerprints case insensitive, to
+
+Modified: branches/BRANCH_6-3/driver.c
+===================================================================
+--- branches/BRANCH_6-3/driver.c	2009-02-18 13:28:33 UTC (rev 5266)
++++ branches/BRANCH_6-3/driver.c	2009-04-09 20:46:39 UTC (rev 5267)
+@@ -935,9 +935,13 @@
+ 	/* execute pre-initialization command, if any */
+ 	if (ctl->preconnect && (err = system(ctl->preconnect)))
+ 	{
+-	    report(stderr, 
+-		   GT_("pre-connection command failed with status %d\n"), err);
+-	    err = PS_SYNTAX;
++	    if (WIFSIGNALED(err))
++		report(stderr,
++			GT_("pre-connection command terminated with signal %d\n"), WTERMSIG(err));
++	    else
++		report(stderr,
++			GT_("pre-connection command failed with status %d\n"), WEXITSTATUS(err));
++	    err = PS_PROTOCOL;
+ 	    goto closeUp;
+ 	}
+ 
+@@ -1566,9 +1570,12 @@
+     /* execute wrapup command, if any */
+     if (ctl->postconnect && (tmperr = system(ctl->postconnect)))
+     {
+-	report(stderr, GT_("post-connection command failed with status %d\n"), tmperr);
++	if (WIFSIGNALED(tmperr))
++	    report(stderr, GT_("post-connection command terminated with signal %d\n"), WTERMSIG(tmperr));
++	else
++	    report(stderr, GT_("post-connection command failed with status %d\n"), WEXITSTATUS(tmperr));
+ 	if (err == PS_SUCCESS)
+-	    err = PS_SYNTAX;
++	    err = PS_PROTOCOL;
+     }
+ 
+     set_timeout(0); /* cancel any pending alarm */
+
+Modified: branches/BRANCH_6-3/fetchmail.man
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.man	2009-02-18 13:28:33 UTC (rev 5266)
++++ branches/BRANCH_6-3/fetchmail.man	2009-04-09 20:46:39 UTC (rev 5267)
+@@ -2532,10 +2532,14 @@
+ standard input attached to a terminal and could not prompt for a
+ missing password.
+ .IP 4
+-Some sort of fatal protocol error was detected.
++Some sort of fatal protocol error was detected. Since 6.3.10, this
++includes non-zero exit status or signal-triggered termination of a pre-
++or post-connect command.
+ .IP 5
+ There was a syntax error in the arguments to
+ .IR fetchmail .
++Up to and including 6.3.9, this was also used if the pre- or
++post-connect command failed.
+ .IP 6
+ The run control file had bad permissions.
+ .IP 7
+
+
+
+From svn at mknod.org  Fri Apr 10 07:15:15 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Fri, 10 Apr 2009 00:15:15 -0500
+Subject: [fetchmail-svn] r5267 - branches/BRANCH_6-3
+Message-ID: <20090410051515.5AE9321F02B@mknod.org>
+
+Author: root
+Date: 2009-04-10 00:15:15 -0500 (Fri, 10 Apr 2009)
+New Revision: 5267
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/driver.c
+   branches/BRANCH_6-3/fetchmail.man
+Log:
+Fix pre-/post-connect error/signal reporting.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-02-18 13:28:33 UTC (rev 5266)
++++ branches/BRANCH_6-3/NEWS	2009-04-10 05:15:15 UTC (rev 5267)
+@@ -48,6 +48,10 @@
+ 
+ fetchmail 6.3.10 (not yet released):
+ 
++# INCOMPATIBLE BUGFIXES
++* Use PS_PROTOCOL (4) rather than PS_SYNTAX (5) exit status when a pre- or
++  post-connect command fails.
++
+ # BUGFIXES
+ * Fix misuse of canonical autoconf target as _TARGET when it should have been
+   _HOST. Report and patch courtesy of Diego E. "Flameeyes" Petten?.
+@@ -56,6 +60,8 @@
+   Michelle Konzack, Debian Bug#508667.
+ * Do not overlap source and destination fields in snprintf() in interface.c.
+   Courtesy of Nico Golde, Debian.
++* When a pre- or post-connect command fails, now report the exit status or
++  termination signal properly through sys/wait.h macros.
+ 
+ # CHANGES
+ * Make the comparison of the SSL fingerprints case insensitive, to
+
+Modified: branches/BRANCH_6-3/driver.c
+===================================================================
+--- branches/BRANCH_6-3/driver.c	2009-02-18 13:28:33 UTC (rev 5266)
++++ branches/BRANCH_6-3/driver.c	2009-04-10 05:15:15 UTC (rev 5267)
+@@ -935,9 +935,13 @@
+ 	/* execute pre-initialization command, if any */
+ 	if (ctl->preconnect && (err = system(ctl->preconnect)))
+ 	{
+-	    report(stderr, 
+-		   GT_("pre-connection command failed with status %d\n"), err);
+-	    err = PS_SYNTAX;
++	    if (WIFSIGNALED(err))
++		report(stderr,
++			GT_("pre-connection command terminated with signal %d\n"), WTERMSIG(err));
++	    else
++		report(stderr,
++			GT_("pre-connection command failed with status %d\n"), WEXITSTATUS(err));
++	    err = PS_PROTOCOL;
+ 	    goto closeUp;
+ 	}
+ 
+@@ -1566,9 +1570,12 @@
+     /* execute wrapup command, if any */
+     if (ctl->postconnect && (tmperr = system(ctl->postconnect)))
+     {
+-	report(stderr, GT_("post-connection command failed with status %d\n"), tmperr);
++	if (WIFSIGNALED(tmperr))
++	    report(stderr, GT_("post-connection command terminated with signal %d\n"), WTERMSIG(tmperr));
++	else
++	    report(stderr, GT_("post-connection command failed with status %d\n"), WEXITSTATUS(tmperr));
+ 	if (err == PS_SUCCESS)
+-	    err = PS_SYNTAX;
++	    err = PS_PROTOCOL;
+     }
+ 
+     set_timeout(0); /* cancel any pending alarm */
+
+Modified: branches/BRANCH_6-3/fetchmail.man
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.man	2009-02-18 13:28:33 UTC (rev 5266)
++++ branches/BRANCH_6-3/fetchmail.man	2009-04-10 05:15:15 UTC (rev 5267)
+@@ -2532,10 +2532,14 @@
+ standard input attached to a terminal and could not prompt for a
+ missing password.
+ .IP 4
+-Some sort of fatal protocol error was detected.
++Some sort of fatal protocol error was detected. Since 6.3.10, this
++includes non-zero exit status or signal-triggered termination of a pre-
++or post-connect command.
+ .IP 5
+ There was a syntax error in the arguments to
+ .IR fetchmail .
++Up to and including 6.3.9, this was also used if the pre- or
++post-connect command failed.
+ .IP 6
+ The run control file had bad permissions.
+ .IP 7
+
+
+
+From svn at mknod.org  Thu Apr 23 16:39:11 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 23 Apr 2009 09:39:11 -0500
+Subject: [fetchmail-svn] r5268 - branches/BRANCH_6-3
+Message-ID: <20090423143911.5D94E21F02E@mknod.org>
+
+Author: m-a
+Date: 2009-04-23 09:39:11 -0500 (Thu, 23 Apr 2009)
+New Revision: 5268
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Drop and close Debian Bug#480851.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2009-04-09 20:46:39 UTC (rev 5267)
++++ branches/BRANCH_6-3/TODO.txt	2009-04-23 14:39:11 UTC (rev 5268)
+@@ -3,7 +3,6 @@
+   issue)
+ - publish SA-2007-02 after release
+ - Debian Bug #475239, MIME decoder may break up words (need to quote results)
+-- Debian Bug #480851, stuck mail from gandi.net (IMAP; Dovecot) http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=480851
+ - Replace sscanf/fscanf by functions that do range checking (strtol/strtoul) :-/
+   See http://sourceware.org/bugzilla/show_bug.cgi?id=6453
+ - Ubuntu Launchpad Bug #64152, fetchmailconf fails if fetchmail compiled
+
+
+
+From svn at mknod.org  Thu Apr 23 16:39:48 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 23 Apr 2009 09:39:48 -0500
+Subject: [fetchmail-svn] r5269 - branches/BRANCH_6-3
+Message-ID: <20090423143948.E154821F02E@mknod.org>
+
+Author: m-a
+Date: 2009-04-23 09:39:48 -0500 (Thu, 23 Apr 2009)
+New Revision: 5269
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/imap.c
+Log:
+Support NIL as body length (Exchange). Fixes Berlios Bug #11980.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-04-23 14:39:11 UTC (rev 5268)
++++ branches/BRANCH_6-3/NEWS	2009-04-23 14:39:48 UTC (rev 5269)
+@@ -62,6 +62,8 @@
+   Courtesy of Nico Golde, Debian.
+ * When a pre- or post-connect command fails, now report the exit status or
+   termination signal properly through sys/wait.h macros.
++* When acquiring a body, understand NIL ("no such data item"), as returned by
++  some MS Exchange versions. Fixes BerliOS Bug #11980 by KB Sriram.
+ 
+ # CHANGES
+ * Make the comparison of the SSL fingerprints case insensitive, to
+
+Modified: branches/BRANCH_6-3/imap.c
+===================================================================
+--- branches/BRANCH_6-3/imap.c	2009-04-23 14:39:11 UTC (rev 5268)
++++ branches/BRANCH_6-3/imap.c	2009-04-23 14:39:48 UTC (rev 5269)
+@@ -1153,6 +1153,13 @@
+     if (num != number)
+ 	return(PS_ERROR);
+ 
++    /* Understand "NIL" as length => no body present
++     * (MS Exchange, BerliOS Bug #11980) */
++    if (strstr(buf+10, "NIL)")) {
++	    *lenp = 0;
++	    return PS_SUCCESS;
++    }
++
+     /*
+      * Try to extract a length from the FETCH response.  RFC2060 requires
+      * it to be present, but at least one IMAP server (Novell GroupWise)
+
+
+
+From svn at mknod.org  Fri Apr 24 07:15:11 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Fri, 24 Apr 2009 00:15:11 -0500
+Subject: [fetchmail-svn] r5268 - branches/BRANCH_6-3
+Message-ID: <20090424051511.3A81B21F02E@mknod.org>
+
+Author: root
+Date: 2009-04-24 00:15:11 -0500 (Fri, 24 Apr 2009)
+New Revision: 5268
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Drop and close Debian Bug#480851.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2009-04-09 20:46:39 UTC (rev 5267)
++++ branches/BRANCH_6-3/TODO.txt	2009-04-24 05:15:11 UTC (rev 5268)
+@@ -3,7 +3,6 @@
+   issue)
+ - publish SA-2007-02 after release
+ - Debian Bug #475239, MIME decoder may break up words (need to quote results)
+-- Debian Bug #480851, stuck mail from gandi.net (IMAP; Dovecot) http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=480851
+ - Replace sscanf/fscanf by functions that do range checking (strtol/strtoul) :-/
+   See http://sourceware.org/bugzilla/show_bug.cgi?id=6453
+ - Ubuntu Launchpad Bug #64152, fetchmailconf fails if fetchmail compiled
+
+
+
+From svn at mknod.org  Fri Apr 24 07:15:11 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Fri, 24 Apr 2009 00:15:11 -0500
+Subject: [fetchmail-svn] r5269 - branches/BRANCH_6-3
+Message-ID: <20090424051511.DC9EB21F030@mknod.org>
+
+Author: root
+Date: 2009-04-24 00:15:11 -0500 (Fri, 24 Apr 2009)
+New Revision: 5269
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/imap.c
+Log:
+Support NIL as body length (Exchange). Fixes Berlios Bug #11980.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-04-23 14:39:11 UTC (rev 5268)
++++ branches/BRANCH_6-3/NEWS	2009-04-24 05:15:11 UTC (rev 5269)
+@@ -62,6 +62,8 @@
+   Courtesy of Nico Golde, Debian.
+ * When a pre- or post-connect command fails, now report the exit status or
+   termination signal properly through sys/wait.h macros.
++* When acquiring a body, understand NIL ("no such data item"), as returned by
++  some MS Exchange versions. Fixes BerliOS Bug #11980 by KB Sriram.
+ 
+ # CHANGES
+ * Make the comparison of the SSL fingerprints case insensitive, to
+
+Modified: branches/BRANCH_6-3/imap.c
+===================================================================
+--- branches/BRANCH_6-3/imap.c	2009-04-23 14:39:11 UTC (rev 5268)
++++ branches/BRANCH_6-3/imap.c	2009-04-24 05:15:11 UTC (rev 5269)
+@@ -1153,6 +1153,13 @@
+     if (num != number)
+ 	return(PS_ERROR);
+ 
++    /* Understand "NIL" as length => no body present
++     * (MS Exchange, BerliOS Bug #11980) */
++    if (strstr(buf+10, "NIL)")) {
++	    *lenp = 0;
++	    return PS_SUCCESS;
++    }
++
+     /*
+      * Try to extract a length from the FETCH response.  RFC2060 requires
+      * it to be present, but at least one IMAP server (Novell GroupWise)
+
+
+
+From svn at mknod.org  Mon Apr 27 13:23:58 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Mon, 27 Apr 2009 06:23:58 -0500
+Subject: [fetchmail-svn] r5270 - branches/BRANCH_6-3
+Message-ID: <20090427112358.7FCDB21F02D@mknod.org>
+
+Author: m-a
+Date: 2009-04-27 06:23:58 -0500 (Mon, 27 Apr 2009)
+New Revision: 5270
+
+Modified:
+   branches/BRANCH_6-3/fetchmail-FAQ.html
+Log:
+Revise FAQ G3 (support). Make intro more catchy.
+
+Make the introduction a bit more catchy so as to guide people to G3
+right away.
+
+In G3:
+- some information was given twice. Remove the duplication.
+- Add env LC_ALL=C so that people send in information in English and
+  POSIX locale, we cannot handle i18n-ed reports.
+- Remove IMAP advocacy. Doesn't belong here, and ESR's IMAP-over-POP3
+  advocacy is neither technically substantiated nor warranted today.
+
+Modified: branches/BRANCH_6-3/fetchmail-FAQ.html
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-FAQ.html	2009-04-23 14:39:48 UTC (rev 5269)
++++ branches/BRANCH_6-3/fetchmail-FAQ.html	2009-04-27 11:23:58 UTC (rev 5270)
+@@ -31,9 +31,9 @@
+ <hr/>
+ <h1 id="FAQ">Frequently Asked Questions About Fetchmail</h1>
+ 
+-<p>Before reporting any bug, please read <a href="#G3">G3</a> for
+-advice on how to include diagnostic information that will get your
+-bug fixed as quickly as possible.</p>
++<p><strong>Support? Bug reports?</strong> Please read <a 
++href="#G3">G3</a> for what information is required to get your problem 
++solved as quickly as possible.</p>
+ 
+ <p>Note that this FAQ is occasionally updated from the SVN repository
+ and speaks in the past tense ("since") about a fetchmail release that is
+@@ -354,17 +354,22 @@
+ name and origin of the RPM or other binary package you
+ installed.</li>
+ 
+-<li>A copy of your POP or IMAP server's greeting line.</li>
+-
+ <li>The name and version of the SMTP listener or MDA you are
+ forwarding to.</li>
+ 
+ <li>Any command-line options you used.</li>
+ 
+-<li>The output of fetchmail -V called with whatever other
+-command-line options you used.</li>
++<li>The output of <kbd>env LC_ALL=C fetchmail -V</kbd> called with 
++whatever other command-line options you used.</li>
+ 
+-<li><strong>The output of <kbd>fetchmail --nodetach -vvv --nosyslog</kbd> with whatever other command-line options you use routinely.</strong></li>
++<li><strong>The output of <kbd>env LC_ALL=C fetchmail --nodetach -vvv 
++--nosyslog</kbd> with whatever other command-line options you use 
++routinely.</strong>
++ <p>It is very important that the transcript include your
++POP/IMAP server's greeting line, so I can identify it in case of server
++problems. This transcript will not reveal your passwords, which are
++specially masked out precisely so transcripts can be passed around.</p>
++</li>
+ </ol>
+ 
+ <p>If you have FTP access to your remote mail account, and you have
+@@ -382,22 +387,17 @@
+ failure was introduced in the lower half. Now bisect that half in
+ the same way. In a very few tries, you should be able to identify
+ the exact adjacent pair of versions between which your bug was
+-introduced &ndash; and with information like that, I can usually come up
+-with a fix very quickly.</p>
++introduced. <STRONG>Please</STRONG> include session transcripts (as 
++described in the last bullet point above) of <strong>both
++the working and failing versions.</strong> Often, the source of the problem
++can instantly identified by looking at the differences in protocol
++transactions.</p>
+ 
+-<p>Another useful thing you can do, if you're using POP3, is to
+-test for IMAP4 support on your mailserver using the autoprobe
+-function of fetchmailconf. If you have IMAP4, and fetchmailconf
+-doesn't tell you it's broken, switch immediately. POP3 is a weak,
+-poorly-designed protocol with chronic problems, and the later
+-versions after RFC1725 actually get worse rather than better.
+-Changing over to IMAP4 may well make your problem go away &ndash; and if
+-your ISP doesn't have IMAP4 support, bug them to supply it.</p>
+-
+-<p>It is helpful if you include your .fetchmailrc file, but not
++<p>It may helpful if you include your .fetchmailrc file, but not
+ necessary unless your symptom seems to involve an error in
+ configuration parsing. If you do send in your .fetchmailrc, mask
+-the passwords first!</p>
++the passwords first! Otherwise, fetchmail -V &ndash; as directed above 
++&ndash; will usually suffice.</p>
+ 
+ <p>If fetchmail seems to run and fetch mail, but the headers look
+ mangled (that is, headers are missing or blank lines are inserted
+@@ -408,19 +408,6 @@
+ mail chain to screw up that look like fetchmail's fault, but you
+ may be able to fix these by tweaking your configuration.</p>
+ 
+-<p>A transcript of the failed session with "--nosyslog --nodetach -vvv"
+-(yes, that's <em>three</em> -v options, enabling debug mode) will almost
+-always be useful. It is very important that the transcript include your
+-POP/IMAP server's greeting line, so I can identify it in case of server
+-problems. This transcript will not reveal your passwords, which are
+-specially masked out precisely so transcripts can be passed around.</p>
+-
+-<p>If you upgraded your fetchmail and something broke, you should
+-include session transcripts with "--nosyslog --nodetach -vvv" of both
+-the working and failing versions. Very often, the source of the problem
+-can instantly identified by looking at the differences in protocol
+-transactions.</p>
+-
+ <p>If the bug involves a core dump or hang, a gdb stack trace is
+ good to have. (Bear in mind that you can attach gdb to a running
+ but hung process by giving the process ID as a second argument.)
+
+
+
+From svn at mknod.org  Tue Apr 28 07:15:14 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Tue, 28 Apr 2009 00:15:14 -0500
+Subject: [fetchmail-svn] r5270 - branches/BRANCH_6-3
+Message-ID: <20090428051514.2012C21F048@mknod.org>
+
+Author: root
+Date: 2009-04-28 00:15:13 -0500 (Tue, 28 Apr 2009)
+New Revision: 5270
+
+Modified:
+   branches/BRANCH_6-3/fetchmail-FAQ.html
+Log:
+Revise FAQ G3 (support). Make intro more catchy.
+
+Make the introduction a bit more catchy so as to guide people to G3
+right away.
+
+In G3:
+- some information was given twice. Remove the duplication.
+- Add env LC_ALL=C so that people send in information in English and
+  POSIX locale, we cannot handle i18n-ed reports.
+- Remove IMAP advocacy. Doesn't belong here, and ESR's IMAP-over-POP3
+  advocacy is neither technically substantiated nor warranted today.
+
+Modified: branches/BRANCH_6-3/fetchmail-FAQ.html
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-FAQ.html	2009-04-23 14:39:48 UTC (rev 5269)
++++ branches/BRANCH_6-3/fetchmail-FAQ.html	2009-04-28 05:15:13 UTC (rev 5270)
+@@ -31,9 +31,9 @@
+ <hr/>
+ <h1 id="FAQ">Frequently Asked Questions About Fetchmail</h1>
+ 
+-<p>Before reporting any bug, please read <a href="#G3">G3</a> for
+-advice on how to include diagnostic information that will get your
+-bug fixed as quickly as possible.</p>
++<p><strong>Support? Bug reports?</strong> Please read <a 
++href="#G3">G3</a> for what information is required to get your problem 
++solved as quickly as possible.</p>
+ 
+ <p>Note that this FAQ is occasionally updated from the SVN repository
+ and speaks in the past tense ("since") about a fetchmail release that is
+@@ -354,17 +354,22 @@
+ name and origin of the RPM or other binary package you
+ installed.</li>
+ 
+-<li>A copy of your POP or IMAP server's greeting line.</li>
+-
+ <li>The name and version of the SMTP listener or MDA you are
+ forwarding to.</li>
+ 
+ <li>Any command-line options you used.</li>
+ 
+-<li>The output of fetchmail -V called with whatever other
+-command-line options you used.</li>
++<li>The output of <kbd>env LC_ALL=C fetchmail -V</kbd> called with 
++whatever other command-line options you used.</li>
+ 
+-<li><strong>The output of <kbd>fetchmail --nodetach -vvv --nosyslog</kbd> with whatever other command-line options you use routinely.</strong></li>
++<li><strong>The output of <kbd>env LC_ALL=C fetchmail --nodetach -vvv 
++--nosyslog</kbd> with whatever other command-line options you use 
++routinely.</strong>
++ <p>It is very important that the transcript include your
++POP/IMAP server's greeting line, so I can identify it in case of server
++problems. This transcript will not reveal your passwords, which are
++specially masked out precisely so transcripts can be passed around.</p>
++</li>
+ </ol>
+ 
+ <p>If you have FTP access to your remote mail account, and you have
+@@ -382,22 +387,17 @@
+ failure was introduced in the lower half. Now bisect that half in
+ the same way. In a very few tries, you should be able to identify
+ the exact adjacent pair of versions between which your bug was
+-introduced &ndash; and with information like that, I can usually come up
+-with a fix very quickly.</p>
++introduced. <STRONG>Please</STRONG> include session transcripts (as 
++described in the last bullet point above) of <strong>both
++the working and failing versions.</strong> Often, the source of the problem
++can instantly identified by looking at the differences in protocol
++transactions.</p>
+ 
+-<p>Another useful thing you can do, if you're using POP3, is to
+-test for IMAP4 support on your mailserver using the autoprobe
+-function of fetchmailconf. If you have IMAP4, and fetchmailconf
+-doesn't tell you it's broken, switch immediately. POP3 is a weak,
+-poorly-designed protocol with chronic problems, and the later
+-versions after RFC1725 actually get worse rather than better.
+-Changing over to IMAP4 may well make your problem go away &ndash; and if
+-your ISP doesn't have IMAP4 support, bug them to supply it.</p>
+-
+-<p>It is helpful if you include your .fetchmailrc file, but not
++<p>It may helpful if you include your .fetchmailrc file, but not
+ necessary unless your symptom seems to involve an error in
+ configuration parsing. If you do send in your .fetchmailrc, mask
+-the passwords first!</p>
++the passwords first! Otherwise, fetchmail -V &ndash; as directed above 
++&ndash; will usually suffice.</p>
+ 
+ <p>If fetchmail seems to run and fetch mail, but the headers look
+ mangled (that is, headers are missing or blank lines are inserted
+@@ -408,19 +408,6 @@
+ mail chain to screw up that look like fetchmail's fault, but you
+ may be able to fix these by tweaking your configuration.</p>
+ 
+-<p>A transcript of the failed session with "--nosyslog --nodetach -vvv"
+-(yes, that's <em>three</em> -v options, enabling debug mode) will almost
+-always be useful. It is very important that the transcript include your
+-POP/IMAP server's greeting line, so I can identify it in case of server
+-problems. This transcript will not reveal your passwords, which are
+-specially masked out precisely so transcripts can be passed around.</p>
+-
+-<p>If you upgraded your fetchmail and something broke, you should
+-include session transcripts with "--nosyslog --nodetach -vvv" of both
+-the working and failing versions. Very often, the source of the problem
+-can instantly identified by looking at the differences in protocol
+-transactions.</p>
+-
+ <p>If the bug involves a core dump or hang, a gdb stack trace is
+ good to have. (Bear in mind that you can attach gdb to a running
+ but hung process by giving the process ID as a second argument.)
+
+
+
+From svn at mknod.org  Wed Apr 29 14:34:43 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Wed, 29 Apr 2009 07:34:43 -0500
+Subject: [fetchmail-svn] r5271 - branches/BRANCH_6-3
+Message-ID: <20090429123444.1502321F048@mknod.org>
+
+Author: m-a
+Date: 2009-04-29 07:34:43 -0500 (Wed, 29 Apr 2009)
+New Revision: 5271
+
+Modified:
+   branches/BRANCH_6-3/fetchmail-FAQ.html
+Log:
+Rename G3 item so it includes support.
+
+Modified: branches/BRANCH_6-3/fetchmail-FAQ.html
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-FAQ.html	2009-04-27 11:23:58 UTC (rev 5270)
++++ branches/BRANCH_6-3/fetchmail-FAQ.html	2009-04-29 12:34:43 UTC (rev 5271)
+@@ -70,7 +70,7 @@
+ 
+ <a href="#G1">G1. What is fetchmail and why should I bother?</a><br/>
+ <a href="#G2">G2. Where do I find the latest FAQ and fetchmail sources?</a><br/>
+-<a href="#G3">G3. I think I've found a bug. Will you fix it?</a><br/>
++<a href="#G3">G3. Something doesn't work/I think I've found a bug. Will you fix it?</a><br/>
+ <a href="#G4">G4. I have this idea for a neat feature. Will you add it?</a><br/>
+ <a href="#G5">G5. I want to make fetchmail remove kept mail after some days.</a><br/>
+ <a href="#G6">G6. Is there a mailing list for exchanging tips?</a><br/>
+@@ -334,8 +334,7 @@
+ distribution. Because it freezes at distribution release time, it
+ may not be completely current.</p>
+ 
+-<h2><a id="G3" name="G3">G3. I think I've found a bug. Will you fix
+-it?</a></h2>
++<h2><a id="G3" name="G3">G3. Something does not work/I think I've found a bug. Will you fix it?</a></h2>
+ 
+ <p>The first thing you should to is to upgrade to the newest version of
+ fetchmail, and then see if the problem reproduces. So you'll probably
+
+
+
+From svn at mknod.org  Wed Apr 29 14:34:54 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Wed, 29 Apr 2009 07:34:54 -0500
+Subject: [fetchmail-svn] r5272 - branches/BRANCH_6-3
+Message-ID: <20090429123454.368B421F048@mknod.org>
+
+Author: m-a
+Date: 2009-04-29 07:34:54 -0500 (Wed, 29 Apr 2009)
+New Revision: 5272
+
+Modified:
+   branches/BRANCH_6-3/fetchmail-FAQ.html
+Log:
+Make document valid XHTML again.
+
+Modified: branches/BRANCH_6-3/fetchmail-FAQ.html
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-FAQ.html	2009-04-29 12:34:43 UTC (rev 5271)
++++ branches/BRANCH_6-3/fetchmail-FAQ.html	2009-04-29 12:34:54 UTC (rev 5272)
+@@ -386,7 +386,7 @@
+ failure was introduced in the lower half. Now bisect that half in
+ the same way. In a very few tries, you should be able to identify
+ the exact adjacent pair of versions between which your bug was
+-introduced. <STRONG>Please</STRONG> include session transcripts (as 
++introduced. <strong>Please</strong> include session transcripts (as
+ described in the last bullet point above) of <strong>both
+ the working and failing versions.</strong> Often, the source of the problem
+ can instantly identified by looking at the differences in protocol
+@@ -485,8 +485,8 @@
+ &lt;fetchmail-devel at lists.berlios.de&gt; for people who want to discuss
+ fixes and improvements in fetchmail and help co-develop it. It's a
+ Mailman list, which you can sign up for at <a
+-href="http://lists.berlios.de/mailman/listinfo/fetchmail-devel">http://lists.berlios.de/mailman/listinfo/fetchmail-devel</a>.
+-There is also an announcements-only list,
++href="http://lists.berlios.de/mailman/listinfo/fetchmail-devel">http://lists.berlios.de/mailman/listinfo/fetchmail-devel</a>.</p>
++<p>There is also an announcements-only list,
+ &lt;fetchmail-announce at lists.berlios.de&gt;, which you can sign up for at <a
+ href="http://lists.berlios.de/mailman/listinfo/fetchmail-announce">http://lists.berlios.de/mailman/listinfo/fetchmail-announce</a>.</p>
+ 
+
+
+
+From svn at mknod.org  Wed Apr 29 14:35:03 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Wed, 29 Apr 2009 07:35:03 -0500
+Subject: [fetchmail-svn] r5273 - branches/BRANCH_6-3
+Message-ID: <20090429123503.EA7F221F048@mknod.org>
+
+Author: m-a
+Date: 2009-04-29 07:35:03 -0500 (Wed, 29 Apr 2009)
+New Revision: 5273
+
+Modified:
+   branches/BRANCH_6-3/fetchmail-FAQ.html
+Log:
+Point from mail list to #G3 item.
+
+Modified: branches/BRANCH_6-3/fetchmail-FAQ.html
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-FAQ.html	2009-04-29 12:34:54 UTC (rev 5272)
++++ branches/BRANCH_6-3/fetchmail-FAQ.html	2009-04-29 12:35:03 UTC (rev 5273)
+@@ -479,8 +479,10 @@
+ <p>There is a fetchmail-users list
+ &lt;fetchmail-users at lists.berlios.de&gt;
+ for bug reports and people who want to discuss configuration issues of
+-fetchmail. It's a Mailman list, see <a
+-    href="http://lists.berlios.de/mailman/listinfo/fetchmail-users">http://lists.berlios.de/mailman/listinfo/fetchmail-users</a>.</p>
++fetchmail. Please see <a href="#G3">G3 above for information you need to
++report.</a> It's a Mailman list, see <a
++    href="http://lists.berlios.de/mailman/listinfo/fetchmail-users">http://lists.berlios.de/mailman/listinfo/fetchmail-users</a>
++for info and subscription.</p>
+ <p>There is a fetchmail-devel list
+ &lt;fetchmail-devel at lists.berlios.de&gt; for people who want to discuss
+ fixes and improvements in fetchmail and help co-develop it. It's a
+
+
+
+From svn at mknod.org  Wed Apr 29 14:35:13 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Wed, 29 Apr 2009 07:35:13 -0500
+Subject: [fetchmail-svn] r5274 - branches/BRANCH_6-3
+Message-ID: <20090429123513.8FF3821F048@mknod.org>
+
+Author: m-a
+Date: 2009-04-29 07:35:13 -0500 (Wed, 29 Apr 2009)
+New Revision: 5274
+
+Modified:
+   branches/BRANCH_6-3/fetchmail-FAQ.html
+Log:
+Fix trailing whitespace at EOL.
+
+Modified: branches/BRANCH_6-3/fetchmail-FAQ.html
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-FAQ.html	2009-04-29 12:35:03 UTC (rev 5273)
++++ branches/BRANCH_6-3/fetchmail-FAQ.html	2009-04-29 12:35:13 UTC (rev 5274)
+@@ -31,8 +31,8 @@
+ <hr/>
+ <h1 id="FAQ">Frequently Asked Questions About Fetchmail</h1>
+ 
+-<p><strong>Support? Bug reports?</strong> Please read <a 
+-href="#G3">G3</a> for what information is required to get your problem 
++<p><strong>Support? Bug reports?</strong> Please read <a
++href="#G3">G3</a> for what information is required to get your problem
+ solved as quickly as possible.</p>
+ 
+ <p>Note that this FAQ is occasionally updated from the SVN repository
+@@ -358,11 +358,11 @@
+ 
+ <li>Any command-line options you used.</li>
+ 
+-<li>The output of <kbd>env LC_ALL=C fetchmail -V</kbd> called with 
++<li>The output of <kbd>env LC_ALL=C fetchmail -V</kbd> called with
+ whatever other command-line options you used.</li>
+ 
+-<li><strong>The output of <kbd>env LC_ALL=C fetchmail --nodetach -vvv 
+---nosyslog</kbd> with whatever other command-line options you use 
++<li><strong>The output of <kbd>env LC_ALL=C fetchmail --nodetach -vvv
++--nosyslog</kbd> with whatever other command-line options you use
+ routinely.</strong>
+  <p>It is very important that the transcript include your
+ POP/IMAP server's greeting line, so I can identify it in case of server
+@@ -395,7 +395,7 @@
+ <p>It may helpful if you include your .fetchmailrc file, but not
+ necessary unless your symptom seems to involve an error in
+ configuration parsing. If you do send in your .fetchmailrc, mask
+-the passwords first! Otherwise, fetchmail -V &ndash; as directed above 
++the passwords first! Otherwise, fetchmail -V &ndash; as directed above
+ &ndash; will usually suffice.</p>
+ 
+ <p>If fetchmail seems to run and fetch mail, but the headers look
+
+
+
+From svn at mknod.org  Thu Apr 30 07:15:14 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 30 Apr 2009 00:15:14 -0500
+Subject: [fetchmail-svn] r5272 - branches/BRANCH_6-3
+Message-ID: <20090430051514.5A72E21F04B@mknod.org>
+
+Author: root
+Date: 2009-04-30 00:15:14 -0500 (Thu, 30 Apr 2009)
+New Revision: 5272
+
+Modified:
+   branches/BRANCH_6-3/fetchmail-FAQ.html
+Log:
+Make document valid XHTML again.
+
+Modified: branches/BRANCH_6-3/fetchmail-FAQ.html
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-FAQ.html	2009-04-29 12:34:43 UTC (rev 5271)
++++ branches/BRANCH_6-3/fetchmail-FAQ.html	2009-04-30 05:15:14 UTC (rev 5272)
+@@ -386,7 +386,7 @@
+ failure was introduced in the lower half. Now bisect that half in
+ the same way. In a very few tries, you should be able to identify
+ the exact adjacent pair of versions between which your bug was
+-introduced. <STRONG>Please</STRONG> include session transcripts (as 
++introduced. <strong>Please</strong> include session transcripts (as
+ described in the last bullet point above) of <strong>both
+ the working and failing versions.</strong> Often, the source of the problem
+ can instantly identified by looking at the differences in protocol
+@@ -485,8 +485,8 @@
+ &lt;fetchmail-devel at lists.berlios.de&gt; for people who want to discuss
+ fixes and improvements in fetchmail and help co-develop it. It's a
+ Mailman list, which you can sign up for at <a
+-href="http://lists.berlios.de/mailman/listinfo/fetchmail-devel">http://lists.berlios.de/mailman/listinfo/fetchmail-devel</a>.
+-There is also an announcements-only list,
++href="http://lists.berlios.de/mailman/listinfo/fetchmail-devel">http://lists.berlios.de/mailman/listinfo/fetchmail-devel</a>.</p>
++<p>There is also an announcements-only list,
+ &lt;fetchmail-announce at lists.berlios.de&gt;, which you can sign up for at <a
+ href="http://lists.berlios.de/mailman/listinfo/fetchmail-announce">http://lists.berlios.de/mailman/listinfo/fetchmail-announce</a>.</p>
+ 
+
+
+
+From svn at mknod.org  Thu Apr 30 07:15:13 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 30 Apr 2009 00:15:13 -0500
+Subject: [fetchmail-svn] r5271 - branches/BRANCH_6-3
+Message-ID: <20090430051514.02AB921F049@mknod.org>
+
+Author: root
+Date: 2009-04-30 00:15:13 -0500 (Thu, 30 Apr 2009)
+New Revision: 5271
+
+Modified:
+   branches/BRANCH_6-3/fetchmail-FAQ.html
+Log:
+Rename G3 item so it includes support.
+
+Modified: branches/BRANCH_6-3/fetchmail-FAQ.html
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-FAQ.html	2009-04-27 11:23:58 UTC (rev 5270)
++++ branches/BRANCH_6-3/fetchmail-FAQ.html	2009-04-30 05:15:13 UTC (rev 5271)
+@@ -70,7 +70,7 @@
+ 
+ <a href="#G1">G1. What is fetchmail and why should I bother?</a><br/>
+ <a href="#G2">G2. Where do I find the latest FAQ and fetchmail sources?</a><br/>
+-<a href="#G3">G3. I think I've found a bug. Will you fix it?</a><br/>
++<a href="#G3">G3. Something doesn't work/I think I've found a bug. Will you fix it?</a><br/>
+ <a href="#G4">G4. I have this idea for a neat feature. Will you add it?</a><br/>
+ <a href="#G5">G5. I want to make fetchmail remove kept mail after some days.</a><br/>
+ <a href="#G6">G6. Is there a mailing list for exchanging tips?</a><br/>
+@@ -334,8 +334,7 @@
+ distribution. Because it freezes at distribution release time, it
+ may not be completely current.</p>
+ 
+-<h2><a id="G3" name="G3">G3. I think I've found a bug. Will you fix
+-it?</a></h2>
++<h2><a id="G3" name="G3">G3. Something does not work/I think I've found a bug. Will you fix it?</a></h2>
+ 
+ <p>The first thing you should to is to upgrade to the newest version of
+ fetchmail, and then see if the problem reproduces. So you'll probably
+
+
+
+From svn at mknod.org  Thu Apr 30 07:15:14 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 30 Apr 2009 00:15:14 -0500
+Subject: [fetchmail-svn] r5274 - branches/BRANCH_6-3
+Message-ID: <20090430051515.00AA521F050@mknod.org>
+
+Author: root
+Date: 2009-04-30 00:15:14 -0500 (Thu, 30 Apr 2009)
+New Revision: 5274
+
+Modified:
+   branches/BRANCH_6-3/fetchmail-FAQ.html
+Log:
+Fix trailing whitespace at EOL.
+
+Modified: branches/BRANCH_6-3/fetchmail-FAQ.html
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-FAQ.html	2009-04-29 12:35:03 UTC (rev 5273)
++++ branches/BRANCH_6-3/fetchmail-FAQ.html	2009-04-30 05:15:14 UTC (rev 5274)
+@@ -31,8 +31,8 @@
+ <hr/>
+ <h1 id="FAQ">Frequently Asked Questions About Fetchmail</h1>
+ 
+-<p><strong>Support? Bug reports?</strong> Please read <a 
+-href="#G3">G3</a> for what information is required to get your problem 
++<p><strong>Support? Bug reports?</strong> Please read <a
++href="#G3">G3</a> for what information is required to get your problem
+ solved as quickly as possible.</p>
+ 
+ <p>Note that this FAQ is occasionally updated from the SVN repository
+@@ -358,11 +358,11 @@
+ 
+ <li>Any command-line options you used.</li>
+ 
+-<li>The output of <kbd>env LC_ALL=C fetchmail -V</kbd> called with 
++<li>The output of <kbd>env LC_ALL=C fetchmail -V</kbd> called with
+ whatever other command-line options you used.</li>
+ 
+-<li><strong>The output of <kbd>env LC_ALL=C fetchmail --nodetach -vvv 
+---nosyslog</kbd> with whatever other command-line options you use 
++<li><strong>The output of <kbd>env LC_ALL=C fetchmail --nodetach -vvv
++--nosyslog</kbd> with whatever other command-line options you use
+ routinely.</strong>
+  <p>It is very important that the transcript include your
+ POP/IMAP server's greeting line, so I can identify it in case of server
+@@ -395,7 +395,7 @@
+ <p>It may helpful if you include your .fetchmailrc file, but not
+ necessary unless your symptom seems to involve an error in
+ configuration parsing. If you do send in your .fetchmailrc, mask
+-the passwords first! Otherwise, fetchmail -V &ndash; as directed above 
++the passwords first! Otherwise, fetchmail -V &ndash; as directed above
+ &ndash; will usually suffice.</p>
+ 
+ <p>If fetchmail seems to run and fetch mail, but the headers look
+
+
+
+From svn at mknod.org  Thu Apr 30 07:15:14 2009
+From: svn at mknod.org (svn at mknod.org)
+Date: Thu, 30 Apr 2009 00:15:14 -0500
+Subject: [fetchmail-svn] r5273 - branches/BRANCH_6-3
+Message-ID: <20090430051514.ABF7921F04E@mknod.org>
+
+Author: root
+Date: 2009-04-30 00:15:14 -0500 (Thu, 30 Apr 2009)
+New Revision: 5273
+
+Modified:
+   branches/BRANCH_6-3/fetchmail-FAQ.html
+Log:
+Point from mail list to #G3 item.
+
+Modified: branches/BRANCH_6-3/fetchmail-FAQ.html
+===================================================================
+--- branches/BRANCH_6-3/fetchmail-FAQ.html	2009-04-29 12:34:54 UTC (rev 5272)
++++ branches/BRANCH_6-3/fetchmail-FAQ.html	2009-04-30 05:15:14 UTC (rev 5273)
+@@ -479,8 +479,10 @@
+ <p>There is a fetchmail-users list
+ &lt;fetchmail-users at lists.berlios.de&gt;
+ for bug reports and people who want to discuss configuration issues of
+-fetchmail. It's a Mailman list, see <a
+-    href="http://lists.berlios.de/mailman/listinfo/fetchmail-users">http://lists.berlios.de/mailman/listinfo/fetchmail-users</a>.</p>
++fetchmail. Please see <a href="#G3">G3 above for information you need to
++report.</a> It's a Mailman list, see <a
++    href="http://lists.berlios.de/mailman/listinfo/fetchmail-users">http://lists.berlios.de/mailman/listinfo/fetchmail-users</a>
++for info and subscription.</p>
+ <p>There is a fetchmail-devel list
+ &lt;fetchmail-devel at lists.berlios.de&gt; for people who want to discuss
+ fixes and improvements in fetchmail and help co-develop it. It's a
+
+
+

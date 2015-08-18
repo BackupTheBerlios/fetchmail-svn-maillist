@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5267 - branches/BRANCH_6-3
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-April/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5267%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090410051515.5AE9321F02B%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000247.html">
+   <LINK REL="Next"  HREF="000249.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5267 - branches/BRANCH_6-3</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5267%20-%20branches/BRANCH_6-3&In-Reply-To=%3C20090410051515.5AE9321F02B%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5267 - branches/BRANCH_6-3">svn at mknod.org
+       </A><BR>
+    <I>Fri Apr 10 07:15:15 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000247.html">[fetchmail-svn] r5267 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000249.html">[fetchmail-svn] r5268 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#248">[ date ]</a>
+              <a href="thread.html#248">[ thread ]</a>
+              <a href="subject.html#248">[ subject ]</a>
+              <a href="author.html#248">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: root
+Date: 2009-04-10 00:15:15 -0500 (Fri, 10 Apr 2009)
+New Revision: 5267
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/driver.c
+   branches/BRANCH_6-3/fetchmail.man
+Log:
+Fix pre-/post-connect error/signal reporting.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-02-18 13:28:33 UTC (rev 5266)
++++ branches/BRANCH_6-3/NEWS	2009-04-10 05:15:15 UTC (rev 5267)
+@@ -48,6 +48,10 @@
+ 
+ fetchmail 6.3.10 (not yet released):
+ 
++# INCOMPATIBLE BUGFIXES
++* Use PS_PROTOCOL (4) rather than PS_SYNTAX (5) exit status when a pre- or
++  post-connect command fails.
++
+ # BUGFIXES
+ * Fix misuse of canonical autoconf target as _TARGET when it should have been
+   _HOST. Report and patch courtesy of Diego E. &quot;Flameeyes&quot; Petten&#242;.
+@@ -56,6 +60,8 @@
+   Michelle Konzack, Debian Bug#508667.
+ * Do not overlap source and destination fields in snprintf() in interface.c.
+   Courtesy of Nico Golde, Debian.
++* When a pre- or post-connect command fails, now report the exit status or
++  termination signal properly through sys/wait.h macros.
+ 
+ # CHANGES
+ * Make the comparison of the SSL fingerprints case insensitive, to
+
+Modified: branches/BRANCH_6-3/driver.c
+===================================================================
+--- branches/BRANCH_6-3/driver.c	2009-02-18 13:28:33 UTC (rev 5266)
++++ branches/BRANCH_6-3/driver.c	2009-04-10 05:15:15 UTC (rev 5267)
+@@ -935,9 +935,13 @@
+ 	/* execute pre-initialization command, if any */
+ 	if (ctl-&gt;preconnect &amp;&amp; (err = system(ctl-&gt;preconnect)))
+ 	{
+-	    report(stderr, 
+-		   GT_(&quot;pre-connection command failed with status %d\n&quot;), err);
+-	    err = PS_SYNTAX;
++	    if (WIFSIGNALED(err))
++		report(stderr,
++			GT_(&quot;pre-connection command terminated with signal %d\n&quot;), WTERMSIG(err));
++	    else
++		report(stderr,
++			GT_(&quot;pre-connection command failed with status %d\n&quot;), WEXITSTATUS(err));
++	    err = PS_PROTOCOL;
+ 	    goto closeUp;
+ 	}
+ 
+@@ -1566,9 +1570,12 @@
+     /* execute wrapup command, if any */
+     if (ctl-&gt;postconnect &amp;&amp; (tmperr = system(ctl-&gt;postconnect)))
+     {
+-	report(stderr, GT_(&quot;post-connection command failed with status %d\n&quot;), tmperr);
++	if (WIFSIGNALED(tmperr))
++	    report(stderr, GT_(&quot;post-connection command terminated with signal %d\n&quot;), WTERMSIG(tmperr));
++	else
++	    report(stderr, GT_(&quot;post-connection command failed with status %d\n&quot;), WEXITSTATUS(tmperr));
+ 	if (err == PS_SUCCESS)
+-	    err = PS_SYNTAX;
++	    err = PS_PROTOCOL;
+     }
+ 
+     set_timeout(0); /* cancel any pending alarm */
+
+Modified: branches/BRANCH_6-3/fetchmail.man
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.man	2009-02-18 13:28:33 UTC (rev 5266)
++++ branches/BRANCH_6-3/fetchmail.man	2009-04-10 05:15:15 UTC (rev 5267)
+@@ -2532,10 +2532,14 @@
+ standard input attached to a terminal and could not prompt for a
+ missing password.
+ .IP 4
+-Some sort of fatal protocol error was detected.
++Some sort of fatal protocol error was detected. Since 6.3.10, this
++includes non-zero exit status or signal-triggered termination of a pre-
++or post-connect command.
+ .IP 5
+ There was a syntax error in the arguments to
+ .IR fetchmail .
++Up to and including 6.3.9, this was also used if the pre- or
++post-connect command failed.
+ .IP 6
+ The run control file had bad permissions.
+ .IP 7
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000247.html">[fetchmail-svn] r5267 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000249.html">[fetchmail-svn] r5268 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#248">[ date ]</a>
+              <a href="thread.html#248">[ thread ]</a>
+              <a href="subject.html#248">[ subject ]</a>
+              <a href="author.html#248">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

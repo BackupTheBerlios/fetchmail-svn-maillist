@@ -1,0 +1,536 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5432 - in branches/BRANCH_6-3: . po
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2009-September/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5432%20-%20in%20branches/BRANCH_6-3%3A%20.%20po&In-Reply-To=%3C20090923102152.7C86321F086%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000489.html">
+   <LINK REL="Next"  HREF="000491.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5432 - in branches/BRANCH_6-3: . po</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5432%20-%20in%20branches/BRANCH_6-3%3A%20.%20po&In-Reply-To=%3C20090923102152.7C86321F086%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5432 - in branches/BRANCH_6-3: . po">svn at mknod.org
+       </A><BR>
+    <I>Wed Sep 23 12:21:52 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000489.html">[fetchmail-svn] r5431 - branches/BRANCH_6-3
+</A></li>
+        <LI>Next message: <A HREF="000491.html">[fetchmail-svn] r5433 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#490">[ date ]</a>
+              <a href="thread.html#490">[ thread ]</a>
+              <a href="subject.html#490">[ subject ]</a>
+              <a href="author.html#490">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2009-09-23 05:21:51 -0500 (Wed, 23 Sep 2009)
+New Revision: 5432
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/po/zh_CN.po
+Log:
+Update Chinese (simplified) translation, courtesy of Zheng-Yu Ji.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2009-09-22 07:17:23 UTC (rev 5431)
++++ branches/BRANCH_6-3/NEWS	2009-09-23 10:21:51 UTC (rev 5432)
+@@ -72,6 +72,7 @@
+ 
+ # TRANSLATION UPDATES AND ADDITIONS (ordered by language name):
+ * [ca]    Catalan (Ernest Adrogu&#233; Calveras)
++* [zh_CN] Chinese/Simplified (Ji ZhengYu)
+ * [cs]    Czech (Petr Pisar)
+ * [ja]    Japanese (Takeshi Hamasaki)
+ * [pl]    Polish (Jakub Bogusz)
+
+Modified: branches/BRANCH_6-3/po/zh_CN.po
+===================================================================
+--- branches/BRANCH_6-3/po/zh_CN.po	2009-09-22 07:17:23 UTC (rev 5431)
++++ branches/BRANCH_6-3/po/zh_CN.po	2009-09-23 10:21:51 UTC (rev 5432)
+@@ -6,13 +6,12 @@
+ #
+ msgid &quot;&quot;
+ msgstr &quot;&quot;
+-&quot;Project-Id-Version: fetchmail 6.3.10-pre2\n&quot;
++&quot;Project-Id-Version: fetchmail 6.3.11\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+-&quot;POT-Creation-Date: 2009-08-18 13:45+0200\n&quot;
+-&quot;PO-Revision-Date: 2009-07-05 10:01+0800\n&quot;
++&quot;POT-Creation-Date: 2009-08-06 01:21+0200\n&quot;
++&quot;PO-Revision-Date: 2009-09-23 15:42&#20013;&#22269;&#26631;&#20934;&#26102;&#38388;\n&quot;
+ &quot;Last-Translator: Ji ZhengYu &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">zhengyuji at gmail.com</A>&gt;\n&quot;
+-&quot;Language-Team: Chinese (simplified) &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">translation-team-zh-cn at lists.</A>&quot;
+-&quot;sourceforge.net&gt;\n&quot;
++&quot;Language-Team: Chinese (simplified) &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">translation-team-zh-cn at lists.sourceforge.net</A>&gt;\n&quot;
+ &quot;MIME-Version: 1.0\n&quot;
+ &quot;Content-Type: text/plain; charset=UTF-8\n&quot;
+ &quot;Content-Transfer-Encoding: 8bit\n&quot;
+@@ -131,8 +130,7 @@
+ 
+ #: driver.c:751
+ #, c-format
+-msgid &quot;&quot;
+-&quot;message %s@%s:%d was not the expected length (%d actual != %d expected)\n&quot;
++msgid &quot;message %s@%s:%d was not the expected length (%d actual != %d expected)\n&quot;
+ msgstr &quot;%s@%s:%d &#37038;&#20214;&#38750;&#25152;&#38656;&#22823;&#23567; (&#23454;&#38469; %d &#23383;&#33410;!= &#25152;&#35201;&#27714;&#30340; %d &#23383;&#33410;)\n&quot;
+ 
+ #: driver.c:783
+@@ -150,8 +148,7 @@
+ #: driver.c:828
+ #, c-format
+ msgid &quot;fetchlimit %d reached; %d message left on server %s account %s\n&quot;
+-msgid_plural &quot;&quot;
+-&quot;fetchlimit %d reached; %d messages left on server %s account %s\n&quot;
++msgid_plural &quot;fetchlimit %d reached; %d messages left on server %s account %s\n&quot;
+ msgstr[0] &quot;&#21040;&#36798;&#25910;&#20214;&#19978;&#38480; %d&#65307;%d &#23553;&#37038;&#20214;&#30041;&#22312;&#26381;&#21153;&#22120; %s &#24080;&#21495;&#20026; %s\n&quot;
+ 
+ #: driver.c:885
+@@ -185,9 +182,7 @@
+ 
+ #: driver.c:916
+ #, c-format
+-msgid &quot;&quot;
+-&quot;Fetchmail saw more than %d timeouts while attempting to get mail from %s@%&quot;
+-&quot;s.\n&quot;
++msgid &quot;Fetchmail saw more than %d timeouts while attempting to get mail from %s@%s.\n&quot;
+ msgstr &quot;Fetchmail &#23581;&#35797;&#20174; %2$s@%3$s &#25910;&#21462;&#37038;&#20214;&#26102;&#21457;&#29616;&#22810;&#20110; %1$d &#27425;&#36229;&#26102;&#12290;\n&quot;
+ 
+ #: driver.c:920
+@@ -512,8 +507,7 @@
+ msgid &quot;&quot;
+ &quot;%s: The NULLMAILER_FLAGS environment variable is set.\n&quot;
+ &quot;This is dangerous as it can make nullmailer-inject or nullmailer's\n&quot;
+-&quot;sendmail wrapper tamper with your From:, Message-ID: or Return-Path: &quot;
+-&quot;headers.\n&quot;
++&quot;sendmail wrapper tamper with your From:, Message-ID: or Return-Path: headers.\n&quot;
+ &quot;Try \&quot;env NULLMAILER_FLAGS= %s YOUR ARGUMENTS HERE\&quot;\n&quot;
+ &quot;%s: Abort.\n&quot;
+ msgstr &quot;&quot;
+@@ -545,8 +539,7 @@
+ #: env.c:174
+ msgid &quot;&quot;
+ &quot;Trying to continue with unqualified hostname.\n&quot;
+-&quot;DO NOT report broken Received: headers, HELO/EHLO lines or similar &quot;
+-&quot;problems!\n&quot;
++&quot;DO NOT report broken Received: headers, HELO/EHLO lines or similar problems!\n&quot;
+ &quot;DO repair your /etc/hosts, DNS, NIS or LDAP instead.\n&quot;
+ msgstr &quot;&quot;
+ &quot;&#27491;&#22312;&#23581;&#35797;&#29992;&#26410;&#39564;&#35777;&#30340;&#20027;&#26426;&#21517;&#32487;&#32493;&#25805;&#20316;&#12290;\n&quot;
+@@ -620,14 +613,12 @@
+ #: fetchmail.c:137
+ msgid &quot;&quot;
+ &quot;Copyright (C) 2002, 2003 Eric S. Raymond\n&quot;
+-&quot;Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham &quot;
+-&quot;Wilson\n&quot;
++&quot;Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham Wilson\n&quot;
+ &quot;Copyright (C) 2005 - 2006 Sunil Shetye\n&quot;
+ &quot;Copyright (C) 2005 - 2009 Matthias Andree\n&quot;
+ msgstr &quot;&quot;
+ &quot;&#29256;&#26435;&#25152;&#26377; (C) 2002, 2003 Eric S. Raymond\n&quot;
+-&quot;&#29256;&#26435;&#25152;&#26377; (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham &quot;
+-&quot;Wilson\n&quot;
++&quot;&#29256;&#26435;&#25152;&#26377; (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham Wilson\n&quot;
+ &quot;&#29256;&#26435;&#25152;&#26377; (C) 2005 - 2006 Sunil Shetye\n&quot;
+ &quot;&#29256;&#26435;&#25152;&#26377; (C) 2005 - 2009 Matthias Andree\n&quot;
+ 
+@@ -699,17 +690,13 @@
+ msgstr &quot;fetchmail: %s fetchmail &#36827;&#31243;&#21495; %d &#32456;&#27490;\n&quot;
+ 
+ #: fetchmail.c:480
+-msgid &quot;&quot;
+-&quot;fetchmail: can't check mail while another fetchmail to same host is &quot;
+-&quot;running.\n&quot;
++msgid &quot;fetchmail: can't check mail while another fetchmail to same host is running.\n&quot;
+ msgstr &quot;fetchmail: &#26377;&#21478;&#19968;&#20010; fetchmail &#22312;&#21516;&#19968;&#20027;&#26426;&#19978;&#36816;&#34892;&#26102;&#26080;&#27861;&#26816;&#26597;&#37038;&#20214;&#12290;\n&quot;
+ 
+ #: fetchmail.c:486
+ #, c-format
+-msgid &quot;&quot;
+-&quot;fetchmail: can't poll specified hosts with another fetchmail running at %d.\n&quot;
+-msgstr &quot;&quot;
+-&quot;fetchmail: &#26377;&#21478;&#19968;&#20010; fetchmail &#36827;&#31243;&#21495; %d &#22312;&#25351;&#23450;&#20027;&#26426;&#19978;&#36816;&#34892;&#26102;&#26080;&#27861;&#25910;&#37038;&#20214;&#12290;\n&quot;
++msgid &quot;fetchmail: can't poll specified hosts with another fetchmail running at %d.\n&quot;
++msgstr &quot;fetchmail: &#26377;&#21478;&#19968;&#20010; fetchmail &#36827;&#31243;&#21495; %d &#22312;&#25351;&#23450;&#20027;&#26426;&#19978;&#36816;&#34892;&#26102;&#26080;&#27861;&#25910;&#37038;&#20214;&#12290;\n&quot;
+ 
+ #: fetchmail.c:493
+ #, c-format
+@@ -717,8 +704,7 @@
+ msgstr &quot;fetchmail: &#21478;&#19968;&#20010;&#21069;&#21488; fetchmail &#36827;&#31243;&#21495; %d &#27491;&#22312;&#36816;&#34892;&#12290;\n&quot;
+ 
+ #: fetchmail.c:503
+-msgid &quot;&quot;
+-&quot;fetchmail: can't accept options while a background fetchmail is running.\n&quot;
++msgid &quot;fetchmail: can't accept options while a background fetchmail is running.\n&quot;
+ msgstr &quot;fetchmail: &#26377;&#21518;&#21488; fetchmail &#27491;&#22312;&#36816;&#34892;&#26102;&#26080;&#27861;&#25509;&#21463;&#36873;&#39033;\n&quot;
+ 
+ #: fetchmail.c:509
+@@ -913,8 +899,7 @@
+ 
+ #: fetchmail.c:1273
+ #, c-format
+-msgid &quot;&quot;
+-&quot;fetchmail: warning: no DNS available to check multidrop fetches from %s\n&quot;
++msgid &quot;fetchmail: warning: no DNS available to check multidrop fetches from %s\n&quot;
+ msgstr &quot;fetchmail: &#35686;&#21578;: &#26080;&#21487;&#29992;&#30340; DNS &#26469;&#26816;&#26597;&#21462;&#33258; %s &#30340;&#22810;&#25237;&#37038;&#20214;\n&quot;
+ 
+ #: fetchmail.c:1284
+@@ -928,9 +913,7 @@
+ 
+ #: fetchmail.c:1302
+ #, c-format
+-msgid &quot;&quot;
+-&quot;fetchmail: %s configuration invalid, specify positive port number for &quot;
+-&quot;service or port\n&quot;
++msgid &quot;fetchmail: %s configuration invalid, specify positive port number for service or port\n&quot;
+ msgstr &quot;fetchmail: %s &#37197;&#32622;&#26080;&#25928;&#65292;&#20026;&#26381;&#21153;&#25110;&#31471;&#21475;&#25351;&#23450;&#22823;&#20110;&#38646;&#30340;&#31471;&#21475;\n&quot;
+ 
+ #: fetchmail.c:1309
+@@ -1171,7 +1154,7 @@
+ #: fetchmail.c:1662
+ #, c-format
+ msgid &quot;  SSL server CommonName: %s\n&quot;
+-msgstr &quot;&#26381;&#21153;&#22120;&#30340; CommonName: %s\n&quot;
++msgstr &quot;  SSL &#26381;&#21153;&#22120;&#21517;: %s\n&quot;
+ 
+ #: fetchmail.c:1664
+ #, c-format
+@@ -1216,20 +1199,15 @@
+ msgstr &quot; &#22312;&#25910;&#21462;&#26032;&#37038;&#20214;&#21069;&#21024;&#38500;&#26087;&#37038;&#20214;(--flush &#24320;&#21551;).\n&quot;
+ 
+ #: fetchmail.c:1694
+-msgid &quot;&quot;
+-&quot;  Old messages will not be flushed before message retrieval (--flush off).\n&quot;
++msgid &quot;  Old messages will not be flushed before message retrieval (--flush off).\n&quot;
+ msgstr &quot; &#22312;&#25910;&#21462;&#26032;&#37038;&#20214;&#21069;&#19981;&#21024;&#38500;&#26087;&#37038;&#20214;(--flush &#20851;&#38381;).\n&quot;
+ 
+ #: fetchmail.c:1696
+-msgid &quot;&quot;
+-&quot;  Oversized messages will be flushed before message retrieval (--limitflush &quot;
+-&quot;on).\n&quot;
++msgid &quot;  Oversized messages will be flushed before message retrieval (--limitflush on).\n&quot;
+ msgstr &quot; &#25910;&#20214;&#21069;&#23558;&#21024;&#38500;&#36229;&#22823;&#30340;&#37038;&#20214;(--limitflush &#24320;&#21551;).\n&quot;
+ 
+ #: fetchmail.c:1697
+-msgid &quot;&quot;
+-&quot;  Oversized messages will not be flushed before message retrieval (--&quot;
+-&quot;limitflush off).\n&quot;
++msgid &quot;  Oversized messages will not be flushed before message retrieval (--limitflush off).\n&quot;
+ msgstr &quot; &#25910;&#20214;&#21069;&#23558;&#19981;&#21024;&#38500;&#36229;&#22823;&#30340;&#37038;&#20214;(--limitflush &#20851;&#38381;).\n&quot;
+ 
+ #: fetchmail.c:1699
+@@ -1257,13 +1235,11 @@
+ msgstr &quot; &#19981;&#22312;&#25442;&#34892;&#21069;&#24378;&#34892;&#25554;&#20837;&#22238;&#36710;&#31526;(forcecr &#20851;&#38381;).\n&quot;
+ 
+ #: fetchmail.c:1708
+-msgid &quot;&quot;
+-&quot;  Interpretation of Content-Transfer-Encoding is disabled (pass8bits on).\n&quot;
++msgid &quot;  Interpretation of Content-Transfer-Encoding is disabled (pass8bits on).\n&quot;
+ msgstr &quot; &#24573;&#30053; Content-Transfer-Encoding (pass8bits &#24320;&#21551;).\n&quot;
+ 
+ #: fetchmail.c:1709
+-msgid &quot;&quot;
+-&quot;  Interpretation of Content-Transfer-Encoding is enabled (pass8bits off).\n&quot;
++msgid &quot;  Interpretation of Content-Transfer-Encoding is enabled (pass8bits off).\n&quot;
+ msgstr &quot; &#19981;&#24573;&#30053; Content-Transfer-Encoding (pass8bits &#20851;&#38381;).\n&quot;
+ 
+ #: fetchmail.c:1711
+@@ -1452,8 +1428,7 @@
+ msgstr &quot; &#20851;&#38381; DNS &#25628;&#23547;&#22810;&#25237;&#22320;&#22336;&#12290;\n&quot;
+ 
+ #: fetchmail.c:1866
+-msgid &quot;&quot;
+-&quot;  Server aliases will be compared with multidrop addresses by IP address.\n&quot;
++msgid &quot;  Server aliases will be compared with multidrop addresses by IP address.\n&quot;
+ msgstr &quot; &#26381;&#21153;&#22120;&#26165;&#31216;&#23558;&#20197; IP &#22320;&#22336;&#19982;&#22810;&#25237;&#22320;&#22336;&#36827;&#34892;&#27604;&#36739;\n&quot;
+ 
+ #: fetchmail.c:1868
+@@ -1715,8 +1690,7 @@
+ msgstr &quot;%u &#26159;&#39318;&#20010;&#26410;&#35835;&#37038;&#20214;\n&quot;
+ 
+ #: imap.c:1002
+-msgid &quot;&quot;
+-&quot;Warning: ignoring bogus data for message sizes returned by the server.\n&quot;
++msgid &quot;Warning: ignoring bogus data for message sizes returned by the server.\n&quot;
+ msgstr &quot;&#35686;&#21578;: &#24573;&#30053;&#26381;&#21153;&#22120;&#36820;&#22238;&#30340;&#37038;&#20214;&#22823;&#23567;&#30340;&#26080;&#25928;&#25968;&#25454;&#12290;\n&quot;
+ 
+ #: interface.c:256
+@@ -1986,9 +1960,7 @@
+ msgstr &quot; -L, --logfile\t&#25351;&#23450;&#26085;&#24535;&#25991;&#20214;&#21517;\n&quot;
+ 
+ #: options.c:613
+-msgid &quot;&quot;
+-&quot;      --syslog      use syslog(3) for most messages when running as a &quot;
+-&quot;daemon\n&quot;
++msgid &quot;      --syslog      use syslog(3) for most messages when running as a daemon\n&quot;
+ msgstr &quot; --syslog\t&#20197;&#21518;&#21488;&#26381;&#21153;&#36816;&#34892;&#26102;&#29992; syslog(3) &#24471;&#21040;&#26356;&#22810;&#30340;&#20449;&#24687;\n&quot;
+ 
+ #: options.c:614
+@@ -2016,14 +1988,11 @@
+ msgstr &quot; --nobounce\t&#23558;&#22238;&#36865;&#37038;&#20214;&#20174;&#29992;&#25143;&#37325;&#23450;&#21521;&#33267;&#37038;&#20214;&#31649;&#29702;&#21592;\n&quot;
+ 
+ #: options.c:620
+-msgid &quot;&quot;
+-&quot;      --nosoftbounce fetchmail deletes permanently undeliverable messages.\n&quot;
++msgid &quot;      --nosoftbounce fetchmail deletes permanently undeliverable messages.\n&quot;
+ msgstr &quot;      --nosoftbounce\t&#35753; fetchmail &#27704;&#20037;&#21024;&#38500;&#26080;&#27861;&#25237;&#36882;&#30340;&#37038;&#20214;&#12290;\n&quot;
+ 
+ #: options.c:621
+-msgid &quot;&quot;
+-&quot;      --softbounce  keep permanently undeliverable messages on server &quot;
+-&quot;(default).\n&quot;
++msgid &quot;      --softbounce  keep permanently undeliverable messages on server (default).\n&quot;
+ msgstr &quot;      --softbounce\t&#23558;&#26080;&#27861;&#25237;&#36882;&#30340;&#37038;&#20214;&#38271;&#26399;&#20445;&#30041;&#22312;&#26381;&#21153;&#22120;&#19978;(&#40664;&#35748;)&#12290;\n&quot;
+ 
+ #: options.c:623
+@@ -2055,14 +2024,11 @@
+ msgstr &quot; --sslcertpath\tssl &#35777;&#20070;&#30446;&#24405;\n&quot;
+ 
+ #: options.c:632
+-msgid &quot;&quot;
+-&quot;      --sslcommonname  expect this CommonName from server (discouraged)\n&quot;
+-msgstr &quot; --sslcommonname\t&#26399;&#26395;&#26381;&#21153;&#22120;&#36820;&#22238; CommonName (&#19981;&#40723;&#21169;)\n&quot;
++msgid &quot;      --sslcommonname  expect this CommonName from server (discouraged)\n&quot;
++msgstr &quot; --sslcommonname\t&#26399;&#26395;&#36820;&#22238;&#26381;&#21153;&#22120;&#21517; (&#19981;&#40723;&#21169;)\n&quot;
+ 
+ #: options.c:633
+-msgid &quot;&quot;
+-&quot;      --sslfingerprint fingerprint that must match that of the server's &quot;
+-&quot;cert.\n&quot;
++msgid &quot;      --sslfingerprint fingerprint that must match that of the server's cert.\n&quot;
+ msgstr &quot; --sslfingerprint\t&#25351;&#23450;&#19968;&#20010;&#25351;&#32441;&#65292;&#23427;&#24517;&#39035;&#19982;&#26381;&#21153;&#22120;&#35777;&#20070;&#30340;&#25351;&#32441;&#21305;&#37197;\n&quot;
+ 
+ #: options.c:634
+@@ -2090,8 +2056,7 @@
+ msgstr &quot; --port\t&#35201;&#36830;&#25509;&#30340; TCP &#31471;&#21475;(&#36807;&#26102;&#20102;&#65292;&#29992; --service)\n&quot;
+ 
+ #: options.c:642
+-msgid &quot;&quot;
+-&quot;  -P, --service     TCP service to connect to (can be numeric TCP port)\n&quot;
++msgid &quot;  -P, --service     TCP service to connect to (can be numeric TCP port)\n&quot;
+ msgstr &quot; -P, --service\t&#35201;&#36830;&#25509;&#30340; TCP &#26381;&#21153;(&#20801;&#35768;&#29992; TCP &#31471;&#21475;&#30340;&#25968;&#20540;&#26469;&#34920;&#31034;)\n&quot;
+ 
+ #: options.c:643
+@@ -2215,9 +2180,7 @@
+ msgstr &quot; --showdots\t&#21363;&#20351;&#22312;&#26085;&#24535;&#25991;&#20214;&#20013;&#20063;&#35201;&#26174;&#31034;&#36827;&#24230;&#26465;(&#20197;&#28857;&#30340;&#24418;&#24335;)\n&quot;
+ 
+ #: pop3.c:355
+-msgid &quot;&quot;
+-&quot;Warning: \&quot;Maillennium POP3/PROXY server\&quot; found, using RETR command instead &quot;
+-&quot;of TOP.\n&quot;
++msgid &quot;Warning: \&quot;Maillennium POP3/PROXY server\&quot; found, using RETR command instead of TOP.\n&quot;
+ msgstr &quot;&#35686;&#21578;: &#21457;&#29616;&#8220; POP3 &#20195;&#29702;&#26381;&#21153;&#22120;&#8221;&#65292;&#29992; RETR &#21629;&#20196;&#20195;&#26367; TOP&#12290;\n&quot;
+ 
+ #: pop3.c:454
+@@ -2300,15 +2263,11 @@
+ msgstr &quot;SDPS &#19981;&#21487;&#29992;&quot;
+ 
+ #: rcfile_y.y:215
+-msgid &quot;&quot;
+-&quot;fetchmail: interface option is only supported under Linux (without IPv6) and &quot;
+-&quot;FreeBSD\n&quot;
++msgid &quot;fetchmail: interface option is only supported under Linux (without IPv6) and FreeBSD\n&quot;
+ msgstr &quot;fetchmail: interface &#36873;&#39033;&#21482;&#26377; Linux(&#26080; IPv6)&#21644; FreeBSD &#25903;&#25345;\n&quot;
+ 
+ #: rcfile_y.y:222
+-msgid &quot;&quot;
+-&quot;fetchmail: monitor option is only supported under Linux (without IPv6) and &quot;
+-&quot;FreeBSD\n&quot;
++msgid &quot;fetchmail: monitor option is only supported under Linux (without IPv6) and FreeBSD\n&quot;
+ msgstr &quot;fetchmail: monitor &#36873;&#39033;&#21482;&#26377; Linux(&#26080; IPv6)&#21644; FreeBSD &#25903;&#25345;\n&quot;
+ 
+ #: rcfile_y.y:335
+@@ -2640,8 +2599,7 @@
+ 
+ #: sink.c:1373
+ #, c-format
+-msgid &quot;&quot;
+-&quot;Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n&quot;
++msgid &quot;Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n&quot;
+ msgstr &quot;&#22855;&#24618;: MDA pclose &#36820;&#22238; %d &#19988; errno &#20026; %d/%s&#65292;&#22312; %s:%d &#26080;&#27861;&#22788;&#29702;\n&quot;
+ 
+ #: sink.c:1395
+@@ -2777,112 +2735,110 @@
+ #: socket.c:623
+ #, c-format
+ msgid &quot;Issuer CommonName: %s\n&quot;
+-msgstr &quot;&#21457;&#34892;&#32773; CommonName: %s\n&quot;
++msgstr &quot;&#21457;&#34892;&#32773;: %s\n&quot;
+ 
+ #: socket.c:626
+ msgid &quot;Warning: Issuer CommonName too long (possibly truncated).\n&quot;
+-msgstr &quot;&#35686;&#21578;: &#21457;&#34892;&#32773; CommonName &#22826;&#38271; (&#21487;&#33021;&#25130;&#30701;)&#12290;\n&quot;
++msgstr &quot;&#35686;&#21578;: &#21457;&#34892;&#32773;&#21517;&#31216;&#22826;&#38271; (&#21487;&#33021;&#25130;&#30701;)&#12290;\n&quot;
+ 
+ #: socket.c:628
+ msgid &quot;Unknown Issuer CommonName\n&quot;
+-msgstr &quot;&#26410;&#30693;&#30340;&#21457;&#34892;&#32773; CommonName\n&quot;
++msgstr &quot;&#26410;&#30693;&#30340;&#21457;&#34892;&#32773;&#21517;&#31216;\n&quot;
+ 
+ #: socket.c:632
+ #, c-format
+ msgid &quot;Server CommonName: %s\n&quot;
+-msgstr &quot;&#26381;&#21153;&#22120; CommonName: %s\n&quot;
++msgstr &quot;&#26381;&#21153;&#22120;&#21517;: %s\n&quot;
+ 
+-#: socket.c:638
++#: socket.c:637
+ msgid &quot;Bad certificate: Subject CommonName too long!\n&quot;
+-msgstr &quot;&#35777;&#20070;&#38169;&#35823;: &#20027; CommonName &#22826;&#38271;!\n&quot;
++msgstr &quot;&#35777;&#20070;&#38169;&#35823;: &#37038;&#20214;&#26631;&#39064;&#22826;&#38271;!\n&quot;
+ 
+-#: socket.c:644
+-#, fuzzy
++#: socket.c:643
+ msgid &quot;Bad certificate: Subject CommonName contains NUL, aborting!\n&quot;
+-msgstr &quot;&#35777;&#20070;&#38169;&#35823;: &#20027; CommonName &#22826;&#38271;!\n&quot;
++msgstr &quot;&#35777;&#20070;&#38169;&#35823;: &#37038;&#20214;&#26631;&#39064;&#21517;&#20013;&#24102;&#26377; NUL &#23383;&#31526;&#65292;&#36864;&#20986;&#65281;\n&quot;
+ 
+-#: socket.c:665
++#: socket.c:664
+ #, c-format
+ msgid &quot;Subject Alternative Name: %s\n&quot;
+-msgstr &quot;&quot;
++msgstr &quot;&#37038;&#20214;&#26631;&#39064;&#21035;&#21517;: %s\n&quot;
+ 
+-#: socket.c:671
+-#, fuzzy
++#: socket.c:670
+ msgid &quot;Bad certificate: Subject Alternative Name contains NUL, aborting!\n&quot;
+-msgstr &quot;&#35777;&#20070;&#38169;&#35823;: &#20027; CommonName &#22826;&#38271;!\n&quot;
++msgstr &quot;&#35777;&#20070;&#38169;&#35823;: &#37038;&#20214;&#26631;&#39064;&#21035;&#21517;&#24102;&#26377; NUL &#23383;&#31526;&#65292;&#36864;&#20986;&#65281;\n&quot;
+ 
+-#: socket.c:699
++#: socket.c:698
+ #, c-format
+ msgid &quot;Server CommonName mismatch: %s != %s\n&quot;
+-msgstr &quot;&#26381;&#21153;&#22120; CommonName &#19981;&#21305;&#37197;: %s != %s\n&quot;
++msgstr &quot;&#26381;&#21153;&#22120;&#21517;&#19981;&#21305;&#37197;: %s != %s\n&quot;
+ 
+-#: socket.c:706
++#: socket.c:705
+ msgid &quot;Server name not set, could not verify certificate!\n&quot;
+ msgstr &quot;&#26410;&#35774;&#32622;&#26381;&#21153;&#22120;&#21517;&#31216;&#65292;&#26080;&#27861;&#39564;&#35777;&#35777;&#20070;&#65281;\n&quot;
+ 
+-#: socket.c:711
++#: socket.c:710
+ msgid &quot;Unknown Server CommonName\n&quot;
+-msgstr &quot;&#26410;&#30693;&#30340;&#26381;&#21153;&#22120; CommonName\n&quot;
++msgstr &quot;&#26410;&#30693;&#30340;&#26381;&#21153;&#22120;&#21517;\n&quot;
+ 
+-#: socket.c:713
++#: socket.c:712
+ msgid &quot;Server name not specified in certificate!\n&quot;
+ msgstr &quot;&#26381;&#21153;&#22120;&#21517;&#31216;&#26410;&#22312;&#35777;&#20070;&#20013;&#25351;&#23450;&#65281;\n&quot;
+ 
+-#: socket.c:725
++#: socket.c:724
+ msgid &quot;EVP_md5() failed!\n&quot;
+ msgstr &quot;EVP_md5() &#22833;&#36133;&#65281;\n&quot;
+ 
+-#: socket.c:729
++#: socket.c:728
+ msgid &quot;Out of memory!\n&quot;
+ msgstr &quot;&#36229;&#20986;&#20869;&#23384;&#65281;\n&quot;
+ 
+-#: socket.c:737
++#: socket.c:736
+ msgid &quot;Digest text buffer too small!\n&quot;
+ msgstr &quot;Digest &#25991;&#26412;&#32531;&#20914;&#21306;&#22826;&#23567;&#65281;\n&quot;
+ 
+-#: socket.c:743
++#: socket.c:742
+ #, c-format
+ msgid &quot;%s key fingerprint: %s\n&quot;
+ msgstr &quot;%s &#23494;&#38053;&#25351;&#32441;: %s\n&quot;
+ 
+-#: socket.c:747
++#: socket.c:746
+ #, c-format
+ msgid &quot;%s fingerprints match.\n&quot;
+ msgstr &quot;%s &#25351;&#32441;&#21305;&#37197;&#12290;\n&quot;
+ 
+-#: socket.c:749
++#: socket.c:748
+ #, c-format
+ msgid &quot;%s fingerprints do not match!\n&quot;
+ msgstr &quot;%s &#25351;&#32441;&#19981;&#21305;&#37197;&#65281;\n&quot;
+ 
+-#: socket.c:758
++#: socket.c:757
+ #, c-format
+ msgid &quot;Server certificate verification error: %s\n&quot;
+ msgstr &quot;&#26381;&#21153;&#22120;&#35777;&#20070;&#39564;&#35777;&#38169;&#35823;: %s\n&quot;
+ 
+-#: socket.c:764
++#: socket.c:763
+ #, c-format
+ msgid &quot;unknown issuer (first %d characters): %s\n&quot;
+ msgstr &quot;&#26410;&#30693;&#30340;&#21457;&#34892;&#32773;&#12288;(&#21069; %d &#20010;&#23383;&#31526;): %s\n&quot;
+ 
+-#: socket.c:851
++#: socket.c:850
+ msgid &quot;File descriptor out of range for SSL&quot;
+ msgstr &quot;&#25991;&#20214;&#25551;&#36848;&#31526;&#36229;&#20986; SSL &#30340;&#33539;&#22260;&quot;
+ 
+-#: socket.c:867
+-#, fuzzy, c-format
++#: socket.c:866
++#, c-format
+ msgid &quot;Invalid SSL protocol '%s' specified, using default (SSLv23).\n&quot;
+ msgstr &quot;&#25351;&#23450;&#20102;&#26080;&#25928;&#30340; SSL &#21327;&#35758; &#8216;%s&#8217;&#65292;&#23558;&#29992;&#40664;&#35748;&#30340;&#21327;&#35758;(SSLv23)&#20195;&#26367;&#12290;\n&quot;
+ 
+-#: socket.c:943
++#: socket.c:942
+ msgid &quot;Certificate/fingerprint verification was somehow skipped!\n&quot;
+ msgstr &quot;&#35777;&#20070;(&#25351;&#32441;)&#39564;&#35777;&#34987;&#19981;&#26126;&#21407;&#22240;&#22320;&#36339;&#36807;&#65281;\n&quot;
+ 
+-#: socket.c:1021
++#: socket.c:1020
+ msgid &quot;Cygwin socket read retry\n&quot;
+ msgstr &quot;&#37325;&#35797;&#35835;&#21462; Cygwin &#25509;&#21475;\n&quot;
+ 
+-#: socket.c:1024
++#: socket.c:1023
+ msgid &quot;Cygwin socket read retry failed!\n&quot;
+ msgstr &quot;&#37325;&#35797;&#35835;&#21462; Cygwin &#25509;&#21475;&#22833;&#36133;&#65281;\n&quot;
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000489.html">[fetchmail-svn] r5431 - branches/BRANCH_6-3
+</A></li>
+	<LI>Next message: <A HREF="000491.html">[fetchmail-svn] r5433 - branches/BRANCH_6-3
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#490">[ date ]</a>
+              <a href="thread.html#490">[ thread ]</a>
+              <a href="subject.html#490">[ subject ]</a>
+              <a href="author.html#490">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

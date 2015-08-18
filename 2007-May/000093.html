@@ -1,0 +1,219 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [fetchmail-svn] r5102 - in branches/BRANCH_6-3: . po
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/fetchmail-svn/2007-May/index.html" >
+   <LINK REL="made" HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5102%20-%20in%20branches/BRANCH_6-3%3A%20.%20po&In-Reply-To=%3C20070528133622.49224218179%40mknod.org%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000092.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[fetchmail-svn] r5102 - in branches/BRANCH_6-3: . po</H1>
+    <B>svn at mknod.org</B> 
+    <A HREF="mailto:fetchmail-svn%40lists.berlios.de?Subject=Re%3A%20%5Bfetchmail-svn%5D%20r5102%20-%20in%20branches/BRANCH_6-3%3A%20.%20po&In-Reply-To=%3C20070528133622.49224218179%40mknod.org%3E"
+       TITLE="[fetchmail-svn] r5102 - in branches/BRANCH_6-3: . po">svn at mknod.org
+       </A><BR>
+    <I>Mon May 28 15:36:22 CEST 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000092.html">[fetchmail-svn] r5101 - branches/BRANCH_6-3
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#93">[ date ]</a>
+              <a href="thread.html#93">[ thread ]</a>
+              <a href="subject.html#93">[ subject ]</a>
+              <a href="author.html#93">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: m-a
+Date: 2007-05-28 08:36:21 -0500 (Mon, 28 May 2007)
+New Revision: 5102
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/po/vi.po
+Log:
+Update Vietnamese translation to 6.3.8 (Clytie Siddall).
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2007-05-24 23:50:27 UTC (rev 5101)
++++ branches/BRANCH_6-3/NEWS	2007-05-28 13:36:21 UTC (rev 5102)
+@@ -48,6 +48,7 @@
+ * Polish (Jakub Bogusz)
+ * Japanese (Takeshi Hamasaki)
+ * Spanish (Javier Fern&#225;ndez-Sanguino Pe&#241;a, Matthias Andree)
++* Vietnamese (Clytie Siddall)
+ 
+ fetchmail 6.3.8 (released 2007-04-06):
+ 
+
+Modified: branches/BRANCH_6-3/po/vi.po
+===================================================================
+--- branches/BRANCH_6-3/po/vi.po	2007-05-24 23:50:27 UTC (rev 5101)
++++ branches/BRANCH_6-3/po/vi.po	2007-05-28 13:36:21 UTC (rev 5102)
+@@ -1,20 +1,20 @@
+ # Vietnamese translation for Fetchmail.
+-# Copyright &#169; 2006 Eric S. Raymond
+-# Clytie Siddall &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">clytie at riverland.net.au</A>&gt;, 2006.
++# Copyright &#169; 2007 Eric S. Raymond
++# Clytie Siddall &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">clytie at riverland.net.au</A>&gt;, 2006-2007.
+ # 
+ msgid &quot;&quot;
+ msgstr &quot;&quot;
+-&quot;Project-Id-Version: fetchmail 6.3.6-rc4\n&quot;
++&quot;Project-Id-Version: fetchmail 6.3.8\n&quot;
+ &quot;Report-Msgid-Bugs-To: <A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">fetchmail-devel at lists.berlios.de</A>\n&quot;
+ &quot;POT-Creation-Date: 2007-03-30 09:56+0200\n&quot;
+-&quot;PO-Revision-Date: 2006-12-01 22:01+1030\n&quot;
++&quot;PO-Revision-Date: 2007-05-28 21:48+0930\n&quot;
+ &quot;Last-Translator: Clytie Siddall &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">clytie at riverland.net.au</A>&gt;\n&quot;
+ &quot;Language-Team: Vietnamese &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">vi-VN at googlegroups.com</A>&gt;\n&quot;
+ &quot;MIME-Version: 1.0\n&quot;
+ &quot;Content-Type: text/plain; charset=utf-8\n&quot;
+ &quot;Content-Transfer-Encoding: 8bit\n&quot;
+ &quot;Plural-Forms: nplurals=1; plural=0;\n&quot;
+-&quot;X-Generator: Mac PO Editor 1.0a9\n&quot;
++&quot;X-Generator: LocFactory Editor 1.6.3b1\n&quot;
+ 
+ #: checkalias.c:174
+ #, c-format
+@@ -76,13 +76,13 @@
+ msgstr &quot;Nh&#7919;ng th&#432; qu&#225; l&#7899;n theo &#273;&#226;y c&#242;n l&#7841;i tr&#234;n m&#225;y ph&#7909;c v&#7909; %s t&#224;i kho&#7843;n %s:&quot;
+ 
+ #: driver.c:362
+-#, fuzzy, c-format
++#, c-format
+ msgid &quot;  %d message  %d octets long deleted by fetchmail.&quot;
+ msgid_plural &quot;  %d messages %d octets long deleted by fetchmail.&quot;
+-msgstr[0] &quot;  %d th&#432; &#273;&#7897; d&#224;i %d octet b&#7883; fetchmail xo&#225; b&#7887;.&quot;
++msgstr[0] &quot;  %d th&#432; &#273;&#7897; d&#224;i %d octet b&#7883; fetchmail xo&#225;.&quot;
+ 
+ #: driver.c:367
+-#, fuzzy, c-format
++#, c-format
+ msgid &quot;  %d message  %d octets long skipped by fetchmail.&quot;
+ msgid_plural &quot;  %d messages %d octets long skipped by fetchmail.&quot;
+ msgstr[0] &quot;  %d th&#432; &#273;&#7897; d&#224;i %d octet b&#7883; fetchmail b&#7887; qua.&quot;
+@@ -617,7 +617,6 @@
+ msgstr &quot;Kh&#244;ng h&#7895; tr&#7907; t&#249;y ch&#7885;n &#171; --check &#187; (ki&#7875;m tra) &#273;&#7889;i v&#7899;i ETRN\n&quot;
+ 
+ #: fetchmail.c:137
+-#, fuzzy
+ msgid &quot;&quot;
+ &quot;Copyright (C) 2002, 2003 Eric S. Raymond\n&quot;
+ &quot;Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham &quot;
+@@ -625,10 +624,11 @@
+ &quot;Copyright (C) 2005-2006 Sunil Shetye\n&quot;
+ &quot;Copyright (C) 2005-2007 Matthias Andree\n&quot;
+ msgstr &quot;&quot;
+-&quot;B&#7843;n quy&#7873;n &#169; n&#259;m 2002, 2003 c&#7911;a Eric S. Raymond\n&quot;
+-&quot;B&#7843;n quy&#7873;n &#169; n&#259;m 2004 c&#7911;a Matthias Andree, Eric S. Raymond, Robert M. Funk, &quot;
++&quot;T&#225;c quy&#7873;n &#169; n&#259;m 2002, 2003 c&#7911;a Eric S. Raymond\n&quot;
++&quot;T&#225;c quy&#7873;n &#169; n&#259;m 2004 c&#7911;a Matthias Andree, Eric S. Raymond, Robert F. Funk, &quot;
+ &quot;Graham Wilson\n&quot;
+-&quot;B&#7843;n quy&#7873;n &#169; n&#259;m 2005-2006 c&#7911;a Matthias Andree, Sunil Shetye\n&quot;
++&quot;T&#225;c quy&#7873;n &#169; n&#259;m 2005-2006 c&#7911;a Sunil Shetye\n&quot;
++&quot;T&#225;c quy&#7873;n &#169; n&#259;m 2005-2007 c&#7911;a Matthias Andree\n&quot;
+ 
+ #: fetchmail.c:142
+ msgid &quot;&quot;
+@@ -905,19 +905,18 @@
+ msgstr &quot;Ch&#432;a bi&#234;n d&#7883;ch c&#225;ch h&#7895; tr&#7907; SSL.\n&quot;
+ 
+ #: fetchmail.c:1229
+-#, fuzzy
+ msgid &quot;KERBEROS v4 support is configured, but not compiled in.\n&quot;
+-msgstr &quot;Ch&#432;a bi&#234;n d&#7883;ch c&#225;ch h&#7895; tr&#7907; SSL.\n&quot;
++msgstr &quot;&quot;
++&quot;Kh&#7843; n&#259;ng h&#7895; tr&#7907; KERBEROS v4 &#273;&#227; &#273;&#432;&#7907;c c&#7845;u h&#236;nh c&#242;n ch&#432;a &#273;&#432;&#7907;c bi&#234;n d&#7883;ch v&#224;o.\n&quot;
+ 
+ #: fetchmail.c:1235
+-#, fuzzy
+ msgid &quot;KERBEROS v5 support is configured, but not compiled in.\n&quot;
+-msgstr &quot;Ch&#432;a bi&#234;n d&#7883;ch c&#225;ch h&#7895; tr&#7907; SSL.\n&quot;
++msgstr &quot;&quot;
++&quot;Kh&#7843; n&#259;ng h&#7895; tr&#7907; KERBEROS v5 &#273;&#227; &#273;&#432;&#7907;c c&#7845;u h&#236;nh c&#242;n ch&#432;a &#273;&#432;&#7907;c bi&#234;n d&#7883;ch v&#224;o.\n&quot;
+ 
+ #: fetchmail.c:1241
+-#, fuzzy
+ msgid &quot;GSSAPI support is configured, but not compiled in.\n&quot;
+-msgstr &quot;Ch&#432;a bi&#234;n d&#7883;ch c&#225;ch h&#7895; tr&#7907; SSL.\n&quot;
++msgstr &quot;Kh&#7843; n&#259;ng h&#7895; tr&#7907; GSSAPI &#273;&#227; &#273;&#432;&#7907;c c&#7845;u h&#236;nh c&#242;n ch&#432;a &#273;&#432;&#7907;c bi&#234;n d&#7883;ch v&#224;o.\n&quot;
+ 
+ #: fetchmail.c:1271
+ #, c-format
+@@ -2281,10 +2280,12 @@
+ #: pop3.c:449
+ msgid &quot;TLS is mandatory for this session, but server refused CAPA command.\n&quot;
+ msgstr &quot;&quot;
++&quot;B&#7855;t bu&#7897;c ph&#7843;i s&#7917; d&#7909;ng TLS trong phi&#234;n ch&#7841;y n&#224;y m&#224; tr&#236;nh ph&#7909;c v&#7909; &#273;&#227; t&#7915; ch&#7889;i &quot;
++&quot;l&#7879;nh CAPA.\n&quot;
+ 
+ #: pop3.c:450
+ msgid &quot;The CAPA command is however necessary for TLS.\n&quot;
+-msgstr &quot;&quot;
++msgstr &quot;C&#242;n l&#7879;nh CAPA c&#7847;n thi&#7871;t cho TLS.\n&quot;
+ 
+ #: pop3.c:525
+ #, c-format
+@@ -2307,7 +2308,7 @@
+ 
+ #: pop3.c:672
+ msgid &quot;Invalid APOP timestamp.\n&quot;
+-msgstr &quot;&quot;
++msgstr &quot;Nh&#227;n gi&#7901; APOP kh&#244;ng h&#7907;p l&#7879;.\n&quot;
+ 
+ #: pop3.c:696
+ msgid &quot;Undefined protocol request in POP3_auth\n&quot;
+@@ -2636,14 +2637,13 @@
+ msgstr &quot;L&#7895;i  %cMTP: %s\n&quot;
+ 
+ #: sink.c:712
+-#, fuzzy, c-format
++#, c-format
+ msgid &quot;BSMTP file open failed: %s\n&quot;
+-msgstr &quot;T&#7853;p tin BSMTP &#273;&#227; m&#7903;, ho&#7863;c vi&#7879;c ghi l&#7901;i m&#7903; &#273;&#7847;u b&#7883; l&#7895;i\n&quot;
++msgstr &quot;Vi&#7879;c m&#7903; t&#7853;p tin BSMTP b&#7883; l&#7895;i: %s\n&quot;
+ 
+ #: sink.c:758
+-#, fuzzy
+ msgid &quot;BSMTP preamble write failed.\n&quot;
+-msgstr &quot;T&#7853;p tin BSMTP &#273;&#227; m&#7903;, ho&#7863;c vi&#7879;c ghi l&#7901;i m&#7903; &#273;&#7847;u b&#7883; l&#7895;i\n&quot;
++msgstr &quot;Vi&#7879;c ghi l&#7901;i m&#7903; &#273;&#7847;u BSMTP b&#7883; l&#7895;i.\n&quot;
+ 
+ #: sink.c:972
+ #, c-format
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000092.html">[fetchmail-svn] r5101 - branches/BRANCH_6-3
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#93">[ date ]</a>
+              <a href="thread.html#93">[ thread ]</a>
+              <a href="subject.html#93">[ subject ]</a>
+              <a href="author.html#93">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/fetchmail-svn">More information about the fetchmail-svn
+mailing list</a><br>
+</body></html>

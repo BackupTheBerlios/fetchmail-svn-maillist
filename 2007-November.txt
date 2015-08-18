@@ -1,0 +1,341 @@
+From svn at mknod.org  Mon Nov  5 10:43:57 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Mon,  5 Nov 2007 03:43:57 -0600 (CST)
+Subject: [fetchmail-svn] r5131 - branches/BRANCH_6-3
+Message-ID: <20071105094357.487EF21800A@mknod.org>
+
+Author: m-a
+Date: 2007-11-05 03:43:56 -0600 (Mon, 05 Nov 2007)
+New Revision: 5131
+
+Modified:
+   branches/BRANCH_6-3/
+   branches/BRANCH_6-3/TODO.txt
+Log:
+ r524 at balu:  mandree | 2007-11-05 10:43:46 +0100
+ add two new items
+
+
+
+Property changes on: branches/BRANCH_6-3
+___________________________________________________________________
+Name: svk:merge
+   - fbb42c1a-5c77-f34b-9454-e29eadb441c6:/local/fetchmail_6-3:6396
+   + 980ad99f-4e24-40f8-b839-cc772390f726:/local/fetchmail-6-3:524
+fbb42c1a-5c77-f34b-9454-e29eadb441c6:/local/fetchmail_6-3:6396
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2007-09-01 16:06:51 UTC (rev 5130)
++++ branches/BRANCH_6-3/TODO.txt	2007-11-05 09:43:56 UTC (rev 5131)
+@@ -16,6 +16,11 @@
+ - report multiline SMTP errors properly (sample in private mail from 
+   Earl Chew, 2007-07-30T02:28)
+ - publish SA-2007-02 after release
++- Debian Bug#449179, smbutil.c:90: unicodeToString: Assertion `len+1 < sizeof
++  buf' failed, from Stepan Golosunov <stepan at golosunov.pp.ru>
++questionable:
++- fetch IMAP message in one go (fetchmail-devel by Adam Simpkins
++  <simpkins at cisco.com> around Nov 2nd)?
+ 
+ 6.4:
+ - change SSL/TLS UI incompatibly, making it easier to use
+
+
+
+From svn at mknod.org  Mon Nov  5 14:51:02 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Mon,  5 Nov 2007 07:51:02 -0600 (CST)
+Subject: [fetchmail-svn] r5132 - branches/BRANCH_6-3
+Message-ID: <20071105135102.85C3E21800A@mknod.org>
+
+Author: m-a
+Date: 2007-11-05 07:51:02 -0600 (Mon, 05 Nov 2007)
+New Revision: 5132
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+add one item
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2007-11-05 09:43:56 UTC (rev 5131)
++++ branches/BRANCH_6-3/TODO.txt	2007-11-05 13:51:02 UTC (rev 5132)
+@@ -19,6 +19,7 @@
+ - Debian Bug#449179, smbutil.c:90: unicodeToString: Assertion `len+1 < sizeof
+   buf' failed, from Stepan Golosunov <stepan at golosunov.pp.ru>
+ questionable:
++- Convert POP3 UIDs to X-UIDL?
+ - fetch IMAP message in one go (fetchmail-devel by Adam Simpkins
+   <simpkins at cisco.com> around Nov 2nd)?
+ 
+
+
+
+From svn at mknod.org  Tue Nov  6 10:01:12 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Tue,  6 Nov 2007 03:01:12 -0600 (CST)
+Subject: [fetchmail-svn] r5133 - branches/BRANCH_6-3
+Message-ID: <20071106090112.F119921800A@mknod.org>
+
+Author: m-a
+Date: 2007-11-06 03:01:12 -0600 (Tue, 06 Nov 2007)
+New Revision: 5133
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Add new item.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2007-11-05 13:51:02 UTC (rev 5132)
++++ branches/BRANCH_6-3/TODO.txt	2007-11-06 09:01:12 UTC (rev 5133)
+@@ -18,6 +18,7 @@
+ - publish SA-2007-02 after release
+ - Debian Bug#449179, smbutil.c:90: unicodeToString: Assertion `len+1 < sizeof
+   buf' failed, from Stepan Golosunov <stepan at golosunov.pp.ru>
++- Peter O'Gorman 2007-10-31 fetchmail-6.3.8 portability patches [-devel list]
+ questionable:
+ - Convert POP3 UIDs to X-UIDL?
+ - fetch IMAP message in one go (fetchmail-devel by Adam Simpkins
+
+
+
+From svn at mknod.org  Tue Nov  6 16:39:44 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Tue,  6 Nov 2007 09:39:44 -0600 (CST)
+Subject: [fetchmail-svn] r5134 - branches/BRANCH_6-3
+Message-ID: <20071106153944.1C69321800A@mknod.org>
+
+Author: m-a
+Date: 2007-11-06 09:39:43 -0600 (Tue, 06 Nov 2007)
+New Revision: 5134
+
+Modified:
+   branches/BRANCH_6-3/NEWS
+   branches/BRANCH_6-3/fetchmail.h
+Log:
+Remove FETCHMAIL_DEBUG diversion that couldn't be officially enabled and was
+prone to symlink attacks. Found by Nico Golde.
+
+Modified: branches/BRANCH_6-3/NEWS
+===================================================================
+--- branches/BRANCH_6-3/NEWS	2007-11-06 09:01:12 UTC (rev 5133)
++++ branches/BRANCH_6-3/NEWS	2007-11-06 15:39:43 UTC (rev 5134)
+@@ -67,6 +67,11 @@
+   Fixes Debian Bug#421446 (Holger Leskien), Novell Bug #247233 (Jon Nelson).
+   Thanks to Matthias Strau? for a configuration to reproduce the issue.
+ 
++# CHANGES:
++* Removed dead FETCHMAIL_DEBUG code from fetchmail.h that was disabled by 
++  default with no switches in configure to enable it. However, the macro would 
++  have been prone to a symlink attack. Found by Nico Golde.
++
+ # DOCUMENTATION:
+ * Add fetchmail-SA-2007-02.txt
+ * Re-add two lines to the manual page that had accidentally become comments 
+
+Modified: branches/BRANCH_6-3/fetchmail.h
+===================================================================
+--- branches/BRANCH_6-3/fetchmail.h	2007-11-06 09:01:12 UTC (rev 5133)
++++ branches/BRANCH_6-3/fetchmail.h	2007-11-06 15:39:43 UTC (rev 5134)
+@@ -716,18 +716,6 @@
+ char *stpcpy(char *, const char*);
+ #endif
+ 
+-#ifdef FETCHMAIL_DEBUG
+-#define exit(e) do { \
+-       FILE *out; \
+-       out = fopen("/tmp/fetchmail.log", "a"); \
+-       fprintf(out, \
+-               "Exiting fetchmail from file %s, line %d with status %d\n", \
+-               __FILE__, __LINE__, e); \
+-       fclose(out); \
+-       _exit(e); \
+-       } while(0)
+-#endif /* FETCHMAIL_DEBUG */
+-
+ #ifdef __CYGWIN__
+ #define ROOT_UID 18
+ #else /* !__CYGWIN__ */
+
+
+
+From svn at mknod.org  Mon Nov 12 09:47:31 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Mon, 12 Nov 2007 02:47:31 -0600 (CST)
+Subject: [fetchmail-svn] r5135 - branches/BRANCH_6-3
+Message-ID: <20071112084731.6923921800C@mknod.org>
+
+Author: m-a
+Date: 2007-11-12 02:47:30 -0600 (Mon, 12 Nov 2007)
+New Revision: 5135
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Add one item (perhaps unneeded ;-))
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2007-11-06 15:39:43 UTC (rev 5134)
++++ branches/BRANCH_6-3/TODO.txt	2007-11-12 08:47:30 UTC (rev 5135)
+@@ -25,6 +25,8 @@
+   <simpkins at cisco.com> around Nov 2nd)?
+ 
+ 6.4:
++- http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=374514
++  "Deleting fetchids file" vs. POP3 - probably unneeded if we use IMAP UIDs.
+ - change SSL/TLS UI incompatibly, making it easier to use
+ - allow selection of SSL/TLS Ciphers
+ - perhaps switch to libgsasl and libgnutls (which doesn't talk SSLv2)
+
+
+
+From svn at mknod.org  Sat Nov 17 11:10:31 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Sat, 17 Nov 2007 04:10:31 -0600 (CST)
+Subject: [fetchmail-svn] r5136 - branches/BRANCH_6-3
+Message-ID: <20071117101031.C32C421800C@mknod.org>
+
+Author: m-a
+Date: 2007-11-17 04:10:31 -0600 (Sat, 17 Nov 2007)
+New Revision: 5136
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+6.4+ feature request noted
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2007-11-12 08:47:30 UTC (rev 5135)
++++ branches/BRANCH_6-3/TODO.txt	2007-11-17 10:10:31 UTC (rev 5136)
+@@ -25,6 +25,10 @@
+   <simpkins at cisco.com> around Nov 2nd)?
+ 
+ 6.4:
++- feature request by Daniel Goering <g_daniel at gmx.net> on
++  fetchmail-devel 2007-11-15: populate .fetchids from current messages.
++  (it'll probably be useful to limit this to "all but the 10 latest" or
++  "all before date this-and-that")
+ - http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=374514
+   "Deleting fetchids file" vs. POP3 - probably unneeded if we use IMAP UIDs.
+ - change SSL/TLS UI incompatibly, making it easier to use
+
+
+
+From svn at mknod.org  Sun Nov 18 10:23:13 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Sun, 18 Nov 2007 03:23:13 -0600 (CST)
+Subject: [fetchmail-svn] r5137 - branches/BRANCH_6-3
+Message-ID: <20071118092313.E5A3F21800C@mknod.org>
+
+Author: m-a
+Date: 2007-11-18 03:23:13 -0600 (Sun, 18 Nov 2007)
+New Revision: 5137
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Add new 6.4 idea.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2007-11-17 10:10:31 UTC (rev 5136)
++++ branches/BRANCH_6-3/TODO.txt	2007-11-18 09:23:13 UTC (rev 5137)
+@@ -25,6 +25,9 @@
+   <simpkins at cisco.com> around Nov 2nd)?
+ 
+ 6.4:
++- download only messages whose headers match a filter (by Toby, Usenet
++  Nov 2007 de.comm.software.mailserver
++  Message-ID: <1195033726.123704.296060 at k79g2000hse.googlegroups.com>)
+ - feature request by Daniel Goering <g_daniel at gmx.net> on
+   fetchmail-devel 2007-11-15: populate .fetchids from current messages.
+   (it'll probably be useful to limit this to "all but the 10 latest" or
+
+
+
+From svn at mknod.org  Tue Nov 27 11:32:55 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Tue, 27 Nov 2007 04:32:55 -0600 (CST)
+Subject: [fetchmail-svn] r5138 - branches/BRANCH_6-3
+Message-ID: <20071127103255.2E5D721800D@mknod.org>
+
+Author: m-a
+Date: 2007-11-27 04:32:54 -0600 (Tue, 27 Nov 2007)
+New Revision: 5138
+
+Modified:
+   branches/BRANCH_6-3/TODO.txt
+Log:
+Debian Bug #452907 new.
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2007-11-18 09:23:13 UTC (rev 5137)
++++ branches/BRANCH_6-3/TODO.txt	2007-11-27 10:32:54 UTC (rev 5138)
+@@ -23,6 +23,8 @@
+ - Convert POP3 UIDs to X-UIDL?
+ - fetch IMAP message in one go (fetchmail-devel by Adam Simpkins
+   <simpkins at cisco.com> around Nov 2nd)?
++- Debian Bug #452907 .fetchmailrc not permitted to be a symlink
++  (restriction not mentioned in manpage, also affects .idfile)
+ 
+ 6.4:
+ - download only messages whose headers match a filter (by Toby, Usenet
+
+
+
+From svn at mknod.org  Wed Nov 28 01:57:43 2007
+From: svn at mknod.org (svn at mknod.org)
+Date: Tue, 27 Nov 2007 18:57:43 -0600 (CST)
+Subject: [fetchmail-svn] r5139 - branches/BRANCH_6-3
+Message-ID: <20071128005743.F147921800C@mknod.org>
+
+Author: m-a
+Date: 2007-11-27 18:57:43 -0600 (Tue, 27 Nov 2007)
+New Revision: 5139
+
+Modified:
+   branches/BRANCH_6-3/
+   branches/BRANCH_6-3/TODO.txt
+Log:
+ r535 at balu:  mandree | 2007-11-28 01:57:28 +0100
+ Move recent Debian Bug before tag 'questionable'.
+
+
+
+Property changes on: branches/BRANCH_6-3
+___________________________________________________________________
+Name: svk:merge
+   - 980ad99f-4e24-40f8-b839-cc772390f726:/local/fetchmail-6-3:524
+fbb42c1a-5c77-f34b-9454-e29eadb441c6:/local/fetchmail_6-3:6396
+   + 980ad99f-4e24-40f8-b839-cc772390f726:/local/fetchmail-6-3:535
+fbb42c1a-5c77-f34b-9454-e29eadb441c6:/local/fetchmail_6-3:6396
+
+Modified: branches/BRANCH_6-3/TODO.txt
+===================================================================
+--- branches/BRANCH_6-3/TODO.txt	2007-11-27 10:32:54 UTC (rev 5138)
++++ branches/BRANCH_6-3/TODO.txt	2007-11-28 00:57:43 UTC (rev 5139)
+@@ -19,12 +19,12 @@
+ - Debian Bug#449179, smbutil.c:90: unicodeToString: Assertion `len+1 < sizeof
+   buf' failed, from Stepan Golosunov <stepan at golosunov.pp.ru>
+ - Peter O'Gorman 2007-10-31 fetchmail-6.3.8 portability patches [-devel list]
++- Debian Bug #452907 .fetchmailrc not permitted to be a symlink
++  (restriction not mentioned in manpage, also affects .idfile)
+ questionable:
+ - Convert POP3 UIDs to X-UIDL?
+ - fetch IMAP message in one go (fetchmail-devel by Adam Simpkins
+   <simpkins at cisco.com> around Nov 2nd)?
+-- Debian Bug #452907 .fetchmailrc not permitted to be a symlink
+-  (restriction not mentioned in manpage, also affects .idfile)
+ 
+ 6.4:
+ - download only messages whose headers match a filter (by Toby, Usenet
+
+
+
